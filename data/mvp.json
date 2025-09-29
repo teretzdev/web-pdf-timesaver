@@ -1,0 +1,22 @@
+{
+    "clients": [],
+    "projects": [
+        {
+            "id": "p_96a2f256682d",
+            "clientId": "",
+            "name": "test01",
+            "status": "in_progress",
+            "createdAt": "2025-09-29T09:10:24+02:00"
+        }
+    ],
+    "projectDocuments": [
+        {
+            "id": "pd_56e3fb740725",
+            "projectId": "p_96a2f256682d",
+            "templateId": "t_fl105_gc120",
+            "status": "in_progress",
+            "createdAt": "2025-09-29T09:10:32+02:00"
+        }
+    ],
+    "fieldValues": []
+}

@@ -1,0 +1,37 @@
+# Disable PHP error display in production-like environments
+# Keep errors logged but don't show them to users.
+php_flag display_errors Off
+php_value error_reporting E_ALL
+
+# Set upload limits
+php_value upload_max_filesize 10M
+php_value post_max_size 10M
+php_value max_execution_time 300
+php_value max_input_time 300
+
+# Security headers
+Header always set X-Content-Type-Options nosniff
+Header always set X-Frame-Options DENY
+Header always set X-XSS-Protection "1; mode=block"
+
+# Prevent access to sensitive files
+<Files "composer.json">
+    Order allow,deny
+    Deny from all
+</Files>
+
+<Files "*.conf">
+    Order allow,deny
+    Deny from all
+</Files>
+
+
+
+
+
+
+
+
+
+
+

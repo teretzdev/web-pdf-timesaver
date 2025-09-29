@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://web-pdftimesaver.local/specs/mvp-data-model.json",
+  "title": "MVP Data Model for Draft-like Workflow",
+  "type": "object",
+  "properties": {
+    "clients": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "displayName"],
+        "properties": {
+          "id": { "type": "string" },
+          "displayName": { "type": "string" },
+          "email": { "type": "string" },
+          "phone": { "type": "string" },
+          "notes": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "projects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "clientId", "name", "status"],
+        "properties": {
+          "id": { "type": "string" },
+          "clientId": { "type": "string" },
+          "name": { "type": "string" },
+          "status": { "type": "string", "enum": ["in_progress", "completed", "archived"] },
+          "tags": { "type": "array", "items": { "type": "string" } },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "templates": {
+      "description": "Registry of document templates we can fill (e.g., FL-105/GC-120)",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "code", "name", "version", "fields"],
+        "properties": {
+          "id": { "type": "string" },
+          "code": { "type": "string" },
+          "name": { "type": "string" },
+          "version": { "type": "string" },
+          "panels": {
+            "description": "Logical groupings shown on Populate UI (Attorney, Client, Children, etc)",
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["id", "label"],
+              "properties": {
+                "id": { "type": "string" },
+                "label": { "type": "string" },
+                "order": { "type": "number" }
+              }
+            }
+          },
+          "fields": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["key", "label", "type"],
+              "properties": {
+                "key": { "type": "string" },
+                "label": { "type": "string" },
+                "type": { "type": "string", "enum": ["text", "textarea", "number", "date", "checkbox", "select"] },
+                "panelId": { "type": "string" },
+                "required": { "type": "boolean" },
+                "placeholder": { "type": "string" },
+                "options": { "type": "array", "items": { "type": "string" } },
+                "pdfTarget": {
+                  "description": "Where this value maps on the PDF (form field name or (page,x,y) for stamping)",
+                  "type": "object",
+                  "properties": {
+                    "formField": { "type": "string" },
+                    "page": { "type": "number" },
+                    "x": { "type": "number" },
+                    "y": { "type": "number" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "projectDocuments": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "projectId", "templateId", "status"],
+        "properties": {
+          "id": { "type": "string" },
+          "projectId": { "type": "string" },
+          "templateId": { "type": "string" },
+          "status": { "type": "string", "enum": ["in_progress", "ready_to_sign", "signed"] },
+          "outputPath": { "type": "string" },
+          "signedPath": { "type": "string" },
+          "createdAt": { "type": "string", "format": "date-time" },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "fieldValues": {
+      "description": "Per-project-document values keyed by template field key",
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "projectDocumentId", "key", "value"],
+        "properties": {
+          "id": { "type": "string" },
+          "projectDocumentId": { "type": "string" },
+          "key": { "type": "string" },
+          "value": { "type": ["string", "number", "boolean"] },
+          "updatedAt": { "type": "string", "format": "date-time" }
+        }
+      }
+    }
+  },
+  "required": ["clients", "projects", "templates", "projectDocuments", "fieldValues"],
+  "examples": [
+    {
+      "clients": [
+        { "id": "c_1", "displayName": "John Doe" }
+      ],
+      "projects": [
+        { "id": "p_1", "clientId": "c_1", "name": "BHBA EVENT (JOHN DOE)", "status": "in_progress" }
+      ],
+      "templates": [
+        {
+          "id": "t_fl105_gc120",
+          "code": "FL-105/GC-120",
+          "name": "Declaration Under UCCJEA",
+          "version": "2025-01",
+          "panels": [
+            { "id": "attorney", "label": "Attorney", "order": 1 },
+            { "id": "court", "label": "Court", "order": 2 },
+            { "id": "children", "label": "Children", "order": 3 }
+          ],
+          "fields": [
+            { "key": "attorney.name", "label": "Attorney Name", "type": "text", "panelId": "attorney", "required": true, "pdfTarget": { "formField": "ATTORNEY_NAME" } },
+            { "key": "attorney.firm", "label": "Law Firm Name", "type": "text", "panelId": "attorney", "pdfTarget": { "formField": "FIRM_NAME" } },
+            { "key": "court.branch", "label": "Branch Name", "type": "text", "panelId": "court", "pdfTarget": { "formField": "COURT_BRANCH" } }
+          ]
+        }
+      ],
+      "projectDocuments": [
+        { "id": "pd_1", "projectId": "p_1", "templateId": "t_fl105_gc120", "status": "in_progress" }
+      ],
+      "fieldValues": [
+        { "id": "fv_1", "projectDocumentId": "pd_1", "key": "attorney.name", "value": "RON REITSHSTEIN" }
+      ]
+    }
+  ]
+}
+
+

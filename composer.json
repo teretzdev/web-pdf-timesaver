@@ -1,0 +1,12 @@
+{
+    "require": {
+        "setasign/fpdi": "^2.3",
+        "setasign/fpdf": "^1.8",
+        "smalot/pdfparser": "^2.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "": "src/"
+        }
+    }
+}
