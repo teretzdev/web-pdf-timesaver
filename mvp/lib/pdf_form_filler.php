@@ -820,63 +820,130 @@ final class PdfFormFiller {
         }
 
         $logFile = __DIR__ . '/../../logs/pdf_debug.log';
+        file_put_contents($logFile, date('Y-m-d H:i:s') . ' === Starting fillPdfFormWithPositions ===' . PHP_EOL, FILE_APPEND);
+        
         $pdf = new Fpdi();
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->SetTextColor(0, 0, 0);
-
-        // Use the unencrypted template PDF as background for the first page
+        
+        // IMPORTANT: Use FL-100 PDF as background for ALL pages
         $templatePdf = __DIR__ . '/../../uploads/fl100.pdf';
+        $pageCount = 0;
+        $hasTemplate = false;
+        
         try {
             if (file_exists($templatePdf)) {
                 $pageCount = $pdf->setSourceFile($templatePdf);
-                $tplId = $pdf->importPage(1);
-                $size = $pdf->getTemplateSize($tplId);
-                $orientation = ($size['width'] > $size['height']) ? 'L' : 'P';
-                $pdf->AddPage($orientation, [$size['width'], $size['height']]);
-                $pdf->useTemplate($tplId, 0, 0, $size['width'], $size['height']);
+                $hasTemplate = true;
+                file_put_contents($logFile, date('Y-m-d H:i:s') . " FL-100 template loaded with $pageCount pages" . PHP_EOL, FILE_APPEND);
             } else {
-                $pdf->AddPage();
+                file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 template not found at: ' . $templatePdf . PHP_EOL, FILE_APPEND);
             }
         } catch (\Throwable $e) {
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: positioned template import failed: ' . $e->getMessage() . PHP_EOL, FILE_APPEND);
-            $pdf->AddPage();
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 template load error: ' . $e->getMessage() . PHP_EOL, FILE_APPEND);
         }
 
-        // Log positions being used
-        file_put_contents($logFile, date('Y-m-d H:i:s') . ' Using positions for fields: ' . json_encode(array_keys($positions)) . PHP_EOL, FILE_APPEND);
+        // Ensure we have at least 4 pages for FL-100
+        $totalPages = max(4, $pageCount);
+        
+        // Group positions by page for efficient processing
+        $pageFields = [];
+        foreach ($positions as $fieldKey => $position) {
+            $page = $position['page'] ?? 1;
+            if (!isset($pageFields[$page])) {
+                $pageFields[$page] = [];
+            }
+            $pageFields[$page][$fieldKey] = $position;
+        }
+        
+        file_put_contents($logFile, date('Y-m-d H:i:s') . ' Field distribution: ' . json_encode(array_map('count', $pageFields)) . ' fields per page' . PHP_EOL, FILE_APPEND);
 
-        // Fill fields using positioned coordinates (already in millimeters)
-        foreach ($values as $fieldKey => $value) {
-            if (!empty($value) && isset($positions[$fieldKey])) {
-                $position = $positions[$fieldKey];
-                $x = (float)($position['x'] ?? 0);
-                $y = (float)($position['y'] ?? 0);
-                $width = (float)($position['width'] ?? 100);
-                $height = (float)($position['height'] ?? 5);
-                $type = $position['type'] ?? 'text';
-                
-                // Log field being filled
-                file_put_contents($logFile, date('Y-m-d H:i:s') . " Filling field '$fieldKey' at ($x, $y) with value: $value" . PHP_EOL, FILE_APPEND);
-                
-                $pdf->SetXY($x, $y);
-                
-                // Handle different field types
-                if ($type === 'checkbox') {
-                    if (strtolower($value) === 'yes' || strtolower($value) === 'true' || $value === '1' || $value === 'checked') {
-                        $pdf->SetFont('Arial', '', 12);
-                        $pdf->Cell($width, $height, 'X', 0, 0, 'C');
-                        $pdf->SetFont('Arial', '', 10);
-                    }
-                } else {
-                    // Use Cell instead of Write for better control
-                    $pdf->Cell($width, $height, (string)$value, 0, 0, 'L');
+        // Process each page
+        for ($pageNum = 1; $pageNum <= $totalPages; $pageNum++) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . " Processing page $pageNum/$totalPages" . PHP_EOL, FILE_APPEND);
+            
+            // Add page with FL-100 background
+            if ($hasTemplate && $pageNum <= $pageCount) {
+                try {
+                    $tplId = $pdf->importPage($pageNum);
+                    $size = $pdf->getTemplateSize($tplId);
+                    $orientation = ($size['width'] > $size['height']) ? 'L' : 'P';
+                    $pdf->AddPage($orientation, [$size['width'], $size['height']]);
+                    $pdf->useTemplate($tplId, 0, 0, $size['width'], $size['height']);
+                    file_put_contents($logFile, date('Y-m-d H:i:s') . " Page $pageNum: FL-100 background applied" . PHP_EOL, FILE_APPEND);
+                } catch (\Throwable $e) {
+                    file_put_contents($logFile, date('Y-m-d H:i:s') . " Page $pageNum: Failed to import - " . $e->getMessage() . PHP_EOL, FILE_APPEND);
+                    $pdf->AddPage();
                 }
+            } else {
+                // Add blank page if no template or beyond template pages
+                $pdf->AddPage();
+                file_put_contents($logFile, date('Y-m-d H:i:s') . " Page $pageNum: Added blank page" . PHP_EOL, FILE_APPEND);
+            }
+            
+            // Set default font for this page
+            $pdf->SetFont('Arial', '', 10);
+            $pdf->SetTextColor(0, 0, 0);
+            
+            // Fill fields for this page
+            if (isset($pageFields[$pageNum])) {
+                file_put_contents($logFile, date('Y-m-d H:i:s') . " Page $pageNum: Filling " . count($pageFields[$pageNum]) . " fields" . PHP_EOL, FILE_APPEND);
+                
+                foreach ($pageFields[$pageNum] as $fieldKey => $position) {
+                    if (!isset($values[$fieldKey]) || empty($values[$fieldKey])) {
+                        continue;
+                    }
+                    
+                    $value = $values[$fieldKey];
+                    $x = (float)($position['x'] ?? 0);
+                    $y = (float)($position['y'] ?? 0);
+                    $width = (float)($position['width'] ?? 100);
+                    $height = (float)($position['height'] ?? 5);
+                    $type = $position['type'] ?? 'text';
+                    
+                    file_put_contents($logFile, date('Y-m-d H:i:s') . "   Field '$fieldKey' ($type) at ($x,$y): $value" . PHP_EOL, FILE_APPEND);
+                    
+                    $pdf->SetXY($x, $y);
+                    
+                    // Handle different field types
+                    if ($type === 'checkbox') {
+                        if (in_array(strtolower($value), ['yes', 'true', '1', 'checked', 'x'])) {
+                            $pdf->SetFont('Arial', 'B', 10);
+                            $pdf->Cell($width, $height, 'X', 0, 0, 'C');
+                            $pdf->SetFont('Arial', '', 10);
+                        }
+                    } elseif ($type === 'signature') {
+                        $pdf->SetFont('Arial', 'I', 11);
+                        $pdf->Cell($width, $height, (string)$value, 0, 0, 'L');
+                        $pdf->SetFont('Arial', '', 10);
+                    } else {
+                        // Text, date, email, phone - all rendered as text
+                        $pdf->Cell($width, $height, (string)$value, 0, 0, 'L');
+                    }
+                }
+            } else {
+                file_put_contents($logFile, date('Y-m-d H:i:s') . " Page $pageNum: No fields to fill" . PHP_EOL, FILE_APPEND);
             }
         }
 
         $pdf->Output('F', $outputPath);
+        
+        // Verify output
+        if (!file_exists($outputPath)) {
+            throw new \RuntimeException('Failed to create PDF at ' . $outputPath);
+        }
+        
+        $fileSize = filesize($outputPath);
+        file_put_contents($logFile, date('Y-m-d H:i:s') . " PDF created: $outputPath ($fileSize bytes, $totalPages pages)" . PHP_EOL, FILE_APPEND);
+        file_put_contents($logFile, date('Y-m-d H:i:s') . ' === Completed fillPdfFormWithPositions ===' . PHP_EOL, FILE_APPEND);
 
-        return ['success' => true, 'file' => $filename, 'path' => $outputPath, 'used_positions' => count($positions)];
+        return [
+            'success' => true, 
+            'file' => $filename, 
+            'filename' => $filename,
+            'path' => $outputPath, 
+            'used_positions' => count($positions),
+            'pages' => $totalPages,
+            'size' => $fileSize
+        ];
     }
 
 
