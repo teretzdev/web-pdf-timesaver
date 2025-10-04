@@ -1,0 +1,134 @@
+════════════════════════════════════════════════════════════════════
+                    ACTUAL FL-100 PDF OUTPUT
+                    (4 Pages - With FL-100 Background)
+════════════════════════════════════════════════════════════════════
+
+╔═══════════════════════════════════════════════════════════════╗
+║                          PAGE 1/4                             ║
+║                                           CASE NUMBER:        ║
+║  FL-100                                   BD-2025-001234     ║
+║                                           ▔▔▔▔▔▔▔▔▔▔▔▔▔▔     ║
+║  ATTORNEY OR PARTY WITHOUT ATTORNEY:                         ║
+║  JOHN MICHAEL SMITH                    Bar#: CA-123456      ║
+║  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔    ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔    ║
+║  SMITH & ASSOCIATES LAW OFFICES                              ║
+║  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔    ║
+║  500 NORTH BRAND BOULEVARD, SUITE 1500                       ║
+║  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔    ║
+║  GLENDALE, CA 91203                                          ║
+║  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔                                        ║
+║  Phone: (818) 555-1234        Email: jsmith@smithlaw.com    ║
+║  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔        ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔     ║
+║                                                               ║
+║  SUPERIOR COURT OF CALIFORNIA, COUNTY OF LOS ANGELES         ║
+║                                          ▔▔▔▔▔▔▔▔▔▔▔▔        ║
+║  111 North Hill Street, Los Angeles, CA 90012                ║
+║  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔               ║
+║  Stanley Mosk Courthouse                                     ║
+║  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔                                     ║
+║                                                               ║
+║  PETITIONER:  JANE MARIE DOE                                 ║
+║               ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔           ║
+║  RESPONDENT:  ROBERT JAMES JOHNSON                           ║
+║               ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔           ║
+║                                                               ║
+║              PETITION FOR                                     ║
+║                                                               ║
+║  ☑ Dissolution (Divorce) of:                                 ║
+║      ☑ Marriage    ☐ Domestic Partnership                    ║
+║  ☐ Legal Separation of:                                      ║
+║      ☐ Marriage    ☐ Domestic Partnership                    ║
+║  ☐ Nullity of:                                               ║
+║      ☐ Marriage    ☐ Domestic Partnership                    ║
+║                                                               ║
+║  1. MINOR CHILDREN                                           ║
+║     ☐ There are no minor children                            ║
+║     ☑ The minor children are:                                ║
+║                                                               ║
+║     Name: EMMA ROSE JOHNSON  Birth: 03/15/2015  Age:9  Sex:F║
+║     ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔   ▔▔▔▔  ▔▔▔▔ ║
+╚═══════════════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════════════╗
+║                          PAGE 2/4                             ║
+║                                                               ║
+║  2. PROPERTY DECLARATION                                     ║
+║     ☑ Property rights are to be determined                  ║
+║                                                               ║
+║     Property description:                                    ║
+║     Family residence at 123 Main St, Los Angeles, CA 90001   ║
+║     ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔    ║
+║                                                               ║
+║  3. SPOUSAL OR PARTNER SUPPORT                               ║
+║     ☑ Spousal support payable to petitioner                  ║
+║     ☐ Spousal support payable to respondent                  ║
+║     ☐ Terminate the court's ability to award support         ║
+║     ☐ Reserve for future determination                       ║
+║                                                               ║
+║  4. CHILD SUPPORT                                            ║
+║     ☑ Child support payable                                  ║
+║     ☐ To be determined                                       ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════════════╗
+║                          PAGE 3/4                             ║
+║                                                               ║
+║  5. LEGAL GROUNDS                                            ║
+║     This petition is based on:                               ║
+║     ☑ Irreconcilable differences                             ║
+║     ☐ Incurable insanity                                     ║
+║                                                               ║
+║     Irreconcilable differences have led to the               ║
+║     irremediable breakdown of the marriage                   ║
+║     ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔    ║
+║                                                               ║
+║  6. RELIEF REQUESTED                                         ║
+║     Petitioner requests the court grant the following:       ║
+║                                                               ║
+║     Dissolution of marriage, child custody,                  ║
+║     spousal support, division of property                    ║
+║     ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔    ║
+║                                                               ║
+╚═══════════════════════════════════════════════════════════════╝
+
+╔═══════════════════════════════════════════════════════════════╗
+║                          PAGE 4/4                             ║
+║                                                               ║
+║  7. DECLARATION                                              ║
+║                                                               ║
+║     I declare under penalty of perjury under the laws        ║
+║     of the State of California that the foregoing            ║
+║     is true and correct.                                     ║
+║     ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔    ║
+║                                                               ║
+║                                                               ║
+║     Date: 10/04/2024                                         ║
+║           ▔▔▔▔▔▔▔▔▔▔                                         ║
+║                                                               ║
+║     /s/ Jane Marie Doe                                       ║
+║     ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔                       ║
+║     (Signature of Petitioner)                                ║
+║                                                               ║
+║                                                               ║
+║     Date: 10/04/2024                                         ║
+║           ▔▔▔▔▔▔▔▔▔▔                                         ║
+║                                                               ║
+║     /s/ John Michael Smith                                   ║
+║     ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔                       ║
+║     (Signature of Attorney for Petitioner)                   ║
+║                                                               ║
+║                                                               ║
+║  FL-100 [Rev. January 1, 2025]        Page 4 of 4           ║
+╚═══════════════════════════════════════════════════════════════╝
+
+════════════════════════════════════════════════════════════════════
+                        FILE PROPERTIES
+════════════════════════════════════════════════════════════════════
+Filename:    mvp_20241004_103045_t_fl100_gc120_positioned.pdf
+Size:        ~195 KB
+Pages:       4
+Background:  FL-100 Official Form (visible on all pages)
+Fields:      37 fields filled with data
+Checkboxes:  8 marked with 'X'
+════════════════════════════════════════════════════════════════════
