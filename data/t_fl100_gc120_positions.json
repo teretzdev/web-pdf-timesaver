@@ -1,4 +1,38 @@
 {
-  "case_number": {},
-  "petitioner_name": {}
+  "case_number": {
+    "x": 100,
+    "y": 50
+  },
+  "petitioner_name": {
+    "x": 100,
+    "y": 100
+  },
+  "respondent_name": {
+    "x": 100,
+    "y": 150
+  },
+  "attorney_name": {
+    "x": 100,
+    "y": 200
+  },
+  "court_county": {
+    "x": 300,
+    "y": 50
+  },
+  "marriage_date": {
+    "x": 100,
+    "y": 250
+  },
+  "separation_date": {
+    "x": 300,
+    "y": 250
+  },
+  "grounds_for_dissolution": {
+    "x": 100,
+    "y": 300
+  },
+  "has_children": {
+    "x": 100,
+    "y": 350
+  }
 }
