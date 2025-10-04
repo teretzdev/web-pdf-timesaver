@@ -367,5 +367,113 @@
     "height": 5,
     "type": "text",
     "label": "Sex"
+  },
+  "property_declaration": {
+    "page": 2,
+    "x": 20,
+    "y": 50,
+    "width": 4,
+    "height": 4,
+    "type": "checkbox",
+    "label": "Property Declaration"
+  },
+  "property_list": {
+    "page": 2,
+    "x": 30,
+    "y": 60,
+    "width": 160,
+    "height": 40,
+    "type": "text",
+    "label": "Property List"
+  },
+  "spousal_support": {
+    "page": 2,
+    "x": 20,
+    "y": 110,
+    "width": 4,
+    "height": 4,
+    "type": "checkbox",
+    "label": "Spousal Support"
+  },
+  "child_support": {
+    "page": 2,
+    "x": 20,
+    "y": 120,
+    "width": 4,
+    "height": 4,
+    "type": "checkbox",
+    "label": "Child Support"
+  },
+  "legal_grounds": {
+    "page": 3,
+    "x": 20,
+    "y": 50,
+    "width": 170,
+    "height": 30,
+    "type": "text",
+    "label": "Legal Grounds"
+  },
+  "irreconcilable_differences": {
+    "page": 3,
+    "x": 20,
+    "y": 90,
+    "width": 4,
+    "height": 4,
+    "type": "checkbox",
+    "label": "Irreconcilable Differences"
+  },
+  "relief_requested": {
+    "page": 3,
+    "x": 20,
+    "y": 110,
+    "width": 170,
+    "height": 50,
+    "type": "text",
+    "label": "Relief Requested"
+  },
+  "petitioner_signature": {
+    "page": 4,
+    "x": 30,
+    "y": 200,
+    "width": 80,
+    "height": 15,
+    "type": "signature",
+    "label": "Petitioner Signature"
+  },
+  "petitioner_date_signed": {
+    "page": 4,
+    "x": 120,
+    "y": 200,
+    "width": 40,
+    "height": 5,
+    "type": "date",
+    "label": "Date Signed"
+  },
+  "attorney_signature": {
+    "page": 4,
+    "x": 30,
+    "y": 230,
+    "width": 80,
+    "height": 15,
+    "type": "signature",
+    "label": "Attorney Signature"
+  },
+  "attorney_date_signed": {
+    "page": 4,
+    "x": 120,
+    "y": 230,
+    "width": 40,
+    "height": 5,
+    "type": "date",
+    "label": "Attorney Date Signed"
+  },
+  "declaration_text": {
+    "page": 4,
+    "x": 20,
+    "y": 100,
+    "width": 170,
+    "height": 80,
+    "type": "text",
+    "label": "Declaration"
   }
 }
