@@ -4,6 +4,10 @@ import express from 'express';
 import cors from 'cors';
 import fs from 'fs-extra';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 interface FieldPosition {
   x: number;
@@ -18,7 +22,7 @@ interface FieldPositions {
 
 class FieldEditorServer {
   private app: express.Application;
-  private port: number = 3001;
+  private port: number = 3002;
 
   constructor() {
     this.app = express();
@@ -168,7 +172,7 @@ class FieldEditorServer {
     await fs.writeJson(positionsFile, positions, { spaces: 2 });
   }
 
-  public start(port: number = 3001) {
+  public start(port: number = 3002) {
     this.port = port;
     this.app.listen(port, () => {
       console.log(`🎯 Field Editor Server running on http://localhost:${port}`);
@@ -178,7 +182,7 @@ class FieldEditorServer {
 }
 
 // Start the server if this file is run directly
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   const server = new FieldEditorServer();
   server.start();
 }
