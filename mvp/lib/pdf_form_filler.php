@@ -842,19 +842,35 @@ final class PdfFormFiller {
             $pdf->AddPage();
         }
 
-        // Convert editor pixel coordinates to millimeters for FPDF/FPDI (assuming 72 DPI if not specified)
-        $pxToMm = function($px, $dpi = 96.0) { return ($px / $dpi) * 25.4; };
+        // Log positions being used
+        file_put_contents($logFile, date('Y-m-d H:i:s') . ' Using positions for fields: ' . json_encode(array_keys($positions)) . PHP_EOL, FILE_APPEND);
 
-        // Fill fields using positioned coordinates with unit conversion
+        // Fill fields using positioned coordinates (already in millimeters)
         foreach ($values as $fieldKey => $value) {
             if (!empty($value) && isset($positions[$fieldKey])) {
                 $position = $positions[$fieldKey];
-                $xPx = (float)($position['x'] ?? 0);
-                $yPx = (float)($position['y'] ?? 0);
-                $xMm = $pxToMm($xPx);
-                $yMm = $pxToMm($yPx);
-                $pdf->SetXY($xMm, $yMm);
-                $pdf->Write(0, (string)$value);
+                $x = (float)($position['x'] ?? 0);
+                $y = (float)($position['y'] ?? 0);
+                $width = (float)($position['width'] ?? 100);
+                $height = (float)($position['height'] ?? 5);
+                $type = $position['type'] ?? 'text';
+                
+                // Log field being filled
+                file_put_contents($logFile, date('Y-m-d H:i:s') . " Filling field '$fieldKey' at ($x, $y) with value: $value" . PHP_EOL, FILE_APPEND);
+                
+                $pdf->SetXY($x, $y);
+                
+                // Handle different field types
+                if ($type === 'checkbox') {
+                    if (strtolower($value) === 'yes' || strtolower($value) === 'true' || $value === '1' || $value === 'checked') {
+                        $pdf->SetFont('Arial', '', 12);
+                        $pdf->Cell($width, $height, 'X', 0, 0, 'C');
+                        $pdf->SetFont('Arial', '', 10);
+                    }
+                } else {
+                    // Use Cell instead of Write for better control
+                    $pdf->Cell($width, $height, (string)$value, 0, 0, 'L');
+                }
             }
         }
 
