@@ -1,4 +1,479 @@
 {
-  "case_number": {},
-  "petitioner_name": {}
+  "case_number": {
+    "page": 1,
+    "x": 142,
+    "y": 27,
+    "width": 46,
+    "height": 6,
+    "type": "text",
+    "label": "Case Number"
+  },
+  "attorney_name": {
+    "page": 1,
+    "x": 20,
+    "y": 58,
+    "width": 100,
+    "height": 5,
+    "type": "text",
+    "label": "Attorney Name"
+  },
+  "attorney_bar_number": {
+    "page": 1,
+    "x": 125,
+    "y": 58,
+    "width": 65,
+    "height": 5,
+    "type": "text",
+    "label": "State Bar Number"
+  },
+  "attorney_firm": {
+    "page": 1,
+    "x": 20,
+    "y": 67,
+    "width": 170,
+    "height": 5,
+    "type": "text",
+    "label": "Firm Name"
+  },
+  "attorney_address": {
+    "page": 1,
+    "x": 20,
+    "y": 76,
+    "width": 170,
+    "height": 5,
+    "type": "text",
+    "label": "Street Address"
+  },
+  "attorney_city_state_zip": {
+    "page": 1,
+    "x": 20,
+    "y": 85,
+    "width": 170,
+    "height": 5,
+    "type": "text",
+    "label": "City, State, ZIP"
+  },
+  "attorney_city": {
+    "page": 1,
+    "x": 20,
+    "y": 85,
+    "width": 60,
+    "height": 5,
+    "type": "text",
+    "label": "City"
+  },
+  "attorney_state": {
+    "page": 1,
+    "x": 85,
+    "y": 85,
+    "width": 20,
+    "height": 5,
+    "type": "text",
+    "label": "State"
+  },
+  "attorney_zip": {
+    "page": 1,
+    "x": 110,
+    "y": 85,
+    "width": 30,
+    "height": 5,
+    "type": "text",
+    "label": "ZIP"
+  },
+  "attorney_phone": {
+    "page": 1,
+    "x": 20,
+    "y": 94,
+    "width": 80,
+    "height": 5,
+    "type": "phone",
+    "label": "Telephone"
+  },
+  "attorney_fax": {
+    "page": 1,
+    "x": 105,
+    "y": 94,
+    "width": 85,
+    "height": 5,
+    "type": "phone",
+    "label": "Fax"
+  },
+  "attorney_email": {
+    "page": 1,
+    "x": 20,
+    "y": 103,
+    "width": 170,
+    "height": 5,
+    "type": "email",
+    "label": "E-Mail Address"
+  },
+  "attorney_for": {
+    "page": 1,
+    "x": 20,
+    "y": 112,
+    "width": 170,
+    "height": 5,
+    "type": "text",
+    "label": "Attorney for"
+  },
+  "court_name": {
+    "page": 1,
+    "x": 20,
+    "y": 122,
+    "width": 100,
+    "height": 5,
+    "type": "text",
+    "label": "Superior Court of California"
+  },
+  "court_county": {
+    "page": 1,
+    "x": 50,
+    "y": 131,
+    "width": 70,
+    "height": 5,
+    "type": "text",
+    "label": "County of"
+  },
+  "court_street": {
+    "page": 1,
+    "x": 20,
+    "y": 140,
+    "width": 100,
+    "height": 5,
+    "type": "text",
+    "label": "Street address"
+  },
+  "court_mailing": {
+    "page": 1,
+    "x": 20,
+    "y": 149,
+    "width": 100,
+    "height": 5,
+    "type": "text",
+    "label": "Mailing address"
+  },
+  "court_city_zip": {
+    "page": 1,
+    "x": 20,
+    "y": 158,
+    "width": 100,
+    "height": 5,
+    "type": "text",
+    "label": "City and zip code"
+  },
+  "court_branch": {
+    "page": 1,
+    "x": 20,
+    "y": 167,
+    "width": 100,
+    "height": 5,
+    "type": "text",
+    "label": "Branch name"
+  },
+  "petitioner_name": {
+    "page": 1,
+    "x": 20,
+    "y": 180,
+    "width": 170,
+    "height": 5,
+    "type": "text",
+    "label": "Petitioner"
+  },
+  "petitioner_first_name": {
+    "page": 1,
+    "x": 20,
+    "y": 180,
+    "width": 80,
+    "height": 5,
+    "type": "text",
+    "label": "Petitioner First Name"
+  },
+  "petitioner_last_name": {
+    "page": 1,
+    "x": 105,
+    "y": 180,
+    "width": 85,
+    "height": 5,
+    "type": "text",
+    "label": "Petitioner Last Name"
+  },
+  "respondent_name": {
+    "page": 1,
+    "x": 20,
+    "y": 189,
+    "width": 170,
+    "height": 5,
+    "type": "text",
+    "label": "Respondent"
+  },
+  "respondent_first_name": {
+    "page": 1,
+    "x": 20,
+    "y": 189,
+    "width": 80,
+    "height": 5,
+    "type": "text",
+    "label": "Respondent First Name"
+  },
+  "respondent_last_name": {
+    "page": 1,
+    "x": 105,
+    "y": 189,
+    "width": 85,
+    "height": 5,
+    "type": "text",
+    "label": "Respondent Last Name"
+  },
+  "petition_dissolution": {
+    "page": 1,
+    "x": 20,
+    "y": 210,
+    "width": 4,
+    "height": 4,
+    "type": "checkbox",
+    "label": "Dissolution (Divorce) of"
+  },
+  "dissolution_marriage": {
+    "page": 1,
+    "x": 70,
+    "y": 210,
+    "width": 4,
+    "height": 4,
+    "type": "checkbox",
+    "label": "Marriage"
+  },
+  "dissolution_domestic": {
+    "page": 1,
+    "x": 100,
+    "y": 210,
+    "width": 4,
+    "height": 4,
+    "type": "checkbox",
+    "label": "Domestic Partnership"
+  },
+  "legal_separation_of": {
+    "page": 1,
+    "x": 20,
+    "y": 219,
+    "width": 4,
+    "height": 4,
+    "type": "checkbox",
+    "label": "Legal Separation of"
+  },
+  "separation_marriage": {
+    "page": 1,
+    "x": 70,
+    "y": 219,
+    "width": 4,
+    "height": 4,
+    "type": "checkbox",
+    "label": "Marriage"
+  },
+  "separation_domestic": {
+    "page": 1,
+    "x": 100,
+    "y": 219,
+    "width": 4,
+    "height": 4,
+    "type": "checkbox",
+    "label": "Domestic Partnership"
+  },
+  "nullity_of": {
+    "page": 1,
+    "x": 20,
+    "y": 228,
+    "width": 4,
+    "height": 4,
+    "type": "checkbox",
+    "label": "Nullity of"
+  },
+  "nullity_marriage": {
+    "page": 1,
+    "x": 70,
+    "y": 228,
+    "width": 4,
+    "height": 4,
+    "type": "checkbox",
+    "label": "Marriage"
+  },
+  "nullity_domestic": {
+    "page": 1,
+    "x": 100,
+    "y": 228,
+    "width": 4,
+    "height": 4,
+    "type": "checkbox",
+    "label": "Domestic Partnership"
+  },
+  "minor_children": {
+    "page": 1,
+    "x": 20,
+    "y": 240,
+    "width": 4,
+    "height": 4,
+    "type": "checkbox",
+    "label": "There are no minor children"
+  },
+  "children_from_relationship": {
+    "page": 1,
+    "x": 20,
+    "y": 249,
+    "width": 4,
+    "height": 4,
+    "type": "checkbox",
+    "label": "The minor children are"
+  },
+  "continued_attachment": {
+    "page": 1,
+    "x": 20,
+    "y": 258,
+    "width": 4,
+    "height": 4,
+    "type": "checkbox",
+    "label": "Continued on Attachment"
+  },
+  "child1_name": {
+    "page": 1,
+    "x": 30,
+    "y": 267,
+    "width": 80,
+    "height": 5,
+    "type": "text",
+    "label": "Child 1 Name"
+  },
+  "child1_birthdate": {
+    "page": 1,
+    "x": 115,
+    "y": 267,
+    "width": 40,
+    "height": 5,
+    "type": "date",
+    "label": "Birthdate"
+  },
+  "child1_age": {
+    "page": 1,
+    "x": 160,
+    "y": 267,
+    "width": 15,
+    "height": 5,
+    "type": "text",
+    "label": "Age"
+  },
+  "child1_sex": {
+    "page": 1,
+    "x": 180,
+    "y": 267,
+    "width": 10,
+    "height": 5,
+    "type": "text",
+    "label": "Sex"
+  },
+  "property_declaration": {
+    "page": 2,
+    "x": 20,
+    "y": 50,
+    "width": 4,
+    "height": 4,
+    "type": "checkbox",
+    "label": "Property Declaration"
+  },
+  "property_list": {
+    "page": 2,
+    "x": 30,
+    "y": 60,
+    "width": 160,
+    "height": 40,
+    "type": "text",
+    "label": "Property List"
+  },
+  "spousal_support": {
+    "page": 2,
+    "x": 20,
+    "y": 110,
+    "width": 4,
+    "height": 4,
+    "type": "checkbox",
+    "label": "Spousal Support"
+  },
+  "child_support": {
+    "page": 2,
+    "x": 20,
+    "y": 120,
+    "width": 4,
+    "height": 4,
+    "type": "checkbox",
+    "label": "Child Support"
+  },
+  "legal_grounds": {
+    "page": 3,
+    "x": 20,
+    "y": 50,
+    "width": 170,
+    "height": 30,
+    "type": "text",
+    "label": "Legal Grounds"
+  },
+  "irreconcilable_differences": {
+    "page": 3,
+    "x": 20,
+    "y": 90,
+    "width": 4,
+    "height": 4,
+    "type": "checkbox",
+    "label": "Irreconcilable Differences"
+  },
+  "relief_requested": {
+    "page": 3,
+    "x": 20,
+    "y": 110,
+    "width": 170,
+    "height": 50,
+    "type": "text",
+    "label": "Relief Requested"
+  },
+  "petitioner_signature": {
+    "page": 4,
+    "x": 30,
+    "y": 200,
+    "width": 80,
+    "height": 15,
+    "type": "signature",
+    "label": "Petitioner Signature"
+  },
+  "petitioner_date_signed": {
+    "page": 4,
+    "x": 120,
+    "y": 200,
+    "width": 40,
+    "height": 5,
+    "type": "date",
+    "label": "Date Signed"
+  },
+  "attorney_signature": {
+    "page": 4,
+    "x": 30,
+    "y": 230,
+    "width": 80,
+    "height": 15,
+    "type": "signature",
+    "label": "Attorney Signature"
+  },
+  "attorney_date_signed": {
+    "page": 4,
+    "x": 120,
+    "y": 230,
+    "width": 40,
+    "height": 5,
+    "type": "date",
+    "label": "Attorney Date Signed"
+  },
+  "declaration_text": {
+    "page": 4,
+    "x": 20,
+    "y": 100,
+    "width": 170,
+    "height": 80,
+    "type": "text",
+    "label": "Declaration"
+  }
 }
