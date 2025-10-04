@@ -4,6 +4,10 @@ import express from 'express';
 import cors from 'cors';
 import fs from 'fs-extra';
 import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 interface FieldPosition {
   x: number;
@@ -18,7 +22,7 @@ interface FieldPositions {
 
 class FieldEditorServer {
   private app: express.Application;
-  private port: number = 3001;
+  private port: number = 3002;
 
   constructor() {
     this.app = express();
@@ -88,7 +92,7 @@ class FieldEditorServer {
   }
 
   private async getTemplateFields(template: string): Promise<any[]> {
-    const templateFile = path.join(process.cwd(), 'mvp', 'templates', 'registry.php');
+    const templateFile = path.join(process.cwd(), '..', 'mvp', 'templates', 'registry.php');
     
     if (!await fs.pathExists(templateFile)) {
       throw new Error('Template registry not found');
@@ -96,42 +100,40 @@ class FieldEditorServer {
 
     const phpContent = await fs.readFile(templateFile, 'utf-8');
     
-    // Extract template fields using regex
-    const templateRegex = new RegExp(`'${template}'\\s*=>\\s*\\[([\\s\\S]*?)\\]`, 'g');
-    const match = templateRegex.exec(phpContent);
+    // Look for the fields section within the template - need to handle nested brackets
+    const fieldsRegex = new RegExp(`'${template}'\\s*=>\\s*\\[[\\s\\S]*?'fields'\\s*=>\\s*\\[([\\s\\S]*?)\\]\\s*\\]\\s*\\]`, 'g');
+    const match = fieldsRegex.exec(phpContent);
     
     if (!match) {
-      throw new Error(`Template ${template} not found`);
+      throw new Error(`Template ${template} fields not found`);
     }
 
     const fields: any[] = [];
-    const fieldRegex = /'([^']+)'\s*=>\s*\[([^\]]+)\]/g;
-    let fieldMatch;
+    // Split by field array boundaries and parse each field
+    const fieldBlocks = match[1].split(/\[\s*$/gm).filter(block => block.trim());
     
-    while ((fieldMatch = fieldRegex.exec(match[1])) !== null) {
-      const fieldKey = fieldMatch[1];
-      const fieldContent = fieldMatch[2];
-      
-      // Extract label
-      const labelMatch = fieldContent.match(/'label'\s*=>\s*'([^']+)'/);
-      const label = labelMatch ? labelMatch[1] : fieldKey;
-      
-      // Extract type
-      const typeMatch = fieldContent.match(/'type'\s*=>\s*'([^']+)'/);
-      const type = typeMatch ? typeMatch[1] : 'text';
-      
-      fields.push({
-        key: fieldKey,
-        label: label,
-        type: type,
-      });
+    for (const block of fieldBlocks) {
+      if (block.includes("'key'")) {
+        // Extract key
+        const keyMatch = block.match(/'key'\s*=>\s*'([^']+)'/);
+        const labelMatch = block.match(/'label'\s*=>\s*'([^']+)'/);
+        const typeMatch = block.match(/'type'\s*=>\s*'([^']+)'/);
+        
+        if (keyMatch && labelMatch && typeMatch) {
+          fields.push({
+            key: keyMatch[1],
+            label: labelMatch[1],
+            type: typeMatch[1],
+          });
+        }
+      }
     }
 
     return fields;
   }
 
   private async getFieldPositions(template: string): Promise<FieldPositions> {
-    const positionsFile = path.join(process.cwd(), 'data', `${template}_positions.json`);
+    const positionsFile = path.join(process.cwd(), '..', 'data', `${template}_positions.json`);
     
     if (await fs.pathExists(positionsFile)) {
       return await fs.readJson(positionsFile);
@@ -141,7 +143,7 @@ class FieldEditorServer {
   }
 
   private async saveFieldPositions(template: string, positions: FieldPositions): Promise<void> {
-    const positionsFile = path.join(process.cwd(), 'data', `${template}_positions.json`);
+    const positionsFile = path.join(process.cwd(), '..', 'data', `${template}_positions.json`);
     
     await fs.ensureDir(path.dirname(positionsFile));
     await fs.writeJson(positionsFile, positions, { spaces: 2 });
@@ -155,7 +157,7 @@ class FieldEditorServer {
     width?: number,
     height?: number
   ): Promise<void> {
-    const positionsFile = path.join(process.cwd(), 'data', `${template}_positions.json`);
+    const positionsFile = path.join(process.cwd(), '..', 'data', `${template}_positions.json`);
     
     let positions: FieldPositions = {};
     if (await fs.pathExists(positionsFile)) {
@@ -168,7 +170,7 @@ class FieldEditorServer {
     await fs.writeJson(positionsFile, positions, { spaces: 2 });
   }
 
-  public start(port: number = 3001) {
+  public start(port: number = 3002) {
     this.port = port;
     this.app.listen(port, () => {
       console.log(`🎯 Field Editor Server running on http://localhost:${port}`);
@@ -178,7 +180,7 @@ class FieldEditorServer {
 }
 
 // Start the server if this file is run directly
-if (require.main === module) {
+if (import.meta.url === `file://${process.argv[1]}`) {
   const server = new FieldEditorServer();
   server.start();
 }
