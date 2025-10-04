@@ -1,0 +1,32 @@
+{
+  "name": "mcp-field-editor",
+  "version": "1.0.0",
+  "description": "MCP server for drag and drop field positioning on PDF forms",
+  "main": "dist/server-simple.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/server-simple.js",
+    "dev": "ts-node src/server-simple.ts",
+    "watch": "tsc --watch"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^0.4.0",
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "multer": "^1.4.5-lts.1",
+    "pdf-lib": "^1.17.1",
+    "fs-extra": "^11.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/express": "^4.17.17",
+    "@types/cors": "^2.8.13",
+    "@types/multer": "^1.4.7",
+    "@types/fs-extra": "^11.0.1",
+    "typescript": "^5.0.0",
+    "ts-node": "^10.9.0"
+  },
+  "keywords": ["mcp", "pdf", "form", "field", "positioning", "drag", "drop"],
+  "author": "Web PDF Time Saver",
+  "license": "MIT"
+}

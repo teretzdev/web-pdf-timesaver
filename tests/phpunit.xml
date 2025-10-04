@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.5/phpunit.xsd"
+         
+         colors="true"
+         stopOnFailure="false"
+         cacheResultFile=".phpunit.result.cache"
+         executionOrder="depends,defects"
+         requireCoverageMetadata="true"
+         beStrictAboutCoverageMetadata="true"
+         beStrictAboutOutputDuringTests="true"
+         failOnRisky="true"
+         failOnWarning="true">
+    
+    <testsuites>
+        <testsuite name="PDF QC">
+            <file>PdfQualityControlRegressionTest.php</file>
+        </testsuite>
+        <testsuite name="Integration Tests">
+            <file>integration_client_project_workflow_test.php</file>
+        </testsuite>
+        
+        <testsuite name="UI Components Tests">
+            <file>ui_components_test.php</file>
+        </testsuite>
+        
+        <testsuite name="API Routes Tests">
+            <file>api_routes_test.php</file>
+        </testsuite>
+        
+        <testsuite name="Performance Tests">
+            <file>performance_large_datasets_test.php</file>
+        </testsuite>
+        
+        <testsuite name="Accessibility Tests">
+            <file>accessibility_test.php</file>
+        </testsuite>
+        
+        <testsuite name="Cross-Browser Compatibility Tests">
+            <file>cross_browser_compatibility_test.php</file>
+        </testsuite>
+        
+        <testsuite name="Mobile Responsiveness Tests">
+            <file>mobile_responsiveness_test.php</file>
+        </testsuite>
+        
+        <testsuite name="Dark Mode Functionality Tests">
+            <file>dark_mode_functionality_test.php</file>
+        </testsuite>
+        
+        <testsuite name="Regression PDF Functionality Tests">
+            <file>regression_pdf_functionality_test.php</file>
+        </testsuite>
+        
+        <testsuite name="All Tests">
+            <directory>.</directory>
+        </testsuite>
+    </testsuites>
+    
+    <coverage processUncoveredFiles="true">
+        <include>
+            <directory suffix=".php">../mvp</directory>
+        </include>
+        <exclude>
+            <directory>../vendor</directory>
+            <directory>../tests</directory>
+            <file>../mvp/index.php</file>
+        </exclude>
+        <report>
+            <html outputDirectory="coverage"/>
+            <text outputFile="coverage.txt"/>
+            <clover outputFile="coverage.xml"/>
+        </report>
+    </coverage>
+    
+    <logging>
+        <junit outputFile="test-results.xml"/>
+        <testdoxHtml outputFile="test-results.html"/>
+        <testdoxText outputFile="test-results.txt"/>
+    </logging>
+    
+    <php>
+        <ini name="memory_limit" value="512M"/>
+        <ini name="max_execution_time" value="300"/>
+        <ini name="error_reporting" value="E_ALL"/>
+        <ini name="display_errors" value="1"/>
+        <ini name="display_startup_errors" value="1"/>
+    </php>
+</phpunit>
+
+
+
+
+
+
+
+
+
+
+
+
+

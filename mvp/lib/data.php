@@ -17,16 +17,16 @@ final class DataStore {
 
 	private function load(): array {
 		if (!file_exists($this->path)) {
-			return [ 'clients' => [], 'projects' => [], 'projectDocuments' => [], 'fieldValues' => [] ];
+			return [ 'clients' => [], 'projects' => [], 'projectDocuments' => [], 'fieldValues' => [], 'customFields' => [] ];
 		}
 		$raw = @file_get_contents($this->path);
-		if ($raw === false) { return [ 'clients' => [], 'projects' => [], 'projectDocuments' => [], 'fieldValues' => [] ]; }
+		if ($raw === false) { return [ 'clients' => [], 'projects' => [], 'projectDocuments' => [], 'fieldValues' => [], 'customFields' => [] ]; }
 		$data = json_decode($raw, true);
 		if (json_last_error() !== JSON_ERROR_NONE) {
 			// If the JSON is corrupted, don't blow up: return empty skeleton and preserve existing file.
-			return [ 'clients' => [], 'projects' => [], 'projectDocuments' => [], 'fieldValues' => [] ];
+			return [ 'clients' => [], 'projects' => [], 'projectDocuments' => [], 'fieldValues' => [], 'customFields' => [] ];
 		}
-		return array_merge([ 'clients' => [], 'projects' => [], 'projectDocuments' => [], 'fieldValues' => [] ], $data ?? []);
+		return array_merge([ 'clients' => [], 'projects' => [], 'projectDocuments' => [], 'fieldValues' => [], 'customFields' => [] ], $data ?? []);
 	}
 
 	private function save(): void {
@@ -94,22 +94,57 @@ final class DataStore {
 	}
 
 	public function getFieldValues(string $projectDocumentId): array {
+		$logFile = __DIR__ . '/../../logs/pdf_debug.log';
+		file_put_contents($logFile, date('Y-m-d H:i:s') . ' DATA DEBUG: Getting field values for PD ID: ' . $projectDocumentId . PHP_EOL, FILE_APPEND);
+		file_put_contents($logFile, date('Y-m-d H:i:s') . ' DATA DEBUG: Total field values in DB: ' . count($this->db['fieldValues']) . PHP_EOL, FILE_APPEND);
+		
 		$out = [];
-		foreach ($this->db['fieldValues'] as $fv) if ($fv['projectDocumentId'] === $projectDocumentId) $out[$fv['key']] = $fv['value'];
+		foreach ($this->db['fieldValues'] as $fv) {
+			file_put_contents($logFile, date('Y-m-d H:i:s') . ' DATA DEBUG: Checking field value: ' . json_encode($fv) . PHP_EOL, FILE_APPEND);
+			if ($fv['projectDocumentId'] === $projectDocumentId) {
+				$out[$fv['key']] = $fv['value'];
+				file_put_contents($logFile, date('Y-m-d H:i:s') . ' DATA DEBUG: MATCH! Added: ' . $fv['key'] . ' = ' . $fv['value'] . PHP_EOL, FILE_APPEND);
+			}
+		}
+		
+		file_put_contents($logFile, date('Y-m-d H:i:s') . ' DATA DEBUG: Final output: ' . json_encode($out) . PHP_EOL, FILE_APPEND);
 		return $out;
 	}
 	public function saveFieldValues(string $projectDocumentId, array $kv): void {
-		// remove existing
-		$this->db['fieldValues'] = array_values(array_filter($this->db['fieldValues'], fn($fv) => $fv['projectDocumentId'] !== $projectDocumentId || !array_key_exists($fv['key'], $kv)));
-		// add new
+		$logFile = __DIR__ . '/../../logs/pdf_debug.log';
+		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE VALUES: PD ID: ' . $projectDocumentId . PHP_EOL, FILE_APPEND);
+		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE VALUES: Input data: ' . json_encode($kv) . PHP_EOL, FILE_APPEND);
+		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE VALUES: Existing field values before: ' . count($this->db['fieldValues']) . PHP_EOL, FILE_APPEND);
+		
+		// remove ALL existing field values for this project document
+		$oldCount = count($this->db['fieldValues']);
+		$this->db['fieldValues'] = array_values(array_filter($this->db['fieldValues'], fn($fv) => $fv['projectDocumentId'] !== $projectDocumentId));
+		$newCount = count($this->db['fieldValues']);
+		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE VALUES: Removed ' . ($oldCount - $newCount) . ' existing values' . PHP_EOL, FILE_APPEND);
+		
+		// add new field values
+		$addedCount = 0;
 		foreach ($kv as $k => $v) {
-			$this->db['fieldValues'][] = [ 'id' => $this->newId('fv'), 'projectDocumentId' => $projectDocumentId, 'key' => $k, 'value' => $v, 'updatedAt' => date(DATE_ATOM) ];
+			// Only save non-empty values or explicitly set empty values (like unchecked checkboxes)
+			if ($v !== '' || array_key_exists($k, $kv)) {
+				$newFieldValue = [ 'id' => $this->newId('fv'), 'projectDocumentId' => $projectDocumentId, 'key' => $k, 'value' => $v, 'updatedAt' => date(DATE_ATOM) ];
+				$this->db['fieldValues'][] = $newFieldValue;
+				file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE VALUES: Added field: ' . json_encode($newFieldValue) . PHP_EOL, FILE_APPEND);
+				$addedCount++;
+			}
 		}
+		
+		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE VALUES: Added ' . $addedCount . ' new values' . PHP_EOL, FILE_APPEND);
+		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE VALUES: Total field values after: ' . count($this->db['fieldValues']) . PHP_EOL, FILE_APPEND);
+		
 		// touch parent project updatedAt
 		$projectId = null;
 		foreach ($this->db['projectDocuments'] as $d) if ($d['id'] === $projectDocumentId) { $projectId = $d['projectId']; break; }
 		if ($projectId) { $this->touchProject($projectId); }
+		
+		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE VALUES: Saving to database...' . PHP_EOL, FILE_APPEND);
 		$this->save();
+		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE VALUES: Database saved successfully' . PHP_EOL, FILE_APPEND);
 	}
 
 	/** Update a project's display name and touch updatedAt. */
@@ -188,6 +223,100 @@ final class DataStore {
 
 	private function touchProject(string $projectId): void {
 		foreach ($this->db['projects'] as &$p) if ($p['id'] === $projectId) { $p['updatedAt'] = date(DATE_ATOM); break; }
+	}
+
+	// Custom Fields Management
+	public function getCustomFields(string $projectDocumentId): array {
+		$fields = array_values(array_filter($this->db['customFields'], fn($cf) => $cf['projectDocumentId'] === $projectDocumentId));
+		// Sort by order field, with fallback to creation order
+		usort($fields, function($a, $b) {
+			$orderA = $a['order'] ?? 999;
+			$orderB = $b['order'] ?? 999;
+			return $orderA <=> $orderB;
+		});
+		return $fields;
+	}
+
+	public function addCustomField(string $projectDocumentId, string $label, string $type = 'text', string $placeholder = '', bool $required = false): array {
+		// Get the next order number for this document
+		$existingFields = $this->getCustomFields($projectDocumentId);
+		$nextOrder = count($existingFields);
+		
+		$field = [
+			'id' => $this->newId('cf'),
+			'projectDocumentId' => $projectDocumentId,
+			'label' => $label,
+			'type' => $type,
+			'placeholder' => $placeholder,
+			'required' => $required,
+			'order' => $nextOrder,
+			'createdAt' => date(DATE_ATOM),
+			'updatedAt' => date(DATE_ATOM)
+		];
+		$this->db['customFields'][] = $field;
+		$this->touchProject($this->getProjectIdFromDocument($projectDocumentId));
+		$this->save();
+		return $field;
+	}
+
+	public function updateCustomField(string $fieldId, string $label, string $type = 'text', string $placeholder = '', bool $required = false): ?array {
+		foreach ($this->db['customFields'] as &$field) {
+			if ($field['id'] === $fieldId) {
+				$field['label'] = $label;
+				$field['type'] = $type;
+				$field['placeholder'] = $placeholder;
+				$field['required'] = $required;
+				$field['updatedAt'] = date(DATE_ATOM);
+				$this->touchProject($this->getProjectIdFromDocument($field['projectDocumentId']));
+				$this->save();
+				return $field;
+			}
+		}
+		return null;
+	}
+
+	public function deleteCustomField(string $fieldId): bool {
+		$projectDocumentId = null;
+		foreach ($this->db['customFields'] as $idx => $field) {
+			if ($field['id'] === $fieldId) {
+				$projectDocumentId = $field['projectDocumentId'];
+				unset($this->db['customFields'][$idx]);
+				break;
+			}
+		}
+		if ($projectDocumentId) {
+			$this->db['customFields'] = array_values($this->db['customFields']);
+			// Also remove any field values for this custom field
+			$this->db['fieldValues'] = array_values(array_filter($this->db['fieldValues'], fn($fv) => !str_starts_with($fv['key'], 'custom_' . $fieldId)));
+			$this->touchProject($this->getProjectIdFromDocument($projectDocumentId));
+			$this->save();
+			return true;
+		}
+		return false;
+	}
+
+	public function updateCustomFieldOrder(string $projectDocumentId, array $fieldIds): bool {
+		foreach ($this->db['customFields'] as &$field) {
+			if ($field['projectDocumentId'] === $projectDocumentId) {
+				$index = array_search($field['id'], $fieldIds);
+				if ($index !== false) {
+					$field['order'] = $index;
+					$field['updatedAt'] = date(DATE_ATOM);
+				}
+			}
+		}
+		$this->touchProject($this->getProjectIdFromDocument($projectDocumentId));
+		$this->save();
+		return true;
+	}
+
+	private function getProjectIdFromDocument(string $projectDocumentId): ?string {
+		foreach ($this->db['projectDocuments'] as $d) {
+			if ($d['id'] === $projectDocumentId) {
+				return $d['projectId'];
+			}
+		}
+		return null;
 	}
 }
 

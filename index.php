@@ -1,5 +1,5 @@
 <?php
-// Redirect to MVP app
-header('Location: mvp/index.php');
+// Redirect to MVP application dashboard
+header('Location: mvp/?route=dashboard');
 exit;
 ?>

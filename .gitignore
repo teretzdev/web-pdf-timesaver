@@ -1,0 +1,42 @@
+﻿# Composer
+/vendor/
+/composer.phar
+
+# Logs and temp
+/logs/
+*.log
+*.tmp
+*.temp
+
+# Build artifacts and generated output
+/output/
+
+# Node (monorepo subprojects)
+/mcp-field-editor/node_modules/
+/mcp-server/node_modules/
+/mcp-field-editor/dist/
+/mcp-server/dist/
+
+# OS & Editor files
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+
+# PHP/Testing caches
+.phpunit.result.cache
+coverage/
+.cache/
+
+# Package manager debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Sync conflict artifacts
+*.sync-conflict-*
+*sync-conflict*
+
+# Local env
+.env
+.env.*

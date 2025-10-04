@@ -6,20 +6,29 @@ declare(strict_types=1);
 require __DIR__ . '/lib/data.php';
 require __DIR__ . '/templates/registry.php';
 require __DIR__ . '/lib/fill_service.php';
+require __DIR__ . '/lib/pdf_field_service.php';
 require __DIR__ . '/lib/logger.php';
 
 use WebPdfTimeSaver\Mvp\DataStore;
 use WebPdfTimeSaver\Mvp\TemplateRegistry;
 use WebPdfTimeSaver\Mvp\FillService;
+use WebPdfTimeSaver\Mvp\PdfFieldService;
 
 $store = new DataStore(__DIR__ . '/../data/mvp.json');
 $templates = TemplateRegistry::load();
-$fill = new FillService();
+$fill = new FillService(__DIR__ . '/../output', $logger);
+$pdfFieldService = new PdfFieldService();
 $logger = new \WebPdfTimeSaver\Mvp\Logger();
 
-$route = $_GET['route'] ?? 'projects';
+$route = $_GET['route'] ?? 'dashboard';
 
 function render(string $view, array $vars = []): void {
+	global $store, $templates, $fill, $pdfFieldService, $logger;
+	$vars['store'] = $store;
+	$vars['templates'] = $templates;
+	$vars['fill'] = $fill;
+	$vars['pdfFieldService'] = $pdfFieldService;
+	$vars['logger'] = $logger;
 	extract($vars);
 	include __DIR__ . '/views/layout_header.php';
 	include __DIR__ . "/views/{$view}.php";
@@ -39,6 +48,24 @@ if ($needsSeed) {
 }
 
 switch ($route) {
+case 'dashboard':
+	$projects = $store->getProjects();
+	$clients = method_exists($store, 'getClients') ? $store->getClients() : [];
+	$recentDocuments = [];
+	foreach ($projects as $project) {
+		$docs = $store->getProjectDocuments($project['id']);
+		foreach ($docs as $doc) {
+			$doc['project'] = $project;
+			$recentDocuments[] = $doc;
+		}
+	}
+	usort($recentDocuments, function($a, $b) {
+		return strtotime($b['createdAt'] ?? '') <=> strtotime($a['createdAt'] ?? '');
+	});
+	$recentDocuments = array_slice($recentDocuments, 0, 5);
+	render('dashboard', [ 'projects' => $projects, 'clients' => $clients, 'recentDocuments' => $recentDocuments, 'templates' => $templates ]);
+	break;
+
 case 'projects':
     $projects = $store->getProjects();
     $q = isset($_GET['q']) ? trim((string)$_GET['q']) : '';
@@ -108,10 +135,34 @@ case 'projects':
 		$db = $prop->getValue($store);
 		foreach ($db['projects'] as &$p) if ($p['id'] === $id) { $p['status'] = $status; $p['updatedAt'] = date(DATE_ATOM); break; }
 		@file_put_contents(__DIR__ . '/../data/mvp.json', json_encode($db, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
-		header('Location: ?route=projects');
+		header('Location: ?route=dashboard');
 		exit;
 
 	case 'populate':
+		$logFile = __DIR__ . '/../logs/pdf_debug.log';
+		$pdId = (string)($_GET['pd'] ?? '');
+		file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Accessing populate form for PD ID: ' . $pdId . PHP_EOL, FILE_APPEND);
+		
+		$projDoc = $store->getProjectDocumentById($pdId);
+		if (!$projDoc) {
+			file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Project document not found' . PHP_EOL, FILE_APPEND);
+			header('HTTP/1.1 404 Not Found');
+			echo 'Document not found';
+			exit;
+		}
+		
+		$template = $templates[$projDoc['templateId']] ?? null;
+		file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Template ID: ' . ($projDoc['templateId'] ?? 'NONE') . PHP_EOL, FILE_APPEND);
+		file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Template found: ' . ($template ? 'YES' : 'NO') . PHP_EOL, FILE_APPEND);
+		
+		$values = $store->getFieldValues($pdId);
+		$customFields = $store->getCustomFields($pdId);
+		
+		file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Rendering populate form with values: ' . json_encode($values) . PHP_EOL, FILE_APPEND);
+		render('populate', [ 'projectDocument' => $projDoc, 'template' => $template, 'values' => $values, 'customFields' => $customFields ]);
+		break;
+
+	case 'populate_test':
 		$pdId = (string)($_GET['pd'] ?? '');
 		$projDoc = $store->getProjectDocumentById($pdId);
 		if (!$projDoc) {
@@ -120,8 +171,14 @@ case 'projects':
 			exit;
 		}
 		$template = $templates[$projDoc['templateId']] ?? null;
+		error_log("Template lookup for " . $projDoc['templateId'] . ": " . ($template ? 'FOUND' : 'NOT_FOUND'));
 		$values = $store->getFieldValues($pdId);
-		render('populate', [ 'projectDocument' => $projDoc, 'template' => $template, 'values' => $values ]);
+		$project = $store->getProject($projDoc['projectId']);
+		$client = null;
+		if ($project && !empty($project['clientId']) && method_exists($store, 'getClient')) {
+			$client = $store->getClient($project['clientId']);
+		}
+		render('populate_test', [ 'projectDocument' => $projDoc, 'template' => $template, 'fieldValues' => $values, 'project' => $project, 'client' => $client, 'templates' => $templates ]);
 		break;
 
 	case 'actions/create-project':
@@ -149,6 +206,51 @@ case 'projects':
 		header('Location: ?route=clients');
 		exit;
 
+	case 'actions/update-client-status':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ?route=clients'); exit; }
+		$clientId = (string)($_POST['clientId'] ?? '');
+		$status = (string)($_POST['status'] ?? 'active');
+		if ($clientId !== '') {
+			$ref = new \ReflectionClass($store);
+			$prop = $ref->getProperty('db');
+			$prop->setAccessible(true);
+			$db = $prop->getValue($store);
+			foreach ($db['clients'] as &$c) {
+				if ($c['id'] === $clientId) {
+					$c['status'] = $status;
+					$c['updatedAt'] = date(DATE_ATOM);
+					break;
+				}
+			}
+			file_put_contents(__DIR__ . '/../data/mvp.json', json_encode($db, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
+		}
+		header('Location: ?route=clients');
+		exit;
+
+	case 'actions/delete-client':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ?route=clients'); exit; }
+		$clientId = (string)($_POST['clientId'] ?? '');
+		if ($clientId !== '') {
+			$ref = new \ReflectionClass($store);
+			$prop = $ref->getProperty('db');
+			$prop->setAccessible(true);
+			$db = $prop->getValue($store);
+			
+			// Remove client
+			$db['clients'] = array_values(array_filter($db['clients'], fn($c) => $c['id'] !== $clientId));
+			
+			// Remove projects for this client
+			$db['projects'] = array_values(array_filter($db['projects'], fn($p) => $p['clientId'] !== $clientId));
+			
+			// Remove project documents for deleted projects
+			$deletedProjectIds = array_column(array_filter($db['projects'], fn($p) => $p['clientId'] === $clientId), 'id');
+			$db['projectDocuments'] = array_values(array_filter($db['projectDocuments'], fn($pd) => !in_array($pd['projectId'], $deletedProjectIds)));
+			
+			file_put_contents(__DIR__ . '/../data/mvp.json', json_encode($db, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
+		}
+		header('Location: ?route=clients');
+		exit;
+
 	case 'actions/update-project-name':
 		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ?route=projects'); exit; }
 		$projectId = (string)($_POST['id'] ?? '');
@@ -166,30 +268,54 @@ case 'projects':
 		exit;
 
 	case 'actions/save-fields':
-		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ?route=projects'); exit; }
+		$logFile = __DIR__ . '/../logs/pdf_debug.log';
+		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Request method: ' . $_SERVER['REQUEST_METHOD'] . PHP_EOL, FILE_APPEND);
+		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: POST data: ' . json_encode($_POST) . PHP_EOL, FILE_APPEND);
+		
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { 
+			file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Not POST request, redirecting' . PHP_EOL, FILE_APPEND);
+			header('Location: ?route=projects'); 
+			exit; 
+		}
+		
 		$pdId = (string)($_POST['projectDocumentId'] ?? '');
+		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: PD ID: ' . $pdId . PHP_EOL, FILE_APPEND);
+		
 		$data = $_POST;
 		unset($data['projectDocumentId']);
+		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Data to save: ' . json_encode($data) . PHP_EOL, FILE_APPEND);
+		
 		$store->saveFieldValues($pdId, $data);
-		header('Location: ?route=populate&pd=' . urlencode($pdId));
+		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Values saved successfully' . PHP_EOL, FILE_APPEND);
+		
+		header('Location: ?route=populate&pd=' . urlencode($pdId) . '&saved=1');
 		exit;
 
 	case 'actions/generate':
 		$pdId = (string)($_GET['pd'] ?? '');
 		$projDoc = $store->getProjectDocumentById($pdId);
-		if (!$projDoc) { header('Location: ?route=projects'); exit; }
+		if (!$projDoc) { header('Location: ?route=dashboard'); exit; }
 		$template = $templates[$projDoc['templateId']] ?? null;
 		$values = $store->getFieldValues($pdId);
-		try {
-			$result = $fill->generateSimplePdf($template ?? [], $values);
+		
+		// Debug: Log what we're working with
+		$logFile = __DIR__ . '/../logs/pdf_debug.log';
+		file_put_contents($logFile, date('Y-m-d H:i:s') . ' GENERATE DEBUG: PD ID: ' . $pdId . PHP_EOL, FILE_APPEND);
+		file_put_contents($logFile, date('Y-m-d H:i:s') . ' GENERATE DEBUG: Template: ' . json_encode($template) . PHP_EOL, FILE_APPEND);
+		file_put_contents($logFile, date('Y-m-d H:i:s') . ' GENERATE DEBUG: Values: ' . json_encode($values) . PHP_EOL, FILE_APPEND);
+		
+        try {
+            $result = $fill->generateSimplePdf($template ?? [], $values, ['pdId' => $pdId]);
+            $logger->info('actions/generate success: ' . json_encode($result), ['pdId' => $pdId]);
 		} catch (\Throwable $e) {
-			$logger->error('PDF generation failed for pd=' . $pdId . ' : ' . $e->getMessage());
+            error_log('PDF generation failed for pd=' . $pdId . ' : ' . $e->getMessage());
+            $logger->error('PDF generation failed for pd=' . $pdId . ' : ' . $e->getMessage(), ['pdId' => $pdId]);
 			header('Location: ?route=project&id=' . urlencode($projDoc['projectId']));
 			exit;
 		}
 		// persist path and status
 		$projDoc['status'] = 'ready_to_sign';
-		$projDoc['outputPath'] = $result['path'];
+		$projDoc['outputPath'] = $result['filename']; // Store relative path only
 		// naive update
 		$docs = $store->getProjectDocuments($projDoc['projectId']);
 		// replace in DB
@@ -200,20 +326,103 @@ case 'projects':
 		foreach ($db['projectDocuments'] as &$d) if ($d['id'] === $pdId) { $d = $projDoc; break; }
 		foreach ($db['projects'] as &$p) if ($p['id'] === $projDoc['projectId']) { $p['updatedAt'] = date(DATE_ATOM); break; }
 		file_put_contents(__DIR__ . '/../data/mvp.json', json_encode($db, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
-		header('Location: ?route=project&id=' . urlencode($projDoc['projectId']));
+		header('Location: ?route=actions/download&pd=' . urlencode($pdId));
 		exit;
+
+	case 'preview':
+		$pdId = (string)($_GET['pd'] ?? '');
+		$projDoc = $store->getProjectDocumentById($pdId);
+		if (!$projDoc) {
+			header('HTTP/1.1 404 Not Found');
+			echo 'Document not found';
+			exit;
+		}
+		$template = $templates[$projDoc['templateId']] ?? null;
+		$values = $store->getFieldValues($pdId);
+		render('preview', [ 'projectDocument' => $projDoc, 'template' => $template, 'values' => $values ]);
+		break;
+
+	case 'pdf-preview':
+		$pdId = (string)($_GET['pd'] ?? '');
+		$projDoc = $store->getProjectDocumentById($pdId);
+		if (!$projDoc) {
+			header('HTTP/1.1 404 Not Found');
+			echo 'Document not found';
+			exit;
+		}
+		$template = $templates[$projDoc['templateId']] ?? null;
+		$values = $store->getFieldValues($pdId);
+		$customFields = $store->getCustomFields($pdId);
+		
+		// Get PDF form fields (for now using sample data)
+		$pdfFields = $pdfFieldService->getSamplePdfFields();
+		
+		render('pdf-preview', [ 
+			'projectDocument' => $projDoc, 
+			'template' => $template, 
+			'values' => $values,
+			'customFields' => $customFields,
+			'pdfFields' => $pdfFields
+		]);
+		break;
 
 	case 'actions/download':
 		$pdId = (string)($_GET['pd'] ?? '');
 		$projDoc = $store->getProjectDocumentById($pdId);
-		$path = $projDoc['outputPath'] ?? '';
-		if (!$path || !file_exists($path)) { header('Location: ?route=project&id=' . urlencode($projDoc['projectId'])); exit; }
+		$filename = $projDoc['outputPath'] ?? '';
+		
+		// Debug: Log download attempt
+		error_log("Download Debug - PD ID: " . $pdId);
+		error_log("Filename: " . $filename);
+		error_log("Project Document: " . json_encode($projDoc));
+		
+		if (!$filename) { 
+			error_log("No filename found for document");
+			header('Location: ?route=documents'); 
+			exit; 
+		}
+		
+		// Security: Build path within output directory
+		$outputDir = realpath(__DIR__ . '/../output');
+		$path = $outputDir . DIRECTORY_SEPARATOR . basename($filename);
+		
+		error_log("Output Dir: " . $outputDir);
+		error_log("Full Path: " . $path);
+		error_log("File exists: " . (file_exists($path) ? 'YES' : 'NO'));
+		
+		if (!file_exists($path)) { 
+			error_log("File does not exist at path: " . $path);
+			header('Location: ?route=documents'); 
+			exit; 
+		}
+		
 		header('Content-Type: application/pdf');
-		// Use basename and fallback filename; ensure safe header
-		$fn = basename($path) ?: 'document.pdf';
-		header('Content-Disposition: attachment; filename="' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $fn) . '"');
-		$read = readfile($path);
-		if ($read === false) { http_response_code(500); echo 'Failed to read file.'; }
+		header('Content-Disposition: attachment; filename="' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $filename) . '"');
+		readfile($path);
+		exit;
+
+	case 'actions/download-signed':
+		$pdId = (string)($_GET['pd'] ?? '');
+		$projDoc = $store->getProjectDocumentById($pdId);
+		$filename = $projDoc['signedPath'] ?? '';
+		
+		if (!$filename) { 
+			header('Location: ?route=documents'); 
+			exit; 
+		}
+		
+		// Security: Build path within output directory
+		$outputDir = realpath(__DIR__ . '/../output');
+		$path = $outputDir . DIRECTORY_SEPARATOR . basename($filename);
+		
+		if (!file_exists($path)) { 
+			header('Location: ?route=documents'); 
+			exit; 
+		}
+		
+		header('Content-Type: application/pdf');
+		header('Content-Disposition: attachment; filename="' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $filename) . '"');
+		readfile($path);
 		exit;
 
 	case 'actions/update-doc-status':
@@ -251,32 +460,138 @@ case 'projects':
 	case 'actions/sign':
 		$pdId = (string)($_GET['pd'] ?? '');
 		$projDoc = $store->getProjectDocumentById($pdId);
-		if (!$projDoc) { header('Location: ?route=projects'); exit; }
-		$path = $projDoc['outputPath'] ?? '';
-		if (!$path || !file_exists($path)) { header('Location: ?route=project&id=' . urlencode($projDoc['projectId'])); exit; }
+		if (!$projDoc) { header('Location: ?route=documents'); exit; }
+		$filename = $projDoc['outputPath'] ?? '';
+		if (!$filename) { header('Location: ?route=documents'); exit; }
+		
+		// Build full path
+		$outputDir = realpath(__DIR__ . '/../output');
+		$path = $outputDir . DIRECTORY_SEPARATOR . basename($filename);
+		
+		if (!file_exists($path)) { header('Location: ?route=documents'); exit; }
 		try {
 			$result = $fill->stampSigned($path);
 		} catch (\Throwable $e) {
 			$logger->error('PDF signing failed for pd=' . $pdId . ' path=' . $path . ' : ' . $e->getMessage());
-			header('Location: ?route=project&id=' . urlencode($projDoc['projectId']));
+			header('Location: ?route=documents');
 			exit;
 		}
 		$ref = new \ReflectionClass($store);
 		$prop = $ref->getProperty('db');
 		$prop->setAccessible(true);
 		$db = $prop->getValue($store);
-		foreach ($db['projectDocuments'] as &$d) if ($d['id'] === $pdId) { $d['status'] = 'signed'; $d['signedPath'] = $result['path']; }
+		foreach ($db['projectDocuments'] as &$d) if ($d['id'] === $pdId) { $d['status'] = 'signed'; $d['signedPath'] = $result['filename']; }
 		foreach ($db['projects'] as &$p) if ($p['id'] === $projDoc['projectId']) { $p['updatedAt'] = date(DATE_ATOM); }
 		file_put_contents(__DIR__ . '/../data/mvp.json', json_encode($db, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
-		header('Location: ?route=project&id=' . urlencode($projDoc['projectId']));
+		header('Location: ?route=documents');
 		exit;
+
+	case 'actions/add-custom-field':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ?route=projects'); exit; }
+		$pdId = (string)($_POST['projectDocumentId'] ?? '');
+		$label = trim((string)($_POST['label'] ?? ''));
+		$type = (string)($_POST['type'] ?? 'text');
+		$placeholder = trim((string)($_POST['placeholder'] ?? ''));
+		$required = !empty($_POST['required']);
+		if ($pdId !== '' && $label !== '') {
+			$store->addCustomField($pdId, $label, $type, $placeholder, $required);
+		}
+		header('Location: ?route=populate&pd=' . urlencode($pdId));
+		exit;
+
+	case 'actions/update-custom-field':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ?route=projects'); exit; }
+		$fieldId = (string)($_POST['fieldId'] ?? '');
+		$label = trim((string)($_POST['label'] ?? ''));
+		$type = (string)($_POST['type'] ?? 'text');
+		$placeholder = trim((string)($_POST['placeholder'] ?? ''));
+		$required = !empty($_POST['required']);
+		$pdId = (string)($_POST['projectDocumentId'] ?? '');
+		if ($fieldId !== '' && $label !== '') {
+			$store->updateCustomField($fieldId, $label, $type, $placeholder, $required);
+		}
+		header('Location: ?route=populate&pd=' . urlencode($pdId));
+		exit;
+
+	case 'actions/delete-custom-field':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ?route=projects'); exit; }
+		$fieldId = (string)($_POST['fieldId'] ?? '');
+		$pdId = (string)($_POST['projectDocumentId'] ?? '');
+		if ($fieldId !== '') {
+			$store->deleteCustomField($fieldId);
+		}
+		header('Location: ?route=populate&pd=' . urlencode($pdId));
+		exit;
+
+	case 'actions/update-custom-field-order':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ?route=projects'); exit; }
+		$pdId = (string)($_POST['projectDocumentId'] ?? '');
+		$fieldIds = $_POST['fieldIds'] ?? [];
+		if ($pdId !== '' && is_array($fieldIds)) {
+			$store->updateCustomFieldOrder($pdId, $fieldIds);
+		}
+		header('Content-Type: application/json');
+		echo json_encode(['success' => true]);
+		exit;
+
+	case 'documents':
+		// Get all documents across all projects
+		$allDocuments = [];
+		$projects = $store->getProjects();
+		foreach ($projects as $project) {
+			$docs = $store->getProjectDocuments($project['id']);
+			foreach ($docs as $doc) {
+				$doc['project'] = $project;
+				$doc['client'] = null;
+				if (!empty($project['clientId']) && method_exists($store, 'getClient')) {
+					$doc['client'] = $store->getClient($project['clientId']);
+				}
+				$allDocuments[] = $doc;
+			}
+		}
+		// Sort by creation date (newest first)
+		usort($allDocuments, function($a, $b) {
+			return strtotime($b['createdAt'] ?? '') <=> strtotime($a['createdAt'] ?? '');
+		});
+		render('documents', [ 'documents' => $allDocuments, 'templates' => $templates ]);
+		break;
+
+	case 'templates':
+		render('templates', [ 'templates' => $templates ]);
+		break;
+
+	case 'template-edit':
+		$templateId = (string)($_GET['id'] ?? '');
+		$template = $templates[$templateId] ?? null;
+		if (!$template) {
+			header('Location: ?route=templates');
+			exit;
+		}
+		render('template-edit', [ 'template' => $template, 'templateId' => $templateId ]);
+		break;
+
+	case 'activities':
+		render('activities');
+		break;
+
+	case 'bills':
+		render('bills');
+		break;
+
+	case 'reports':
+		render('reports');
+		break;
+
+	case 'settings':
+		render('settings');
+		break;
 
 	case 'support':
 		render('support');
 		break;
 
 	default:
-		header('Location: ?route=projects');
+		header('Location: ?route=dashboard');
 		exit;
 }
 

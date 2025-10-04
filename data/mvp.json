@@ -1,12 +1,38 @@
 {
-    "clients": [],
+    "clients": [
+        {
+            "id": "c_ee68dcb903cd",
+            "displayName": "Teretz",
+            "email": "teretz@gmail.com",
+            "phone": "3144670696",
+            "createdAt": "2025-09-30T18:19:39+02:00",
+            "updatedAt": "2025-09-30T18:19:39+02:00"
+        },
+        {
+            "id": "c_9f4a923bd80b",
+            "displayName": "Test Client",
+            "email": "test@example.com",
+            "phone": "555-1234",
+            "createdAt": "2025-09-30T18:22:08+02:00",
+            "updatedAt": "2025-09-30T18:22:08+02:00"
+        }
+    ],
     "projects": [
         {
             "id": "p_96a2f256682d",
             "clientId": "",
             "name": "test01",
             "status": "in_progress",
-            "createdAt": "2025-09-29T09:10:24+02:00"
+            "createdAt": "2025-09-29T09:10:24+02:00",
+            "updatedAt": "2025-10-03T02:28:42+02:00"
+        },
+        {
+            "id": "p_c3669af4ef03",
+            "clientId": "",
+            "name": "Test Project Workflow",
+            "status": "in_progress",
+            "createdAt": "2025-09-30T18:25:57+02:00",
+            "updatedAt": "2025-10-02T03:04:58+02:00"
         }
     ],
     "projectDocuments": [
@@ -14,9 +40,148 @@
             "id": "pd_56e3fb740725",
             "projectId": "p_96a2f256682d",
             "templateId": "t_fl105_gc120",
-            "status": "in_progress",
-            "createdAt": "2025-09-29T09:10:32+02:00"
+            "status": "ready_to_sign",
+            "createdAt": "2025-09-29T09:10:32+02:00",
+            "outputPath": "mvp_20251002_043347_t_fl105_gc120.pdf",
+            "signedPath": "signed_mvp_20250930_182519_t_fl105_gc120.pdf"
+        },
+        {
+            "id": "pd_734a1ef107ba",
+            "projectId": "p_c3669af4ef03",
+            "templateId": "t_fl105_gc120",
+            "status": "ready_to_sign",
+            "createdAt": "2025-09-30T18:26:09+02:00",
+            "outputPath": "mvp_20251002_030458_t_fl105_gc120.pdf"
+        },
+        {
+            "id": "pd_98e14ae1e0be",
+            "projectId": "p_96a2f256682d",
+            "templateId": "t_fl100_gc120",
+            "status": "ready_to_sign",
+            "createdAt": "2025-10-02T04:49:23+02:00",
+            "outputPath": "mvp_20251003_022842_t_fl100_gc120.pdf"
         }
     ],
-    "fieldValues": []
+    "fieldValues": [
+        {
+            "id": "fv_ce4d6d15b02a",
+            "projectDocumentId": "pd_56e3fb740725",
+            "key": "attorney_name",
+            "value": "John Smith",
+            "updatedAt": "2025-09-30T18:24:57+02:00"
+        },
+        {
+            "id": "fv_2fedf8554674",
+            "projectDocumentId": "pd_56e3fb740725",
+            "key": "attorney_firm",
+            "value": "Smith ",
+            "updatedAt": "2025-09-30T18:24:57+02:00"
+        },
+        {
+            "id": "fv_49b256e08c2f",
+            "projectDocumentId": "pd_56e3fb740725",
+            "key": "Associates",
+            "value": "",
+            "updatedAt": "2025-09-30T18:24:57+02:00"
+        },
+        {
+            "id": "fv_74f989a11ef6",
+            "projectDocumentId": "pd_56e3fb740725",
+            "key": "attorney_bar",
+            "value": "12345",
+            "updatedAt": "2025-09-30T18:24:57+02:00"
+        },
+        {
+            "id": "fv_742213bc62c1",
+            "projectDocumentId": "pd_56e3fb740725",
+            "key": "court_branch",
+            "value": "Superior Court",
+            "updatedAt": "2025-09-30T18:24:57+02:00"
+        },
+        {
+            "id": "fv_dc209c696985",
+            "projectDocumentId": "pd_56e3fb740725",
+            "key": "petitioner_name",
+            "value": "Jane Doe",
+            "updatedAt": "2025-09-30T18:24:57+02:00"
+        },
+        {
+            "id": "fv_e23c310a6faa",
+            "projectDocumentId": "pd_56e3fb740725",
+            "key": "respondent_name",
+            "value": "Bob Johnson",
+            "updatedAt": "2025-09-30T18:24:57+02:00"
+        },
+        {
+            "id": "fv_fl100_001",
+            "projectDocumentId": "pd_98e14ae1e0be",
+            "key": "attorney_name",
+            "value": "John Smith",
+            "updatedAt": "2025-10-02T05:10:00+02:00"
+        },
+        {
+            "id": "fv_fl100_002",
+            "projectDocumentId": "pd_98e14ae1e0be",
+            "key": "attorney_firm",
+            "value": "Smith & Associates Law Firm",
+            "updatedAt": "2025-10-02T05:10:00+02:00"
+        },
+        {
+            "id": "fv_fl100_003",
+            "projectDocumentId": "pd_98e14ae1e0be",
+            "key": "attorney_address",
+            "value": "123 Main Street",
+            "updatedAt": "2025-10-02T05:10:00+02:00"
+        },
+        {
+            "id": "fv_fl100_004",
+            "projectDocumentId": "pd_98e14ae1e0be",
+            "key": "attorney_city_state_zip",
+            "value": "Los Angeles, CA 90210",
+            "updatedAt": "2025-10-02T05:10:00+02:00"
+        },
+        {
+            "id": "fv_fl100_005",
+            "projectDocumentId": "pd_98e14ae1e0be",
+            "key": "attorney_phone",
+            "value": "(555) 123-4567",
+            "updatedAt": "2025-10-02T05:10:00+02:00"
+        },
+        {
+            "id": "fv_fl100_006",
+            "projectDocumentId": "pd_98e14ae1e0be",
+            "key": "attorney_email",
+            "value": "john.smith@lawfirm.com",
+            "updatedAt": "2025-10-02T05:10:00+02:00"
+        },
+        {
+            "id": "fv_fl100_007",
+            "projectDocumentId": "pd_98e14ae1e0be",
+            "key": "attorney_bar_number",
+            "value": "123456",
+            "updatedAt": "2025-10-02T05:10:00+02:00"
+        },
+        {
+            "id": "fv_fl100_008",
+            "projectDocumentId": "pd_98e14ae1e0be",
+            "key": "case_number",
+            "value": "FL100-2024-001",
+            "updatedAt": "2025-10-02T05:10:00+02:00"
+        },
+        {
+            "id": "fv_fl100_009",
+            "projectDocumentId": "pd_98e14ae1e0be",
+            "key": "petitioner_name",
+            "value": "Jane Doe",
+            "updatedAt": "2025-10-02T05:10:00+02:00"
+        },
+        {
+            "id": "fv_fl100_010",
+            "projectDocumentId": "pd_98e14ae1e0be",
+            "key": "respondent_name",
+            "value": "John Doe",
+            "updatedAt": "2025-10-02T05:10:00+02:00"
+        }
+    ],
+    "customFields": []
 }
