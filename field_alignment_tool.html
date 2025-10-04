@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FL-100 Field Alignment Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        
+        .controls {
+            padding: 20px;
+            background: #ecf0f1;
+            border-bottom: 1px solid #bdc3c7;
+        }
+        
+        .control-group {
+            display: inline-block;
+            margin-right: 20px;
+        }
+        
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .control-group select,
+        .control-group input {
+            padding: 8px;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+        
+        .form-container {
+            position: relative;
+            margin: 20px;
+            background: white;
+            border: 1px solid #bdc3c7;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .form-background {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+        
+        .field-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        
+        .field-box {
+            position: absolute;
+            border: 2px solid #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+            pointer-events: auto;
+            cursor: move;
+            transition: all 0.2s ease;
+        }
+        
+        .field-box:hover {
+            border-color: #c0392b;
+            background: rgba(231, 76, 60, 0.2);
+        }
+        
+        .field-box.selected {
+            border-color: #27ae60;
+            background: rgba(39, 174, 96, 0.2);
+        }
+        
+        .field-label {
+            position: absolute;
+            top: -20px;
+            left: 0;
+            background: #2c3e50;
+            color: white;
+            padding: 2px 6px;
+            font-size: 10px;
+            border-radius: 2px;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+        
+        .field-info {
+            position: absolute;
+            bottom: -25px;
+            left: 0;
+            background: #34495e;
+            color: white;
+            padding: 2px 6px;
+            font-size: 9px;
+            border-radius: 2px;
+            white-space: nowrap;
+            pointer-events: none;
+        }
+        
+        .field-type-checkbox {
+            border-radius: 50%;
+        }
+        
+        .field-type-textarea {
+            border-style: dashed;
+        }
+        
+        .legend {
+            padding: 20px;
+            background: #ecf0f1;
+            border-top: 1px solid #bdc3c7;
+        }
+        
+        .legend h3 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        
+        .legend-item {
+            display: inline-block;
+            margin-right: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .legend-color {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        
+        .legend-color.checkbox {
+            border-radius: 50%;
+        }
+        
+        .legend-color.textarea {
+            border-style: dashed;
+        }
+        
+        .coordinates {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 FL-100 Field Alignment Tool</h1>
+            <p>Visual field positioning with FL-100 form background</p>
+        </div>
+        
+        <div class="controls">
+            <div class="control-group">
+                <label for="fieldFilter">Filter Fields:</label>
+                <select id="fieldFilter">
+                    <option value="all">All Fields</option>
+                    <option value="attorney">Attorney Section</option>
+                    <option value="court">Court Section</option>
+                    <option value="party">Party Section</option>
+                    <option value="marriage">Marriage Section</option>
+                    <option value="relief">Relief Section</option>
+                    <option value="children">Children Section</option>
+                    <option value="signature">Signature Section</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label for="fieldType">Field Type:</label>
+                <select id="fieldType">
+                    <option value="all">All Types</option>
+                    <option value="text">Text Fields</option>
+                    <option value="checkbox">Checkboxes</option>
+                    <option value="textarea">Text Areas</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label for="showLabels">Show Labels:</label>
+                <input type="checkbox" id="showLabels" checked>
+            </div>
+            
+            <div class="control-group">
+                <label for="showCoordinates">Show Coordinates:</label>
+                <input type="checkbox" id="showCoordinates" checked>
+            </div>
+        </div>
+        
+        <div class="form-container">
+            <img src="uploads/fl100_background.png" alt="FL-100 Form Background" class="form-background" id="formBackground">
+            <div class="field-overlay" id="fieldOverlay"></div>
+        </div>
+        
+        <div class="legend">
+            <h3>Legend</h3>
+            <div class="legend-item">
+                <span class="legend-color"></span>
+                Text Fields
+            </div>
+            <div class="legend-item">
+                <span class="legend-color checkbox"></span>
+                Checkboxes
+            </div>
+            <div class="legend-item">
+                <span class="legend-color textarea"></span>
+                Text Areas
+            </div>
+        </div>
+    </div>
+    
+    <div class="coordinates" id="coordinates">
+        Mouse: (0, 0)<br>
+        Selected: None
+    </div>
+
+    <script>
+        // Field positions data
+        const fieldPositions = {
+            "attorney_name": { "x": 35, "y": 30, "width": 100, "height": 8, "type": "text", "label": "Attorney Name", "section": "attorney" },
+            "attorney_bar_number": { "x": 145, "y": 30, "width": 50, "height": 8, "type": "text", "label": "State Bar Number", "section": "attorney" },
+            "attorney_firm": { "x": 35, "y": 35, "width": 120, "height": 8, "type": "text", "label": "Law Firm Name", "section": "attorney" },
+            "attorney_address": { "x": 35, "y": 40, "width": 120, "height": 8, "type": "text", "label": "Attorney Address", "section": "attorney" },
+            "attorney_city_state_zip": { "x": 35, "y": 45, "width": 120, "height": 8, "type": "text", "label": "City, State, ZIP", "section": "attorney" },
+            "attorney_phone": { "x": 35, "y": 50, "width": 60, "height": 8, "type": "text", "label": "Phone", "section": "attorney" },
+            "attorney_email": { "x": 120, "y": 50, "width": 80, "height": 8, "type": "text", "label": "Email", "section": "attorney" },
+            "case_number": { "x": 150, "y": 28, "width": 50, "height": 8, "type": "text", "label": "Case Number", "section": "court" },
+            "court_county": { "x": 52, "y": 115, "width": 100, "height": 8, "type": "text", "label": "County", "section": "court" },
+            "court_address": { "x": 52, "y": 122, "width": 120, "height": 8, "type": "text", "label": "Court Address", "section": "court" },
+            "case_type": { "x": 52, "y": 129, "width": 100, "height": 8, "type": "text", "label": "Case Type", "section": "court" },
+            "filing_date": { "x": 52, "y": 136, "width": 80, "height": 8, "type": "text", "label": "Filing Date", "section": "court" },
+            "petitioner_name": { "x": 58, "y": 148, "width": 100, "height": 8, "type": "text", "label": "Petitioner Name", "section": "party" },
+            "respondent_name": { "x": 58, "y": 156, "width": 100, "height": 8, "type": "text", "label": "Respondent Name", "section": "party" },
+            "petitioner_address": { "x": 53, "y": 166, "width": 120, "height": 8, "type": "text", "label": "Petitioner Address", "section": "party" },
+            "petitioner_phone": { "x": 53, "y": 175, "width": 80, "height": 8, "type": "text", "label": "Petitioner Phone", "section": "party" },
+            "respondent_address": { "x": 53, "y": 185, "width": 120, "height": 8, "type": "text", "label": "Respondent Address", "section": "party" },
+            "marriage_date": { "x": 53, "y": 197, "width": 80, "height": 8, "type": "text", "label": "Marriage Date", "section": "marriage" },
+            "separation_date": { "x": 53, "y": 205, "width": 80, "height": 8, "type": "text", "label": "Separation Date", "section": "marriage" },
+            "marriage_location": { "x": 53, "y": 213, "width": 100, "height": 8, "type": "text", "label": "Marriage Location", "section": "marriage" },
+            "grounds_for_dissolution": { "x": 53, "y": 222, "width": 120, "height": 8, "type": "text", "label": "Grounds for Dissolution", "section": "marriage" },
+            "dissolution_type": { "x": 28, "y": 238, "width": 8, "height": 8, "type": "checkbox", "label": "Dissolution", "section": "relief" },
+            "property_division": { "x": 28, "y": 247, "width": 8, "height": 8, "type": "checkbox", "label": "Property Division", "section": "relief" },
+            "spousal_support": { "x": 28, "y": 256, "width": 8, "height": 8, "type": "checkbox", "label": "Spousal Support", "section": "relief" },
+            "attorney_fees": { "x": 28, "y": 265, "width": 8, "height": 8, "type": "checkbox", "label": "Attorney Fees", "section": "relief" },
+            "name_change": { "x": 28, "y": 274, "width": 8, "height": 8, "type": "checkbox", "label": "Name Change", "section": "relief" },
+            "has_children": { "x": 28, "y": 286, "width": 8, "height": 8, "type": "checkbox", "label": "No Children", "section": "children" },
+            "children_count": { "x": 53, "y": 295, "width": 20, "height": 8, "type": "text", "label": "Children Count", "section": "children" },
+            "additional_info": { "x": 53, "y": 305, "width": 120, "height": 15, "type": "textarea", "label": "Additional Information", "section": "signature" },
+            "attorney_signature": { "x": 53, "y": 325, "width": 100, "height": 8, "type": "text", "label": "Attorney Signature", "section": "signature" },
+            "signature_date": { "x": 53, "y": 336, "width": 80, "height": 8, "type": "text", "label": "Signature Date", "section": "signature" }
+        };
+
+        let selectedField = null;
+        let isDragging = false;
+        let dragOffset = { x: 0, y: 0 };
+
+        // Initialize the field overlay
+        function initializeFields() {
+            const overlay = document.getElementById('fieldOverlay');
+            overlay.innerHTML = '';
+
+            Object.entries(fieldPositions).forEach(([fieldId, field]) => {
+                const fieldBox = document.createElement('div');
+                fieldBox.className = `field-box field-type-${field.type}`;
+                fieldBox.id = `field-${fieldId}`;
+                fieldBox.style.left = `${field.x}px`;
+                fieldBox.style.top = `${field.y}px`;
+                fieldBox.style.width = `${field.width}px`;
+                fieldBox.style.height = `${field.height}px`;
+
+                const label = document.createElement('div');
+                label.className = 'field-label';
+                label.textContent = field.label;
+                label.style.display = document.getElementById('showLabels').checked ? 'block' : 'none';
+
+                const info = document.createElement('div');
+                info.className = 'field-info';
+                info.textContent = `${field.x}, ${field.y}`;
+                info.style.display = document.getElementById('showCoordinates').checked ? 'block' : 'none';
+
+                fieldBox.appendChild(label);
+                fieldBox.appendChild(info);
+                overlay.appendChild(fieldBox);
+
+                // Add event listeners
+                fieldBox.addEventListener('mousedown', (e) => startDrag(e, fieldId));
+                fieldBox.addEventListener('click', (e) => selectField(e, fieldId));
+            });
+        }
+
+        function startDrag(e, fieldId) {
+            e.preventDefault();
+            selectedField = fieldId;
+            isDragging = true;
+            
+            const fieldBox = document.getElementById(`field-${fieldId}`);
+            const rect = fieldBox.getBoundingClientRect();
+            const overlayRect = document.getElementById('fieldOverlay').getBoundingClientRect();
+            
+            dragOffset.x = e.clientX - rect.left;
+            dragOffset.y = e.clientY - rect.top;
+            
+            fieldBox.classList.add('selected');
+        }
+
+        function selectField(e, fieldId) {
+            e.stopPropagation();
+            
+            // Remove previous selection
+            document.querySelectorAll('.field-box.selected').forEach(box => {
+                box.classList.remove('selected');
+            });
+            
+            // Select current field
+            selectedField = fieldId;
+            document.getElementById(`field-${fieldId}`).classList.add('selected');
+            
+            updateCoordinates();
+        }
+
+        function updateCoordinates() {
+            const coordsDiv = document.getElementById('coordinates');
+            if (selectedField) {
+                const field = fieldPositions[selectedField];
+                coordsDiv.innerHTML = `Mouse: (0, 0)<br>Selected: ${selectedField}<br>Position: (${field.x}, ${field.y})<br>Size: ${field.width}×${field.height}`;
+            } else {
+                coordsDiv.innerHTML = 'Mouse: (0, 0)<br>Selected: None';
+            }
+        }
+
+        // Mouse move handler
+        document.addEventListener('mousemove', (e) => {
+            if (isDragging && selectedField) {
+                const overlayRect = document.getElementById('fieldOverlay').getBoundingClientRect();
+                const newX = e.clientX - overlayRect.left - dragOffset.x;
+                const newY = e.clientY - overlayRect.top - dragOffset.y;
+                
+                const fieldBox = document.getElementById(`field-${selectedField}`);
+                fieldBox.style.left = `${newX}px`;
+                fieldBox.style.top = `${newY}px`;
+                
+                // Update field positions
+                fieldPositions[selectedField].x = Math.round(newX);
+                fieldPositions[selectedField].y = Math.round(newY);
+                
+                // Update info display
+                const info = fieldBox.querySelector('.field-info');
+                info.textContent = `${Math.round(newX)}, ${Math.round(newY)}`;
+                
+                updateCoordinates();
+            }
+        });
+
+        // Mouse up handler
+        document.addEventListener('mouseup', () => {
+            isDragging = false;
+        });
+
+        // Filter controls
+        document.getElementById('fieldFilter').addEventListener('change', (e) => {
+            const filter = e.target.value;
+            Object.entries(fieldPositions).forEach(([fieldId, field]) => {
+                const fieldBox = document.getElementById(`field-${fieldId}`);
+                if (filter === 'all' || field.section === filter) {
+                    fieldBox.style.display = 'block';
+                } else {
+                    fieldBox.style.display = 'none';
+                }
+            });
+        });
+
+        document.getElementById('fieldType').addEventListener('change', (e) => {
+            const filter = e.target.value;
+            Object.entries(fieldPositions).forEach(([fieldId, field]) => {
+                const fieldBox = document.getElementById(`field-${fieldId}`);
+                if (filter === 'all' || field.type === filter) {
+                    fieldBox.style.display = 'block';
+                } else {
+                    fieldBox.style.display = 'none';
+                }
+            });
+        });
+
+        document.getElementById('showLabels').addEventListener('change', (e) => {
+            const show = e.target.checked;
+            document.querySelectorAll('.field-label').forEach(label => {
+                label.style.display = show ? 'block' : 'none';
+            });
+        });
+
+        document.getElementById('showCoordinates').addEventListener('change', (e) => {
+            const show = e.target.checked;
+            document.querySelectorAll('.field-info').forEach(info => {
+                info.style.display = show ? 'block' : 'none';
+            });
+        });
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeFields();
+        });
+    </script>
+</body>
+</html>

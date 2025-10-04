@@ -43,11 +43,6 @@ class FieldEditorMCPServer {
       {
         name: 'field-editor-mcp',
         version: '1.0.0',
-      },
-      {
-        capabilities: {
-          tools: {},
-        },
       }
     );
 
