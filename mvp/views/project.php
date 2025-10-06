@@ -78,9 +78,17 @@ if (!empty($project['clientId']) && $store && method_exists($store, 'getClient')
                             <?php elseif (!empty($d['outputPath'])): ?>
                                 <a href="?route=actions/download&pd=<?php echo htmlspecialchars($d['id']); ?>" class="clio-btn" style="padding: 6px 12px; font-size: 12px;">Download</a>
                             <?php else: ?>
-                                <a href="?route=populate&pd=<?php echo htmlspecialchars($d['id']); ?>" class="clio-btn-secondary" style="padding: 6px 12px; font-size: 12px;">Complete</a>
+                                <?php 
+                                // Use exact Clio UI for FL-100 forms
+                                $formRoute = ($d['templateId'] === 't_fl100_gc120') ? 'populate_clio' : 'populate';
+                                ?>
+                                <a href="?route=<?php echo $formRoute; ?>&pd=<?php echo htmlspecialchars($d['id']); ?>" class="clio-btn-secondary" style="padding: 6px 12px; font-size: 12px;">Complete</a>
                             <?php endif; ?>
-                            <a href="?route=populate&pd=<?php echo htmlspecialchars($d['id']); ?>" class="clio-btn-secondary" style="padding: 6px 12px; font-size: 12px;">Edit</a>
+                            <?php 
+                            // Use exact Clio UI for FL-100 forms
+                            $editRoute = ($d['templateId'] === 't_fl100_gc120') ? 'populate_clio' : 'populate';
+                            ?>
+                            <a href="?route=<?php echo $editRoute; ?>&pd=<?php echo htmlspecialchars($d['id']); ?>" class="clio-btn-secondary" style="padding: 6px 12px; font-size: 12px;">Edit</a>
                         </div>
                     </td>
                 </tr>
