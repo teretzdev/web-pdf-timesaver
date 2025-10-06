@@ -162,6 +162,21 @@ case 'projects':
 		render('populate', [ 'projectDocument' => $projDoc, 'template' => $template, 'values' => $values, 'customFields' => $customFields ]);
 		break;
 
+	case 'populate_simple':
+		// SIMPLE 1:1 CLIO CLONE - NO IMPROVEMENTS OR EXTRA FEATURES
+		$pdId = (string)($_GET['pd'] ?? '');
+		$projDoc = $store->getProjectDocumentById($pdId);
+		if (!$projDoc) {
+			header('HTTP/1.1 404 Not Found');
+			echo 'Document not found';
+			exit;
+		}
+		$template = $templates[$projDoc['templateId']] ?? null;
+		$values = $store->getFieldValues($pdId);
+		// Note: NO custom fields in simple view - Clio doesn't have this
+		render('populate_simple', [ 'projectDocument' => $projDoc, 'template' => $template, 'values' => $values ]);
+		break;
+
 	case 'populate_test':
 		$pdId = (string)($_GET['pd'] ?? '');
 		$projDoc = $store->getProjectDocumentById($pdId);
