@@ -17,6 +17,14 @@ if (!empty($projectDocument['projectId'])) {
 <div class="populate-header">
     <h2>Populate — <?php echo htmlspecialchars(($tpl['code'] ?? '') . ' ' . ($tpl['name'] ?? '')); ?></h2>
     <div class="populate-actions">
+        <a href="?route=workflow&pd=<?php echo htmlspecialchars($projectDocument['id']); ?>" class="btn secondary">
+            <span class="btn-icon">📝</span>
+            <span>Workflow Mode</span>
+        </a>
+        <a href="?route=panel-editor&pd=<?php echo htmlspecialchars($projectDocument['id']); ?>" class="btn secondary">
+            <span class="btn-icon">✏️</span>
+            <span>Edit Panels</span>
+        </a>
         <button type="submit" form="populate-form" class="btn">
             <span class="btn-icon">💾</span>
             <span>Save Form</span>

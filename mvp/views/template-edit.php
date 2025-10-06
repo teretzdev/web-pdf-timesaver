@@ -2,6 +2,9 @@
 
 <div class="row" style="gap: 16px; margin-bottom: 16px;">
     <a href="?route=templates" class="btn secondary">Back to Templates</a>
+    <a href="?route=panel-editor&id=<?php echo htmlspecialchars($templateId); ?>" class="btn">
+        <span style="margin-right: 5px;">✏️</span> Edit Panels
+    </a>
     <a href="?route=projects" class="btn secondary">Projects</a>
 </div>
 
