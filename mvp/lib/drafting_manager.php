@@ -276,7 +276,7 @@ class DraftingManager {
      * Save drafting state
      */
     private function saveDraftSessionState(array $drafting): void {
-        $draftingFile = __DIR__ . '/../../data/draftings/' . $drafting['id'] . '.json';
+        $draftingFile = __DIR__ . '/../../data/draft_sessions/' . $drafting['id'] . '.json';
         $draftingDir = dirname($draftingFile);
         
         if (!is_dir($draftingDir)) {
@@ -290,7 +290,7 @@ class DraftingManager {
      * Load drafting state
      */
     public function loadDraftSessionState(string $draftingId): ?array {
-        $draftingFile = __DIR__ . '/../../data/draftings/' . $draftingId . '.json';
+        $draftingFile = __DIR__ . '/../../data/draft_sessions/' . $draftingId . '.json';
         if (!file_exists($draftingFile)) {
             return null;
         }
@@ -302,7 +302,7 @@ class DraftingManager {
      * Get drafting by project document
      */
     public function getDraftSessionByDocument(string $projectDocumentId): ?array {
-        $draftingDir = __DIR__ . '/../../data/draftings/';
+        $draftingDir = __DIR__ . '/../../data/draft_sessions/';
         if (!is_dir($draftingDir)) {
             return null;
         }
