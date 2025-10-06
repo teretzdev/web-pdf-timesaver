@@ -177,6 +177,20 @@ case 'projects':
 		render('populate_simple', [ 'projectDocument' => $projDoc, 'template' => $template, 'values' => $values ]);
 		break;
 
+	case 'populate_clio':
+		// EXACT CLIO DRAFT UI CLONE - Matches draft.clio.com/panels/edit/
+		$pdId = (string)($_GET['pd'] ?? '');
+		$projDoc = $store->getProjectDocumentById($pdId);
+		if (!$projDoc) {
+			header('HTTP/1.1 404 Not Found');
+			echo 'Document not found';
+			exit;
+		}
+		$template = $templates[$projDoc['templateId']] ?? null;
+		$values = $store->getFieldValues($pdId);
+		render('populate_clio_exact', [ 'projectDocument' => $projDoc, 'template' => $template, 'values' => $values ]);
+		break;
+
 	case 'populate_test':
 		$pdId = (string)($_GET['pd'] ?? '');
 		$projDoc = $store->getProjectDocumentById($pdId);

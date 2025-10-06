@@ -79,14 +79,14 @@ if (!empty($project['clientId']) && $store && method_exists($store, 'getClient')
                                 <a href="?route=actions/download&pd=<?php echo htmlspecialchars($d['id']); ?>" class="clio-btn" style="padding: 6px 12px; font-size: 12px;">Download</a>
                             <?php else: ?>
                                 <?php 
-                                // Use simple form for FL-100 (1:1 Clio clone)
-                                $formRoute = ($d['templateId'] === 't_fl100_gc120') ? 'populate_simple' : 'populate';
+                                // Use exact Clio UI for FL-100 forms
+                                $formRoute = ($d['templateId'] === 't_fl100_gc120') ? 'populate_clio' : 'populate';
                                 ?>
                                 <a href="?route=<?php echo $formRoute; ?>&pd=<?php echo htmlspecialchars($d['id']); ?>" class="clio-btn-secondary" style="padding: 6px 12px; font-size: 12px;">Complete</a>
                             <?php endif; ?>
                             <?php 
-                            // Use simple form for FL-100 (1:1 Clio clone)
-                            $editRoute = ($d['templateId'] === 't_fl100_gc120') ? 'populate_simple' : 'populate';
+                            // Use exact Clio UI for FL-100 forms
+                            $editRoute = ($d['templateId'] === 't_fl100_gc120') ? 'populate_clio' : 'populate';
                             ?>
                             <a href="?route=<?php echo $editRoute; ?>&pd=<?php echo htmlspecialchars($d['id']); ?>" class="clio-btn-secondary" style="padding: 6px 12px; font-size: 12px;">Edit</a>
                         </div>
