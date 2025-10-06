@@ -1,6 +1,6 @@
 <?php
 /**
- * Panel Editor View - Clio-style workflow for editing form panels
+ * Drafting Editor View - Clio-style drafting interface for editing form sections
  * Provides drag-and-drop panel management, field editing, and live preview
  */
 
@@ -9,13 +9,13 @@ $templateId = $templateId ?? '';
 $projectDocumentId = $_GET['pd'] ?? '';
 ?>
 
-<div class="panel-editor-container">
+<div class="drafting-editor-container">
     <!-- Header with actions -->
     <div class="editor-header">
         <div class="header-left">
             <h2>
                 <span class="icon">✏️</span>
-                Panel Editor — <?php echo htmlspecialchars($template['code'] ?? ''); ?> <?php echo htmlspecialchars($template['name'] ?? ''); ?>
+                Drafting Editor — <?php echo htmlspecialchars($template['code'] ?? ''); ?> <?php echo htmlspecialchars($template['name'] ?? ''); ?>
             </h2>
             <div class="breadcrumb">
                 <?php if ($projectDocumentId): ?>
@@ -300,8 +300,8 @@ $projectDocumentId = $_GET['pd'] ?? '';
 </div>
 
 <style>
-/* Panel Editor Styles */
-.panel-editor-container {
+/* Drafting Editor Styles */
+.drafting-editor-container {
     display: flex;
     flex-direction: column;
     height: calc(100vh - 60px);
@@ -779,7 +779,7 @@ $projectDocumentId = $_GET['pd'] ?? '';
 </style>
 
 <script>
-// Panel Editor JavaScript
+// Drafting JavaScript
 document.addEventListener('DOMContentLoaded', function() {
     // Template data
     const templateId = '<?php echo htmlspecialchars($templateId); ?>';

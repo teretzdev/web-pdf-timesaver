@@ -1,11 +1,11 @@
-# Clio-Style Workflow Implementation
+# Clio-Style Drafting Implementation
 
 ## Overview
-This document summarizes the implementation of a Clio-style drafting workflow for FL-100 forms in your codebase. The implementation provides a complete 1:1 translation of Clio's panel-based form editing and workflow management system.
+This document summarizes the implementation of a Clio-style drafting drafting for FL-100 forms in your codebase. The implementation provides a complete 1:1 translation of Clio's panel-based form editing and drafting management system.
 
 ## Implemented Components
 
-### 1. Panel Editor (`mvp/views/panel-editor.php`)
+### 1. Panel Editor (`mvp/views/drafting-editor.php`)
 A comprehensive panel editing interface that provides:
 - **Drag-and-drop panel management**: Reorder panels with visual feedback
 - **Field management**: Add, edit, delete, and reorder fields within panels
@@ -15,16 +15,16 @@ A comprehensive panel editing interface that provides:
 - **Properties management**: Configure panel and field properties
 - **Live preview**: Preview forms as you edit them
 
-### 2. Workflow Manager (`mvp/lib/workflow_manager.php`)
-A robust workflow engine that handles:
+### 2. Drafting Manager (`mvp/lib/drafting_manager.php`)
+A robust drafting engine that handles:
 - **Step-by-step form filling**: Guide users through panels sequentially
 - **Progress tracking**: Track completion status for each panel and overall form
 - **Field validation**: Validate fields based on type and custom rules
-- **Workflow state management**: Save and restore workflow progress
+- **Drafting state management**: Save and restore drafting progress
 - **Analytics and reporting**: Track time spent, identify bottlenecks
 - **Completion detection**: Determine when forms are ready to generate
 
-### 3. Workflow Interface (`mvp/views/workflow.php`)
+### 3. Drafting Interface (`mvp/views/drafting.php`)
 A Clio-style step-by-step form filling interface featuring:
 - **Visual progress indicators**: Shows completion status for each section
 - **Panel navigation**: Easy navigation between form sections
@@ -34,9 +34,9 @@ A Clio-style step-by-step form filling interface featuring:
 - **Generate when ready**: Generate PDF when all required fields are complete
 
 ### 4. Integration Points
-The workflow system integrates seamlessly with existing components:
-- **Routes added**: `panel-editor`, `workflow`, `actions/save-panel-configuration`, `actions/save-workflow-fields`
-- **Navigation links**: Added workflow and panel editor buttons to populate view
+The drafting system integrates seamlessly with existing components:
+- **Routes added**: `panel-editor`, `drafting`, `actions/save-panel-configuration`, `actions/save-drafting-fields`
+- **Navigation links**: Added drafting and panel editor buttons to populate view
 - **Template support**: Works with existing FL-100 template structure
 - **Data persistence**: Saves to existing data store system
 
@@ -48,7 +48,7 @@ The workflow system integrates seamlessly with existing components:
 | Drag-and-drop panels | ✅ | ✅ | Complete |
 | Field management | ✅ | ✅ | Complete |
 | Field validation | ✅ | ✅ | Complete |
-| Step-by-step workflow | ✅ | ✅ | Complete |
+| Step-by-step drafting | ✅ | ✅ | Complete |
 | Progress tracking | ✅ | ✅ | Complete |
 | Save/restore state | ✅ | ✅ | Complete |
 | PDF generation | ✅ | ✅ | Complete |
@@ -61,7 +61,7 @@ The workflow system integrates seamlessly with existing components:
 ### For End Users
 
 1. **Access a form**: Navigate to a project document
-2. **Choose workflow mode**: Click "Workflow Mode" button
+2. **Choose drafting mode**: Click "Drafting Mode" button
 3. **Fill sections**: Complete each panel step-by-step
 4. **Save progress**: Your progress is saved automatically
 5. **Generate PDF**: When all required fields are complete, generate the PDF
@@ -80,17 +80,17 @@ The workflow system integrates seamlessly with existing components:
 /workspace/
 ├── mvp/
 │   ├── views/
-│   │   ├── panel-editor.php      # Panel editing interface
-│   │   ├── workflow.php          # Step-by-step workflow interface
-│   │   └── populate.php          # Updated with workflow links
+│   │   ├── drafting-editor.php      # Panel editing interface
+│   │   ├── drafting.php          # Step-by-step drafting interface
+│   │   └── populate.php          # Updated with drafting links
 │   ├── lib/
-│   │   └── workflow_manager.php  # Workflow management engine
+│   │   └── drafting_manager.php  # Drafting management engine
 │   └── index.php                  # Updated with new routes
 ├── data/
 │   ├── panel_configs/            # Panel configuration storage
-│   └── workflows/                # Workflow state storage
+│   └── draftings/                # Drafting state storage
 └── tests/
-    └── test_workflow_implementation.php  # Comprehensive test suite
+    └── test_drafting_implementation.php  # Comprehensive test suite
 ```
 
 ## Technical Details
@@ -124,10 +124,10 @@ The workflow system integrates seamlessly with existing components:
 }
 ```
 
-### Workflow State Format
+### Drafting State Format
 ```json
 {
-  "id": "workflow_xyz123",
+  "id": "drafting_xyz123",
   "projectDocumentId": "doc_123",
   "templateId": "t_fl100_gc120",
   "status": "active",
@@ -141,11 +141,11 @@ The workflow system integrates seamlessly with existing components:
 
 ## Testing
 
-A comprehensive test suite (`tests/test_workflow_implementation.php`) validates:
+A comprehensive test suite (`tests/test_drafting_implementation.php`) validates:
 - Panel configuration management
-- Workflow creation and state management
+- Drafting creation and state management
 - Field validation logic
-- Workflow progression tracking
+- Drafting progression tracking
 - Analytics generation
 - Report generation
 
@@ -172,4 +172,4 @@ While the current implementation provides complete Clio-style functionality, pot
 
 ## Conclusion
 
-The Clio-style workflow has been successfully implemented with all core features working as expected. The system provides a professional, user-friendly interface for completing FL-100 forms with step-by-step guidance, validation, and progress tracking. The implementation is modular, maintainable, and ready for production use.
+The Clio-style drafting has been successfully implemented with all core features working as expected. The system provides a professional, user-friendly interface for completing FL-100 forms with step-by-step guidance, validation, and progress tracking. The implementation is modular, maintainable, and ready for production use.

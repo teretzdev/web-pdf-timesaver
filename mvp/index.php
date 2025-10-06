@@ -162,7 +162,7 @@ case 'projects':
 		render('populate', [ 'projectDocument' => $projDoc, 'template' => $template, 'values' => $values, 'customFields' => $customFields ]);
 		break;
 
-	case 'workflow':
+	case 'drafting':
 		$pdId = (string)($_GET['pd'] ?? '');
 		$projDoc = $store->getProjectDocumentById($pdId);
 		if (!$projDoc) {
@@ -182,7 +182,7 @@ case 'projects':
 		$customFields = $store->getCustomFields($pdId);
 		$project = $store->getProject($projDoc['projectId']);
 		
-		render('workflow', [
+		render('drafting', [
 			'projectDocumentId' => $pdId,
 			'projectDocument' => $projDoc,
 			'template' => $template,
@@ -192,14 +192,14 @@ case 'projects':
 		]);
 		break;
 
-	case 'actions/save-workflow-fields':
+	case 'actions/save-draft-fields':
 		if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 			header('Location: ?route=projects');
 			exit;
 		}
 		
 		$pdId = (string)($_POST['projectDocumentId'] ?? '');
-		$workflowId = (string)($_POST['workflowId'] ?? '');
+		$draftSessionId = (string)($_POST['draftSessionId'] ?? '');
 		$currentPanel = (string)($_POST['currentPanel'] ?? '');
 		
 		// Save field values
@@ -207,11 +207,11 @@ case 'projects':
 		unset($data['projectDocumentId'], $data['workflowId'], $data['currentPanel']);
 		$store->saveFieldValues($pdId, $data);
 		
-		// Update workflow state if needed
-		if ($workflowId && $currentPanel) {
-			require_once __DIR__ . '/lib/workflow_manager.php';
-			$workflowManager = new \WebPdfTimeSaver\Mvp\WorkflowManager($store, $templates);
-			$workflowManager->completePanel($workflowId, $currentPanel);
+		// Update draft session state if needed
+		if ($draftSessionId && $currentPanel) {
+			require_once __DIR__ . '/lib/drafting_manager.php';
+			$draftingManager = new \WebPdfTimeSaver\Mvp\DraftingManager($store, $templates);
+			$draftingManager->completePanel($draftSessionId, $currentPanel);
 		}
 		
 		// Determine next panel
@@ -229,7 +229,7 @@ case 'projects':
 		}
 		
 		$nextPanelIndex = $currentPanelIndex + 1;
-		header('Location: ?route=workflow&pd=' . urlencode($pdId) . '&panel=' . $nextPanelIndex);
+		header('Location: ?route=drafting&pd=' . urlencode($pdId) . '&panel=' . $nextPanelIndex);
 		exit;
 
 	case 'populate_test':
@@ -640,7 +640,7 @@ case 'projects':
 		render('template-edit', [ 'template' => $template, 'templateId' => $templateId ]);
 		break;
 
-	case 'panel-editor':
+	case 'drafting-editor':
 		$templateId = (string)($_GET['id'] ?? '');
 		$projectDocumentId = (string)($_GET['pd'] ?? '');
 		$template = $templates[$templateId] ?? null;
@@ -658,7 +658,7 @@ case 'projects':
 			header('Location: ?route=templates');
 			exit;
 		}
-		render('panel-editor', [ 'template' => $template, 'templateId' => $templateId, 'projectDocumentId' => $projectDocumentId ]);
+		render('drafting-editor', [ 'template' => $template, 'templateId' => $templateId, 'projectDocumentId' => $projectDocumentId ]);
 		break;
 
 	case 'actions/save-panel-configuration':

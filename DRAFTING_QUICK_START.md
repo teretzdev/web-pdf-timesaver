@@ -1,4 +1,4 @@
-# Quick Start Guide: Clio-Style Workflow
+# Quick Start Guide: Clio-Style Drafting
 
 ## Getting Started
 
@@ -10,7 +10,7 @@ Navigate to `/mvp` in your browser to access the MVP system.
 - Create a new project or select an existing one
 - Add a document using the FL-100 template
 
-### 3. Choose Your Workflow Mode
+### 3. Choose Your Drafting Mode
 
 You have two options for filling forms:
 
@@ -20,17 +20,17 @@ You have two options for filling forms:
 - Fill fields in any order
 - Save when complete
 
-#### Option B: Clio-Style Workflow (NEW!)
+#### Option B: Clio-Style Drafting (NEW!)
 - Click **Populate** on a document
-- Click **Workflow Mode** button
+- Click **Drafting Mode** button
 - Fill form step-by-step
 - Track your progress
 - Get guided through each section
 
-## Using the Workflow Mode
+## Using the Drafting Mode
 
 ### Step-by-Step Form Filling
-1. **Start**: The workflow opens to the first panel
+1. **Start**: The drafting opens to the first panel
 2. **Complete Fields**: Fill in all fields in the current section
 3. **Navigate**: Use Previous/Next buttons or click on sections in the sidebar
 4. **Save Progress**: Click "Save & Continue" or use auto-save
@@ -102,7 +102,7 @@ Click **Save Changes** to persist your panel configuration
 **A**: Yes, drag and drop panels in the Panel Editor
 
 ### Q: How do I know which fields are missing?
-**A**: The workflow shows field counts and highlights errors in red
+**A**: The drafting shows field counts and highlights errors in red
 
 ### Q: Can I go back to a previous section?
 **A**: Yes, click Previous button or click on any section in the sidebar
@@ -138,4 +138,4 @@ Click **Save Changes** to persist your panel configuration
 
 - View full documentation: [WORKFLOW_IMPLEMENTATION.md](./WORKFLOW_IMPLEMENTATION.md)
 - Contact support through the Support section in the sidebar
-- Check the Help panel in the workflow interface for contextual tips
+- Check the Help panel in the drafting interface for contextual tips

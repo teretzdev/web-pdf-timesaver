@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Drafting Interface Demo - Clio Style</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+        }
+        
+        /* Header */
+        .drafting-header {
+            background: white;
+            border-bottom: 1px solid #e1e5e9;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .drafting-title {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+        
+        .back-link {
+            color: #0b6bcb;
+            text-decoration: none;
+            font-size: 14px;
+        }
+        
+        .form-title {
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .header-actions {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .btn-primary {
+            background: #0b6bcb;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+        
+        /* Progress Bar */
+        .progress-section {
+            background: white;
+            padding: 20px;
+            border-bottom: 1px solid #e1e5e9;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 10px;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #0b6bcb, #0954a5);
+            width: 75%;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            text-align: center;
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        /* Main Layout */
+        .drafting-layout {
+            display: flex;
+            height: calc(100vh - 140px);
+        }
+        
+        /* Left Sidebar */
+        .drafting-sidebar {
+            width: 280px;
+            background: white;
+            border-right: 1px solid #e1e5e9;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .sidebar-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #2c3e50;
+        }
+        
+        .section-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .section-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border: 1px solid #e1e5e9;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .section-item:hover {
+            background: #f8f9fa;
+            border-color: #0b6bcb;
+        }
+        
+        .section-item.active {
+            background: #e6f3ff;
+            border-color: #0b6bcb;
+            box-shadow: 0 2px 4px rgba(11,107,203,0.2);
+        }
+        
+        .section-indicator {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .section-indicator.complete {
+            background: #28a745;
+            color: white;
+        }
+        
+        .section-indicator.active {
+            background: #0b6bcb;
+            color: white;
+        }
+        
+        .section-indicator.error {
+            background: #dc3545;
+            color: white;
+        }
+        
+        .section-indicator.pending {
+            background: #e9ecef;
+            color: #6c757d;
+        }
+        
+        .section-content {
+            flex: 1;
+        }
+        
+        .section-name {
+            font-weight: 500;
+            color: #2c3e50;
+            margin-bottom: 2px;
+        }
+        
+        .section-status {
+            font-size: 12px;
+            color: #6c757d;
+        }
+        
+        .section-error {
+            color: #dc3545;
+            font-size: 12px;
+        }
+        
+        /* Main Content */
+        .drafting-content {
+            flex: 1;
+            background: white;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        
+        .panel-header {
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e1e5e9;
+        }
+        
+        .panel-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .panel-description {
+            color: #6c757d;
+            font-size: 14px;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-label {
+            display: block;
+            font-weight: 500;
+            color: #495057;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+        
+        .required {
+            color: #dc3545;
+        }
+        
+        .form-control {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #e1e5e9;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+        
+        .form-control:focus {
+            outline: none;
+            border-color: #0b6bcb;
+            box-shadow: 0 0 0 3px rgba(11,107,203,0.1);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #e1e5e9;
+        }
+        
+        /* Right Sidebar */
+        .drafting-help {
+            width: 250px;
+            background: white;
+            border-left: 1px solid #e1e5e9;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        
+        .help-section {
+            margin-bottom: 25px;
+        }
+        
+        .help-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 10px;
+        }
+        
+        .help-content {
+            font-size: 13px;
+            color: #6c757d;
+        }
+        
+        .help-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .help-list li {
+            padding: 5px 0;
+            padding-left: 15px;
+            position: relative;
+        }
+        
+        .help-list li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <div class="drafting-header">
+        <div class="drafting-title">
+            <a href="#" class="back-link">← Back to Project</a>
+            <h1 class="form-title">Drafting: FL-100 Petition—Marriage/Domestic Partnership</h1>
+        </div>
+        <div class="header-actions">
+            <button class="btn btn-secondary">💾 Save Progress</button>
+            <button class="btn btn-secondary">👁️ Preview</button>
+            <button class="btn btn-primary">📄 Generate PDF</button>
+        </div>
+    </div>
+    
+    <!-- Progress Bar -->
+    <div class="progress-section">
+        <div class="progress-bar">
+            <div class="progress-fill"></div>
+        </div>
+        <div class="progress-text">75% Complete (5 of 7 sections)</div>
+    </div>
+    
+    <!-- Main Layout -->
+    <div class="drafting-layout">
+        <!-- Left Sidebar -->
+        <div class="drafting-sidebar">
+            <h3 class="sidebar-title">Draft Sections</h3>
+            <div class="section-list">
+                <div class="section-item">
+                    <div class="section-indicator complete">✓</div>
+                    <div class="section-content">
+                        <div class="section-name">Attorney Information</div>
+                        <div class="section-status">7 of 7 fields</div>
+                    </div>
+                </div>
+                <div class="section-item">
+                    <div class="section-indicator complete">✓</div>
+                    <div class="section-content">
+                        <div class="section-name">Court Information</div>
+                        <div class="section-status">5 of 5 fields</div>
+                    </div>
+                </div>
+                <div class="section-item active">
+                    <div class="section-indicator active">●</div>
+                    <div class="section-content">
+                        <div class="section-name">Parties Information</div>
+                        <div class="section-status">3 of 5 fields</div>
+                        <div class="section-error">2 errors</div>
+                    </div>
+                </div>
+                <div class="section-item">
+                    <div class="section-indicator pending">4</div>
+                    <div class="section-content">
+                        <div class="section-name">Marriage Information</div>
+                        <div class="section-status">0 of 5 fields</div>
+                    </div>
+                </div>
+                <div class="section-item">
+                    <div class="section-indicator pending">5</div>
+                    <div class="section-content">
+                        <div class="section-name">Relief Requested</div>
+                        <div class="section-status">0 of 4 fields</div>
+                    </div>
+                </div>
+                <div class="section-item">
+                    <div class="section-indicator pending">6</div>
+                    <div class="section-content">
+                        <div class="section-name">Children</div>
+                        <div class="section-status">0 of 2 fields</div>
+                    </div>
+                </div>
+                <div class="section-item">
+                    <div class="section-indicator pending">7</div>
+                    <div class="section-content">
+                        <div class="section-name">Additional Information</div>
+                        <div class="section-status">0 of 3 fields</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="drafting-content">
+            <div class="panel-header">
+                <h2 class="panel-title">Parties Information</h2>
+                <p class="panel-description">Enter information about the petitioner and respondent</p>
+            </div>
+            
+            <form>
+                <div class="form-group">
+                    <label class="form-label">
+                        Petitioner Name <span class="required">*</span>
+                    </label>
+                    <input type="text" class="form-control" value="Sarah Elizabeth Johnson" placeholder="Enter petitioner's full name">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        Respondent Name <span class="required">*</span>
+                    </label>
+                    <input type="text" class="form-control" value="Michael David Johnson" placeholder="Enter respondent's full name">
+                </div>
+                
+                <div class="form-group">
+                    <label class="form-label">
+                        Petitioner Address <span class="required">*</span>
+                    </label>
+                    <input type="text" class="form-control" value="123 Main Street, Los Angeles, CA 90210" placeholder="Enter petitioner's address">
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">
+                            Petitioner Phone <span class="required">*</span>
+                        </label>
+                        <input type="text" class="form-control" value="" placeholder="(555) 123-4567" style="border-color: #dc3545;">
+                        <small style="color: #dc3545;">This field is required</small>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">
+                            Respondent Address <span class="required">*</span>
+                        </label>
+                        <input type="text" class="form-control" value="" placeholder="Enter respondent's address" style="border-color: #dc3545;">
+                        <small style="color: #dc3545;">This field is required</small>
+                    </div>
+                </div>
+                
+                <div class="navigation-buttons">
+                    <button type="button" class="btn btn-secondary">← Previous</button>
+                    <div>
+                        <button type="button" class="btn btn-secondary">Skip →</button>
+                        <button type="submit" class="btn btn-primary">Save & Continue →</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+        
+        <!-- Right Sidebar -->
+        <div class="drafting-help">
+            <div class="help-section">
+                <h4 class="help-title">Quick Tips</h4>
+                <ul class="help-list">
+                    <li>Fields marked with * are required</li>
+                    <li>Save your progress frequently</li>
+                    <li>You can skip sections and return later</li>
+                    <li>Green checkmarks indicate completed sections</li>
+                </ul>
+            </div>
+            
+            <div class="help-section">
+                <h4 class="help-title">Section Progress</h4>
+                <div class="help-content">
+                    You have completed 3 of 5 fields in this section. Please fill in the remaining required fields to continue.
+                </div>
+            </div>
+            
+            <div class="help-section">
+                <h4 class="help-title">Next Section</h4>
+                <div class="help-content">
+                    <strong>Marriage Information</strong><br>
+                    You'll provide details about the marriage date, location, and separation.
+                </div>
+                <button class="btn btn-secondary" style="width: 100%; margin-top: 10px; font-size: 12px;">
+                    Go to Next Section →
+                </button>
+            </div>
+            
+            <div class="help-section">
+                <h4 class="help-title">Need Help?</h4>
+                <div class="help-content">
+                    Contact support if you have questions about any field.
+                </div>
+                <button class="btn btn-secondary" style="width: 100%; margin-top: 10px; font-size: 12px;">
+                    Get Help
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Demo interactivity
+        document.querySelectorAll('.section-item').forEach(item => {
+            item.addEventListener('click', function() {
+                document.querySelectorAll('.section-item').forEach(el => el.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+    </script>
+</body>
+</html>

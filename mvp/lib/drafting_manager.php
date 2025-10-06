@@ -4,10 +4,10 @@ declare(strict_types=1);
 namespace WebPdfTimeSaver\Mvp;
 
 /**
- * Workflow Manager - Manages form filling workflows similar to Clio
- * Provides step-by-step form completion, validation, and progress tracking
+ * Drafting Manager - Manages form drafting sessions similar to Clio
+ * Provides step-by-step form drafting, validation, and progress tracking
  */
-class WorkflowManager {
+class DraftingManager {
     private DataStore $dataStore;
     private array $templates;
     private string $logFile;
@@ -15,13 +15,13 @@ class WorkflowManager {
     public function __construct(DataStore $dataStore, array $templates = []) {
         $this->dataStore = $dataStore;
         $this->templates = $templates;
-        $this->logFile = __DIR__ . '/../../logs/workflow.log';
+        $this->logFile = __DIR__ . '/../../logs/drafting.log';
     }
     
     /**
-     * Get workflow status for a project document
+     * Get drafting status for a project document
      */
-    public function getWorkflowStatus(string $projectDocumentId): array {
+    public function getDraftingStatus(string $projectDocumentId): array {
         $projDoc = $this->dataStore->getProjectDocumentById($projectDocumentId);
         if (!$projDoc) {
             return ['error' => 'Document not found'];
@@ -202,7 +202,7 @@ class WorkflowManager {
     }
     
     /**
-     * Get current step in workflow
+     * Get current step in drafting
      */
     private function getCurrentStep(array $panels): ?array {
         // Find first incomplete panel
@@ -220,7 +220,7 @@ class WorkflowManager {
     }
     
     /**
-     * Get next step in workflow
+     * Get next step in drafting
      */
     private function getNextStep(array $panels): ?array {
         $foundCurrent = false;
@@ -240,9 +240,9 @@ class WorkflowManager {
     }
     
     /**
-     * Create a workflow instance for a project document
+     * Create a drafting session for a project document
      */
-    public function createWorkflow(string $projectDocumentId, array $options = []): array {
+    public function createDraftSession(string $projectDocumentId, array $options = []): array {
         $projDoc = $this->dataStore->getProjectDocumentById($projectDocumentId);
         if (!$projDoc) {
             return ['error' => 'Document not found'];
@@ -253,9 +253,9 @@ class WorkflowManager {
             return ['error' => 'Template not found'];
         }
         
-        // Initialize workflow state
-        $workflow = [
-            'id' => uniqid('workflow_'),
+        // Initialize drafting state
+        $drafting = [
+            'id' => uniqid('draft_'),
             'projectDocumentId' => $projectDocumentId,
             'templateId' => $projDoc['templateId'],
             'status' => 'active',
@@ -266,52 +266,52 @@ class WorkflowManager {
             'updatedAt' => date(DATE_ATOM)
         ];
         
-        // Save workflow state
-        $this->saveWorkflowState($workflow);
+        // Save drafting state
+        $this->saveDraftSessionState($drafting);
         
-        return $workflow;
+        return $drafting;
     }
     
     /**
-     * Save workflow state
+     * Save drafting state
      */
-    private function saveWorkflowState(array $workflow): void {
-        $workflowFile = __DIR__ . '/../../data/workflows/' . $workflow['id'] . '.json';
-        $workflowDir = dirname($workflowFile);
+    private function saveDraftSessionState(array $drafting): void {
+        $draftingFile = __DIR__ . '/../../data/draftings/' . $drafting['id'] . '.json';
+        $draftingDir = dirname($draftingFile);
         
-        if (!is_dir($workflowDir)) {
-            mkdir($workflowDir, 0777, true);
+        if (!is_dir($draftingDir)) {
+            mkdir($draftingDir, 0777, true);
         }
         
-        file_put_contents($workflowFile, json_encode($workflow, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        file_put_contents($draftingFile, json_encode($drafting, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
     }
     
     /**
-     * Load workflow state
+     * Load drafting state
      */
-    public function loadWorkflowState(string $workflowId): ?array {
-        $workflowFile = __DIR__ . '/../../data/workflows/' . $workflowId . '.json';
-        if (!file_exists($workflowFile)) {
+    public function loadDraftSessionState(string $draftingId): ?array {
+        $draftingFile = __DIR__ . '/../../data/draftings/' . $draftingId . '.json';
+        if (!file_exists($draftingFile)) {
             return null;
         }
         
-        return json_decode(file_get_contents($workflowFile), true);
+        return json_decode(file_get_contents($draftingFile), true);
     }
     
     /**
-     * Get workflow by project document
+     * Get drafting by project document
      */
-    public function getWorkflowByDocument(string $projectDocumentId): ?array {
-        $workflowDir = __DIR__ . '/../../data/workflows/';
-        if (!is_dir($workflowDir)) {
+    public function getDraftSessionByDocument(string $projectDocumentId): ?array {
+        $draftingDir = __DIR__ . '/../../data/draftings/';
+        if (!is_dir($draftingDir)) {
             return null;
         }
         
-        $files = glob($workflowDir . '*.json');
+        $files = glob($draftingDir . '*.json');
         foreach ($files as $file) {
-            $workflow = json_decode(file_get_contents($file), true);
-            if ($workflow && ($workflow['projectDocumentId'] ?? '') === $projectDocumentId) {
-                return $workflow;
+            $drafting = json_decode(file_get_contents($file), true);
+            if ($drafting && ($drafting['projectDocumentId'] ?? '') === $projectDocumentId) {
+                return $drafting;
             }
         }
         
@@ -319,67 +319,67 @@ class WorkflowManager {
     }
     
     /**
-     * Complete a panel in the workflow
+     * Complete a panel in the drafting
      */
-    public function completePanel(string $workflowId, string $panelId): array {
-        $workflow = $this->loadWorkflowState($workflowId);
-        if (!$workflow) {
-            return ['error' => 'Workflow not found'];
+    public function completePanel(string $draftingId, string $panelId): array {
+        $drafting = $this->loadDraftSessionState($draftingId);
+        if (!$drafting) {
+            return ['error' => 'Drafting not found'];
         }
         
-        if (!in_array($panelId, $workflow['completedPanels'])) {
-            $workflow['completedPanels'][] = $panelId;
-            $workflow['updatedAt'] = date(DATE_ATOM);
+        if (!in_array($panelId, $drafting['completedPanels'])) {
+            $drafting['completedPanels'][] = $panelId;
+            $drafting['updatedAt'] = date(DATE_ATOM);
             
             // Update current panel index
-            $template = $this->templates[$workflow['templateId']] ?? null;
+            $template = $this->templates[$drafting['templateId']] ?? null;
             if ($template) {
                 $panels = $template['panels'] ?? [];
                 foreach ($panels as $index => $panel) {
                     if ($panel['id'] === $panelId) {
-                        $workflow['currentPanelIndex'] = min($index + 1, count($panels) - 1);
+                        $drafting['currentPanelIndex'] = min($index + 1, count($panels) - 1);
                         break;
                     }
                 }
             }
             
-            $this->saveWorkflowState($workflow);
+            $this->saveDraftSessionState($drafting);
         }
         
-        return $workflow;
+        return $drafting;
     }
     
     /**
-     * Skip a panel in the workflow
+     * Skip a panel in the drafting
      */
-    public function skipPanel(string $workflowId, string $panelId): array {
-        $workflow = $this->loadWorkflowState($workflowId);
-        if (!$workflow) {
-            return ['error' => 'Workflow not found'];
+    public function skipPanel(string $draftingId, string $panelId): array {
+        $drafting = $this->loadDraftSessionState($draftingId);
+        if (!$drafting) {
+            return ['error' => 'Drafting not found'];
         }
         
-        if (!in_array($panelId, $workflow['skipPanels'])) {
-            $workflow['skipPanels'][] = $panelId;
-            $workflow['updatedAt'] = date(DATE_ATOM);
-            $this->saveWorkflowState($workflow);
+        if (!in_array($panelId, $drafting['skipPanels'])) {
+            $drafting['skipPanels'][] = $panelId;
+            $drafting['updatedAt'] = date(DATE_ATOM);
+            $this->saveDraftSessionState($drafting);
         }
         
-        return $workflow;
+        return $drafting;
     }
     
     /**
-     * Get workflow analytics
+     * Get drafting analytics
      */
-    public function getWorkflowAnalytics(string $workflowId): array {
-        $workflow = $this->loadWorkflowState($workflowId);
-        if (!$workflow) {
-            return ['error' => 'Workflow not found'];
+    public function getDraftingAnalytics(string $draftingId): array {
+        $drafting = $this->loadDraftSessionState($draftingId);
+        if (!$drafting) {
+            return ['error' => 'Drafting not found'];
         }
         
-        $status = $this->getWorkflowStatus($workflow['projectDocumentId']);
+        $status = $this->getDraftingStatus($drafting['projectDocumentId']);
         
         // Calculate time metrics
-        $createdTime = strtotime($workflow['createdAt']);
+        $createdTime = strtotime($drafting['createdAt']);
         $currentTime = time();
         $elapsedTime = $currentTime - $createdTime;
         
@@ -389,14 +389,14 @@ class WorkflowManager {
         $estimatedRemainingTime = max(0, $estimatedTotalTime - $elapsedTime);
         
         return [
-            'workflowId' => $workflowId,
+            'draftingId' => $draftingId,
             'elapsedTime' => $this->formatDuration($elapsedTime),
             'estimatedRemainingTime' => $this->formatDuration($estimatedRemainingTime),
             'completionRate' => $status['overallProgress'] . '%',
-            'panelsCompleted' => count($workflow['completedPanels']),
-            'panelsSkipped' => count($workflow['skipPanels']),
-            'averageTimePerPanel' => count($workflow['completedPanels']) > 0 ? 
-                $this->formatDuration($elapsedTime / count($workflow['completedPanels'])) : 'N/A',
+            'panelsCompleted' => count($drafting['completedPanels']),
+            'panelsSkipped' => count($drafting['skipPanels']),
+            'averageTimePerPanel' => count($drafting['completedPanels']) > 0 ? 
+                $this->formatDuration($elapsedTime / count($drafting['completedPanels'])) : 'N/A',
             'bottlenecks' => $this->identifyBottlenecks($status['panels'])
         ];
     }
@@ -421,7 +421,7 @@ class WorkflowManager {
     }
     
     /**
-     * Identify bottlenecks in the workflow
+     * Identify bottlenecks in the drafting
      */
     private function identifyBottlenecks(array $panels): array {
         $bottlenecks = [];
@@ -446,30 +446,30 @@ class WorkflowManager {
     }
     
     /**
-     * Generate workflow report
+     * Generate drafting report
      */
-    public function generateWorkflowReport(string $workflowId): array {
-        $workflow = $this->loadWorkflowState($workflowId);
-        if (!$workflow) {
-            return ['error' => 'Workflow not found'];
+    public function generateDraftingReport(string $draftingId): array {
+        $drafting = $this->loadDraftSessionState($draftingId);
+        if (!$drafting) {
+            return ['error' => 'Drafting not found'];
         }
         
-        $status = $this->getWorkflowStatus($workflow['projectDocumentId']);
-        $analytics = $this->getWorkflowAnalytics($workflowId);
+        $status = $this->getDraftingStatus($drafting['projectDocumentId']);
+        $analytics = $this->getDraftingAnalytics($draftingId);
         
         return [
-            'workflow' => $workflow,
+            'drafting' => $drafting,
             'status' => $status,
             'analytics' => $analytics,
-            'recommendations' => $this->getWorkflowRecommendations($status, $analytics),
+            'recommendations' => $this->getDraftingRecommendations($status, $analytics),
             'exportedAt' => date(DATE_ATOM)
         ];
     }
     
     /**
-     * Get workflow recommendations
+     * Get drafting recommendations
      */
-    private function getWorkflowRecommendations(array $status, array $analytics): array {
+    private function getDraftingRecommendations(array $status, array $analytics): array {
         $recommendations = [];
         
         // Check for low completion rate
@@ -477,7 +477,7 @@ class WorkflowManager {
             $recommendations[] = [
                 'type' => 'progress',
                 'priority' => 'high',
-                'message' => 'Workflow is less than 50% complete. Focus on completing required fields first.'
+                'message' => 'Drafting is less than 50% complete. Focus on completing required fields first.'
             ];
         }
         

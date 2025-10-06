@@ -1,32 +1,32 @@
 <?php
 /**
- * Workflow View - Clio-style step-by-step form filling interface
+ * Drafting View - Clio-style step-by-step form drafting interface
  */
 
-require_once __DIR__ . '/../lib/workflow_manager.php';
+require_once __DIR__ . '/../lib/drafting_manager.php';
 
-use WebPdfTimeSaver\Mvp\WorkflowManager;
+use WebPdfTimeSaver\Mvp\DraftingManager;
 
 $projectDocumentId = $_GET['pd'] ?? '';
 $template = $template ?? [];
 $values = $values ?? [];
 $customFields = $customFields ?? [];
 
-// Initialize workflow manager
-$workflowManager = new WorkflowManager($store, $templates);
+// Initialize drafting manager
+$draftingManager = new DraftingManager($store, $templates);
 
-// Get or create workflow
-$workflow = $workflowManager->getWorkflowByDocument($projectDocumentId);
-if (!$workflow) {
-    $workflow = $workflowManager->createWorkflow($projectDocumentId);
+// Get or create draft session
+$draftSession = $draftingManager->getDraftSessionByDocument($projectDocumentId);
+if (!$draftSession) {
+    $draftSession = $draftingManager->createDraftSession($projectDocumentId);
 }
 
-// Get workflow status
-$workflowStatus = $workflowManager->getWorkflowStatus($projectDocumentId);
+// Get drafting status
+$draftingStatus = $draftingManager->getDraftingStatus($projectDocumentId);
 
 // Get current panel
-$currentPanelIndex = $_GET['panel'] ?? $workflow['currentPanelIndex'] ?? 0;
-$panels = $workflowStatus['panels'] ?? [];
+$currentPanelIndex = $_GET['panel'] ?? $draftSession['currentPanelIndex'] ?? 0;
+$panels = $draftingStatus['panels'] ?? [];
 $currentPanel = $panels[$currentPanelIndex] ?? null;
 
 // Get template fields for current panel
@@ -38,12 +38,12 @@ if ($currentPanel && !empty($template['fields'])) {
 }
 ?>
 
-<div class="workflow-container">
-    <!-- Workflow Header -->
-    <div class="workflow-header">
-        <div class="workflow-title">
-            <h2><?php echo htmlspecialchars($template['name'] ?? 'Form Workflow'); ?></h2>
-            <div class="workflow-breadcrumb">
+<div class="drafting-container">
+    <!-- Drafting Header -->
+    <div class="drafting-header">
+        <div class="drafting-title">
+            <h2><?php echo htmlspecialchars($template['name'] ?? 'Form Drafting'); ?></h2>
+            <div class="drafting-breadcrumb">
                 <?php if ($project ?? null): ?>
                     <a href="?route=project&id=<?php echo htmlspecialchars($project['id']); ?>">← Back to Project</a>
                 <?php else: ?>
@@ -51,14 +51,14 @@ if ($currentPanel && !empty($template['fields'])) {
                 <?php endif; ?>
             </div>
         </div>
-        <div class="workflow-actions">
+        <div class="drafting-actions">
             <button id="save-progress-btn" class="btn btn-secondary">
                 <span class="icon">💾</span> Save Progress
             </button>
             <button id="preview-document-btn" class="btn btn-secondary">
                 <span class="icon">👁️</span> Preview
             </button>
-            <?php if ($workflowStatus['canGenerate']): ?>
+            <?php if ($draftingStatus['canGenerate']): ?>
                 <a href="?route=actions/generate&pd=<?php echo htmlspecialchars($projectDocumentId); ?>" class="btn btn-primary">
                     <span class="icon">📄</span> Generate PDF
                 </a>
@@ -67,24 +67,24 @@ if ($currentPanel && !empty($template['fields'])) {
     </div>
 
     <!-- Progress Bar -->
-    <div class="workflow-progress">
+    <div class="drafting-progress">
         <div class="progress-bar">
-            <div class="progress-fill" style="width: <?php echo $workflowStatus['overallProgress']; ?>%"></div>
+            <div class="progress-fill" style="width: <?php echo $draftingStatus['overallProgress']; ?>%"></div>
         </div>
         <div class="progress-text">
-            <?php echo $workflowStatus['overallProgress']; ?>% Complete
-            (<?php echo $workflowStatus['completedPanels']; ?> of <?php echo $workflowStatus['totalPanels']; ?> sections)
+            <?php echo $draftingStatus['overallProgress']; ?>% Complete
+            (<?php echo $draftingStatus['completedPanels']; ?> of <?php echo $draftingStatus['totalPanels']; ?> sections)
         </div>
     </div>
 
-    <!-- Workflow Steps -->
-    <div class="workflow-layout">
+    <!-- Drafting Steps -->
+    <div class="drafting-layout">
         <!-- Left Sidebar - Steps Navigation -->
-        <div class="workflow-sidebar">
+        <div class="drafting-sidebar">
             <h3>Form Sections</h3>
-            <div class="workflow-steps">
+            <div class="drafting-steps">
                 <?php foreach ($panels as $index => $panel): ?>
-                    <div class="workflow-step <?php 
+                    <div class="drafting-step <?php 
                         echo $index == $currentPanelIndex ? 'active' : '';
                         echo ' status-' . $panel['status'];
                     ?>" data-panel-index="<?php echo $index; ?>">
@@ -114,7 +114,7 @@ if ($currentPanel && !empty($template['fields'])) {
         </div>
 
         <!-- Main Content - Current Step Form -->
-        <div class="workflow-content">
+        <div class="drafting-content">
             <?php if ($currentPanel): ?>
                 <div class="panel-header">
                     <h3><?php echo htmlspecialchars($currentPanel['label']); ?></h3>
@@ -137,12 +137,12 @@ if ($currentPanel && !empty($template['fields'])) {
                     </div>
                 <?php endif; ?>
 
-                <form id="workflow-form" method="post" action="?route=actions/save-workflow-fields">
+                <form id="drafting-form" method="post" action="?route=actions/save-drafting-fields">
                     <input type="hidden" name="projectDocumentId" value="<?php echo htmlspecialchars($projectDocumentId); ?>">
-                    <input type="hidden" name="workflowId" value="<?php echo htmlspecialchars($workflow['id']); ?>">
+                    <input type="hidden" name="draftingId" value="<?php echo htmlspecialchars($drafting['id']); ?>">
                     <input type="hidden" name="currentPanel" value="<?php echo htmlspecialchars($currentPanel['id']); ?>">
                     
-                    <div class="workflow-fields">
+                    <div class="drafting-fields">
                         <?php foreach ($currentPanelFields as $field): ?>
                             <?php 
                             $fieldValue = $values[$field['key']] ?? '';
@@ -154,7 +154,7 @@ if ($currentPanel && !empty($template['fields'])) {
                                 }
                             }
                             ?>
-                            <div class="workflow-field <?php echo $fieldError ? 'has-error' : ''; ?>">
+                            <div class="drafting-field <?php echo $fieldError ? 'has-error' : ''; ?>">
                                 <label for="field-<?php echo htmlspecialchars($field['key']); ?>">
                                     <?php echo htmlspecialchars($field['label']); ?>
                                     <?php if (!empty($field['required'])): ?>
@@ -226,7 +226,7 @@ if ($currentPanel && !empty($template['fields'])) {
                     </div>
 
                     <!-- Navigation Buttons -->
-                    <div class="workflow-navigation">
+                    <div class="drafting-navigation">
                         <?php if ($currentPanelIndex > 0): ?>
                             <button type="button" class="btn btn-secondary" onclick="navigateToPanel(<?php echo $currentPanelIndex - 1; ?>)">
                                 ← Previous
@@ -243,7 +243,7 @@ if ($currentPanel && !empty($template['fields'])) {
                                     Skip →
                                 </button>
                             <?php else: ?>
-                                <?php if ($workflowStatus['canGenerate']): ?>
+                                <?php if ($draftingStatus['canGenerate']): ?>
                                     <button type="button" class="btn btn-success" onclick="generateDocument()">
                                         ✓ Complete & Generate
                                     </button>
@@ -264,7 +264,7 @@ if ($currentPanel && !empty($template['fields'])) {
         </div>
 
         <!-- Right Sidebar - Help & Info -->
-        <div class="workflow-help">
+        <div class="drafting-help">
             <div class="help-section">
                 <h4>Quick Tips</h4>
                 <ul>
@@ -275,11 +275,11 @@ if ($currentPanel && !empty($template['fields'])) {
                 </ul>
             </div>
             
-            <?php if ($workflowStatus['nextStep']): ?>
+            <?php if ($draftingStatus['nextStep']): ?>
                 <div class="help-section">
                     <h4>Next Section</h4>
-                    <p><?php echo htmlspecialchars($workflowStatus['nextStep']['label']); ?></p>
-                    <button class="btn btn-sm" onclick="navigateToPanel(<?php echo $workflowStatus['nextStep']['index']; ?>)">
+                    <p><?php echo htmlspecialchars($draftingStatus['nextStep']['label']); ?></p>
+                    <button class="btn btn-sm" onclick="navigateToPanel(<?php echo $draftingStatus['nextStep']['index']; ?>)">
                         Go to Next Section →
                     </button>
                 </div>
@@ -297,15 +297,15 @@ if ($currentPanel && !empty($template['fields'])) {
 </div>
 
 <style>
-/* Workflow Styles */
-.workflow-container {
+/* Drafting Styles */
+.drafting-container {
     display: flex;
     flex-direction: column;
     min-height: calc(100vh - 60px);
     background: #f5f7fa;
 }
 
-.workflow-header {
+.drafting-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -315,28 +315,28 @@ if ($currentPanel && !empty($template['fields'])) {
     box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.workflow-title h2 {
+.drafting-title h2 {
     margin: 0;
     color: #2c3e50;
 }
 
-.workflow-breadcrumb {
+.drafting-breadcrumb {
     margin-top: 5px;
 }
 
-.workflow-breadcrumb a {
+.drafting-breadcrumb a {
     color: #0b6bcb;
     text-decoration: none;
     font-size: 14px;
 }
 
-.workflow-actions {
+.drafting-actions {
     display: flex;
     gap: 10px;
 }
 
 /* Progress Bar */
-.workflow-progress {
+.drafting-progress {
     padding: 20px;
     background: white;
     border-bottom: 1px solid #e1e5e9;
@@ -363,14 +363,14 @@ if ($currentPanel && !empty($template['fields'])) {
 }
 
 /* Layout */
-.workflow-layout {
+.drafting-layout {
     flex: 1;
     display: flex;
     overflow: hidden;
 }
 
 /* Sidebar */
-.workflow-sidebar {
+.drafting-sidebar {
     width: 280px;
     background: white;
     border-right: 1px solid #e1e5e9;
@@ -378,19 +378,19 @@ if ($currentPanel && !empty($template['fields'])) {
     padding: 20px;
 }
 
-.workflow-sidebar h3 {
+.drafting-sidebar h3 {
     margin: 0 0 20px 0;
     font-size: 16px;
     color: #2c3e50;
 }
 
-.workflow-steps {
+.drafting-steps {
     display: flex;
     flex-direction: column;
     gap: 10px;
 }
 
-.workflow-step {
+.drafting-step {
     display: flex;
     align-items: center;
     gap: 12px;
@@ -401,12 +401,12 @@ if ($currentPanel && !empty($template['fields'])) {
     transition: all 0.2s;
 }
 
-.workflow-step:hover {
+.drafting-step:hover {
     background: #f8f9fa;
     border-color: #0b6bcb;
 }
 
-.workflow-step.active {
+.drafting-step.active {
     background: #e6f3ff;
     border-color: #0b6bcb;
     box-shadow: 0 2px 4px rgba(11,107,203,0.2);
@@ -423,18 +423,18 @@ if ($currentPanel && !empty($template['fields'])) {
     font-weight: 600;
 }
 
-.workflow-step.status-complete .step-indicator {
+.drafting-step.status-complete .step-indicator {
     background: #28a745;
     color: white;
 }
 
-.workflow-step.status-incomplete .step-indicator,
-.workflow-step.status-not_started .step-indicator {
+.drafting-step.status-incomplete .step-indicator,
+.drafting-step.status-not_started .step-indicator {
     background: #ffc107;
     color: white;
 }
 
-.workflow-step.status-in_progress .step-indicator {
+.drafting-step.status-in_progress .step-indicator {
     background: #0b6bcb;
     color: white;
     font-size: 11px;
@@ -462,7 +462,7 @@ if ($currentPanel && !empty($template['fields'])) {
 }
 
 /* Main Content */
-.workflow-content {
+.drafting-content {
     flex: 1;
     padding: 20px;
     overflow-y: auto;
@@ -530,19 +530,19 @@ if ($currentPanel && !empty($template['fields'])) {
 }
 
 /* Form Fields */
-.workflow-fields {
+.drafting-fields {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
-.workflow-field {
+.drafting-field {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
-.workflow-field label {
+.drafting-field label {
     font-weight: 500;
     color: #495057;
     font-size: 14px;
@@ -567,7 +567,7 @@ if ($currentPanel && !empty($template['fields'])) {
     box-shadow: 0 0 0 3px rgba(11,107,203,0.1);
 }
 
-.workflow-field.has-error .form-control {
+.drafting-field.has-error .form-control {
     border-color: #dc3545;
 }
 
@@ -589,7 +589,7 @@ if ($currentPanel && !empty($template['fields'])) {
 }
 
 /* Navigation */
-.workflow-navigation {
+.drafting-navigation {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -604,7 +604,7 @@ if ($currentPanel && !empty($template['fields'])) {
 }
 
 /* Help Sidebar */
-.workflow-help {
+.drafting-help {
     width: 250px;
     background: white;
     border-left: 1px solid #e1e5e9;
@@ -703,17 +703,17 @@ if ($currentPanel && !empty($template['fields'])) {
 
 /* Responsive */
 @media (max-width: 1200px) {
-    .workflow-help {
+    .drafting-help {
         display: none;
     }
 }
 
 @media (max-width: 768px) {
-    .workflow-layout {
+    .drafting-layout {
         flex-direction: column;
     }
     
-    .workflow-sidebar {
+    .drafting-sidebar {
         width: 100%;
         max-height: 200px;
         border-right: none;
@@ -723,9 +723,9 @@ if ($currentPanel && !empty($template['fields'])) {
 </style>
 
 <script>
-// Workflow JavaScript
+// Drafting JavaScript
 function navigateToPanel(panelIndex) {
-    window.location.href = '?route=workflow&pd=<?php echo htmlspecialchars($projectDocumentId); ?>&panel=' + panelIndex;
+    window.location.href = '?route=drafting&pd=<?php echo htmlspecialchars($projectDocumentId); ?>&panel=' + panelIndex;
 }
 
 function generateDocument() {
@@ -741,7 +741,7 @@ function showHelp() {
 // Step navigation
 document.addEventListener('DOMContentLoaded', function() {
     // Click on step to navigate
-    document.querySelectorAll('.workflow-step').forEach(step => {
+    document.querySelectorAll('.drafting-step').forEach(step => {
         step.addEventListener('click', function() {
             const panelIndex = this.dataset.panelIndex;
             navigateToPanel(panelIndex);
@@ -750,7 +750,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // Save progress button
     document.getElementById('save-progress-btn')?.addEventListener('click', function() {
-        document.getElementById('workflow-form').submit();
+        document.getElementById('drafting-form').submit();
     });
     
     // Preview button
@@ -775,7 +775,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (e.ctrlKey || e.metaKey) {
             if (e.key === 's') {
                 e.preventDefault();
-                document.getElementById('workflow-form').submit();
+                document.getElementById('drafting-form').submit();
             }
         }
     });
