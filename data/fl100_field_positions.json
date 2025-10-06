@@ -1,0 +1,519 @@
+{
+  "form_info": {
+    "form_id": "FL-100",
+    "form_name": "Petition—Marriage/Domestic Partnership",
+    "version": "Rev. 1/1/2023",
+    "pages": 2
+  },
+  "field_positions": {
+    "page_1": {
+      "attorney_name": {
+        "page": 1,
+        "x": 75,
+        "y": 95,
+        "width": 250,
+        "height": 12
+      },
+      "attorney_bar_number": {
+        "page": 1,
+        "x": 340,
+        "y": 95,
+        "width": 100,
+        "height": 12
+      },
+      "attorney_firm": {
+        "page": 1,
+        "x": 75,
+        "y": 110,
+        "width": 365,
+        "height": 12
+      },
+      "attorney_street": {
+        "page": 1,
+        "x": 75,
+        "y": 125,
+        "width": 365,
+        "height": 12
+      },
+      "attorney_city": {
+        "page": 1,
+        "x": 75,
+        "y": 140,
+        "width": 150,
+        "height": 12
+      },
+      "attorney_state": {
+        "page": 1,
+        "x": 230,
+        "y": 140,
+        "width": 30,
+        "height": 12
+      },
+      "attorney_zip": {
+        "page": 1,
+        "x": 265,
+        "y": 140,
+        "width": 80,
+        "height": 12
+      },
+      "attorney_phone": {
+        "page": 1,
+        "x": 75,
+        "y": 155,
+        "width": 120,
+        "height": 12
+      },
+      "attorney_fax": {
+        "page": 1,
+        "x": 200,
+        "y": 155,
+        "width": 120,
+        "height": 12
+      },
+      "attorney_email": {
+        "page": 1,
+        "x": 75,
+        "y": 170,
+        "width": 365,
+        "height": 12
+      },
+      "attorney_for": {
+        "page": 1,
+        "x": 75,
+        "y": 185,
+        "width": 365,
+        "height": 12
+      },
+      "court_county": {
+        "page": 1,
+        "x": 180,
+        "y": 225,
+        "width": 260,
+        "height": 12
+      },
+      "court_street": {
+        "page": 1,
+        "x": 75,
+        "y": 240,
+        "width": 365,
+        "height": 12
+      },
+      "court_mailing": {
+        "page": 1,
+        "x": 75,
+        "y": 255,
+        "width": 365,
+        "height": 12
+      },
+      "court_city_zip": {
+        "page": 1,
+        "x": 75,
+        "y": 270,
+        "width": 365,
+        "height": 12
+      },
+      "court_branch": {
+        "page": 1,
+        "x": 75,
+        "y": 285,
+        "width": 365,
+        "height": 12
+      },
+      "petitioner_name": {
+        "page": 1,
+        "x": 75,
+        "y": 330,
+        "width": 200,
+        "height": 12
+      },
+      "respondent_name": {
+        "page": 1,
+        "x": 75,
+        "y": 350,
+        "width": 200,
+        "height": 12
+      },
+      "case_number": {
+        "page": 1,
+        "x": 350,
+        "y": 330,
+        "width": 120,
+        "height": 12
+      },
+      "petition_dissolution_marriage": {
+        "page": 1,
+        "x": 75,
+        "y": 405,
+        "checkbox": true
+      },
+      "petition_dissolution_partnership": {
+        "page": 1,
+        "x": 75,
+        "y": 420,
+        "checkbox": true
+      },
+      "petition_legal_separation_marriage": {
+        "page": 1,
+        "x": 290,
+        "y": 405,
+        "checkbox": true
+      },
+      "petition_legal_separation_partnership": {
+        "page": 1,
+        "x": 290,
+        "y": 420,
+        "checkbox": true
+      },
+      "petition_nullity_marriage": {
+        "page": 1,
+        "x": 75,
+        "y": 440,
+        "checkbox": true
+      },
+      "petition_nullity_partnership": {
+        "page": 1,
+        "x": 290,
+        "y": 440,
+        "checkbox": true
+      },
+      "we_are_married": {
+        "page": 1,
+        "x": 75,
+        "y": 485,
+        "checkbox": true
+      },
+      "we_are_domestic_partners": {
+        "page": 1,
+        "x": 75,
+        "y": 500,
+        "checkbox": true
+      },
+      "we_are_same_sex_married": {
+        "page": 1,
+        "x": 75,
+        "y": 515,
+        "checkbox": true
+      },
+      "petitioner_resident": {
+        "page": 1,
+        "x": 95,
+        "y": 560,
+        "checkbox": true
+      },
+      "respondent_resident": {
+        "page": 1,
+        "x": 95,
+        "y": 575,
+        "checkbox": true
+      },
+      "same_sex_not_resident": {
+        "page": 1,
+        "x": 95,
+        "y": 590,
+        "checkbox": true
+      },
+      "our_partnership_established": {
+        "page": 1,
+        "x": 95,
+        "y": 605,
+        "checkbox": true
+      },
+      "date_married_month": {
+        "page": 1,
+        "x": 160,
+        "y": 650,
+        "width": 25,
+        "height": 12
+      },
+      "date_married_day": {
+        "page": 1,
+        "x": 190,
+        "y": 650,
+        "width": 25,
+        "height": 12
+      },
+      "date_married_year": {
+        "page": 1,
+        "x": 220,
+        "y": 650,
+        "width": 40,
+        "height": 12
+      },
+      "date_separated_month": {
+        "page": 1,
+        "x": 160,
+        "y": 670,
+        "width": 25,
+        "height": 12
+      },
+      "date_separated_day": {
+        "page": 1,
+        "x": 190,
+        "y": 670,
+        "width": 25,
+        "height": 12
+      },
+      "date_separated_year": {
+        "page": 1,
+        "x": 220,
+        "y": 670,
+        "width": 40,
+        "height": 12
+      },
+      "time_from_marriage_years": {
+        "page": 1,
+        "x": 240,
+        "y": 690,
+        "width": 30,
+        "height": 12
+      },
+      "time_from_marriage_months": {
+        "page": 1,
+        "x": 300,
+        "y": 690,
+        "width": 30,
+        "height": 12
+      }
+    },
+    "page_2": {
+      "case_number_page2": {
+        "page": 2,
+        "x": 350,
+        "y": 60,
+        "width": 120,
+        "height": 12
+      },
+      "no_minor_children": {
+        "page": 2,
+        "x": 95,
+        "y": 95,
+        "checkbox": true
+      },
+      "minor_children_of_petitioner_respondent": {
+        "page": 2,
+        "x": 95,
+        "y": 110,
+        "checkbox": true
+      },
+      "child1_name": {
+        "page": 2,
+        "x": 120,
+        "y": 130,
+        "width": 180,
+        "height": 12
+      },
+      "child1_birthdate": {
+        "page": 2,
+        "x": 310,
+        "y": 130,
+        "width": 70,
+        "height": 12
+      },
+      "child1_age": {
+        "page": 2,
+        "x": 390,
+        "y": 130,
+        "width": 30,
+        "height": 12
+      },
+      "child1_sex": {
+        "page": 2,
+        "x": 430,
+        "y": 130,
+        "width": 20,
+        "height": 12
+      },
+      "child2_name": {
+        "page": 2,
+        "x": 120,
+        "y": 145,
+        "width": 180,
+        "height": 12
+      },
+      "child2_birthdate": {
+        "page": 2,
+        "x": 310,
+        "y": 145,
+        "width": 70,
+        "height": 12
+      },
+      "child2_age": {
+        "page": 2,
+        "x": 390,
+        "y": 145,
+        "width": 30,
+        "height": 12
+      },
+      "child2_sex": {
+        "page": 2,
+        "x": 430,
+        "y": 145,
+        "width": 20,
+        "height": 12
+      },
+      "continued_attachment": {
+        "page": 2,
+        "x": 95,
+        "y": 175,
+        "checkbox": true
+      },
+      "pregnant_no": {
+        "page": 2,
+        "x": 95,
+        "y": 195,
+        "checkbox": true
+      },
+      "pregnant_yes": {
+        "page": 2,
+        "x": 95,
+        "y": 210,
+        "checkbox": true
+      },
+      "grounds_irreconcilable": {
+        "page": 2,
+        "x": 115,
+        "y": 255,
+        "checkbox": true
+      },
+      "grounds_incurable_insanity": {
+        "page": 2,
+        "x": 115,
+        "y": 270,
+        "checkbox": true
+      },
+      "child_custody_to_petitioner": {
+        "page": 2,
+        "x": 115,
+        "y": 340,
+        "checkbox": true
+      },
+      "child_custody_to_respondent": {
+        "page": 2,
+        "x": 200,
+        "y": 340,
+        "checkbox": true
+      },
+      "child_custody_other": {
+        "page": 2,
+        "x": 285,
+        "y": 340,
+        "checkbox": true
+      },
+      "child_visitation_granted": {
+        "page": 2,
+        "x": 95,
+        "y": 360,
+        "checkbox": true
+      },
+      "child_visitation_petitioner": {
+        "page": 2,
+        "x": 115,
+        "y": 375,
+        "checkbox": true
+      },
+      "child_visitation_respondent": {
+        "page": 2,
+        "x": 200,
+        "y": 375,
+        "checkbox": true
+      },
+      "determine_parentage": {
+        "page": 2,
+        "x": 95,
+        "y": 395,
+        "checkbox": true
+      },
+      "spousal_support_petitioner": {
+        "page": 2,
+        "x": 115,
+        "y": 425,
+        "checkbox": true
+      },
+      "spousal_support_respondent": {
+        "page": 2,
+        "x": 200,
+        "y": 425,
+        "checkbox": true
+      },
+      "terminate_support_petitioner": {
+        "page": 2,
+        "x": 115,
+        "y": 445,
+        "checkbox": true
+      },
+      "terminate_support_respondent": {
+        "page": 2,
+        "x": 200,
+        "y": 445,
+        "checkbox": true
+      },
+      "property_rights_determination": {
+        "page": 2,
+        "x": 95,
+        "y": 470,
+        "checkbox": true
+      },
+      "attorney_fees_petitioner": {
+        "page": 2,
+        "x": 115,
+        "y": 490,
+        "checkbox": true
+      },
+      "attorney_fees_respondent": {
+        "page": 2,
+        "x": 200,
+        "y": 490,
+        "checkbox": true
+      },
+      "restore_name": {
+        "page": 2,
+        "x": 95,
+        "y": 515,
+        "checkbox": true
+      },
+      "former_name": {
+        "page": 2,
+        "x": 120,
+        "y": 530,
+        "width": 320,
+        "height": 12
+      },
+      "other_relief": {
+        "page": 2,
+        "x": 95,
+        "y": 555,
+        "width": 400,
+        "height": 50,
+        "multiline": true
+      },
+      "petitioner_signature_date": {
+        "page": 2,
+        "x": 75,
+        "y": 690,
+        "width": 100,
+        "height": 12
+      },
+      "petitioner_signature": {
+        "page": 2,
+        "x": 250,
+        "y": 690,
+        "width": 200,
+        "height": 20
+      },
+      "attorney_signature_date": {
+        "page": 2,
+        "x": 75,
+        "y": 730,
+        "width": 100,
+        "height": 12
+      },
+      "attorney_signature": {
+        "page": 2,
+        "x": 250,
+        "y": 730,
+        "width": 200,
+        "height": 20
+      }
+    }
+  }
+}

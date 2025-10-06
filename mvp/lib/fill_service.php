@@ -28,8 +28,34 @@ final class FillService {
 		$this->logger->debug('Values (masked): ' . json_encode($this->maskPii($values)), ['pdId' => $pd]);
 		$startedAt = microtime(true);
 		try {
-			// Prefer positioned rendering when positions exist
-			$templateId = (string)($template['id'] ?? 't_fl100_gc120');
+			// Use specialized FL-100 filler for FL-100 forms with precise positioning
+			$templateId = (string)($template['id'] ?? '');
+			if ($templateId === 't_fl100_gc120' || ($template['code'] ?? '') === 'FL-100') {
+				require_once __DIR__ . '/pdf_fl100_filler.php';
+				$fl100Filler = new \WebPdfTimeSaver\Mvp\FL100PdfFiller($this->outputDir);
+				
+				// Generate filename with context
+				$prefix = $context['filename_prefix'] ?? 'mvp_' . date('Ymd_His');
+				$filename = $prefix . '_' . $templateId . '.pdf';
+				
+				// Fill the form with the values
+				$result = $fl100Filler->fillForm($values, $filename);
+				
+				if ($result['success']) {
+					$durationMs = (int)round((microtime(true) - $startedAt) * 1000);
+					$this->logger->info('FL-100 PDF generation finished', [
+						'pdId' => $pd, 
+						'durationMs' => $durationMs,
+						'sizeBytes' => $result['size'],
+						'pages' => 2
+					]);
+					return $result;
+				} else {
+					throw new \Exception("Failed to generate FL-100 PDF");
+				}
+			}
+			
+			// Default positioned rendering for other forms
 			$result = $this->formFiller->fillPdfFormWithPositions($template, $values, $templateId);
 			$durationMs = (int)round((microtime(true) - $startedAt) * 1000);
 			$path = $result['path'] ?? ($result['outputPath'] ?? null);
