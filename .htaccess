@@ -1,1 +1,18 @@
 
+DirectoryIndex index.php
+
+# Enable basic rewrites if needed by subdirs
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	# Ensure the MVP app can be addressed cleanly from root
+	RewriteRule ^$ index.php [L]
+</IfModule>
+
+# Deny direct web access to sensitive directories/files
+<FilesMatch "^(composer\.(json|lock|phar)|README\.md|XAMPP-SETUP\.md|STATUS_NOW\.md)$">
+	Require all denied
+</FilesMatch>
+
+# Allow listing prevention but not cause 403 on index.php
+Options -Indexes
+
