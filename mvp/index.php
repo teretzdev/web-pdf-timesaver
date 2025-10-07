@@ -162,6 +162,76 @@ case 'projects':
 		render('populate', [ 'projectDocument' => $projDoc, 'template' => $template, 'values' => $values, 'customFields' => $customFields ]);
 		break;
 
+	case 'drafting':
+		$pdId = (string)($_GET['pd'] ?? '');
+		$projDoc = $store->getProjectDocumentById($pdId);
+		if (!$projDoc) {
+			header('HTTP/1.1 404 Not Found');
+			echo 'Document not found';
+			exit;
+		}
+		
+		$template = $templates[$projDoc['templateId']] ?? null;
+		if (!$template) {
+			header('HTTP/1.1 404 Not Found');
+			echo 'Template not found';
+			exit;
+		}
+		
+		$values = $store->getFieldValues($pdId);
+		$customFields = $store->getCustomFields($pdId);
+		$project = $store->getProject($projDoc['projectId']);
+		
+		render('drafting', [
+			'projectDocumentId' => $pdId,
+			'projectDocument' => $projDoc,
+			'template' => $template,
+			'values' => $values,
+			'customFields' => $customFields,
+			'project' => $project
+		]);
+		break;
+
+	case 'actions/save-draft-fields':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+			header('Location: ?route=projects');
+			exit;
+		}
+		
+		$pdId = (string)($_POST['projectDocumentId'] ?? '');
+		$draftSessionId = (string)($_POST['draftSessionId'] ?? '');
+		$currentPanel = (string)($_POST['currentPanel'] ?? '');
+		
+		// Save field values
+		$data = $_POST;
+		unset($data['projectDocumentId'], $data['workflowId'], $data['currentPanel']);
+		$store->saveFieldValues($pdId, $data);
+		
+		// Update draft session state if needed
+		if ($draftSessionId && $currentPanel) {
+			require_once __DIR__ . '/lib/drafting_manager.php';
+			$draftingManager = new \WebPdfTimeSaver\Mvp\DraftingManager($store, $templates);
+			$draftingManager->completePanel($draftSessionId, $currentPanel);
+		}
+		
+		// Determine next panel
+		$projDoc = $store->getProjectDocumentById($pdId);
+		$template = $templates[$projDoc['templateId']] ?? null;
+		$currentPanelIndex = 0;
+		
+		if ($template && isset($template['panels'])) {
+			foreach ($template['panels'] as $index => $panel) {
+				if ($panel['id'] === $currentPanel) {
+					$currentPanelIndex = $index;
+					break;
+				}
+			}
+		}
+		
+		$nextPanelIndex = $currentPanelIndex + 1;
+		header('Location: ?route=drafting&pd=' . urlencode($pdId) . '&panel=' . $nextPanelIndex);
+		exit;
+
 	case 'populate_test':
 		$pdId = (string)($_GET['pd'] ?? '');
 		$projDoc = $store->getProjectDocumentById($pdId);
@@ -569,6 +639,57 @@ case 'projects':
 		}
 		render('template-edit', [ 'template' => $template, 'templateId' => $templateId ]);
 		break;
+
+	case 'drafting-editor':
+		$templateId = (string)($_GET['id'] ?? '');
+		$projectDocumentId = (string)($_GET['pd'] ?? '');
+		$template = $templates[$templateId] ?? null;
+		
+		// If accessing from a project document, get the template from there
+		if ($projectDocumentId) {
+			$projDoc = $store->getProjectDocumentById($projectDocumentId);
+			if ($projDoc) {
+				$template = $templates[$projDoc['templateId']] ?? null;
+				$templateId = $projDoc['templateId'];
+			}
+		}
+		
+		if (!$template) {
+			header('Location: ?route=templates');
+			exit;
+		}
+		render('drafting-editor', [ 'template' => $template, 'templateId' => $templateId, 'projectDocumentId' => $projectDocumentId ]);
+		break;
+
+	case 'actions/save-panel-configuration':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+			header('Content-Type: application/json');
+			echo json_encode(['success' => false, 'message' => 'Invalid request method']);
+			exit;
+		}
+		
+		$templateId = (string)($_POST['templateId'] ?? '');
+		$configuration = json_decode($_POST['configuration'] ?? '[]', true);
+		
+		if (!$templateId || !$configuration) {
+			header('Content-Type: application/json');
+			echo json_encode(['success' => false, 'message' => 'Missing required data']);
+			exit;
+		}
+		
+		// Save the panel configuration to a file
+		$configFile = __DIR__ . '/../data/panel_configs/' . $templateId . '.json';
+		$configDir = dirname($configFile);
+		
+		if (!is_dir($configDir)) {
+			mkdir($configDir, 0777, true);
+		}
+		
+		$saved = file_put_contents($configFile, json_encode($configuration, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+		
+		header('Content-Type: application/json');
+		echo json_encode(['success' => $saved !== false]);
+		exit;
 
 	case 'activities':
 		render('activities');
