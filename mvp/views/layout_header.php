@@ -3,10 +3,10 @@
 require_once __DIR__ . '/breadcrumb.php';
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Clio</title>
     <style>
         * { 
@@ -58,27 +58,7 @@ require_once __DIR__ . '/breadcrumb.php';
             letter-spacing: -0.5px;
         }
         
-        .clio-nav {
-            display: flex;
-            align-items: center;
-            gap: 32px;
-        }
         
-        .clio-nav-item {
-            color: #6c757d;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 14px;
-            padding: 8px 0;
-            border-bottom: 2px solid transparent;
-            transition: all 0.2s ease;
-        }
-        
-        .clio-nav-item:hover,
-        .clio-nav-item.active {
-            color: #1976d2;
-            border-bottom-color: #1976d2;
-        }
         
         .clio-user-menu {
             display: flex;
@@ -263,12 +243,21 @@ require_once __DIR__ . '/breadcrumb.php';
             color: #0c5460;
         }
         
+        /* Feature detection and fallbacks */
+        @supports not (display: flex) {
+            .clio-header { display: block; }
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .clio-content-body {
                 padding: 20px;
             }
         }
+
+        /* Orientation-specific adjustments */
+        @media (orientation: portrait) { /* placeholder for portrait-specific styles */ }
+        @media (orientation: landscape) { /* placeholder for landscape-specific styles */ }
     </style>
 </head>
 <body>
@@ -278,17 +267,6 @@ require_once __DIR__ . '/breadcrumb.php';
             <img src="../logo.png" alt="Clio">
             <span class="clio-logo-text">Clio</span>
         </div>
-        
-        <nav class="clio-nav">
-            <a href="?route=dashboard" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'dashboard' ? 'active' : ''; ?>">Dashboard</a>
-            <a href="?route=projects" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'projects' ? 'active' : ''; ?>">Matters</a>
-            <a href="?route=clients" class="clio-nav-item <?php echo ($_GET['route'] ?? 'clients') === 'clients' ? 'active' : ''; ?>">Contacts</a>
-            <a href="?route=activities" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'activities' ? 'active' : ''; ?>">Activities</a>
-            <a href="?route=bills" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'bills' ? 'active' : ''; ?>">Bills</a>
-            <a href="?route=documents" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'documents' ? 'active' : ''; ?>">Documents</a>
-            <a href="?route=reports" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'reports' ? 'active' : ''; ?>">Reports</a>
-            <a href="?route=settings" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'settings' ? 'active' : ''; ?>">Settings</a>
-        </nav>
         
         <div class="clio-user-menu">
             <div class="clio-user-avatar">JD</div>
