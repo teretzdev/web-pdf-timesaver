@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace WebPdfTimeSaver\Mvp;
 
-require_once __DIR__ . '/../../vendor/autoload.php';
+$__autoload = __DIR__ . '/../../vendor/autoload.php';
+if (file_exists($__autoload)) {
+    require_once $__autoload;
+}
 require_once __DIR__ . '/pdf_form_filler.php';
 require_once __DIR__ . '/logger.php';
 use setasign\Fpdi\Fpdi;

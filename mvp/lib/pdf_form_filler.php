@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace WebPdfTimeSaver\Mvp;
 
-require_once __DIR__ . '/../../vendor/autoload.php';
+$__autoload = __DIR__ . '/../../vendor/autoload.php';
+if (file_exists($__autoload)) {
+    require_once $__autoload;
+}
 require_once __DIR__ . '/field_position_loader.php';
 require_once __DIR__ . '/field_fillers/FieldFillerManager.php';
 

@@ -14,11 +14,11 @@ use WebPdfTimeSaver\Mvp\TemplateRegistry;
 use WebPdfTimeSaver\Mvp\FillService;
 use WebPdfTimeSaver\Mvp\PdfFieldService;
 
+$logger = new \WebPdfTimeSaver\Mvp\Logger();
 $store = new DataStore(__DIR__ . '/../data/mvp.json');
 $templates = TemplateRegistry::load();
 $fill = new FillService(__DIR__ . '/../output', $logger);
 $pdfFieldService = new PdfFieldService();
-$logger = new \WebPdfTimeSaver\Mvp\Logger();
 
 $route = $_GET['route'] ?? 'dashboard';
 
@@ -315,7 +315,11 @@ case 'projects':
 		}
 		// persist path and status
 		$projDoc['status'] = 'ready_to_sign';
-		$projDoc['outputPath'] = $result['filename']; // Store relative path only
+        $generatedFilename = $result['filename'] ?? ($result['file'] ?? null);
+        if ($generatedFilename) {
+            // Store relative filename only
+            $projDoc['outputPath'] = $generatedFilename;
+        }
 		// naive update
 		$docs = $store->getProjectDocuments($projDoc['projectId']);
 		// replace in DB
