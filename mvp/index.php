@@ -16,9 +16,12 @@ use WebPdfTimeSaver\Mvp\PdfFieldService;
 
 $store = new DataStore(__DIR__ . '/../data/mvp.json');
 $templates = TemplateRegistry::load();
+// Initialize logger BEFORE passing it into services to avoid undefined variable notices
+$logger = new \WebPdfTimeSaver\Mvp\Logger();
 $fill = new FillService(__DIR__ . '/../output', $logger);
 $pdfFieldService = new PdfFieldService();
-$logger = new \WebPdfTimeSaver\Mvp\Logger();
+// Toggle verbose debug logging with env MVP_DEBUG_LOG=1
+$isDebug = getenv('MVP_DEBUG_LOG') === '1';
 
 $route = $_GET['route'] ?? 'dashboard';
 
@@ -139,26 +142,34 @@ case 'projects':
 		exit;
 
 	case 'populate':
-		$logFile = __DIR__ . '/../logs/pdf_debug.log';
-		$pdId = (string)($_GET['pd'] ?? '');
-		file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Accessing populate form for PD ID: ' . $pdId . PHP_EOL, FILE_APPEND);
+        $logFile = __DIR__ . '/../logs/pdf_debug.log';
+        $pdId = (string)($_GET['pd'] ?? '');
+        if ($isDebug) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Accessing populate form for PD ID: ' . $pdId . PHP_EOL, FILE_APPEND);
+        }
 		
 		$projDoc = $store->getProjectDocumentById($pdId);
-		if (!$projDoc) {
-			file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Project document not found' . PHP_EOL, FILE_APPEND);
+        if (!$projDoc) {
+            if ($isDebug) {
+                file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Project document not found' . PHP_EOL, FILE_APPEND);
+            }
 			header('HTTP/1.1 404 Not Found');
 			echo 'Document not found';
 			exit;
 		}
 		
-		$template = $templates[$projDoc['templateId']] ?? null;
-		file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Template ID: ' . ($projDoc['templateId'] ?? 'NONE') . PHP_EOL, FILE_APPEND);
-		file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Template found: ' . ($template ? 'YES' : 'NO') . PHP_EOL, FILE_APPEND);
+        $template = $templates[$projDoc['templateId']] ?? null;
+        if ($isDebug) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Template ID: ' . ($projDoc['templateId'] ?? 'NONE') . PHP_EOL, FILE_APPEND);
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Template found: ' . ($template ? 'YES' : 'NO') . PHP_EOL, FILE_APPEND);
+        }
 		
-		$values = $store->getFieldValues($pdId);
-		$customFields = $store->getCustomFields($pdId);
-		
-		file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Rendering populate form with values: ' . json_encode($values) . PHP_EOL, FILE_APPEND);
+        $values = $store->getFieldValues($pdId);
+        $customFields = $store->getCustomFields($pdId);
+        
+        if ($isDebug) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Rendering populate form with values: ' . json_encode($values) . PHP_EOL, FILE_APPEND);
+        }
 		render('populate', [ 'projectDocument' => $projDoc, 'template' => $template, 'values' => $values, 'customFields' => $customFields ]);
 		break;
 
@@ -268,25 +279,35 @@ case 'projects':
 		exit;
 
 	case 'actions/save-fields':
-		$logFile = __DIR__ . '/../logs/pdf_debug.log';
-		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Request method: ' . $_SERVER['REQUEST_METHOD'] . PHP_EOL, FILE_APPEND);
-		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: POST data: ' . json_encode($_POST) . PHP_EOL, FILE_APPEND);
+        $logFile = __DIR__ . '/../logs/pdf_debug.log';
+        if ($isDebug) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Request method: ' . $_SERVER['REQUEST_METHOD'] . PHP_EOL, FILE_APPEND);
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: POST data: ' . json_encode($_POST) . PHP_EOL, FILE_APPEND);
+        }
 		
 		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { 
-			file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Not POST request, redirecting' . PHP_EOL, FILE_APPEND);
+            if ($isDebug) {
+                file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Not POST request, redirecting' . PHP_EOL, FILE_APPEND);
+            }
 			header('Location: ?route=projects'); 
 			exit; 
 		}
 		
 		$pdId = (string)($_POST['projectDocumentId'] ?? '');
-		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: PD ID: ' . $pdId . PHP_EOL, FILE_APPEND);
+        if ($isDebug) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: PD ID: ' . $pdId . PHP_EOL, FILE_APPEND);
+        }
 		
 		$data = $_POST;
 		unset($data['projectDocumentId']);
-		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Data to save: ' . json_encode($data) . PHP_EOL, FILE_APPEND);
+        if ($isDebug) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Data to save: ' . json_encode($data) . PHP_EOL, FILE_APPEND);
+        }
 		
 		$store->saveFieldValues($pdId, $data);
-		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Values saved successfully' . PHP_EOL, FILE_APPEND);
+        if ($isDebug) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Values saved successfully' . PHP_EOL, FILE_APPEND);
+        }
 		
 		header('Location: ?route=populate&pd=' . urlencode($pdId) . '&saved=1');
 		exit;
@@ -300,9 +321,11 @@ case 'projects':
 		
 		// Debug: Log what we're working with
 		$logFile = __DIR__ . '/../logs/pdf_debug.log';
-		file_put_contents($logFile, date('Y-m-d H:i:s') . ' GENERATE DEBUG: PD ID: ' . $pdId . PHP_EOL, FILE_APPEND);
-		file_put_contents($logFile, date('Y-m-d H:i:s') . ' GENERATE DEBUG: Template: ' . json_encode($template) . PHP_EOL, FILE_APPEND);
-		file_put_contents($logFile, date('Y-m-d H:i:s') . ' GENERATE DEBUG: Values: ' . json_encode($values) . PHP_EOL, FILE_APPEND);
+        if ($isDebug) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' GENERATE DEBUG: PD ID: ' . $pdId . PHP_EOL, FILE_APPEND);
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' GENERATE DEBUG: Template: ' . json_encode($template) . PHP_EOL, FILE_APPEND);
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' GENERATE DEBUG: Values: ' . json_encode($values) . PHP_EOL, FILE_APPEND);
+        }
 		
         try {
             $result = $fill->generateSimplePdf($template ?? [], $values, ['pdId' => $pdId]);

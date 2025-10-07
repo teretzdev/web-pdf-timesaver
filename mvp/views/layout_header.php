@@ -273,22 +273,31 @@ require_once __DIR__ . '/breadcrumb.php';
 </head>
 <body>
     <!-- Clio Header -->
+    <?php 
+    // Allow disabling the navbar in production without code changes
+    // Priority: query param nav=0 > env MVP_NAV_ENABLED=0 > default on
+    $navDisabledByQuery = isset($_GET['nav']) && $_GET['nav'] === '0';
+    $navEnabledByEnv = getenv('MVP_NAV_ENABLED') !== '0';
+    $navEnabled = !$navDisabledByQuery && $navEnabledByEnv;
+    ?>
     <header class="clio-header">
         <div class="clio-logo">
             <img src="../logo.png" alt="Clio">
             <span class="clio-logo-text">Clio</span>
         </div>
         
-        <nav class="clio-nav">
-            <a href="?route=dashboard" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'dashboard' ? 'active' : ''; ?>">Dashboard</a>
-            <a href="?route=projects" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'projects' ? 'active' : ''; ?>">Matters</a>
-            <a href="?route=clients" class="clio-nav-item <?php echo ($_GET['route'] ?? 'clients') === 'clients' ? 'active' : ''; ?>">Contacts</a>
-            <a href="?route=activities" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'activities' ? 'active' : ''; ?>">Activities</a>
-            <a href="?route=bills" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'bills' ? 'active' : ''; ?>">Bills</a>
-            <a href="?route=documents" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'documents' ? 'active' : ''; ?>">Documents</a>
-            <a href="?route=reports" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'reports' ? 'active' : ''; ?>">Reports</a>
-            <a href="?route=settings" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'settings' ? 'active' : ''; ?>">Settings</a>
-        </nav>
+        <?php if ($navEnabled): ?>
+            <nav class="clio-nav">
+                <a href="?route=dashboard" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'dashboard' ? 'active' : ''; ?>">Dashboard</a>
+                <a href="?route=projects" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'projects' ? 'active' : ''; ?>">Matters</a>
+                <a href="?route=clients" class="clio-nav-item <?php echo ($_GET['route'] ?? 'clients') === 'clients' ? 'active' : ''; ?>">Contacts</a>
+                <a href="?route=activities" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'activities' ? 'active' : ''; ?>">Activities</a>
+                <a href="?route=bills" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'bills' ? 'active' : ''; ?>">Bills</a>
+                <a href="?route=documents" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'documents' ? 'active' : ''; ?>">Documents</a>
+                <a href="?route=reports" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'reports' ? 'active' : ''; ?>">Reports</a>
+                <a href="?route=settings" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'settings' ? 'active' : ''; ?>">Settings</a>
+            </nav>
+        <?php endif; ?>
         
         <div class="clio-user-menu">
             <div class="clio-user-avatar">JD</div>
