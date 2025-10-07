@@ -1,0 +1,17 @@
+DirectoryIndex index.php
+
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase /mvp/
+
+	# Route bare /mvp and /mvp/ to index.php
+	RewriteRule ^$ index.php [L]
+
+	# Pass-through PHP entry when query params present
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^ index.php [L]
+</IfModule>
+
+Options -Indexes
+

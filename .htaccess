@@ -6,6 +6,8 @@ DirectoryIndex index.php
 	RewriteEngine On
 	# Ensure the MVP app can be addressed cleanly from root
 	RewriteRule ^$ index.php [L]
+	# Route /mvp to its entrypoint
+	RewriteRule ^mvp/?$ mvp/index.php [L]
 </IfModule>
 
 # Deny direct web access to sensitive directories/files
