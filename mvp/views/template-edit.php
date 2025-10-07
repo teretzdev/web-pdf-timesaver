@@ -1,153 +1,106 @@
-<h2>Edit Template — <?php echo htmlspecialchars($template['code'] ?? ''); ?> <?php echo htmlspecialchars($template['name'] ?? ''); ?></h2>
-
-<div class="row" style="gap: 16px; margin-bottom: 16px;">
-    <a href="?route=templates" class="btn secondary">Back to Templates</a>
-    <a href="?route=projects" class="btn secondary">Projects</a>
-</div>
-
-<div class="panel">
-    <h3>Template Information</h3>
-    <div class="grid">
+<div class="clio-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
         <div>
-            <strong>Code:</strong> <?php echo htmlspecialchars($template['code'] ?? ''); ?>
+            <h2 style="margin: 0 0 6px 0; color: #2c3e50; font-size: 24px; font-weight: 700;">
+                <?php echo htmlspecialchars($template['code'] ?? ''); ?> — <?php echo htmlspecialchars($template['name'] ?? ''); ?>
+            </h2>
+            <p style="margin: 0; color: #6c757d; font-size: 14px;">Template details and field configuration</p>
         </div>
         <div>
-            <strong>Name:</strong> <?php echo htmlspecialchars($template['name'] ?? ''); ?>
-        </div>
-        <div>
-            <strong>Version:</strong> <?php echo htmlspecialchars($template['version'] ?? '1.0'); ?>
-        </div>
-        <div>
-            <strong>Fields:</strong> <?php echo count($template['fields'] ?? []); ?>
+            <a href="?route=templates" class="clio-btn-secondary">← Back to Templates</a>
         </div>
     </div>
 </div>
 
-<div class="panel">
-    <h3>Panels</h3>
-    <p class="muted">Panels organize fields into logical groups in the form interface.</p>
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 24px; margin-bottom: 32px;">
+    <div class="clio-card">
+        <h3 style="margin: 0 0 16px 0; color: #2c3e50; font-size: 18px; font-weight: 600;">Template Info</h3>
+        <div style="margin-bottom: 12px;">
+            <div style="color: #6c757d; font-size: 12px; margin-bottom: 4px;">Code</div>
+            <div style="font-weight: 600; color: #2c3e50;"><?php echo htmlspecialchars($template['code'] ?? ''); ?></div>
+        </div>
+        <div style="margin-bottom: 12px;">
+            <div style="color: #6c757d; font-size: 12px; margin-bottom: 4px;">Version</div>
+            <div style="font-weight: 600; color: #2c3e50;"><?php echo htmlspecialchars($template['version'] ?? '1.0'); ?></div>
+        </div>
+    </div>
     
-    <?php if (!empty($template['panels'])): ?>
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Label</th>
-                    <th>Order</th>
-                    <th>Fields</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($template['panels'] as $panel): ?>
-                    <tr>
-                        <td><code><?php echo htmlspecialchars($panel['id']); ?></code></td>
-                        <td><?php echo htmlspecialchars($panel['label']); ?></td>
-                        <td><?php echo htmlspecialchars($panel['order'] ?? 0); ?></td>
-                        <td>
-                            <?php 
-                            $fieldCount = 0;
-                            foreach ($template['fields'] ?? [] as $field) {
-                                if (($field['panelId'] ?? '') === $panel['id']) {
-                                    $fieldCount++;
-                                }
-                            }
-                            echo $fieldCount;
-                            ?>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    <?php else: ?>
-        <div class="muted">No panels defined for this template.</div>
-    <?php endif; ?>
+    <div class="clio-card">
+        <h3 style="margin: 0 0 16px 0; color: #2c3e50; font-size: 18px; font-weight: 600;">Structure</h3>
+        <div style="margin-bottom: 12px;">
+            <div style="color: #6c757d; font-size: 12px; margin-bottom: 4px;">Total Fields</div>
+            <div style="font-weight: 600; color: #2c3e50;"><?php echo count($template['fields'] ?? []); ?> fields</div>
+        </div>
+        <div style="margin-bottom: 12px;">
+            <div style="color: #6c757d; font-size: 12px; margin-bottom: 4px;">Panels</div>
+            <div style="font-weight: 600; color: #2c3e50;"><?php echo count($template['panels'] ?? []); ?> panels</div>
+        </div>
+    </div>
 </div>
 
-<div class="panel">
-    <h3>Fields</h3>
-    <p class="muted">Fields define the data that can be entered for this template.</p>
-    
-    <?php if (!empty($template['fields'])): ?>
-        <table class="table">
-            <thead>
+<?php if (!empty($template['panels'])): ?>
+<div class="clio-card">
+    <h3 style="margin: 0 0 24px 0; color: #2c3e50; font-size: 20px; font-weight: 600;">Panels</h3>
+    <table class="clio-table">
+        <thead>
+            <tr>
+                <th>Panel Name</th>
+                <th>Order</th>
+                <th>Fields</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($template['panels'] as $panel): ?>
                 <tr>
-                    <th>Key</th>
-                    <th>Label</th>
-                    <th>Type</th>
-                    <th>Panel</th>
-                    <th>Required</th>
-                    <th>PDF Target</th>
-                </tr>
-            </thead>
-            <tbody>
-                <?php foreach ($template['fields'] as $field): ?>
-                    <tr>
-                        <td><code><?php echo htmlspecialchars($field['key']); ?></code></td>
-                        <td><?php echo htmlspecialchars($field['label']); ?></td>
-                        <td>
-                            <span style="background: #eef2f7; padding: 2px 6px; border-radius: 4px; font-size: 12px;">
-                                <?php echo htmlspecialchars($field['type'] ?? 'text'); ?>
-                            </span>
-                        </td>
-                        <td>
-                            <?php 
-                            $panelLabel = '';
-                            foreach ($template['panels'] ?? [] as $panel) {
-                                if ($panel['id'] === ($field['panelId'] ?? '')) {
-                                    $panelLabel = $panel['label'];
-                                    break;
-                                }
+                    <td><?php echo htmlspecialchars($panel['label']); ?></td>
+                    <td><?php echo htmlspecialchars($panel['order'] ?? 0); ?></td>
+                    <td>
+                        <?php 
+                        $fieldCount = 0;
+                        foreach ($template['fields'] ?? [] as $field) {
+                            if (($field['panelId'] ?? '') === $panel['id']) {
+                                $fieldCount++;
                             }
-                            echo htmlspecialchars($panelLabel ?: 'No panel');
-                            ?>
-                        </td>
-                        <td>
-                            <?php if (!empty($field['required'])): ?>
-                                <span style="color: #dc3545;">Required</span>
-                            <?php else: ?>
-                                <span class="muted">Optional</span>
-                            <?php endif; ?>
-                        </td>
-                        <td>
-                            <?php if (!empty($field['pdfTarget']['formField'])): ?>
-                                <code><?php echo htmlspecialchars($field['pdfTarget']['formField']); ?></code>
-                            <?php elseif (!empty($field['pdfTarget']['page'])): ?>
-                                Page <?php echo htmlspecialchars($field['pdfTarget']['page']); ?>, 
-                                (<?php echo htmlspecialchars($field['pdfTarget']['x'] ?? 0); ?>, 
-                                <?php echo htmlspecialchars($field['pdfTarget']['y'] ?? 0); ?>)
-                            <?php else: ?>
-                                <span class="muted">Not mapped</span>
-                            <?php endif; ?>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
-            </tbody>
-        </table>
-    <?php else: ?>
-        <div class="muted">No fields defined for this template.</div>
-    <?php endif; ?>
+                        }
+                        echo $fieldCount;
+                        ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
 </div>
+<?php endif; ?>
 
-<div class="panel">
-    <h3>Field Details</h3>
-    <p class="muted">Detailed view of all fields with their properties.</p>
-    
-    <?php if (!empty($template['fields'])): ?>
-        <?php foreach ($template['fields'] as $field): ?>
-            <div style="border: 1px solid #eef2f7; border-radius: 8px; padding: 16px; margin-bottom: 12px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">
-                    <h4 style="margin: 0;"><?php echo htmlspecialchars($field['label']); ?></h4>
-                    <span style="background: #eef2f7; padding: 4px 8px; border-radius: 4px; font-size: 12px;">
-                        <?php echo htmlspecialchars($field['type'] ?? 'text'); ?>
-                    </span>
-                </div>
-                
-                <div class="grid">
-                    <div>
-                        <strong>Key:</strong> <code><?php echo htmlspecialchars($field['key']); ?></code>
-                    </div>
-                    <div>
-                        <strong>Panel:</strong> 
+<?php if (!empty($template['fields'])): ?>
+<div class="clio-card">
+    <h3 style="margin: 0 0 24px 0; color: #2c3e50; font-size: 20px; font-weight: 600;">Fields</h3>
+    <table class="clio-table">
+        <thead>
+            <tr>
+                <th>Field Name</th>
+                <th>Type</th>
+                <th>Panel</th>
+                <th>Required</th>
+            </tr>
+        </thead>
+        <tbody>
+            <?php foreach ($template['fields'] as $field): ?>
+                <tr>
+                    <td>
+                        <div style="font-weight: 600; color: #2c3e50;">
+                            <?php echo htmlspecialchars($field['label']); ?>
+                        </div>
+                        <div style="font-size: 12px; color: #6c757d;">
+                            <?php echo htmlspecialchars($field['key']); ?>
+                        </div>
+                    </td>
+                    <td>
+                        <span style="background: #f8f9fa; color: #495057; padding: 4px 8px; border-radius: 4px; font-size: 12px;">
+                            <?php echo htmlspecialchars($field['type'] ?? 'text'); ?>
+                        </span>
+                    </td>
+                    <td>
                         <?php 
                         $panelLabel = '';
                         foreach ($template['panels'] ?? [] as $panel) {
@@ -158,71 +111,17 @@
                         }
                         echo htmlspecialchars($panelLabel ?: 'No panel');
                         ?>
-                    </div>
-                    <div>
-                        <strong>Required:</strong> 
-                        <?php echo !empty($field['required']) ? 'Yes' : 'No'; ?>
-                    </div>
-                    <div>
-                        <strong>Placeholder:</strong> 
-                        <?php echo htmlspecialchars($field['placeholder'] ?? 'None'); ?>
-                    </div>
-                </div>
-                
-                <?php if (!empty($field['options'])): ?>
-                    <div style="margin-top: 8px;">
-                        <strong>Options:</strong>
-                        <ul style="margin: 4px 0 0 0; padding-left: 20px;">
-                            <?php foreach ($field['options'] as $option): ?>
-                                <li><?php echo htmlspecialchars($option); ?></li>
-                            <?php endforeach; ?>
-                        </ul>
-                    </div>
-                <?php endif; ?>
-                
-                <?php if (!empty($field['pdfTarget'])): ?>
-                    <div style="margin-top: 8px;">
-                        <strong>PDF Mapping:</strong>
-                        <?php if (!empty($field['pdfTarget']['formField'])): ?>
-                            Form field: <code><?php echo htmlspecialchars($field['pdfTarget']['formField']); ?></code>
-                        <?php elseif (!empty($field['pdfTarget']['page'])): ?>
-                            Position: Page <?php echo htmlspecialchars($field['pdfTarget']['page']); ?>, 
-                            (<?php echo htmlspecialchars($field['pdfTarget']['x'] ?? 0); ?>, 
-                            <?php echo htmlspecialchars($field['pdfTarget']['y'] ?? 0); ?>)
+                    </td>
+                    <td>
+                        <?php if (!empty($field['required'])): ?>
+                            <span style="color: #dc3545; font-weight: 500;">Required</span>
+                        <?php else: ?>
+                            <span style="color: #6c757d;">Optional</span>
                         <?php endif; ?>
-                    </div>
-                <?php endif; ?>
-            </div>
-        <?php endforeach; ?>
-    <?php endif; ?>
+                    </td>
+                </tr>
+            <?php endforeach; ?>
+        </tbody>
+    </table>
 </div>
-
-<div class="panel">
-    <h3>Usage</h3>
-    <p class="muted">This template can be used in projects to create documents with the fields defined above.</p>
-    <a href="?route=projects" class="btn">Create New Project</a>
-</div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+<?php endif; ?>
