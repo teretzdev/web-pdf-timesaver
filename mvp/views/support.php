@@ -1,12 +1,29 @@
-<h2>Help & support</h2>
-
-<div class="panel">
-    <p class="muted">For assistance, contact support@example.com or consult our quickstart image below.</p>
-    <div>
-        <img src="data:image/svg+xml;utf8,<?xml version='1.0' encoding='UTF-8'?><svg xmlns='http://www.w3.org/2000/svg' width='800' height='320'><rect width='100%' height='100%' fill='%23eef2f7'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='Segoe UI, Arial' font-size='24' fill='%230b6bcb'>Support Quickstart: Projects → Project → Populate → Generate → Sign</text></svg>" alt="Support quickstart" style="max-width:100%; border:1px solid #d7dce3; border-radius:10px;" />
+<div class="clio-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+        <div>
+            <h2 style="margin: 0 0 6px 0; color: #2c3e50; font-size: 24px; font-weight: 700;">Help & Support</h2>
+            <p style="margin: 0; color: #6c757d; font-size: 14px;">Get assistance with using the system</p>
+        </div>
     </div>
 </div>
 
-
-
-
+<div class="clio-card" style="text-align: center; padding: 40px;">
+    <div style="font-size: 48px; margin-bottom: 16px;">🛟</div>
+    <h3 style="margin: 0 0 8px 0; color: #2c3e50; font-size: 20px;">Need Help?</h3>
+    <p style="margin: 0 0 24px 0; color: #6c757d; font-size: 16px;">For assistance, contact support@example.com</p>
+    
+    <div style="background: #f8f9fa; border-radius: 8px; padding: 24px; margin-top: 32px;">
+        <h4 style="margin: 0 0 16px 0; color: #2c3e50; font-size: 16px;">Quick Workflow Guide</h4>
+        <div style="display: flex; justify-content: center; align-items: center; gap: 12px; flex-wrap: wrap; color: #495057;">
+            <span style="background: white; padding: 8px 16px; border-radius: 4px; border: 1px solid #dee2e6;">1. Create Matter</span>
+            <span>→</span>
+            <span style="background: white; padding: 8px 16px; border-radius: 4px; border: 1px solid #dee2e6;">2. Add Document</span>
+            <span>→</span>
+            <span style="background: white; padding: 8px 16px; border-radius: 4px; border: 1px solid #dee2e6;">3. Populate Fields</span>
+            <span>→</span>
+            <span style="background: white; padding: 8px 16px; border-radius: 4px; border: 1px solid #dee2e6;">4. Generate PDF</span>
+            <span>→</span>
+            <span style="background: white; padding: 8px 16px; border-radius: 4px; border: 1px solid #dee2e6;">5. Sign & Download</span>
+        </div>
+    </div>
+</div>
