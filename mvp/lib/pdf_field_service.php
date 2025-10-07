@@ -3,7 +3,10 @@ declare(strict_types=1);
 
 namespace WebPdfTimeSaver\Mvp;
 
-require_once __DIR__ . '/../../vendor/autoload.php';
+$__autoload = __DIR__ . '/../../vendor/autoload.php';
+if (file_exists($__autoload)) {
+    require_once $__autoload;
+}
 use Smalot\PdfParser\Parser;
 
 final class PdfFieldService {
