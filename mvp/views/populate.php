@@ -10,72 +10,61 @@ if (!empty($projectDocument['projectId'])) {
         $client = $store->getClient($project['clientId']);
     }
 }
-
-// Breadcrumb navigation disabled for now
 ?>
 
-<div class="populate-header">
-    <h2>Populate — <?php echo htmlspecialchars(($tpl['code'] ?? '') . ' ' . ($tpl['name'] ?? '')); ?></h2>
-    <div class="populate-actions">
-        <button type="submit" form="populate-form" class="btn">
-            <span class="btn-icon">💾</span>
-            <span>Save Form</span>
-        </button>
-    </div>
-</div>
-
 <?php if (isset($_GET['saved']) && $_GET['saved'] === '1'): ?>
-    <div style="background: #d4edda; color: #155724; padding: 12px; border: 1px solid #c3e6cb; border-radius: 8px; margin-bottom: 16px;">
+    <div class="clio-card" style="background: #d4edda; color: #155724; margin-bottom: 16px;">
         ✅ Form data saved successfully!
     </div>
 <?php endif; ?>
+
+<div class="clio-card">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+        <h3 style="margin: 0; color: #2c3e50; font-size: 20px;">Document: <?php echo htmlspecialchars(($tpl['code'] ?? '') . ' ' . ($tpl['name'] ?? '')); ?></h3>
+        <div style="display: flex; gap: 12px;">
+            <button type="submit" form="populate-form" class="clio-btn">Save Form</button>
+            <a href="?route=project&id=<?php echo htmlspecialchars($projectDocument['projectId']); ?>" class="clio-btn-secondary">Back to Matter</a>
+        </div>
+    </div>
+</div>
 
 <form method="post" action="?route=actions/save-fields" id="populate-form">
     <input type="hidden" name="projectDocumentId" value="<?php echo htmlspecialchars($projectDocument['id']); ?>">
 
     <?php if (!empty($tpl['panels'])): ?>
         <?php foreach ($tpl['panels'] as $panel): ?>
-            <div class="panel">
-                <h3><?php echo htmlspecialchars($panel['label']); ?></h3>
-                <div class="grid">
+            <div class="clio-card">
+                <h3 style="margin: 0 0 20px 0; color: #2c3e50; font-size: 18px; font-weight: 600;"><?php echo htmlspecialchars($panel['label']); ?></h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
                     <?php foreach ($tpl['fields'] as $field): if (($field['panelId'] ?? '') !== $panel['id']) continue; ?>
-                        <div>
-                            <div class="muted" style="margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
-                                <span><?php echo htmlspecialchars($field['label']); ?></span>
-                                <?php 
-                                $originalVal = $values[$field['key']] ?? '';
-                                $hasOriginalData = !empty($originalVal);
-                                ?>
-                                <?php if ($hasOriginalData): ?>
-                                    <button type="button" class="revert-btn" data-field="<?php echo htmlspecialchars($field['key']); ?>" data-original="<?php echo htmlspecialchars((string)$originalVal); ?>" style="background:#dc3545; color:white; border:none; padding:4px 8px; border-radius:4px; font-size:11px; cursor:pointer; opacity:0.7; transition:opacity 0.3s;" title="Revert to original value">
-                                        ↶ Revert
-                                    </button>
-                                <?php endif; ?>
-                            </div>
+                        <div class="clio-form-group">
+                            <label class="clio-form-label">
+                                <?php echo htmlspecialchars($field['label']); ?>
+                            </label>
                             <?php $type = $field['type'] ?? 'text'; $val = $values[$field['key']] ?? ''; ?>
                             <?php 
                             $placeholder = $field['placeholder'] ?? '';
                             $required = !empty($field['required']) ? 'required' : '';
                             ?>
                             <?php if ($type === 'textarea'): ?>
-                                <textarea name="<?php echo htmlspecialchars($field['key']); ?>" rows="3" placeholder="<?php echo htmlspecialchars($placeholder); ?>" <?php echo $required; ?> style="width:100%; padding:12px; border:2px solid #0b6bcb; border-radius:8px; background:#f0f8ff; font-size:14px; font-family:inherit; resize:vertical; box-shadow:0 2px 4px rgba(11,107,203,0.1);"><?php echo htmlspecialchars((string)$val); ?></textarea>
+                                <textarea name="<?php echo htmlspecialchars($field['key']); ?>" rows="3" placeholder="<?php echo htmlspecialchars($placeholder); ?>" <?php echo $required; ?> class="clio-input"><?php echo htmlspecialchars((string)$val); ?></textarea>
                             <?php elseif ($type === 'number' || $type === 'date'): ?>
-                                <input type="<?php echo $type==='number'?'number':'date'; ?>" name="<?php echo htmlspecialchars($field['key']); ?>" value="<?php echo htmlspecialchars((string)$val); ?>" placeholder="<?php echo htmlspecialchars($placeholder); ?>" <?php echo $required; ?> style="width:100%; padding:12px; border:2px solid #0b6bcb; border-radius:8px; background:#f0f8ff; font-size:14px; font-family:inherit; box-shadow:0 2px 4px rgba(11,107,203,0.1);">
+                                <input type="<?php echo $type==='number'?'number':'date'; ?>" name="<?php echo htmlspecialchars($field['key']); ?>" value="<?php echo htmlspecialchars((string)$val); ?>" placeholder="<?php echo htmlspecialchars($placeholder); ?>" <?php echo $required; ?> class="clio-input">
                             <?php elseif ($type === 'checkbox'): ?>
-                                <label style="display:flex; align-items:center; gap:8px; padding:8px; border:2px solid #0b6bcb; border-radius:8px; background:#f0f8ff; cursor:pointer; box-shadow:0 2px 4px rgba(11,107,203,0.1);">
+                                <label style="display:flex; align-items:center; gap:8px;">
                                     <input type="hidden" name="<?php echo htmlspecialchars($field['key']); ?>" value="0">
-                                    <input type="checkbox" name="<?php echo htmlspecialchars($field['key']); ?>" value="1" <?php echo !empty($val)?'checked':''; ?> <?php echo $required; ?> style="transform:scale(1.2);">
-                                    <span style="font-size:14px;"><?php echo !empty($val) ? 'Yes' : 'No'; ?></span>
+                                    <input type="checkbox" name="<?php echo htmlspecialchars($field['key']); ?>" value="1" <?php echo !empty($val)?'checked':''; ?> <?php echo $required; ?>>
+                                    <span><?php echo !empty($val) ? 'Yes' : 'No'; ?></span>
                                 </label>
                             <?php elseif ($type === 'select' && !empty($field['options']) && is_array($field['options'])): ?>
-                                <select name="<?php echo htmlspecialchars($field['key']); ?>" <?php echo $required; ?> style="width:100%; padding:12px; border:2px solid #0b6bcb; border-radius:8px; background:#f0f8ff; font-size:14px; font-family:inherit; box-shadow:0 2px 4px rgba(11,107,203,0.1);">
+                                <select name="<?php echo htmlspecialchars($field['key']); ?>" <?php echo $required; ?> class="clio-input">
                                     <option value=""><?php echo htmlspecialchars($placeholder ?: 'Select an option'); ?></option>
                                     <?php foreach ($field['options'] as $opt): ?>
                                         <option value="<?php echo htmlspecialchars((string)$opt); ?>" <?php echo ((string)$val)===(string)$opt?'selected':''; ?>><?php echo htmlspecialchars((string)$opt); ?></option>
                                     <?php endforeach; ?>
                                 </select>
                             <?php else: ?>
-                                <input type="text" name="<?php echo htmlspecialchars($field['key']); ?>" value="<?php echo htmlspecialchars((string)$val); ?>" placeholder="<?php echo htmlspecialchars($placeholder); ?>" <?php echo $required; ?> style="width:100%; padding:12px; border:2px solid #0b6bcb; border-radius:8px; background:#f0f8ff; font-size:14px; font-family:inherit; box-shadow:0 2px 4px rgba(11,107,203,0.1);">
+                                <input type="text" name="<?php echo htmlspecialchars($field['key']); ?>" value="<?php echo htmlspecialchars((string)$val); ?>" placeholder="<?php echo htmlspecialchars($placeholder); ?>" <?php echo $required; ?> class="clio-input">
                             <?php endif; ?>
                         </div>
                     <?php endforeach; ?>
@@ -97,21 +86,8 @@ if (!empty($projectDocument['projectId'])) {
         <div id="custom-fields-container" class="grid">
             <?php if (!empty($customFields)): ?>
                 <?php foreach ($customFields as $customField): ?>
-                    <div class="custom-field-item draggable" data-field-id="<?php echo htmlspecialchars($customField['id']); ?>" draggable="true">
-                        <div class="muted" style="margin-bottom:6px; display:flex; justify-content:space-between; align-items:center;">
-                            <div style="display: flex; align-items: center; gap: 8px;">
-                                <span class="drag-handle" style="cursor: grab; color: #6c757d; font-size: 16px; user-select: none;" title="Drag to reorder">⋮⋮</span>
-                                <span><?php echo htmlspecialchars($customField['label']); ?></span>
-                            </div>
-                            <div style="display: flex; gap: 4px;">
-                                <button type="button" class="edit-custom-field-btn" data-field-id="<?php echo htmlspecialchars($customField['id']); ?>" style="background:#ffc107; color:white; border:none; padding:2px 6px; border-radius:3px; font-size:10px; cursor:pointer;" title="Edit field">
-                                    ✏️
-                                </button>
-                                <button type="button" class="delete-custom-field-btn" data-field-id="<?php echo htmlspecialchars($customField['id']); ?>" style="background:#dc3545; color:white; border:none; padding:2px 6px; border-radius:3px; font-size:10px; cursor:pointer;" title="Delete field">
-                                    🗑️
-                                </button>
-                            </div>
-                        </div>
+                    <div class="clio-form-group" data-field-id="<?php echo htmlspecialchars($customField['id']); ?>">
+                        <label class="clio-form-label"><?php echo htmlspecialchars($customField['label']); ?></label>
                         <?php 
                         $customKey = 'custom_' . $customField['id'];
                         $customVal = $values[$customKey] ?? '';
@@ -120,17 +96,17 @@ if (!empty($projectDocument['projectId'])) {
                         $customRequired = !empty($customField['required']) ? 'required' : '';
                         ?>
                         <?php if ($customType === 'textarea'): ?>
-                            <textarea name="<?php echo htmlspecialchars($customKey); ?>" rows="3" placeholder="<?php echo htmlspecialchars($customPlaceholder); ?>" <?php echo $customRequired; ?> style="width:100%; padding:12px; border:2px solid #28a745; border-radius:8px; background:#f0fff0; font-size:14px; font-family:inherit; resize:vertical; box-shadow:0 2px 4px rgba(40,167,69,0.1);"><?php echo htmlspecialchars((string)$customVal); ?></textarea>
+                            <textarea name="<?php echo htmlspecialchars($customKey); ?>" rows="3" placeholder="<?php echo htmlspecialchars($customPlaceholder); ?>" <?php echo $customRequired; ?> class="clio-input"><?php echo htmlspecialchars((string)$customVal); ?></textarea>
                         <?php elseif ($customType === 'number' || $customType === 'date'): ?>
-                            <input type="<?php echo $customType==='number'?'number':'date'; ?>" name="<?php echo htmlspecialchars($customKey); ?>" value="<?php echo htmlspecialchars((string)$customVal); ?>" placeholder="<?php echo htmlspecialchars($customPlaceholder); ?>" <?php echo $customRequired; ?> style="width:100%; padding:12px; border:2px solid #28a745; border-radius:8px; background:#f0fff0; font-size:14px; font-family:inherit; box-shadow:0 2px 4px rgba(40,167,69,0.1);">
+                            <input type="<?php echo $customType==='number'?'number':'date'; ?>" name="<?php echo htmlspecialchars($customKey); ?>" value="<?php echo htmlspecialchars((string)$customVal); ?>" placeholder="<?php echo htmlspecialchars($customPlaceholder); ?>" <?php echo $customRequired; ?> class="clio-input">
                         <?php elseif ($customType === 'checkbox'): ?>
-                            <label style="display:flex; align-items:center; gap:8px; padding:8px; border:2px solid #28a745; border-radius:8px; background:#f0fff0; cursor:pointer; box-shadow:0 2px 4px rgba(40,167,69,0.1);">
+                            <label style="display:flex; align-items:center; gap:8px;">
                                 <input type="hidden" name="<?php echo htmlspecialchars($customKey); ?>" value="0">
-                                <input type="checkbox" name="<?php echo htmlspecialchars($customKey); ?>" value="1" <?php echo !empty($customVal)?'checked':''; ?> <?php echo $customRequired; ?> style="transform:scale(1.2);">
-                                <span style="font-size:14px;"><?php echo !empty($customVal) ? 'Yes' : 'No'; ?></span>
+                                <input type="checkbox" name="<?php echo htmlspecialchars($customKey); ?>" value="1" <?php echo !empty($customVal)?'checked':''; ?> <?php echo $customRequired; ?>>
+                                <span><?php echo !empty($customVal) ? 'Yes' : 'No'; ?></span>
                             </label>
                         <?php else: ?>
-                            <input type="text" name="<?php echo htmlspecialchars($customKey); ?>" value="<?php echo htmlspecialchars((string)$customVal); ?>" placeholder="<?php echo htmlspecialchars($customPlaceholder); ?>" <?php echo $customRequired; ?> style="width:100%; padding:12px; border:2px solid #28a745; border-radius:8px; background:#f0fff0; font-size:14px; font-family:inherit; box-shadow:0 2px 4px rgba(40,167,69,0.1);">
+                            <input type="text" name="<?php echo htmlspecialchars($customKey); ?>" value="<?php echo htmlspecialchars((string)$customVal); ?>" placeholder="<?php echo htmlspecialchars($customPlaceholder); ?>" <?php echo $customRequired; ?> class="clio-input">
                         <?php endif; ?>
                     </div>
                 <?php endforeach; ?>
@@ -138,45 +114,7 @@ if (!empty($projectDocument['projectId'])) {
         </div>
     </div>
 
-    <button class="btn" type="submit" onclick="this.innerHTML='Saving...'; this.disabled=true;">Save</button>
-    <a class="btn secondary" href="?route=project&id=<?php echo htmlspecialchars($projectDocument['projectId']); ?>">Back to project</a>
 </form>
-
-<style>
-.populate-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 32px;
-    padding: 24px 32px;
-    background: #fff;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    border: 1px solid #e1e5e9;
-    margin: -32px -32px 32px -32px;
-}
-
-.populate-header h2 {
-    margin: 0;
-    color: #2c3e50;
-    font-size: 28px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-}
-
-.populate-actions {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
-
-.btn-icon {
-    font-size: 16px;
-    margin-right: 8px;
-}
-/* Enhanced form field styling */
-input[type="text"], input[type="number"], input[type="date"], textarea, select {
-    transition: all 0.3s ease;
 }
 
 input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus, textarea:focus, select:focus {
@@ -272,9 +210,6 @@ input[required], textarea[required], select[required] {
     opacity: 0.5;
     transform: rotate(2deg);
 }
-</style>
-
-<script>
 // Auto-hide success message after 3 seconds
 document.addEventListener('DOMContentLoaded', function() {
     const successMsg = document.querySelector('[style*="background: #d4edda"]');
@@ -622,5 +557,3 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 });
-</script>
-

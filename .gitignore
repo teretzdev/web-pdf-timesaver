@@ -17,6 +17,10 @@
 /mcp-field-editor/dist/
 /mcp-server/dist/
 
+# Root level node modules
+/node_modules/
+/package-lock.json
+
 # OS & Editor files
 .DS_Store
 Thumbs.db
