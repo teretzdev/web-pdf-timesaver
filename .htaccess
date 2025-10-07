@@ -1,6 +1,14 @@
 
 DirectoryIndex index.php
 
+<IfModule mod_authz_core.c>
+	Require all granted
+</IfModule>
+<IfModule mod_access_compat.c>
+	Order allow,deny
+	Allow from all
+</IfModule>
+
 # Enable basic rewrites if needed by subdirs
 <IfModule mod_rewrite.c>
 	RewriteEngine On

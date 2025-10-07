@@ -1,5 +1,4 @@
 <?php
-// Redirect to MVP application dashboard
-header('Location: /mvp/index.php?route=dashboard');
-exit;
+// Delegate directly to MVP router to avoid redirects and directory index issues
+require __DIR__ . '/mvp/index.php';
 ?>
