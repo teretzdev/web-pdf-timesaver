@@ -189,25 +189,28 @@ $archivedCount = count(array_filter($clients, fn($c) => ($c['status'] ?? 'active
 <?php endif; ?>
 
 <!-- Add Client Modal -->
-<div id="add-client-modal" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 2000;">
+<div id="add-client-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="add-client-modal-title" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 2000;">
     <div style="background: #fff; border-radius: 8px; width: 500px; max-width: 90vw; max-height: 90vh; overflow-y: auto;">
         <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid #e1e5e9;">
-            <h3 style="margin: 0; color: #2c3e50; font-size: 18px; font-weight: 600;">Add New Client</h3>
-            <button onclick="closeAddClientModal()" style="background: none; border: none; font-size: 24px; color: #6c757d; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">&times;</button>
+            <h3 id="add-client-modal-title" style="margin: 0; color: #2c3e50; font-size: 18px; font-weight: 600;">Add New Client</h3>
+            <button aria-label="Close add client modal" onclick="closeAddClientModal()" style="background: none; border: none; font-size: 24px; color: #6c757d; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">&times;</button>
         </div>
         <form method="post" action="?route=actions/create-client" style="padding: 24px;">
-            <div class="clio-form-group">
-                <label for="client-name" class="clio-form-label">Client Name *</label>
-                <input type="text" id="client-name" name="displayName" placeholder="Enter client name" required class="clio-input">
-            </div>
-            <div class="clio-form-group">
-                <label for="client-email" class="clio-form-label">Email</label>
-                <input type="email" id="client-email" name="email" placeholder="Enter email address" class="clio-input">
-            </div>
-            <div class="clio-form-group">
-                <label for="client-phone" class="clio-form-label">Phone</label>
-                <input type="tel" id="client-phone" name="phone" placeholder="Enter phone number" class="clio-input">
-            </div>
+            <fieldset>
+                <legend class="clio-form-label" style="margin-bottom: 8px;">Client Details</legend>
+                <div class="clio-form-group">
+                    <label for="client-name" class="clio-form-label">Client Name *</label>
+                    <input aria-required="true" type="text" id="client-name" name="displayName" placeholder="Enter client name" required class="clio-input">
+                </div>
+                <div class="clio-form-group">
+                    <label for="client-email" class="clio-form-label">Email</label>
+                    <input type="email" id="client-email" name="email" placeholder="Enter email address" class="clio-input">
+                </div>
+                <div class="clio-form-group">
+                    <label for="client-phone" class="clio-form-label">Phone</label>
+                    <input type="tel" id="client-phone" name="phone" placeholder="Enter phone number" class="clio-input">
+                </div>
+            </fieldset>
             <div style="display: flex; justify-content: flex-end; gap: 12px; padding-top: 20px; border-top: 1px solid #e1e5e9; margin-top: 20px;">
                 <button type="button" class="clio-btn-secondary" onclick="closeAddClientModal()">Cancel</button>
                 <button type="submit" class="clio-btn">Add Client</button>
@@ -221,7 +224,9 @@ $archivedCount = count(array_filter($clients, fn($c) => ($c['status'] ?? 'active
 document.addEventListener('DOMContentLoaded', function() {
     // Add client button
     document.getElementById('add-client-btn').addEventListener('click', function() {
-        document.getElementById('add-client-modal').style.display = 'flex';
+        var modal = document.getElementById('add-client-modal');
+        modal.style.display = 'flex';
+        modal.setAttribute('aria-hidden', 'false');
     });
     
     // Search functionality
@@ -232,17 +237,22 @@ document.addEventListener('DOMContentLoaded', function() {
         window.location.href = currentUrl.toString();
     });
     
-    // Sort functionality
-    document.getElementById('sort-select').addEventListener('change', function() {
-        const sort = this.value;
-        const currentUrl = new URL(window.location);
-        currentUrl.searchParams.set('sort', sort);
-        window.location.href = currentUrl.toString();
-    });
+    // Sort functionality (guard if control present)
+    var sortEl = document.getElementById('sort-select');
+    if (sortEl) {
+        sortEl.addEventListener('change', function() {
+            const sort = this.value;
+            const currentUrl = new URL(window.location);
+            currentUrl.searchParams.set('sort', sort);
+            window.location.href = currentUrl.toString();
+        });
+    }
 });
 
 function closeAddClientModal() {
-    document.getElementById('add-client-modal').style.display = 'none';
+    var modal = document.getElementById('add-client-modal');
+    modal.style.display = 'none';
+    modal.setAttribute('aria-hidden', 'true');
 }
 
 // Close modal when clicking outside

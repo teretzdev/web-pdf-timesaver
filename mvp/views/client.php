@@ -3,7 +3,7 @@
 // Breadcrumb navigation disabled for now
 ?>
 
-<div class="client-header">
+<div class="client-header" role="region" aria-label="Client header">
     <div class="client-info">
         <h1><a href="?route=client&id=<?php echo htmlspecialchars($client['id']); ?>" class="client-name-link"><?php echo htmlspecialchars($client['displayName'] ?? 'Client'); ?></a></h1>
         <div class="client-meta">
@@ -16,13 +16,13 @@
         </div>
     </div>
     <div class="client-actions">
-        <a href="?route=clients" class="btn secondary">← Back to Clients</a>
+        <a href="?route=clients" class="btn secondary" aria-label="Back to clients">← Back to Clients</a>
     </div>
 </div>
 
-<div class="client-tabs">
+<div class="client-tabs" role="tablist" aria-label="Client tabs">
     <div class="tab-nav">
-        <a href="?route=client&id=<?php echo htmlspecialchars($client['id']); ?>" class="tab-link active">Projects (<?php echo count($projects); ?>)</a>
+        <a href="?route=client&id=<?php echo htmlspecialchars($client['id']); ?>" class="tab-link active" role="tab" aria-selected="true">Projects (<?php echo count($projects); ?>)</a>
         <a href="#" class="tab-link">Client vault</a>
         <a href="#" class="tab-link">Profile</a>
         <a href="#" class="tab-link">Notes (0)</a>
