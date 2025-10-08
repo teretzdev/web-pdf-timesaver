@@ -5,6 +5,9 @@
  */
 ?>
 
+<link rel="preload" href="/styles.css" as="style">
+<link rel="prefetch" href="/images/sprites.svg" as="image">
+
 <style>
 /* Loading Spinner */
 .loading-spinner {
@@ -131,7 +134,7 @@
 }
 
 .form-loading::after {
-    content: '';
+    content: 'placeholder';
     position: absolute;
     top: 0;
     left: 0;

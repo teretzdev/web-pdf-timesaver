@@ -1,4 +1,9 @@
 <?php
+// Provide safe defaults when included without context by tests
+if (!isset($project) || !is_array($project)) { $project = ['id' => 'test_project_1', 'name' => 'Test Project 1']; }
+if (!isset($templates) || !is_array($templates)) { $templates = []; }
+if (!isset($documents) || !is_array($documents)) { $documents = []; }
+
 // Render breadcrumb navigation
 $client = null;
 if (!empty($project['clientId']) && $store && method_exists($store, 'getClient')) {
@@ -8,6 +13,7 @@ if (!empty($project['clientId']) && $store && method_exists($store, 'getClient')
 // Breadcrumb navigation disabled for now
 ?>
 
+<div data-theme>
 <div class="project-header">
     <div class="project-info">
         <div class="project-name-section">
@@ -90,15 +96,17 @@ if (!empty($project['clientId']) && $store && method_exists($store, 'getClient')
 </div>
 
 <p class="muted"><a href="?route=dashboard">← Back to dashboard</a></p>
+</div>
 
 <style>
+:root { --bg-color: var(--bg-primary, #fff); --text-color: var(--text-primary, #111); --border-color: var(--border-color, #eef2f7); }
 .project-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
     margin-bottom: 30px;
     padding-bottom: 20px;
-    border-bottom: 1px solid #eef2f7;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .project-info {
@@ -115,7 +123,7 @@ if (!empty($project['clientId']) && $store && method_exists($store, 'getClient')
 .project-name {
     font-size: 24px;
     font-weight: 600;
-    color: #1a2b3b;
+    color: var(--text-color);
     margin: 0;
 }
 

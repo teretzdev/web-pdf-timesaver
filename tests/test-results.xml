@@ -1,16 +1,1083 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="" tests="1" assertions="29" errors="0" warnings="0" failures="1" skipped="0" time="0.003241">
-    <testsuite name="Integration Tests" tests="1" assertions="29" errors="0" warnings="0" failures="1" skipped="0" time="0.003241">
-      <testsuite name="ClientProjectWorkflowTest" file="/workspace/tests/integration_client_project_workflow_test.php" tests="1" assertions="29" errors="0" warnings="0" failures="1" skipped="0" time="0.003241">
-        <testcase name="testCompleteEndToEndWorkflow" class="ClientProjectWorkflowTest" classname="ClientProjectWorkflowTest" file="/workspace/tests/integration_client_project_workflow_test.php" line="355" assertions="29" time="0.003241">
-          <failure type="PHPUnit\Framework\ExpectationFailedException">ClientProjectWorkflowTest::testCompleteEndToEndWorkflow
-Failed asserting that actual size 2 matches expected size 1.
+  <testsuite name="" tests="17" assertions="67" errors="5" warnings="0" failures="4" skipped="0" time="0.005042">
+    <testsuite name="Mobile Responsiveness Tests" tests="17" assertions="67" errors="5" warnings="0" failures="4" skipped="0" time="0.005042">
+      <testsuite name="MobileResponsivenessTest" file="/workspace/tests/mobile_responsiveness_test.php" tests="17" assertions="67" errors="5" warnings="0" failures="4" skipped="0" time="0.005042">
+        <testcase name="testMobileFormInteractions" class="MobileResponsivenessTest" classname="MobileResponsivenessTest" file="/workspace/tests/mobile_responsiveness_test.php" line="159" assertions="0" time="0.001390">
+          <error type="PHPUnit\Framework\Error\Warning">MobileResponsivenessTest::testMobileFormInteractions
+Undefined variable $clients
 
-/workspace/tests/integration_client_project_workflow_test.php:131
-/workspace/tests/integration_client_project_workflow_test.php:205
-/workspace/tests/integration_client_project_workflow_test.php:372</failure>
+/workspace/views/clients.php:11
+/workspace/tests/mobile_responsiveness_test.php:163</error>
         </testcase>
+        <testcase name="testMobileSpecificUIPatterns" class="MobileResponsivenessTest" classname="MobileResponsivenessTest" file="/workspace/tests/mobile_responsiveness_test.php" line="251" assertions="0" time="0.000289">
+          <error type="PHPUnit\Framework\Error\Warning">MobileResponsivenessTest::testMobileSpecificUIPatterns
+Undefined variable $clients
+
+/workspace/views/clients.php:11
+/workspace/tests/mobile_responsiveness_test.php:255</error>
+        </testcase>
+        <testcase name="testMobileFormValidation" class="MobileResponsivenessTest" classname="MobileResponsivenessTest" file="/workspace/tests/mobile_responsiveness_test.php" line="366" assertions="0" time="0.000226">
+          <error type="PHPUnit\Framework\Error\Warning">MobileResponsivenessTest::testMobileFormValidation
+Undefined variable $clients
+
+/workspace/views/clients.php:11
+/workspace/tests/mobile_responsiveness_test.php:370</error>
+        </testcase>
+        <testcase name="testViewportMetaTagConfiguration" class="MobileResponsivenessTest" classname="MobileResponsivenessTest" file="/workspace/tests/mobile_responsiveness_test.php" line="61" assertions="4" time="0.000464">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">MobileResponsivenessTest::testViewportMetaTagConfiguration
+Viewport should set maximum scale to 1
+Failed asserting that '\n
+&lt;style&gt;\n
+.breadcrumb {\n
+    margin-bottom: 20px;\n
+    padding: 12px 0;\n
+}\n
+\n
+.breadcrumb-list {\n
+    display: flex;\n
+    align-items: center;\n
+    list-style: none;\n
+    margin: 0;\n
+    padding: 0;\n
+    gap: 8px;\n
+}\n
+\n
+.breadcrumb-item {\n
+    display: flex;\n
+    align-items: center;\n
+}\n
+\n
+.breadcrumb-link {\n
+    color: #0b6bcb;\n
+    text-decoration: none;\n
+    font-size: 14px;\n
+    font-weight: 500;\n
+    transition: color 0.2s ease;\n
+}\n
+\n
+.breadcrumb-link:hover {\n
+    color: #0a5bb8;\n
+    text-decoration: underline;\n
+}\n
+\n
+.breadcrumb-text {\n
+    color: #65748b;\n
+    font-size: 14px;\n
+    font-weight: 500;\n
+}\n
+\n
+.breadcrumb-item.active .breadcrumb-text {\n
+    color: #1a2b3b;\n
+    font-weight: 600;\n
+}\n
+\n
+.breadcrumb-separator {\n
+    color: #d7dce3;\n
+    font-size: 14px;\n
+    margin: 0 4px;\n
+}\n
+\n
+/* Responsive */\n
+@media (max-width: 768px) {\n
+    .breadcrumb {\n
+        margin-bottom: 16px;\n
+    }\n
+    \n
+    .breadcrumb-list {\n
+        flex-wrap: wrap;\n
+        gap: 4px;\n
+    }\n
+    \n
+    .breadcrumb-link,\n
+    .breadcrumb-text {\n
+        font-size: 13px;\n
+    }\n
+}\n
+&lt;/style&gt;\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+\n
+&lt;!DOCTYPE html&gt;\n
+&lt;html lang="en"&gt;\n
+&lt;head&gt;\n
+    &lt;meta charset="UTF-8"&gt;\n
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;\n
+    &lt;title&gt;Clio&lt;/title&gt;\n
+    &lt;style&gt;\n
+        * { \n
+            box-sizing: border-box; \n
+            margin: 0;\n
+            padding: 0;\n
+        }\n
+        \n
+        body { \n
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; \n
+            background: #f5f6fa; \n
+            color: #2c3e50;\n
+            line-height: 1.4;\n
+            font-size: 14px;\n
+        }\n
+        \n
+        /* Clio Header */\n
+        .clio-header {\n
+            background: #ffffff;\n
+            border-bottom: 1px solid #e1e5e9;\n
+            height: 60px;\n
+            display: flex;\n
+            align-items: center;\n
+            justify-content: space-between;\n
+            padding: 0 24px;\n
+            position: fixed;\n
+            top: 0;\n
+            left: 0;\n
+            right: 0;\n
+            z-index: 1000;\n
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);\n
+        }\n
+        \n
+        .clio-logo {\n
+            display: flex;\n
+            align-items: center;\n
+            gap: 12px;\n
+        }\n
+        \n
+        .clio-logo img {\n
+            width: 32px;\n
+            height: 32px;\n
+        }\n
+        \n
+        .clio-logo-text {\n
+            font-size: 20px;\n
+            font-weight: 700;\n
+            color: #2c3e50;\n
+            letter-spacing: -0.5px;\n
+        }\n
+        \n
+        .clio-nav {\n
+            display: flex;\n
+            align-items: center;\n
+            gap: 32px;\n
+        }\n
+        \n
+        .clio-nav-item {\n
+            color: #6c757d;\n
+            text-decoration: none;\n
+            font-weight: 500;\n
+            font-size: 14px;\n
+            padding: 8px 0;\n
+            border-bottom: 2px solid transparent;\n
+            transition: all 0.2s ease;\n
+        }\n
+        \n
+        .clio-nav-item:hover,\n
+        .clio-nav-item.active {\n
+            color: #1976d2;\n
+            border-bottom-color: #1976d2;\n
+        }\n
+        \n
+        .clio-user-menu {\n
+            display: flex;\n
+            align-items: center;\n
+            gap: 12px;\n
+        }\n
+        \n
+        .clio-user-avatar {\n
+            width: 32px;\n
+            height: 32px;\n
+            border-radius: 50%;\n
+            background: #1976d2;\n
+            color: white;\n
+            display: flex;\n
+            align-items: center;\n
+            justify-content: center;\n
+            font-weight: 600;\n
+            font-size: 14px;\n
+        }\n
+        \n
+        /* Main Content */\n
+        .clio-main-content {\n
+            margin-top: 60px;\n
+            background: #f5f6fa;\n
+            min-height: calc(100vh - 60px);\n
+        }\n
+        \n
+        .clio-content-header {\n
+            background: #ffffff;\n
+            border-bottom: 1px solid #e1e5e9;\n
+            padding: 24px 32px;\n
+        }\n
+        \n
+        .clio-content-title {\n
+            font-size: 24px;\n
+            font-weight: 700;\n
+            color: #2c3e50;\n
+            margin: 0;\n
+        }\n
+        \n
+        .clio-content-body {\n
+            padding: 32px;\n
+        }\n
+        \n
+        /* Clio Components */\n
+        .clio-btn {\n
+            background: #1976d2;\n
+            color: #ffffff;\n
+            border: none;\n
+            padding: 10px 16px;\n
+            border-radius: 4px;\n
+            font-size: 14px;\n
+            font-weight: 500;\n
+            cursor: pointer;\n
+            transition: all 0.2s ease;\n
+            text-decoration: none;\n
+            display: inline-flex;\n
+            align-items: center;\n
+            gap: 8px;\n
+        }\n
+        \n
+        .clio-btn:hover {\n
+            background: #1565c0;\n
+        }\n
+        \n
+        .clio-btn-secondary {\n
+            background: #ffffff;\n
+            color: #495057;\n
+            border: 1px solid #dee2e6;\n
+        }\n
+        \n
+        .clio-btn-secondary:hover {\n
+            background: #f8f9fa;\n
+            border-color: #adb5bd;\n
+        }\n
+        \n
+        .clio-card {\n
+            background: #ffffff;\n
+            border: 1px solid #e1e5e9;\n
+            border-radius: 8px;\n
+            padding: 24px;\n
+            margin-bottom: 24px;\n
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);\n
+        }\n
+        \n
+        .clio-table {\n
+            width: 100%;\n
+            border-collapse: collapse;\n
+            background: #ffffff;\n
+            border: 1px solid #e1e5e9;\n
+            border-radius: 8px;\n
+            overflow: hidden;\n
+        }\n
+        \n
+        .clio-table th {\n
+            background: #f8f9fa;\n
+            padding: 16px 20px;\n
+            text-align: left;\n
+            font-weight: 600;\n
+            color: #2c3e50;\n
+            font-size: 12px;\n
+            text-transform: uppercase;\n
+            letter-spacing: 0.5px;\n
+            border-bottom: 1px solid #e1e5e9;\n
+        }\n
+        \n
+        .clio-table td {\n
+            padding: 16px 20px;\n
+            border-bottom: 1px solid #f1f3f4;\n
+            color: #495057;\n
+            font-size: 14px;\n
+        }\n
+        \n
+        .clio-table tr:hover {\n
+            background: #f8f9fa;\n
+        }\n
+        \n
+        .clio-input {\n
+            width: 100%;\n
+            padding: 10px 12px;\n
+            border: 1px solid #dee2e6;\n
+            border-radius: 4px;\n
+            font-size: 14px;\n
+            transition: all 0.2s ease;\n
+        }\n
+        \n
+        .clio-input:focus {\n
+            outline: none;\n
+            border-color: #1976d2;\n
+            box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);\n
+        }\n
+\n
+        /* Keystroke brightness effect */\n
+        .keystroke-bright {\n
+            background: #ffffff !important;\n
+            color: #1976d2 !important;\n
+            box-shadow: 0 0 8px rgba(25, 118, 210, 0.4) !important;\n
+            border-color: #1976d2 !important;\n
+            transform: scale(1.02);\n
+            transition: all 0.15s ease-out !important;\n
+        }\n
+\n
+        /* Enhanced input styling for brightness effect */\n
+        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="date"], textarea, select {\n
+            transition: all 0.2s ease;\n
+        }\n
+        \n
+        .clio-form-group {\n
+            margin-bottom: 20px;\n
+        }\n
+        \n
+        .clio-form-label {\n
+            display: block;\n
+            margin-bottom: 6px;\n
+            font-weight: 600;\n
+            color: #2c3e50;\n
+            font-size: 14px;\n
+        }\n
+        \n
+        /* Status badges */\n
+        .clio-status {\n
+            padding: 4px 8px;\n
+            border-radius: 12px;\n
+            font-size: 12px;\n
+            font-weight: 500;\n
+            text-transform: uppercase;\n
+            letter-spacing: 0.5px;\n
+        }\n
+        \n
+        .clio-status-active {\n
+            background: #d4edda;\n
+            color: #155724;\n
+        }\n
+        \n
+        .clio-status-archived {\n
+            background: #f8d7da;\n
+            color: #721c24;\n
+        }\n
+        \n
+        .clio-status-in-progress {\n
+            background: #d1ecf1;\n
+            color: #0c5460;\n
+        }\n
+        \n
+        /* Responsive */\n
+        @media (max-width: 768px) {\n
+            .clio-content-body {\n
+                padding: 20px;\n
+            }\n
+        }\n
+    &lt;/style&gt;\n
+&lt;/head&gt;\n
+&lt;body&gt;\n
+    &lt;!-- Clio Header --&gt;\n
+    &lt;header class="clio-header"&gt;\n
+        &lt;div class="clio-logo"&gt;\n
+            &lt;img src="./logo.png" alt="Clio"&gt;\n
+            &lt;span class="clio-logo-text"&gt;Clio&lt;/span&gt;\n
+        &lt;/div&gt;\n
+        \n
+        &lt;nav class="clio-nav"&gt;\n
+            &lt;a href="?route=dashboard" class="clio-nav-item "&gt;Dashboard&lt;/a&gt;\n
+            &lt;a href="?route=projects" class="clio-nav-item "&gt;Matters&lt;/a&gt;\n
+            &lt;a href="?route=clients" class="clio-nav-item active"&gt;Contacts&lt;/a&gt;\n
+            &lt;a href="?route=activities" class="clio-nav-item "&gt;Activities&lt;/a&gt;\n
+            &lt;a href="?route=bills" class="clio-nav-item "&gt;Bills&lt;/a&gt;\n
+            &lt;a href="?route=documents" class="clio-nav-item "&gt;Documents&lt;/a&gt;\n
+            &lt;a href="?route=reports" class="clio-nav-item "&gt;Reports&lt;/a&gt;\n
+            &lt;a href="?route=settings" class="clio-nav-item "&gt;Settings&lt;/a&gt;\n
+        &lt;/nav&gt;\n
+        \n
+        &lt;div class="clio-user-menu"&gt;\n
+            &lt;div class="clio-user-avatar"&gt;JD&lt;/div&gt;\n
+        &lt;/div&gt;\n
+    &lt;/header&gt;\n
+    \n
+    &lt;!-- Main Content --&gt;\n
+    &lt;main class="clio-main-content"&gt;\n
+        &lt;div class="clio-content-header"&gt;\n
+            &lt;h1 class="clio-content-title"&gt;\n
+                Dashboard            &lt;/h1&gt;\n
+        &lt;/div&gt;\n
+        &lt;div class="clio-content-body"&gt;\n
+\n
+' contains "maximum-scale=1".
+
+/workspace/tests/mobile_responsiveness_test.php:71</failure>
+        </testcase>
+        <testcase name="testResponsiveCSSBreakpoints" class="MobileResponsivenessTest" classname="MobileResponsivenessTest" file="/workspace/tests/mobile_responsiveness_test.php" line="78" assertions="7" time="0.000291"/>
+        <testcase name="testTouchFriendlyInterfaceElements" class="MobileResponsivenessTest" classname="MobileResponsivenessTest" file="/workspace/tests/mobile_responsiveness_test.php" line="112" assertions="2" time="0.000293">
+          <error type="PHPUnit\Framework\Error\Warning">MobileResponsivenessTest::testTouchFriendlyInterfaceElements
+Undefined variable $clients
+
+/workspace/views/clients.php:11
+/workspace/tests/mobile_responsiveness_test.php:125</error>
+        </testcase>
+        <testcase name="testMobileNavigationPatterns" class="MobileResponsivenessTest" classname="MobileResponsivenessTest" file="/workspace/tests/mobile_responsiveness_test.php" line="139" assertions="5" time="0.000112"/>
+        <testcase name="testMobileTypographyAndReadability" class="MobileResponsivenessTest" classname="MobileResponsivenessTest" file="/workspace/tests/mobile_responsiveness_test.php" line="179" assertions="5" time="0.000244">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">MobileResponsivenessTest::testMobileTypographyAndReadability
+Page should have h3 headings
+Failed asserting that '\n
+&lt;div data-theme&gt;\n
+&lt;div class="project-header"&gt;\n
+    &lt;div class="project-info"&gt;\n
+        &lt;div class="project-name-section"&gt;\n
+            &lt;h1 class="project-name"&gt;Test Project 1&lt;/h1&gt;\n
+            &lt;a href="#" class="edit-link" id="edit-project-name"&gt;Edit&lt;/a&gt;\n
+        &lt;/div&gt;\n
+        &lt;div class="project-meta"&gt;\n
+                            &lt;span class="client-link"&gt;No client assigned&lt;/span&gt;\n
+                    &lt;/div&gt;\n
+    &lt;/div&gt;\n
+    &lt;div class="project-actions"&gt;\n
+        &lt;form method="post" action="?route=actions/duplicate-project" style="display: inline;"&gt;\n
+            &lt;input type="hidden" name="id" value="test_project_1"&gt;\n
+            &lt;button class="btn secondary" type="submit"&gt;Duplicate&lt;/button&gt;\n
+        &lt;/form&gt;\n
+    &lt;/div&gt;\n
+&lt;/div&gt;\n
+\n
+\n
+&lt;div class="clio-card"&gt;\n
+    &lt;div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;"&gt;\n
+        &lt;h2 style="margin: 0; color: #2c3e50; font-size: 24px; font-weight: 700;"&gt;Documents&lt;/h2&gt;\n
+        &lt;form method="post" action="?route=actions/add-document" style="display: inline;"&gt;\n
+            &lt;input type="hidden" name="projectId" value="test_project_1"&gt;\n
+            &lt;select name="templateId" required style="margin-right: 8px; padding: 8px 12px; border: 1px solid #dee2e6; border-radius: 4px;"&gt;\n
+                            &lt;/select&gt;\n
+            &lt;button class="clio-btn" type="submit"&gt;Add Document&lt;/button&gt;\n
+        &lt;/form&gt;\n
+    &lt;/div&gt;\n
+&lt;/div&gt;\n
+\n
+&lt;div class="clio-card"&gt;\n
+    &lt;table class="clio-table"&gt;\n
+        &lt;thead&gt;\n
+            &lt;tr&gt;\n
+                &lt;th&gt;Document&lt;/th&gt;\n
+                &lt;th&gt;Status&lt;/th&gt;\n
+                &lt;th&gt;Actions&lt;/th&gt;\n
+            &lt;/tr&gt;\n
+        &lt;/thead&gt;\n
+        &lt;tbody&gt;\n
+                    &lt;/tbody&gt;\n
+    &lt;/table&gt;\n
+&lt;/div&gt;\n
+\n
+&lt;p class="muted"&gt;&lt;a href="?route=dashboard"&gt;← Back to dashboard&lt;/a&gt;&lt;/p&gt;\n
+&lt;/div&gt;\n
+\n
+&lt;style&gt;\n
+:root { --bg-color: var(--bg-primary, #fff); --text-color: var(--text-primary, #111); --border-color: var(--border-color, #eef2f7); }\n
+.project-header {\n
+    display: flex;\n
+    justify-content: space-between;\n
+    align-items: flex-start;\n
+    margin-bottom: 30px;\n
+    padding-bottom: 20px;\n
+    border-bottom: 1px solid var(--border-color);\n
+}\n
+\n
+.project-info {\n
+    flex: 1;\n
+}\n
+\n
+.project-name-section {\n
+    display: flex;\n
+    align-items: center;\n
+    gap: 12px;\n
+    margin-bottom: 8px;\n
+}\n
+\n
+.project-name {\n
+    font-size: 24px;\n
+    font-weight: 600;\n
+    color: var(--text-color);\n
+    margin: 0;\n
+}\n
+\n
+.edit-link {\n
+    color: #0b6bcb;\n
+    text-decoration: none;\n
+    font-size: 14px;\n
+    font-weight: 500;\n
+}\n
+\n
+.edit-link:hover {\n
+    text-decoration: underline;\n
+}\n
+\n
+\n
+.project-meta {\n
+    color: #65748b;\n
+    font-size: 14px;\n
+}\n
+\n
+.client-link a {\n
+    color: #0b6bcb;\n
+    text-decoration: none;\n
+    font-weight: 500;\n
+}\n
+\n
+.client-link a:hover {\n
+    text-decoration: underline;\n
+}\n
+\n
+.project-actions {\n
+    display: flex;\n
+    align-items: center;\n
+    gap: 12px;\n
+}\n
+\n
+.btn-sm {\n
+    padding: 6px 12px;\n
+    font-size: 12px;\n
+    border-radius: 4px;\n
+}\n
+\n
+/* Responsive */\n
+@media (max-width: 768px) {\n
+    .project-header {\n
+        flex-direction: column;\n
+        gap: 16px;\n
+    }\n
+    \n
+    .project-name-form {\n
+        flex-direction: column;\n
+        align-items: stretch;\n
+        gap: 8px;\n
+    }\n
+    \n
+    .project-name-input {\n
+        min-width: auto;\n
+        width: 100%;\n
+    }\n
+    \n
+    .project-actions {\n
+        justify-content: flex-end;\n
+    }\n
+}\n
+&lt;/style&gt;\n
+\n
+&lt;script&gt;\n
+document.addEventListener('DOMContentLoaded', function() {\n
+    \n
+    // Handle edit project name\n
+    const editLink = document.getElementById('edit-project-name');\n
+    const projectName = document.querySelector('.project-name');\n
+    \n
+    if (editLink &amp;&amp; projectName) {\n
+        editLink.addEventListener('click', function(e) {\n
+            e.preventDefault();\n
+            \n
+            // Create input field\n
+            const input = document.createElement('input');\n
+            input.type = 'text';\n
+            input.value = projectName.textContent;\n
+            input.className = 'project-name-input';\n
+            input.style.cssText = 'font-size: 24px; font-weight: 600; color: #1a2b3b; border: 2px solid #0b6bcb; background: #fff; padding: 8px 12px; border-radius: 6px; min-width: 300px;';\n
+            \n
+            // Replace name with input\n
+            projectName.style.display = 'none';\n
+            editLink.style.display = 'none';\n
+            projectName.parentNode.insertBefore(input, projectName);\n
+            input.focus();\n
+            input.select();\n
+            \n
+            // Handle save\n
+            const saveEdit = function() {\n
+                const newName = input.value.trim();\n
+                if (newName &amp;&amp; newName !== projectName.textContent) {\n
+                    // Create form and submit\n
+                    const form = document.createElement('form');\n
+                    form.method = 'POST';\n
+                    form.action = '?route=actions/update-project-name';\n
+                    \n
+                    const idInput = document.createElement('input');\n
+                    idInput.type = 'hidden';\n
+                    idInput.name = 'id';\n
+                    idInput.value = 'test_project_1';\n
+                    \n
+                    const nameInput = document.createElement('input');\n
+                    nameInput.type = 'hidden';\n
+                    nameInput.name = 'name';\n
+                    nameInput.value = newName;\n
+                    \n
+                    form.appendChild(idInput);\n
+                    form.appendChild(nameInput);\n
+                    document.body.appendChild(form);\n
+                    form.submit();\n
+                } else {\n
+                    // Cancel edit\n
+                    input.remove();\n
+                    projectName.style.display = 'block';\n
+                    editLink.style.display = 'inline';\n
+                }\n
+            };\n
+            \n
+            // Handle enter key\n
+            input.addEventListener('keydown', function(e) {\n
+                if (e.key === 'Enter') {\n
+                    e.preventDefault();\n
+                    saveEdit();\n
+                } else if (e.key === 'Escape') {\n
+                    e.preventDefault();\n
+                    input.remove();\n
+                    projectName.style.display = 'block';\n
+                    editLink.style.display = 'inline';\n
+                }\n
+            });\n
+            \n
+            // Handle blur\n
+            input.addEventListener('blur', saveEdit);\n
+        });\n
+    }\n
+});\n
+&lt;/script&gt;\n
+\n
+' contains "h3".
+
+/workspace/tests/mobile_responsiveness_test.php:198</failure>
+        </testcase>
+        <testcase name="testMobilePerformanceOptimizations" class="MobileResponsivenessTest" classname="MobileResponsivenessTest" file="/workspace/tests/mobile_responsiveness_test.php" line="204" assertions="5" time="0.000168"/>
+        <testcase name="testMobileGestureSupport" class="MobileResponsivenessTest" classname="MobileResponsivenessTest" file="/workspace/tests/mobile_responsiveness_test.php" line="231" assertions="5" time="0.000134"/>
+        <testcase name="testMobileAccessibilityFeatures" class="MobileResponsivenessTest" classname="MobileResponsivenessTest" file="/workspace/tests/mobile_responsiveness_test.php" line="271" assertions="4" time="0.000180">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">MobileResponsivenessTest::testMobileAccessibilityFeatures
+Mobile elements should have aria-describedby
+Failed asserting that '\n
+&lt;style&gt;\n
+/* Dark mode hooks */\n
+[data-theme] .client-card { background-color: var(--bg-color, #fff); }\n
+[data-theme="dark"] .client-card { background-color: var(--bg-secondary, #2d2d2d); }\n
+\n
+/* Mobile CSS features */\n
+.client-card, .btn, .status-select {\n
+    -webkit-tap-highlight-color: rgba(0,0,0,0);\n
+    -webkit-touch-callout: none;\n
+    -webkit-user-select: none;\n
+    user-select: none;\n
+}\n
+\n
+.client-card {\n
+    background: var(--bg-secondary, #fff);\n
+    background-color: var(--bg-color, #fff);\n
+    border: 1px solid var(--border-color, #eef2f7);\n
+    border-radius: 8px;\n
+    padding: 20px;\n
+    margin-bottom: 16px;\n
+    transition: all 0.2s ease;\n
+    cursor: pointer;\n
+    position: relative;\n
+    -webkit-overflow-scrolling: touch;\n
+    overscroll-behavior: contain;\n
+    will-change: transform;\n
+}\n
+\n
+.client-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-2px); }\n
+\n
+.client-card.archived { opacity: 0.7; background: #f8f9fa; }\n
+\n
+.client-card-content { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }\n
+\n
+.client-info { flex: 1; }\n
+\n
+.client-name { margin: 0 0 8px 0; font-size: 18px; font-weight: 600; color: var(--text-color, #1a2b3b); }\n
+\n
+.client-meta { color: #65748b; font-size: 14px; margin-bottom: 8px; }\n
+\n
+.client-contact { display: flex; flex-direction: column; gap: 4px; }\n
+\n
+.contact-item { font-size: 16px; line-height: 1.5; color: #65748b; }\n
+\n
+.client-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 12px; }\n
+\n
+.client-status { display: flex; align-items: center; }\n
+\n
+.status-select { padding: 6px 12px; border: 1px solid #d7dce3; border-radius: 4px; font-size: 16px; min-height: 44px; background: #fff; }\n
+\n
+.action-buttons { display: flex; gap: 8px; }\n
+\n
+.btn-sm { padding: 12px; font-size: 16px; min-height: 44px; min-width: 44px; border-radius: 4px; }\n
+\n
+.btn-danger { background: #dc3545; color: #fff; }\n
+\n
+.btn-danger:hover { background: #c82333; }\n
+\n
+.btn-secondary { background: #6c757d; color: #fff; border: 1px solid #6c757d; }\n
+\n
+.btn-secondary:hover { background: #5a6268; border-color: #545b62; }\n
+\n
+.separator { color: #65748b; }\n
+\n
+/* Responsive */\n
+@media (max-width: 768px) { .client-card-content { flex-direction: column; gap: 16px; } .client-actions { flex-direction: row; justify-content: space-between; width: 100%; } }\n
+@media (max-width: 1024px) { .client-card-content { gap: 16px; } }\n
+&lt;/style&gt;\n
+\n
+&lt;script&gt;\n
+document.addEventListener('DOMContentLoaded', function() {\n
+    // Handle client card clicks\n
+    document.querySelectorAll('.client-card').forEach(card =&gt; {\n
+        card.addEventListener('click', function(e) {\n
+            if (e.target.tagName === 'BUTTON' || e.target.tagName === 'SELECT' || e.target.tagName === 'A') { return; }\n
+            const clientId = this.getAttribute('data-client-id');\n
+            if (clientId) { window.location.href = '?route=client&amp;id=' + clientId; }\n
+        });\n
+        // Touch gestures\n
+        let touchStartX = 0, touchStartY = 0;\n
+        card.addEventListener('touchstart', function(e){ const t=e.touches[0]; touchStartX=t.clientX; touchStartY=t.clientY; }, {passive:true});\n
+        card.addEventListener('touchmove', function(e){ /* touchmove */ }, {passive:true});\n
+        card.addEventListener('touchend', function(e){ const t=e.changedTouches[0]; const dx=(t.clientX-touchStartX); const dy=(t.clientY-touchStartY); if (Math.abs(dx)&gt;50 &amp;&amp; Math.abs(dy)&lt;30) { /* swipe */ } });\n
+    });\n
+    \n
+    // Handle status changes\n
+    document.querySelectorAll('.status-select').forEach(select =&gt; {\n
+        select.addEventListener('change', function() {\n
+            const clientId = this.getAttribute('data-client-id');\n
+            const newStatus = this.value;\n
+            const form = document.createElement('form');\n
+            form.method = 'POST'; form.action = '?route=actions/update-client-status';\n
+            const clientIdInput = document.createElement('input'); clientIdInput.type = 'hidden'; clientIdInput.name = 'clientId'; clientIdInput.value = clientId;\n
+            const statusInput = document.createElement('input'); statusInput.type = 'hidden'; statusInput.name = 'status'; statusInput.value = newStatus;\n
+            form.appendChild(clientIdInput); form.appendChild(statusInput); document.body.appendChild(form); form.submit();\n
+        });\n
+    });\n
+    \n
+    document.querySelectorAll('.manage-access').forEach(button =&gt; { button.addEventListener('click', function(e) { e.stopPropagation(); alert('User access management feature coming soon!'); }); });\n
+    document.querySelectorAll('.delete-client').forEach(button =&gt; { button.addEventListener('click', function(e) { e.stopPropagation(); const clientId = this.getAttribute('data-client-id'); if (confirm('Are you sure you want to delete this client? This will also delete all associated projects and documents. This action cannot be undone.')) { const form = document.createElement('form'); form.method = 'POST'; form.action = '?route=actions/delete-client'; const clientIdInput = document.createElement('input'); clientIdInput.type = 'hidden'; clientIdInput.name = 'clientId'; clientIdInput.value = clientId; form.appendChild(clientIdInput); document.body.appendChild(form); form.submit(); } }); });\n
+});\n
+&lt;/script&gt;\n
+' contains "aria-describedby".
+
+/workspace/tests/mobile_responsiveness_test.php:289</failure>
+        </testcase>
+        <testcase name="testMobileDataUsageOptimization" class="MobileResponsivenessTest" classname="MobileResponsivenessTest" file="/workspace/tests/mobile_responsiveness_test.php" line="296" assertions="3" time="0.000274">
+          <error type="PHPUnit\Framework\Error\Warning">MobileResponsivenessTest::testMobileDataUsageOptimization
+Undefined variable $clients
+
+/workspace/views/clients.php:11
+/workspace/tests/mobile_responsiveness_test.php:310</error>
+        </testcase>
+        <testcase name="testMobileOrientationHandling" class="MobileResponsivenessTest" classname="MobileResponsivenessTest" file="/workspace/tests/mobile_responsiveness_test.php" line="321" assertions="1" time="0.000184">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">MobileResponsivenessTest::testMobileOrientationHandling
+CSS should handle orientation changes
+Failed asserting that '&lt;!DOCTYPE html&gt;\n
+&lt;html lang="en"&gt;\n
+&lt;head&gt;\n
+    &lt;meta charset="UTF-8"&gt;\n
+    &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;\n
+    &lt;title&gt;Clio&lt;/title&gt;\n
+    &lt;style&gt;\n
+        * { \n
+            box-sizing: border-box; \n
+            margin: 0;\n
+            padding: 0;\n
+        }\n
+        \n
+        body { \n
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; \n
+            background: #f5f6fa; \n
+            color: #2c3e50;\n
+            line-height: 1.4;\n
+            font-size: 14px;\n
+        }\n
+        \n
+        /* Clio Header */\n
+        .clio-header {\n
+            background: #ffffff;\n
+            border-bottom: 1px solid #e1e5e9;\n
+            height: 60px;\n
+            display: flex;\n
+            align-items: center;\n
+            justify-content: space-between;\n
+            padding: 0 24px;\n
+            position: fixed;\n
+            top: 0;\n
+            left: 0;\n
+            right: 0;\n
+            z-index: 1000;\n
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);\n
+        }\n
+        \n
+        .clio-logo {\n
+            display: flex;\n
+            align-items: center;\n
+            gap: 12px;\n
+        }\n
+        \n
+        .clio-logo img {\n
+            width: 32px;\n
+            height: 32px;\n
+        }\n
+        \n
+        .clio-logo-text {\n
+            font-size: 20px;\n
+            font-weight: 700;\n
+            color: #2c3e50;\n
+            letter-spacing: -0.5px;\n
+        }\n
+        \n
+        .clio-nav {\n
+            display: flex;\n
+            align-items: center;\n
+            gap: 32px;\n
+        }\n
+        \n
+        .clio-nav-item {\n
+            color: #6c757d;\n
+            text-decoration: none;\n
+            font-weight: 500;\n
+            font-size: 14px;\n
+            padding: 8px 0;\n
+            border-bottom: 2px solid transparent;\n
+            transition: all 0.2s ease;\n
+        }\n
+        \n
+        .clio-nav-item:hover,\n
+        .clio-nav-item.active {\n
+            color: #1976d2;\n
+            border-bottom-color: #1976d2;\n
+        }\n
+        \n
+        .clio-user-menu {\n
+            display: flex;\n
+            align-items: center;\n
+            gap: 12px;\n
+        }\n
+        \n
+        .clio-user-avatar {\n
+            width: 32px;\n
+            height: 32px;\n
+            border-radius: 50%;\n
+            background: #1976d2;\n
+            color: white;\n
+            display: flex;\n
+            align-items: center;\n
+            justify-content: center;\n
+            font-weight: 600;\n
+            font-size: 14px;\n
+        }\n
+        \n
+        /* Main Content */\n
+        .clio-main-content {\n
+            margin-top: 60px;\n
+            background: #f5f6fa;\n
+            min-height: calc(100vh - 60px);\n
+        }\n
+        \n
+        .clio-content-header {\n
+            background: #ffffff;\n
+            border-bottom: 1px solid #e1e5e9;\n
+            padding: 24px 32px;\n
+        }\n
+        \n
+        .clio-content-title {\n
+            font-size: 24px;\n
+            font-weight: 700;\n
+            color: #2c3e50;\n
+            margin: 0;\n
+        }\n
+        \n
+        .clio-content-body {\n
+            padding: 32px;\n
+        }\n
+        \n
+        /* Clio Components */\n
+        .clio-btn {\n
+            background: #1976d2;\n
+            color: #ffffff;\n
+            border: none;\n
+            padding: 10px 16px;\n
+            border-radius: 4px;\n
+            font-size: 14px;\n
+            font-weight: 500;\n
+            cursor: pointer;\n
+            transition: all 0.2s ease;\n
+            text-decoration: none;\n
+            display: inline-flex;\n
+            align-items: center;\n
+            gap: 8px;\n
+        }\n
+        \n
+        .clio-btn:hover {\n
+            background: #1565c0;\n
+        }\n
+        \n
+        .clio-btn-secondary {\n
+            background: #ffffff;\n
+            color: #495057;\n
+            border: 1px solid #dee2e6;\n
+        }\n
+        \n
+        .clio-btn-secondary:hover {\n
+            background: #f8f9fa;\n
+            border-color: #adb5bd;\n
+        }\n
+        \n
+        .clio-card {\n
+            background: #ffffff;\n
+            border: 1px solid #e1e5e9;\n
+            border-radius: 8px;\n
+            padding: 24px;\n
+            margin-bottom: 24px;\n
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);\n
+        }\n
+        \n
+        .clio-table {\n
+            width: 100%;\n
+            border-collapse: collapse;\n
+            background: #ffffff;\n
+            border: 1px solid #e1e5e9;\n
+            border-radius: 8px;\n
+            overflow: hidden;\n
+        }\n
+        \n
+        .clio-table th {\n
+            background: #f8f9fa;\n
+            padding: 16px 20px;\n
+            text-align: left;\n
+            font-weight: 600;\n
+            color: #2c3e50;\n
+            font-size: 12px;\n
+            text-transform: uppercase;\n
+            letter-spacing: 0.5px;\n
+            border-bottom: 1px solid #e1e5e9;\n
+        }\n
+        \n
+        .clio-table td {\n
+            padding: 16px 20px;\n
+            border-bottom: 1px solid #f1f3f4;\n
+            color: #495057;\n
+            font-size: 14px;\n
+        }\n
+        \n
+        .clio-table tr:hover {\n
+            background: #f8f9fa;\n
+        }\n
+        \n
+        .clio-input {\n
+            width: 100%;\n
+            padding: 10px 12px;\n
+            border: 1px solid #dee2e6;\n
+            border-radius: 4px;\n
+            font-size: 14px;\n
+            transition: all 0.2s ease;\n
+        }\n
+        \n
+        .clio-input:focus {\n
+            outline: none;\n
+            border-color: #1976d2;\n
+            box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);\n
+        }\n
+\n
+        /* Keystroke brightness effect */\n
+        .keystroke-bright {\n
+            background: #ffffff !important;\n
+            color: #1976d2 !important;\n
+            box-shadow: 0 0 8px rgba(25, 118, 210, 0.4) !important;\n
+            border-color: #1976d2 !important;\n
+            transform: scale(1.02);\n
+            transition: all 0.15s ease-out !important;\n
+        }\n
+\n
+        /* Enhanced input styling for brightness effect */\n
+        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="date"], textarea, select {\n
+            transition: all 0.2s ease;\n
+        }\n
+        \n
+        .clio-form-group {\n
+            margin-bottom: 20px;\n
+        }\n
+        \n
+        .clio-form-label {\n
+            display: block;\n
+            margin-bottom: 6px;\n
+            font-weight: 600;\n
+            color: #2c3e50;\n
+            font-size: 14px;\n
+        }\n
+        \n
+        /* Status badges */\n
+        .clio-status {\n
+            padding: 4px 8px;\n
+            border-radius: 12px;\n
+            font-size: 12px;\n
+            font-weight: 500;\n
+            text-transform: uppercase;\n
+            letter-spacing: 0.5px;\n
+        }\n
+        \n
+        .clio-status-active {\n
+            background: #d4edda;\n
+            color: #155724;\n
+        }\n
+        \n
+        .clio-status-archived {\n
+            background: #f8d7da;\n
+            color: #721c24;\n
+        }\n
+        \n
+        .clio-status-in-progress {\n
+            background: #d1ecf1;\n
+            color: #0c5460;\n
+        }\n
+        \n
+        /* Responsive */\n
+        @media (max-width: 768px) {\n
+            .clio-content-body {\n
+                padding: 20px;\n
+            }\n
+        }\n
+    &lt;/style&gt;\n
+&lt;/head&gt;\n
+&lt;body&gt;\n
+    &lt;!-- Clio Header --&gt;\n
+    &lt;header class="clio-header"&gt;\n
+        &lt;div class="clio-logo"&gt;\n
+            &lt;img src="./logo.png" alt="Clio"&gt;\n
+            &lt;span class="clio-logo-text"&gt;Clio&lt;/span&gt;\n
+        &lt;/div&gt;\n
+        \n
+        &lt;nav class="clio-nav"&gt;\n
+            &lt;a href="?route=dashboard" class="clio-nav-item "&gt;Dashboard&lt;/a&gt;\n
+            &lt;a href="?route=projects" class="clio-nav-item "&gt;Matters&lt;/a&gt;\n
+            &lt;a href="?route=clients" class="clio-nav-item active"&gt;Contacts&lt;/a&gt;\n
+            &lt;a href="?route=activities" class="clio-nav-item "&gt;Activities&lt;/a&gt;\n
+            &lt;a href="?route=bills" class="clio-nav-item "&gt;Bills&lt;/a&gt;\n
+            &lt;a href="?route=documents" class="clio-nav-item "&gt;Documents&lt;/a&gt;\n
+            &lt;a href="?route=reports" class="clio-nav-item "&gt;Reports&lt;/a&gt;\n
+            &lt;a href="?route=settings" class="clio-nav-item "&gt;Settings&lt;/a&gt;\n
+        &lt;/nav&gt;\n
+        \n
+        &lt;div class="clio-user-menu"&gt;\n
+            &lt;div class="clio-user-avatar"&gt;JD&lt;/div&gt;\n
+        &lt;/div&gt;\n
+    &lt;/header&gt;\n
+    \n
+    &lt;!-- Main Content --&gt;\n
+    &lt;main class="clio-main-content"&gt;\n
+        &lt;div class="clio-content-header"&gt;\n
+            &lt;h1 class="clio-content-title"&gt;\n
+                Dashboard            &lt;/h1&gt;\n
+        &lt;/div&gt;\n
+        &lt;div class="clio-content-body"&gt;\n
+\n
+' contains "orientation".
+
+/workspace/tests/mobile_responsiveness_test.php:329</failure>
+        </testcase>
+        <testcase name="testMobileSpecificCSSFeatures" class="MobileResponsivenessTest" classname="MobileResponsivenessTest" file="/workspace/tests/mobile_responsiveness_test.php" line="346" assertions="5" time="0.000162"/>
+        <testcase name="testMobilePerformanceMetrics" class="MobileResponsivenessTest" classname="MobileResponsivenessTest" file="/workspace/tests/mobile_responsiveness_test.php" line="386" assertions="7" time="0.000323"/>
+        <testcase name="testMobileBreakpointConsistency" class="MobileResponsivenessTest" classname="MobileResponsivenessTest" file="/workspace/tests/mobile_responsiveness_test.php" line="415" assertions="9" time="0.000170"/>
+        <testcase name="testMobileSpecificJavaScriptFeatures" class="MobileResponsivenessTest" classname="MobileResponsivenessTest" file="/workspace/tests/mobile_responsiveness_test.php" line="445" assertions="5" time="0.000137"/>
       </testsuite>
     </testsuite>
   </testsuite>

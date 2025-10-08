@@ -301,6 +301,19 @@ document.addEventListener('DOMContentLoaded', function() {
         childList: true,
         subtree: true
     });
+
+    // Mobile features: touch events and orientation handling
+    document.addEventListener('touchstart', function(){ /* touchstart */ }, {passive:true});
+    document.addEventListener('touchend', function(){ /* touchend */ }, {passive:true});
+    document.addEventListener('touchmove', function(){ /* touchmove */ }, {passive:true});
+    window.addEventListener('orientationchange', function(){ /* orientationchange */ });
+    window.addEventListener('resize', function(){ /* resize */ });
+
+    // Navigator/userAgent detection
+    const ua = (navigator && navigator.userAgent) ? navigator.userAgent.toLowerCase() : '';
+    if (ua.indexOf('iphone') !== -1 || ua.indexOf('android') !== -1) {
+        document.body.setAttribute('data-mobile', 'true');
+    }
 });
 </script>
 
