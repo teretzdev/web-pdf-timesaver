@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => '__root__',
-        'pretty_version' => 'dev-master',
-        'version' => 'dev-master',
-        'reference' => 'a493b2be22def3f128fa1b54fabf1a5c71546c78',
+        'pretty_version' => 'dev-main',
+        'version' => 'dev-main',
+        'reference' => '7a961d8aef11ed9c1409791b8ccaad608c6b4817',
         'type' => 'library',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -11,9 +11,9 @@
     ),
     'versions' => array(
         '__root__' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
-            'reference' => 'a493b2be22def3f128fa1b54fabf1a5c71546c78',
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '7a961d8aef11ed9c1409791b8ccaad608c6b4817',
             'type' => 'library',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
@@ -263,9 +263,9 @@
             'dev_requirement' => true,
         ),
         'setasign/fpdf' => array(
-            'pretty_version' => '1.8.2',
-            'version' => '1.8.2.0',
-            'reference' => 'd77904018090c17dc9f3ab6e944679a7a47e710a',
+            'pretty_version' => '1.8.6',
+            'version' => '1.8.6.0',
+            'reference' => '0838e0ee4925716fcbbc50ad9e1799b5edfae0a0',
             'type' => 'library',
             'install_path' => __DIR__ . '/../setasign/fpdf',
             'aliases' => array(),

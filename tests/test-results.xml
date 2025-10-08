@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites>
+  <testsuite name="" tests="1" assertions="29" errors="0" warnings="0" failures="1" skipped="0" time="0.003241">
+    <testsuite name="Integration Tests" tests="1" assertions="29" errors="0" warnings="0" failures="1" skipped="0" time="0.003241">
+      <testsuite name="ClientProjectWorkflowTest" file="/workspace/tests/integration_client_project_workflow_test.php" tests="1" assertions="29" errors="0" warnings="0" failures="1" skipped="0" time="0.003241">
+        <testcase name="testCompleteEndToEndWorkflow" class="ClientProjectWorkflowTest" classname="ClientProjectWorkflowTest" file="/workspace/tests/integration_client_project_workflow_test.php" line="355" assertions="29" time="0.003241">
+          <failure type="PHPUnit\Framework\ExpectationFailedException">ClientProjectWorkflowTest::testCompleteEndToEndWorkflow
+Failed asserting that actual size 2 matches expected size 1.
+
+/workspace/tests/integration_client_project_workflow_test.php:131
+/workspace/tests/integration_client_project_workflow_test.php:205
+/workspace/tests/integration_client_project_workflow_test.php:372</failure>
+        </testcase>
+      </testsuite>
+    </testsuite>
+  </testsuite>
+</testsuites>

@@ -6,6 +6,16 @@ namespace WebPdfTimeSaver\Mvp;
 final class DataStore {
 	private string $path;
 	private array $db;
+	/** Ensure updatedAt changes even if operations occur within same second. */
+	private function nextUpdatedAt(?string $previous): string {
+		$now = new \DateTimeImmutable('now', new \DateTimeZone('UTC'));
+		$curr = $now->format(DATE_ATOM);
+		if ($previous !== null && $curr === $previous) {
+			$now = $now->modify('+1 second');
+			$curr = $now->format(DATE_ATOM);
+		}
+		return $curr;
+	}
 
 	public function __construct(string $path) {
 		$this->path = $path;
@@ -48,17 +58,60 @@ final class DataStore {
 
 	// Clients
 	public function getClients(): array { return $this->db['clients']; }
-	public function createClient(string $displayName, string $email = '', string $phone = ''): array {
-		$client = [ 'id' => $this->newId('c'), 'displayName' => $displayName, 'email' => $email, 'phone' => $phone, 'createdAt' => date(DATE_ATOM), 'updatedAt' => date(DATE_ATOM) ];
-		$this->db['clients'][] = $client; $this->save(); return $client;
-	}
+    /**
+     * Create a client. Accepts either discrete params (displayName, email, phone)
+     * or an associative array with keys matching tests.
+     */
+    public function createClient($displayNameOrData, string $email = '', string $phone = ''): array {
+        if (is_array($displayNameOrData)) {
+            $data = $displayNameOrData;
+            $client = [
+                'id' => (string)($data['id'] ?? $this->newId('c')),
+                'displayName' => (string)($data['displayName'] ?? 'Untitled Client'),
+                'email' => (string)($data['email'] ?? ''),
+                'phone' => (string)($data['phone'] ?? ''),
+                'status' => (string)($data['status'] ?? 'active'),
+                'createdAt' => (string)($data['createdAt'] ?? date(DATE_ATOM)),
+                'updatedAt' => (string)($data['updatedAt'] ?? date(DATE_ATOM)),
+            ];
+            // De-duplicate by id: replace existing if present
+            $replaced = false;
+            foreach ($this->db['clients'] as $idx => $existing) {
+                if (($existing['id'] ?? null) === $client['id']) {
+                    // Preserve original createdAt if not explicitly provided
+                    if (!isset($data['createdAt']) && isset($existing['createdAt'])) {
+                        $client['createdAt'] = $existing['createdAt'];
+                    }
+                    $this->db['clients'][$idx] = $client;
+                    $replaced = true;
+                    break;
+                }
+            }
+            if (!$replaced) { $this->db['clients'][] = $client; }
+            $this->save(); return $client;
+        }
+        $displayName = (string)$displayNameOrData;
+        $client = [ 'id' => $this->newId('c'), 'displayName' => $displayName, 'email' => $email, 'phone' => $phone, 'status' => 'active', 'createdAt' => date(DATE_ATOM), 'updatedAt' => date(DATE_ATOM) ];
+        $this->db['clients'][] = $client; $this->save(); return $client;
+    }
 	public function getClient(string $id): ?array { foreach ($this->db['clients'] as $c) if (($c['id'] ?? '') === $id) return $c; return null; }
 
-	public function getProjectsByClient(string $clientId): array {
-		return array_values(array_filter($this->db['projects'], fn($p) => ($p['clientId'] ?? '') === $clientId));
-	}
+    public function getProjectsByClient(string $clientId): array {
+        $projects = array_values(array_filter($this->db['projects'], fn($p) => ($p['clientId'] ?? '') === $clientId));
+        @file_put_contents(__DIR__ . '/../logs/pdf_debug.log', date('c') . ' GPCB client=' . $clientId . ' projects=' . json_encode($projects) . PHP_EOL, FILE_APPEND);
+        // Deduplicate by id
+        $seen = [];
+        $unique = [];
+        foreach ($projects as $p) {
+            $pid = $p['id'] ?? null;
+            if ($pid === null || isset($seen[$pid])) { continue; }
+            $seen[$pid] = true;
+            $unique[] = $p;
+        }
+        return $unique;
+    }
 
-	public function createProjectForClient(string $clientId, string $name): array {
+    public function createProjectForClient(string $clientId, string $name): array {
 		$proj = [ 'id' => $this->newId('p'), 'clientId' => $clientId, 'name' => $name, 'status' => 'in_progress', 'createdAt' => date(DATE_ATOM) ];
 		$this->db['projects'][] = $proj; $this->save(); return $proj;
 	}
@@ -67,31 +120,90 @@ final class DataStore {
 	public function getProject(string $id): ?array {
 		foreach ($this->db['projects'] as $p) if ($p['id'] === $id) return $p; return null;
 	}
-	public function createProject(string $name): array {
-		$proj = [ 'id' => $this->newId('p'), 'clientId' => '', 'name' => $name, 'status' => 'in_progress', 'createdAt' => date(DATE_ATOM) ];
-		$this->db['projects'][] = $proj; $this->save(); return $proj;
-	}
+    /**
+     * Create a project. Accepts either string name or associative array.
+     */
+    public function createProject($nameOrData): array {
+        if (is_array($nameOrData)) {
+            $data = $nameOrData;
+            $proj = [
+                'id' => (string)($data['id'] ?? $this->newId('p')),
+                'clientId' => (string)($data['clientId'] ?? ''),
+                'name' => (string)($data['name'] ?? 'Untitled Project'),
+                'status' => (string)($data['status'] ?? 'in_progress'),
+                'createdAt' => (string)($data['createdAt'] ?? date(DATE_ATOM)),
+                'updatedAt' => (string)($data['updatedAt'] ?? date(DATE_ATOM)),
+            ];
+            @file_put_contents(__DIR__ . '/../logs/pdf_debug.log', date('c') . ' CREATE_PROJECT data=' . json_encode($proj) . PHP_EOL, FILE_APPEND);
+            // De-duplicate by id: replace existing if present
+            $replaced = false;
+            foreach ($this->db['projects'] as $idx => $existing) {
+                if (($existing['id'] ?? null) === $proj['id']) {
+                    if (!isset($data['createdAt']) && isset($existing['createdAt'])) {
+                        $proj['createdAt'] = $existing['createdAt'];
+                    }
+                    $this->db['projects'][$idx] = $proj;
+                    $replaced = true;
+                    break;
+                }
+            }
+            if (!$replaced) { $this->db['projects'][] = $proj; }
+            $this->save(); return $proj;
+        }
+        $name = (string)$nameOrData;
+        $proj = [ 'id' => $this->newId('p'), 'clientId' => '', 'name' => $name, 'status' => 'in_progress', 'createdAt' => date(DATE_ATOM), 'updatedAt' => date(DATE_ATOM) ];
+        @file_put_contents(__DIR__ . '/../logs/pdf_debug.log', date('c') . ' CREATE_PROJECT(name) data=' . json_encode($proj) . PHP_EOL, FILE_APPEND);
+        $this->db['projects'][] = $proj; $this->save(); return $proj;
+    }
 
 	public function assignClientToProject(string $projectId, string $clientId): ?array {
 		foreach ($this->db['projects'] as &$p) {
-			if ($p['id'] === $projectId) { $p['clientId'] = $clientId; $p['updatedAt'] = date(DATE_ATOM); $this->save(); return $p; }
+            if ($p['id'] === $projectId) { $p['clientId'] = $clientId; $p['updatedAt'] = $this->nextUpdatedAt($p['updatedAt'] ?? null); $this->save(); return $p; }
 		}
 		return null;
 	}
 
-	public function getProjectDocuments(string $projectId): array {
-		return array_values(array_filter($this->db['projectDocuments'], fn($d) => $d['projectId'] === $projectId));
-	}
+    public function getProjectDocuments(string $projectId): array {
+        $docs = array_values(array_filter($this->db['projectDocuments'], fn($d) => $d['projectId'] === $projectId));
+        // Deduplicate by id
+        $seen = [];
+        $unique = [];
+        foreach ($docs as $d) {
+            $did = $d['id'] ?? null;
+            if ($did === null || isset($seen[$did])) { continue; }
+            $seen[$did] = true;
+            $unique[] = $d;
+        }
+        return $unique;
+    }
 	public function getProjectDocumentById(string $id): ?array {
 		foreach ($this->db['projectDocuments'] as $d) if ($d['id'] === $id) return $d; return null;
 	}
-	public function addProjectDocument(string $projectId, string $templateId): array {
+    public function addProjectDocument(string $projectId, string $templateId): array {
 		$doc = [ 'id' => $this->newId('pd'), 'projectId' => $projectId, 'templateId' => $templateId, 'status' => 'in_progress', 'createdAt' => date(DATE_ATOM) ];
 		$this->db['projectDocuments'][] = $doc; 
 		$this->touchProject($projectId);
 		$this->save(); 
 		return $doc;
 	}
+
+    /**
+     * Compatibility: add document using an associative array (used by tests)
+     */
+    public function addDocumentToProject(array $documentData): array {
+        $doc = [
+            'id' => (string)($documentData['id'] ?? $this->newId('pd')),
+            'projectId' => (string)($documentData['projectId'] ?? ''),
+            'templateId' => (string)($documentData['templateId'] ?? ''),
+            'status' => (string)($documentData['status'] ?? 'in_progress'),
+            'createdAt' => (string)($documentData['createdAt'] ?? date(DATE_ATOM)),
+            'updatedAt' => (string)($documentData['updatedAt'] ?? date(DATE_ATOM)),
+        ];
+        $this->db['projectDocuments'][] = $doc;
+        if ($doc['projectId'] !== '') { $this->touchProject($doc['projectId']); }
+        $this->save();
+        return $doc;
+    }
 
 	public function getFieldValues(string $projectDocumentId): array {
 		$logFile = __DIR__ . '/../logs/pdf_debug.log';
@@ -127,7 +239,7 @@ final class DataStore {
 		foreach ($kv as $k => $v) {
 			// Only save non-empty values or explicitly set empty values (like unchecked checkboxes)
 			if ($v !== '' || array_key_exists($k, $kv)) {
-				$newFieldValue = [ 'id' => $this->newId('fv'), 'projectDocumentId' => $projectDocumentId, 'key' => $k, 'value' => $v, 'updatedAt' => date(DATE_ATOM) ];
+                $newFieldValue = [ 'id' => $this->newId('fv'), 'projectDocumentId' => $projectDocumentId, 'key' => $k, 'value' => $v, 'updatedAt' => $this->nextUpdatedAt(null) ];
 				$this->db['fieldValues'][] = $newFieldValue;
 				file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE VALUES: Added field: ' . json_encode($newFieldValue) . PHP_EOL, FILE_APPEND);
 				$addedCount++;
@@ -152,7 +264,21 @@ final class DataStore {
 		foreach ($this->db['projects'] as &$p) {
 			if ($p['id'] === $projectId) {
 				$p['name'] = $newName;
-				$p['updatedAt'] = date(DATE_ATOM);
+                $p['updatedAt'] = $this->nextUpdatedAt($p['updatedAt'] ?? null);
+				$updated = $p;
+				$this->save();
+				return $updated;
+			}
+		}
+		return null;
+	}
+
+	/** Update a project's status and touch updatedAt. */
+	public function updateProjectStatus(string $projectId, string $status): ?array {
+		foreach ($this->db['projects'] as &$p) {
+			if ($p['id'] === $projectId) {
+				$p['status'] = $status;
+                $p['updatedAt'] = $this->nextUpdatedAt($p['updatedAt'] ?? null);
 				$updated = $p;
 				$this->save();
 				return $updated;
@@ -173,7 +299,23 @@ final class DataStore {
 		}
 		$this->db['projectDocuments'] = array_values($this->db['projectDocuments']);
 		$this->db['fieldValues'] = array_values(array_filter($this->db['fieldValues'], fn($fv) => $fv['projectDocumentId'] !== $projectDocumentId));
-		if ($projectId) { $this->touchProject($projectId); }
+        if ($projectId) { $this->touchProject($projectId); }
+		$this->save();
+	}
+
+	/** Delete a client and cascade to their projects and project documents. */
+	public function deleteClient(string $clientId): void {
+		$this->db['clients'] = array_values(array_filter($this->db['clients'], fn($c) => ($c['id'] ?? '') !== $clientId));
+		$deletedProjectIds = array_column(array_filter($this->db['projects'], fn($p) => ($p['clientId'] ?? '') === $clientId), 'id');
+		$this->db['projects'] = array_values(array_filter($this->db['projects'], fn($p) => ($p['clientId'] ?? '') !== $clientId));
+		$this->db['projectDocuments'] = array_values(array_filter($this->db['projectDocuments'], fn($pd) => !in_array($pd['projectId'] ?? '', $deletedProjectIds, true)));
+		$this->save();
+	}
+
+	/** Delete a project and cascade to its documents. */
+	public function deleteProject(string $projectId): void {
+		$this->db['projects'] = array_values(array_filter($this->db['projects'], fn($p) => ($p['id'] ?? '') !== $projectId));
+		$this->db['projectDocuments'] = array_values(array_filter($this->db['projectDocuments'], fn($pd) => ($pd['projectId'] ?? '') !== $projectId));
 		$this->save();
 	}
 
@@ -198,7 +340,7 @@ final class DataStore {
 				$newDoc['id'] = $this->newId('pd');
 				$newDoc['projectId'] = $copy['id'];
 				$newDoc['status'] = $d['status'] ?? 'in_progress';
-				$newDoc['createdAt'] = date(DATE_ATOM);
+                $newDoc['createdAt'] = date(DATE_ATOM);
 				unset($newDoc['outputPath'], $newDoc['signedPath']);
 				$this->db['projectDocuments'][] = $newDoc;
 				$idMap[$d['id']] = $newDoc['id'];
@@ -212,7 +354,7 @@ final class DataStore {
 					'projectDocumentId' => $idMap[$fv['projectDocumentId']],
 					'key' => $fv['key'],
 					'value' => $fv['value'],
-					'updatedAt' => date(DATE_ATOM)
+                    'updatedAt' => date(DATE_ATOM)
 				];
 			}
 		}
@@ -222,7 +364,7 @@ final class DataStore {
 	}
 
 	private function touchProject(string $projectId): void {
-		foreach ($this->db['projects'] as &$p) if ($p['id'] === $projectId) { $p['updatedAt'] = date(DATE_ATOM); break; }
+		foreach ($this->db['projects'] as &$p) if ($p['id'] === $projectId) { $p['updatedAt'] = $this->nextUpdatedAt($p['updatedAt'] ?? null); break; }
 	}
 
 	// Custom Fields Management
@@ -266,7 +408,7 @@ final class DataStore {
 				$field['type'] = $type;
 				$field['placeholder'] = $placeholder;
 				$field['required'] = $required;
-				$field['updatedAt'] = date(DATE_ATOM);
+                $field['updatedAt'] = $this->nextUpdatedAt($field['updatedAt'] ?? null);
 				$this->touchProject($this->getProjectIdFromDocument($field['projectDocumentId']));
 				$this->save();
 				return $field;
@@ -301,7 +443,7 @@ final class DataStore {
 				$index = array_search($field['id'], $fieldIds);
 				if ($index !== false) {
 					$field['order'] = $index;
-					$field['updatedAt'] = date(DATE_ATOM);
+                    $field['updatedAt'] = $this->nextUpdatedAt($field['updatedAt'] ?? null);
 				}
 			}
 		}
@@ -318,6 +460,57 @@ final class DataStore {
 		}
 		return null;
 	}
+
+    /** Update client status convenience (compat for tests). */
+    public function updateClientStatus(string $clientId, string $status): ?array {
+        foreach ($this->db['clients'] as &$c) {
+            if (($c['id'] ?? '') === $clientId) {
+                $c['status'] = $status;
+                $c['updatedAt'] = $this->nextUpdatedAt($c['updatedAt'] ?? null);
+                $this->save();
+                return $c;
+            }
+        }
+        return null;
+    }
+
+    /** Return sorted clients for simple keys (compat for tests). */
+    public function getClientsSorted(string $sort): array {
+        $clients = $this->getClients();
+        usort($clients, function($a, $b) use ($sort) {
+            $an = strtolower($a['displayName'] ?? '');
+            $bn = strtolower($b['displayName'] ?? '');
+            $ac = strtotime($a['createdAt'] ?? 'now');
+            $bc = strtotime($b['createdAt'] ?? 'now');
+            switch ($sort) {
+                case 'name_asc': return $an <=> $bn;
+                case 'name_desc': return $bn <=> $an;
+                case 'created_asc': return $ac <=> $bc;
+                case 'created_desc': default: return $bc <=> $ac;
+            }
+        });
+        return $clients;
+    }
+
+    /** Simple name/email search (compat for tests). */
+    public function searchClients(string $q): array {
+        $qLower = strtolower($q);
+        $results = [];
+        foreach ($this->db['clients'] as $c) {
+            $name = strtolower($c['displayName'] ?? '');
+            $email = strtolower($c['email'] ?? '');
+            $nameMatchesWholeWord = @preg_match('/\\b' . preg_quote($qLower, '/') . '\\b/i', $c['displayName'] ?? '') === 1;
+            $emailContains = strpos($email, $qLower) !== false;
+            if ($nameMatchesWholeWord || $emailContains) {
+                $results[] = $c;
+            }
+        }
+        return $results;
+    }
+
+    /** Alias for tests expecting duplicateProject */
+    public function duplicateProject(string $projectId): ?array { return $this->duplicateProjectDeep($projectId); }
 }
 
+\class_alias(__NAMESPACE__ . '\\DataStore', 'DataStore');
 
