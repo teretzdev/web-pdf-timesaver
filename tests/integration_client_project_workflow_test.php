@@ -4,7 +4,7 @@
  * Tests the complete user journey from client creation to project management
  */
 
-require_once __DIR__ . '/../mvp/lib/data.php';
+require_once __DIR__ . '/../lib/data.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class ClientProjectWorkflowTest extends PHPUnit\Framework\TestCase

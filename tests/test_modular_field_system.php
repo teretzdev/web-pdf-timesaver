@@ -1,6 +1,6 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../mvp/lib/field_fillers/FieldFillerManager.php';
+require_once __DIR__ . '/../lib/field_fillers/FieldFillerManager.php';
 
 use WebPdfTimeSaver\Mvp\FieldFillers\FieldFillerManager;
 

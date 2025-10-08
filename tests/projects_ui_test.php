@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
-require __DIR__ . '/../mvp/lib/data.php';
-require __DIR__ . '/../mvp/templates/registry.php';
+require __DIR__ . '/../lib/data.php';
+require __DIR__ . '/../templates/registry.php';
 
 use WebPdfTimeSaver\Mvp\DataStore;
 use WebPdfTimeSaver\Mvp\TemplateRegistry;
@@ -22,7 +22,7 @@ $p2 = $store->createProject('Zeta Project');
 $projects = $store->getProjects();
 $filters = [ 'q' => '', 'status' => '', 'sort' => 'updated_desc' ];
 ob_start();
-include __DIR__ . '/../mvp/views/projects.php';
+include __DIR__ . '/../views/projects.php';
 $html = ob_get_clean();
 
 contains($html, 'Search projects', 'Search input present');

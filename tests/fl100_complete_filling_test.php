@@ -1,12 +1,12 @@
 <?php
 declare(strict_types=1);
 
-require_once __DIR__ . '/../mvp/lib/data.php';
-require_once __DIR__ . '/../mvp/lib/pdf_field_service.php';
-require_once __DIR__ . '/../mvp/lib/fill_service.php';
-require_once __DIR__ . '/../mvp/lib/pdf_form_filler.php';
-require_once __DIR__ . '/../mvp/lib/fl100_test_data_generator.php';
-require_once __DIR__ . '/../mvp/templates/registry.php';
+require_once __DIR__ . '/../lib/data.php';
+require_once __DIR__ . '/../lib/pdf_field_service.php';
+require_once __DIR__ . '/../lib/fill_service.php';
+require_once __DIR__ . '/../lib/pdf_form_filler.php';
+require_once __DIR__ . '/../lib/fl100_test_data_generator.php';
+require_once __DIR__ . '/../templates/registry.php';
 
 use WebPdfTimeSaver\Mvp\DataStore;
 use WebPdfTimeSaver\Mvp\PDFFieldService;

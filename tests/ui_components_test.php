@@ -4,7 +4,7 @@
  * Tests all new interface components and their interactions
  */
 
-require_once __DIR__ . '/../mvp/lib/data.php';
+require_once __DIR__ . '/../lib/data.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class UIComponentsTest extends PHPUnit\Framework\TestCase
@@ -79,7 +79,7 @@ class UIComponentsTest extends PHPUnit\Framework\TestCase
     {
         // Capture output from sidebar
         ob_start();
-        include __DIR__ . '/../mvp/views/sidebar.php';
+        include __DIR__ . '/../views/sidebar.php';
         $sidebarOutput = ob_get_clean();
         
         // Test sidebar structure
@@ -115,7 +115,7 @@ class UIComponentsTest extends PHPUnit\Framework\TestCase
         
         // Capture output from client card
         ob_start();
-        include __DIR__ . '/../mvp/views/client_card.php';
+        include __DIR__ . '/../views/client_card.php';
         renderClientCard($client, $projectCount, $client['updatedAt']);
         $cardOutput = ob_get_clean();
         
@@ -158,7 +158,7 @@ class UIComponentsTest extends PHPUnit\Framework\TestCase
         
         // Capture output from clients view
         ob_start();
-        include __DIR__ . '/../mvp/views/clients.php';
+        include __DIR__ . '/../views/clients.php';
         $clientsOutput = ob_get_clean();
         
         // Test header structure
@@ -203,7 +203,7 @@ class UIComponentsTest extends PHPUnit\Framework\TestCase
         
         // Capture output from client detail view
         ob_start();
-        include __DIR__ . '/../mvp/views/client.php';
+        include __DIR__ . '/../views/client.php';
         $clientDetailOutput = ob_get_clean();
         
         // Test header structure
@@ -260,7 +260,7 @@ class UIComponentsTest extends PHPUnit\Framework\TestCase
         
         // Capture output from project detail view
         ob_start();
-        include __DIR__ . '/../mvp/views/project.php';
+        include __DIR__ . '/../views/project.php';
         $projectDetailOutput = ob_get_clean();
         
         // Test header structure
@@ -344,7 +344,7 @@ class UIComponentsTest extends PHPUnit\Framework\TestCase
     public function testLoadingComponent()
     {
         ob_start();
-        include __DIR__ . '/../mvp/views/loading.php';
+        include __DIR__ . '/../views/loading.php';
         $loadingOutput = ob_get_clean();
         
         $this->assertStringContainsString('global-loading-overlay', $loadingOutput);
@@ -358,7 +358,7 @@ class UIComponentsTest extends PHPUnit\Framework\TestCase
     public function testKeyboardShortcutsComponent()
     {
         ob_start();
-        include __DIR__ . '/../mvp/views/keyboard_shortcuts.php';
+        include __DIR__ . '/../views/keyboard_shortcuts.php';
         $shortcutsOutput = ob_get_clean();
         
         $this->assertStringContainsString('keyboard-shortcuts-modal', $shortcutsOutput);
@@ -377,7 +377,7 @@ class UIComponentsTest extends PHPUnit\Framework\TestCase
     public function testDarkModeComponent()
     {
         ob_start();
-        include __DIR__ . '/../mvp/views/dark_mode.php';
+        include __DIR__ . '/../views/dark_mode.php';
         $darkModeOutput = ob_get_clean();
         
         $this->assertStringContainsString('dark-mode-toggle', $darkModeOutput);
@@ -392,7 +392,7 @@ class UIComponentsTest extends PHPUnit\Framework\TestCase
     {
         // Test sidebar CSS
         ob_start();
-        include __DIR__ . '/../mvp/views/sidebar.php';
+        include __DIR__ . '/../views/sidebar.php';
         $sidebarOutput = ob_get_clean();
         
         $this->assertStringContainsString('organization-item', $sidebarOutput);
@@ -402,7 +402,7 @@ class UIComponentsTest extends PHPUnit\Framework\TestCase
         
         // Test client card CSS
         ob_start();
-        include __DIR__ . '/../mvp/views/client_card.php';
+        include __DIR__ . '/../views/client_card.php';
         $cardOutput = ob_get_clean();
         
         $this->assertStringContainsString('client-card', $cardOutput);
@@ -414,7 +414,7 @@ class UIComponentsTest extends PHPUnit\Framework\TestCase
         
         // Test clients view CSS
         ob_start();
-        include __DIR__ . '/../mvp/views/clients.php';
+        include __DIR__ . '/../views/clients.php';
         $clientsOutput = ob_get_clean();
         
         $this->assertStringContainsString('sort-dropdown', $clientsOutput);
@@ -425,7 +425,7 @@ class UIComponentsTest extends PHPUnit\Framework\TestCase
         
         // Test project detail CSS
         ob_start();
-        include __DIR__ . '/../mvp/views/project.php';
+        include __DIR__ . '/../views/project.php';
         $projectOutput = ob_get_clean();
         
         $this->assertStringContainsString('project-name-section', $projectOutput);
@@ -445,7 +445,7 @@ class UIComponentsTest extends PHPUnit\Framework\TestCase
     {
         // Test client card JavaScript
         ob_start();
-        include __DIR__ . '/../mvp/views/client_card.php';
+        include __DIR__ . '/../views/client_card.php';
         $cardOutput = ob_get_clean();
         
         $this->assertStringContainsString('addEventListener', $cardOutput);
@@ -456,7 +456,7 @@ class UIComponentsTest extends PHPUnit\Framework\TestCase
         
         // Test project detail JavaScript
         ob_start();
-        include __DIR__ . '/../mvp/views/project.php';
+        include __DIR__ . '/../views/project.php';
         $projectOutput = ob_get_clean();
         
         $this->assertStringContainsString('go-to-populate', $projectOutput);
@@ -467,7 +467,7 @@ class UIComponentsTest extends PHPUnit\Framework\TestCase
         
         // Test keyboard shortcuts JavaScript
         ob_start();
-        include __DIR__ . '/../mvp/views/keyboard_shortcuts.php';
+        include __DIR__ . '/../views/keyboard_shortcuts.php';
         $shortcutsOutput = ob_get_clean();
         
         $this->assertStringContainsString('keydown', $shortcutsOutput);
@@ -482,12 +482,12 @@ class UIComponentsTest extends PHPUnit\Framework\TestCase
     {
         // Test sidebar responsive classes
         ob_start();
-        include __DIR__ . '/../mvp/views/sidebar.php';
+        include __DIR__ . '/../views/sidebar.php';
         $sidebarOutput = ob_get_clean();
         
         // Test client card responsive classes
         ob_start();
-        include __DIR__ . '/../mvp/views/client_card.php';
+        include __DIR__ . '/../views/client_card.php';
         $cardOutput = ob_get_clean();
         
         $this->assertStringContainsString('@media', $cardOutput);
@@ -496,7 +496,7 @@ class UIComponentsTest extends PHPUnit\Framework\TestCase
         
         // Test project detail responsive classes
         ob_start();
-        include __DIR__ . '/../mvp/views/project.php';
+        include __DIR__ . '/../views/project.php';
         $projectOutput = ob_get_clean();
         
         $this->assertStringContainsString('@media', $projectOutput);

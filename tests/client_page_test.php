@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
-require __DIR__ . '/../mvp/lib/data.php';
-require __DIR__ . '/../mvp/templates/registry.php';
+require __DIR__ . '/../lib/data.php';
+require __DIR__ . '/../templates/registry.php';
 
 use WebPdfTimeSaver\Mvp\DataStore;
 
@@ -17,7 +17,7 @@ $clientVar = $client; $projectsVar = $projects; // alias
 
 $client2 = $client; $projects2 = $projects; $templates2 = $templates; $client = $clientVar; $projects = $projectsVar; $templates = $templates2; // satisfy include
 
-ob_start(); include __DIR__ . '/../mvp/views/client.php'; $html = ob_get_clean();
+ob_start(); include __DIR__ . '/../views/client.php'; $html = ob_get_clean();
 
 ct(strpos($html, 'Projects') !== false, 'Client page shows Projects tab');
 ct(strpos($html, 'Add new project') !== false, 'Client page has add project');

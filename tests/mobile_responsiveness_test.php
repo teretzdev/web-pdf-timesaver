@@ -4,7 +4,7 @@
  * Tests application responsiveness across different mobile devices and screen sizes
  */
 
-require_once __DIR__ . '/../mvp/lib/data.php';
+require_once __DIR__ . '/../lib/data.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
@@ -61,7 +61,7 @@ class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
     public function testViewportMetaTagConfiguration()
     {
         ob_start();
-        include __DIR__ . '/../mvp/views/layout_header.php';
+        include __DIR__ . '/../views/layout_header.php';
         $headerOutput = ob_get_clean();
         
         // Check for viewport meta tag
@@ -79,7 +79,7 @@ class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
     {
         // Test sidebar responsive CSS
         ob_start();
-        include __DIR__ . '/../mvp/views/sidebar.php';
+        include __DIR__ . '/../views/sidebar.php';
         $sidebarOutput = ob_get_clean();
         
         // Check for media queries
@@ -89,7 +89,7 @@ class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
         
         // Test client card responsive CSS
         ob_start();
-        include __DIR__ . '/../mvp/views/client_card.php';
+        include __DIR__ . '/../views/client_card.php';
         $cardOutput = ob_get_clean();
         
         // Check for mobile-specific styles
@@ -98,7 +98,7 @@ class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
         
         // Test project detail responsive CSS
         ob_start();
-        include __DIR__ . '/../mvp/views/project.php';
+        include __DIR__ . '/../views/project.php';
         $projectOutput = ob_get_clean();
         
         // Check for responsive layout
@@ -113,7 +113,7 @@ class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
     {
         // Test button sizing
         ob_start();
-        include __DIR__ . '/../mvp/views/client_card.php';
+        include __DIR__ . '/../views/client_card.php';
         $cardOutput = ob_get_clean();
         
         // Check for touch-friendly button sizes
@@ -122,7 +122,7 @@ class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
         
         // Test input field sizing
         ob_start();
-        include __DIR__ . '/../mvp/views/clients.php';
+        include __DIR__ . '/../views/clients.php';
         $clientsOutput = ob_get_clean();
         
         // Check for touch-friendly input sizes
@@ -140,7 +140,7 @@ class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
     {
         // Test sidebar mobile behavior
         ob_start();
-        include __DIR__ . '/../mvp/views/sidebar.php';
+        include __DIR__ . '/../views/sidebar.php';
         $sidebarOutput = ob_get_clean();
         
         // Check for mobile navigation
@@ -160,7 +160,7 @@ class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
     {
         // Test form mobile behavior
         ob_start();
-        include __DIR__ . '/../mvp/views/clients.php';
+        include __DIR__ . '/../views/clients.php';
         $clientsOutput = ob_get_clean();
         
         // Check for mobile form optimizations
@@ -180,7 +180,7 @@ class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
     {
         // Test typography scaling
         ob_start();
-        include __DIR__ . '/../mvp/views/client_card.php';
+        include __DIR__ . '/../views/client_card.php';
         $cardOutput = ob_get_clean();
         
         // Check for readable font sizes
@@ -189,7 +189,7 @@ class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
         
         // Test heading hierarchy
         ob_start();
-        include __DIR__ . '/../mvp/views/project.php';
+        include __DIR__ . '/../views/project.php';
         $projectOutput = ob_get_clean();
         
         // Check for proper heading sizes
@@ -205,7 +205,7 @@ class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
     {
         // Test image optimization
         ob_start();
-        include __DIR__ . '/../mvp/views/sidebar.php';
+        include __DIR__ . '/../views/sidebar.php';
         $sidebarOutput = ob_get_clean();
         
         // Check for responsive images
@@ -217,7 +217,7 @@ class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
         
         // Test CSS optimization
         ob_start();
-        include __DIR__ . '/../mvp/views/client_card.php';
+        include __DIR__ . '/../views/client_card.php';
         $cardOutput = ob_get_clean();
         
         // Check for efficient CSS
@@ -232,7 +232,7 @@ class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
     {
         // Test touch event handling
         ob_start();
-        include __DIR__ . '/../mvp/views/client_card.php';
+        include __DIR__ . '/../views/client_card.php';
         $cardOutput = ob_get_clean();
         
         // Check for touch event support
@@ -252,7 +252,7 @@ class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
     {
         // Test modal mobile behavior
         ob_start();
-        include __DIR__ . '/../mvp/views/clients.php';
+        include __DIR__ . '/../views/clients.php';
         $clientsOutput = ob_get_clean();
         
         // Check for mobile modal patterns
@@ -272,7 +272,7 @@ class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
     {
         // Test mobile accessibility
         ob_start();
-        include __DIR__ . '/../mvp/views/sidebar.php';
+        include __DIR__ . '/../views/sidebar.php';
         $sidebarOutput = ob_get_clean();
         
         // Check for mobile accessibility
@@ -282,7 +282,7 @@ class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
         
         // Test mobile screen reader support
         ob_start();
-        include __DIR__ . '/../mvp/views/client_card.php';
+        include __DIR__ . '/../views/client_card.php';
         $cardOutput = ob_get_clean();
         
         // Check for screen reader support
@@ -297,7 +297,7 @@ class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
     {
         // Test data usage optimization
         ob_start();
-        include __DIR__ . '/../mvp/views/loading.php';
+        include __DIR__ . '/../views/loading.php';
         $loadingOutput = ob_get_clean();
         
         // Check for loading optimization
@@ -307,7 +307,7 @@ class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
         
         // Test progressive loading
         ob_start();
-        include __DIR__ . '/../mvp/views/clients.php';
+        include __DIR__ . '/../views/clients.php';
         $clientsOutput = ob_get_clean();
         
         // Check for progressive loading
@@ -322,7 +322,7 @@ class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
     {
         // Test orientation handling
         ob_start();
-        include __DIR__ . '/../mvp/views/layout_header.php';
+        include __DIR__ . '/../views/layout_header.php';
         $headerOutput = ob_get_clean();
         
         // Check for orientation support
@@ -332,7 +332,7 @@ class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
         
         // Test orientation JavaScript
         ob_start();
-        include __DIR__ . '/../mvp/views/keyboard_shortcuts.php';
+        include __DIR__ . '/../views/keyboard_shortcuts.php';
         $shortcutsOutput = ob_get_clean();
         
         // Check for orientation event handling
@@ -347,7 +347,7 @@ class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
     {
         // Test mobile CSS features
         ob_start();
-        include __DIR__ . '/../mvp/views/client_card.php';
+        include __DIR__ . '/../views/client_card.php';
         $cardOutput = ob_get_clean();
         
         // Check for mobile-specific CSS
@@ -367,7 +367,7 @@ class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
     {
         // Test mobile form validation
         ob_start();
-        include __DIR__ . '/../mvp/views/clients.php';
+        include __DIR__ . '/../views/clients.php';
         $clientsOutput = ob_get_clean();
         
         // Check for mobile form validation
@@ -401,7 +401,7 @@ class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
         
         // Test mobile-specific optimizations
         ob_start();
-        include __DIR__ . '/../mvp/views/loading.php';
+        include __DIR__ . '/../views/loading.php';
         $loadingOutput = ob_get_clean();
         
         // Check for performance optimizations
@@ -426,7 +426,7 @@ class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
         
         // Test that breakpoints are consistently used
         ob_start();
-        include __DIR__ . '/../mvp/views/client_card.php';
+        include __DIR__ . '/../views/client_card.php';
         $cardOutput = ob_get_clean();
         
         // Check for consistent breakpoint usage
@@ -446,7 +446,7 @@ class MobileResponsivenessTest extends PHPUnit\Framework\TestCase
     {
         // Test mobile JavaScript features
         ob_start();
-        include __DIR__ . '/../mvp/views/keyboard_shortcuts.php';
+        include __DIR__ . '/../views/keyboard_shortcuts.php';
         $shortcutsOutput = ob_get_clean();
         
         // Check for mobile JavaScript features

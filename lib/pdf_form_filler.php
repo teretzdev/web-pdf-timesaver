@@ -819,7 +819,7 @@ final class PdfFormFiller {
             return $this->fillPdfForm($template, $values);
         }
 
-        $logFile = __DIR__ . '/../../logs/pdf_debug.log';
+		$logFile = __DIR__ . '/../logs/pdf_debug.log';
         $pdf = new Fpdi();
         $pdf->SetFont('Arial', '', 10);
         $pdf->SetTextColor(0, 0, 0);

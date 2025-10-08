@@ -1,9 +1,9 @@
 <?php
 declare(strict_types=1);
 
-require __DIR__ . '/../mvp/lib/data.php';
-require __DIR__ . '/../mvp/templates/registry.php';
-require __DIR__ . '/../mvp/lib/fill_service.php';
+require __DIR__ . '/../lib/data.php';
+require __DIR__ . '/../templates/registry.php';
+require __DIR__ . '/../lib/fill_service.php';
 
 use WebPdfTimeSaver\Mvp\DataStore;
 use WebPdfTimeSaver\Mvp\TemplateRegistry;

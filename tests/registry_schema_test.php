@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-require __DIR__ . '/../mvp/templates/registry.php';
+require __DIR__ . '/../templates/registry.php';
 
 use WebPdfTimeSaver\Mvp\TemplateRegistry;
 

@@ -54,7 +54,7 @@ This guide will help you set up the Web-PDFTimeSaver project to work with XAMPP 
 ## Access URLs
 
 - **Main Application:** http://localhost/Web-PDFTimeSaver/
-- **MVP Interface:** http://localhost/Web-PDFTimeSaver/mvp/
+- **App Interface:** http://localhost/Web-PDFTimeSaver/
 - **Setup Test:** http://localhost/Web-PDFTimeSaver/test-setup.php
 
 ## Configuration Files

@@ -4,7 +4,7 @@
  * Tests dark mode implementation, theme switching, and persistence
  */
 
-require_once __DIR__ . '/../mvp/lib/data.php';
+require_once __DIR__ . '/../lib/data.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class DarkModeFunctionalityTest extends PHPUnit\Framework\TestCase
@@ -52,7 +52,7 @@ class DarkModeFunctionalityTest extends PHPUnit\Framework\TestCase
     public function testDarkModeToggleComponent()
     {
         ob_start();
-        include __DIR__ . '/../mvp/views/dark_mode.php';
+        include __DIR__ . '/../views/dark_mode.php';
         $darkModeOutput = ob_get_clean();
         
         // Check for dark mode toggle
@@ -75,7 +75,7 @@ class DarkModeFunctionalityTest extends PHPUnit\Framework\TestCase
     public function testCSSCustomPropertiesForTheming()
     {
         ob_start();
-        include __DIR__ . '/../mvp/views/dark_mode.php';
+        include __DIR__ . '/../views/dark_mode.php';
         $darkModeOutput = ob_get_clean();
         
         // Check for CSS custom properties
@@ -98,7 +98,7 @@ class DarkModeFunctionalityTest extends PHPUnit\Framework\TestCase
     public function testThemeSwitchingFunctionality()
     {
         ob_start();
-        include __DIR__ . '/../mvp/views/dark_mode.php';
+        include __DIR__ . '/../views/dark_mode.php';
         $darkModeOutput = ob_get_clean();
         
         // Check for theme switching JavaScript
@@ -122,7 +122,7 @@ class DarkModeFunctionalityTest extends PHPUnit\Framework\TestCase
     public function testThemePersistence()
     {
         ob_start();
-        include __DIR__ . '/../mvp/views/dark_mode.php';
+        include __DIR__ . '/../views/dark_mode.php';
         $darkModeOutput = ob_get_clean();
         
         // Check for theme persistence
@@ -144,7 +144,7 @@ class DarkModeFunctionalityTest extends PHPUnit\Framework\TestCase
     public function testSystemThemeDetection()
     {
         ob_start();
-        include __DIR__ . '/../mvp/views/dark_mode.php';
+        include __DIR__ . '/../views/dark_mode.php';
         $darkModeOutput = ob_get_clean();
         
         // Check for system theme detection
@@ -166,7 +166,7 @@ class DarkModeFunctionalityTest extends PHPUnit\Framework\TestCase
     {
         // Test sidebar dark mode styling
         ob_start();
-        include __DIR__ . '/../mvp/views/sidebar.php';
+        include __DIR__ . '/../views/sidebar.php';
         $sidebarOutput = ob_get_clean();
         
         // Check for dark mode styles
@@ -175,7 +175,7 @@ class DarkModeFunctionalityTest extends PHPUnit\Framework\TestCase
         
         // Test client card dark mode styling
         ob_start();
-        include __DIR__ . '/../mvp/views/client_card.php';
+        include __DIR__ . '/../views/client_card.php';
         $cardOutput = ob_get_clean();
         
         // Check for theme-specific colors
@@ -185,7 +185,7 @@ class DarkModeFunctionalityTest extends PHPUnit\Framework\TestCase
         
         // Test project detail dark mode styling
         ob_start();
-        include __DIR__ . '/../mvp/views/project.php';
+        include __DIR__ . '/../views/project.php';
         $projectOutput = ob_get_clean();
         
         // Check for theme-specific styling
@@ -199,7 +199,7 @@ class DarkModeFunctionalityTest extends PHPUnit\Framework\TestCase
     public function testDarkModeAccessibility()
     {
         ob_start();
-        include __DIR__ . '/../mvp/views/dark_mode.php';
+        include __DIR__ . '/../views/dark_mode.php';
         $darkModeOutput = ob_get_clean();
         
         // Check for accessibility features
@@ -223,7 +223,7 @@ class DarkModeFunctionalityTest extends PHPUnit\Framework\TestCase
     public function testDarkModePerformance()
     {
         ob_start();
-        include __DIR__ . '/../mvp/views/dark_mode.php';
+        include __DIR__ . '/../views/dark_mode.php';
         $darkModeOutput = ob_get_clean();
         
         // Check for performance optimizations
@@ -245,7 +245,7 @@ class DarkModeFunctionalityTest extends PHPUnit\Framework\TestCase
     public function testDarkModeColorContrast()
     {
         ob_start();
-        include __DIR__ . '/../mvp/views/dark_mode.php';
+        include __DIR__ . '/../views/dark_mode.php';
         $darkModeOutput = ob_get_clean();
         
         // Check for color contrast compliance
@@ -267,7 +267,7 @@ class DarkModeFunctionalityTest extends PHPUnit\Framework\TestCase
     public function testDarkModeAnimations()
     {
         ob_start();
-        include __DIR__ . '/../mvp/views/dark_mode.php';
+        include __DIR__ . '/../views/dark_mode.php';
         $darkModeOutput = ob_get_clean();
         
         // Check for smooth theme transitions
@@ -291,7 +291,7 @@ class DarkModeFunctionalityTest extends PHPUnit\Framework\TestCase
     public function testDarkModeStateManagement()
     {
         ob_start();
-        include __DIR__ . '/../mvp/views/dark_mode.php';
+        include __DIR__ . '/../views/dark_mode.php';
         $darkModeOutput = ob_get_clean();
         
         // Check for state management
@@ -315,7 +315,7 @@ class DarkModeFunctionalityTest extends PHPUnit\Framework\TestCase
     public function testDarkModeErrorHandling()
     {
         ob_start();
-        include __DIR__ . '/../mvp/views/dark_mode.php';
+        include __DIR__ . '/../views/dark_mode.php';
         $darkModeOutput = ob_get_clean();
         
         // Check for error handling
@@ -340,7 +340,7 @@ class DarkModeFunctionalityTest extends PHPUnit\Framework\TestCase
     {
         // Test sidebar integration
         ob_start();
-        include __DIR__ . '/../mvp/views/sidebar.php';
+        include __DIR__ . '/../views/sidebar.php';
         $sidebarOutput = ob_get_clean();
         
         // Check for dark mode integration
@@ -349,7 +349,7 @@ class DarkModeFunctionalityTest extends PHPUnit\Framework\TestCase
         
         // Test client card integration
         ob_start();
-        include __DIR__ . '/../mvp/views/client_card.php';
+        include __DIR__ . '/../views/client_card.php';
         $cardOutput = ob_get_clean();
         
         // Check for dark mode integration
@@ -358,7 +358,7 @@ class DarkModeFunctionalityTest extends PHPUnit\Framework\TestCase
         
         // Test project detail integration
         ob_start();
-        include __DIR__ . '/../mvp/views/project.php';
+        include __DIR__ . '/../views/project.php';
         $projectOutput = ob_get_clean();
         
         // Check for dark mode integration
@@ -372,7 +372,7 @@ class DarkModeFunctionalityTest extends PHPUnit\Framework\TestCase
     public function testDarkModeCustomization()
     {
         ob_start();
-        include __DIR__ . '/../mvp/views/dark_mode.php';
+        include __DIR__ . '/../views/dark_mode.php';
         $darkModeOutput = ob_get_clean();
         
         // Check for customization options
@@ -397,7 +397,7 @@ class DarkModeFunctionalityTest extends PHPUnit\Framework\TestCase
     public function testDarkModeBrowserCompatibility()
     {
         ob_start();
-        include __DIR__ . '/../mvp/views/dark_mode.php';
+        include __DIR__ . '/../views/dark_mode.php';
         $darkModeOutput = ob_get_clean();
         
         // Check for browser compatibility

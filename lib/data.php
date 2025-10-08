@@ -94,7 +94,7 @@ final class DataStore {
 	}
 
 	public function getFieldValues(string $projectDocumentId): array {
-		$logFile = __DIR__ . '/../../logs/pdf_debug.log';
+		$logFile = __DIR__ . '/../logs/pdf_debug.log';
 		file_put_contents($logFile, date('Y-m-d H:i:s') . ' DATA DEBUG: Getting field values for PD ID: ' . $projectDocumentId . PHP_EOL, FILE_APPEND);
 		file_put_contents($logFile, date('Y-m-d H:i:s') . ' DATA DEBUG: Total field values in DB: ' . count($this->db['fieldValues']) . PHP_EOL, FILE_APPEND);
 		
@@ -111,7 +111,7 @@ final class DataStore {
 		return $out;
 	}
 	public function saveFieldValues(string $projectDocumentId, array $kv): void {
-		$logFile = __DIR__ . '/../../logs/pdf_debug.log';
+		$logFile = __DIR__ . '/../logs/pdf_debug.log';
 		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE VALUES: PD ID: ' . $projectDocumentId . PHP_EOL, FILE_APPEND);
 		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE VALUES: Input data: ' . json_encode($kv) . PHP_EOL, FILE_APPEND);
 		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE VALUES: Existing field values before: ' . count($this->db['fieldValues']) . PHP_EOL, FILE_APPEND);

@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-require __DIR__ . '/../mvp/templates/registry.php';
+require __DIR__ . '/../templates/registry.php';
 
 use WebPdfTimeSaver\Mvp\TemplateRegistry;
 
@@ -17,7 +17,7 @@ $template = $tpl;
 $values = [ 'attorney.name' => 'RON REITSHSTEIN', 'attorney.firm' => 'YOUNGMAN REITSHSTEIN, PLC' ];
 
 ob_start();
-include __DIR__ . '/../mvp/views/populate.php';
+include __DIR__ . '/../views/populate.php';
 $populateHtml = ob_get_clean();
 
 assert_contains($populateHtml, 'Populate —', 'Populate heading present');
@@ -32,7 +32,7 @@ $documents = [
 ];
 
 ob_start();
-include __DIR__ . '/../mvp/views/project.php';
+include __DIR__ . '/../views/project.php';
 $projectHtml = ob_get_clean();
 
 assert_contains($projectHtml, 'Duplicate', 'Duplicate button present');

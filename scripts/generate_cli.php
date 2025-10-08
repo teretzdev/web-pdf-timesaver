@@ -3,8 +3,8 @@ declare(strict_types=1);
 
 // Simple CLI to generate a PDF and print result + metrics
 
-require __DIR__ . '/../mvp/lib/logger.php';
-require __DIR__ . '/../mvp/lib/pdf_form_filler.php';
+require __DIR__ . '/../lib/logger.php';
+require __DIR__ . '/../lib/pdf_form_filler.php';
 
 use WebPdfTimeSaver\Mvp\Logger;
 use WebPdfTimeSaver\Mvp\PdfFormFiller;
