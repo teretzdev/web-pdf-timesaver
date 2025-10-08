@@ -4,7 +4,7 @@
  * Tests all new routes and actions for proper functionality
  */
 
-require_once __DIR__ . '/../mvp/lib/data.php';
+require_once __DIR__ . '/../lib/data.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class APIRoutesTest extends PHPUnit\Framework\TestCase

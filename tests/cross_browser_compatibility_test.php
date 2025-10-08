@@ -4,7 +4,7 @@
  * Tests application compatibility across different browsers and devices
  */
 
-require_once __DIR__ . '/../mvp/lib/data.php';
+require_once __DIR__ . '/../lib/data.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class CrossBrowserCompatibilityTest extends PHPUnit\Framework\TestCase
@@ -60,7 +60,7 @@ class CrossBrowserCompatibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test sidebar CSS
         ob_start();
-        include __DIR__ . '/../mvp/views/sidebar.php';
+        include __DIR__ . '/../views/sidebar.php';
         $sidebarOutput = ob_get_clean();
         
         // Check for vendor prefixes
@@ -74,7 +74,7 @@ class CrossBrowserCompatibilityTest extends PHPUnit\Framework\TestCase
         
         // Test client card CSS
         ob_start();
-        include __DIR__ . '/../mvp/views/client_card.php';
+        include __DIR__ . '/../views/client_card.php';
         $cardOutput = ob_get_clean();
         
         // Check for CSS custom properties (CSS variables)
@@ -93,7 +93,7 @@ class CrossBrowserCompatibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test client card JavaScript
         ob_start();
-        include __DIR__ . '/../mvp/views/client_card.php';
+        include __DIR__ . '/../views/client_card.php';
         $cardOutput = ob_get_clean();
         
         // Check for modern JavaScript features
@@ -106,7 +106,7 @@ class CrossBrowserCompatibilityTest extends PHPUnit\Framework\TestCase
         
         // Test project detail JavaScript
         ob_start();
-        include __DIR__ . '/../mvp/views/project.php';
+        include __DIR__ . '/../views/project.php';
         $projectOutput = ob_get_clean();
         
         // Check for modern JavaScript features
@@ -125,7 +125,7 @@ class CrossBrowserCompatibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test semantic HTML elements
         ob_start();
-        include __DIR__ . '/../mvp/views/sidebar.php';
+        include __DIR__ . '/../views/sidebar.php';
         $sidebarOutput = ob_get_clean();
         
         // Check for HTML5 semantic elements
@@ -136,7 +136,7 @@ class CrossBrowserCompatibilityTest extends PHPUnit\Framework\TestCase
         
         // Test form elements
         ob_start();
-        include __DIR__ . '/../mvp/views/clients.php';
+        include __DIR__ . '/../views/clients.php';
         $clientsOutput = ob_get_clean();
         
         // Check for HTML5 form elements
@@ -153,7 +153,7 @@ class CrossBrowserCompatibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test responsive CSS
         ob_start();
-        include __DIR__ . '/../mvp/views/client_card.php';
+        include __DIR__ . '/../views/client_card.php';
         $cardOutput = ob_get_clean();
         
         // Check for responsive design features
@@ -163,7 +163,7 @@ class CrossBrowserCompatibilityTest extends PHPUnit\Framework\TestCase
         
         // Check for viewport meta tag
         ob_start();
-        include __DIR__ . '/../mvp/views/layout_header.php';
+        include __DIR__ . '/../views/layout_header.php';
         $headerOutput = ob_get_clean();
         
         $this->assertStringContainsString('viewport', $headerOutput, 'HTML should have viewport meta tag for mobile compatibility');
@@ -178,7 +178,7 @@ class CrossBrowserCompatibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test CSS Grid usage
         ob_start();
-        include __DIR__ . '/../mvp/views/project.php';
+        include __DIR__ . '/../views/project.php';
         $projectOutput = ob_get_clean();
         
         // Check for CSS Grid
@@ -188,7 +188,7 @@ class CrossBrowserCompatibilityTest extends PHPUnit\Framework\TestCase
         
         // Test Flexbox usage
         ob_start();
-        include __DIR__ . '/../mvp/views/client_card.php';
+        include __DIR__ . '/../views/client_card.php';
         $cardOutput = ob_get_clean();
         
         // Check for Flexbox
@@ -205,7 +205,7 @@ class CrossBrowserCompatibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test CSS transitions
         ob_start();
-        include __DIR__ . '/../mvp/views/sidebar.php';
+        include __DIR__ . '/../views/sidebar.php';
         $sidebarOutput = ob_get_clean();
         
         // Check for CSS transitions
@@ -214,7 +214,7 @@ class CrossBrowserCompatibilityTest extends PHPUnit\Framework\TestCase
         
         // Test CSS animations
         ob_start();
-        include __DIR__ . '/../mvp/views/loading.php';
+        include __DIR__ . '/../views/loading.php';
         $loadingOutput = ob_get_clean();
         
         // Check for CSS animations
@@ -230,7 +230,7 @@ class CrossBrowserCompatibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test HTML5 form validation
         ob_start();
-        include __DIR__ . '/../mvp/views/clients.php';
+        include __DIR__ . '/../views/clients.php';
         $clientsOutput = ob_get_clean();
         
         // Check for HTML5 validation attributes
@@ -251,7 +251,7 @@ class CrossBrowserCompatibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test ARIA attributes
         ob_start();
-        include __DIR__ . '/../mvp/views/sidebar.php';
+        include __DIR__ . '/../views/sidebar.php';
         $sidebarOutput = ob_get_clean();
         
         // Check for ARIA attributes
@@ -261,7 +261,7 @@ class CrossBrowserCompatibilityTest extends PHPUnit\Framework\TestCase
         
         // Test keyboard navigation
         ob_start();
-        include __DIR__ . '/../mvp/views/keyboard_shortcuts.php';
+        include __DIR__ . '/../views/keyboard_shortcuts.php';
         $shortcutsOutput = ob_get_clean();
         
         // Check for keyboard event handling
@@ -277,7 +277,7 @@ class CrossBrowserCompatibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test image elements
         ob_start();
-        include __DIR__ . '/../mvp/views/sidebar.php';
+        include __DIR__ . '/../views/sidebar.php';
         $sidebarOutput = ob_get_clean();
         
         // Check for image attributes
@@ -297,7 +297,7 @@ class CrossBrowserCompatibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test modern JavaScript features
         ob_start();
-        include __DIR__ . '/../mvp/views/project.php';
+        include __DIR__ . '/../views/project.php';
         $projectOutput = ob_get_clean();
         
         // Check for arrow functions (should be transpiled for older browsers)
@@ -321,7 +321,7 @@ class CrossBrowserCompatibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test CSS custom properties
         ob_start();
-        include __DIR__ . '/../mvp/views/dark_mode.php';
+        include __DIR__ . '/../views/dark_mode.php';
         $darkModeOutput = ob_get_clean();
         
         // Check for CSS custom properties
@@ -339,7 +339,7 @@ class CrossBrowserCompatibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test CSS prefixes
         ob_start();
-        include __DIR__ . '/../mvp/views/loading.php';
+        include __DIR__ . '/../views/loading.php';
         $loadingOutput = ob_get_clean();
         
         // Check for webkit prefixes
@@ -363,7 +363,7 @@ class CrossBrowserCompatibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test event handling
         ob_start();
-        include __DIR__ . '/../mvp/views/client_card.php';
+        include __DIR__ . '/../views/client_card.php';
         $cardOutput = ob_get_clean();
         
         // Check for modern event handling
@@ -386,7 +386,7 @@ class CrossBrowserCompatibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test CSS feature detection
         ob_start();
-        include __DIR__ . '/../mvp/views/layout_header.php';
+        include __DIR__ . '/../views/layout_header.php';
         $headerOutput = ob_get_clean();
         
         // Check for CSS feature detection
@@ -404,7 +404,7 @@ class CrossBrowserCompatibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test JavaScript feature detection
         ob_start();
-        include __DIR__ . '/../mvp/views/keyboard_shortcuts.php';
+        include __DIR__ . '/../views/keyboard_shortcuts.php';
         $shortcutsOutput = ob_get_clean();
         
         // Check for feature detection

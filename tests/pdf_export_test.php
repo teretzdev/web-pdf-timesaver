@@ -2,8 +2,8 @@
 declare(strict_types=1);
 
 require __DIR__ . '/../vendor/autoload.php';
-require __DIR__ . '/../mvp/lib/fill_service.php';
-require __DIR__ . '/../mvp/templates/registry.php';
+require __DIR__ . '/../lib/fill_service.php';
+require __DIR__ . '/../templates/registry.php';
 
 use WebPdfTimeSaver\Mvp\FillService;
 use WebPdfTimeSaver\Mvp\TemplateRegistry;

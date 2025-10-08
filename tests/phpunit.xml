@@ -64,7 +64,7 @@
         <exclude>
             <directory>../vendor</directory>
             <directory>../tests</directory>
-            <file>../mvp/index.php</file>
+            <file>../index.php</file>
         </exclude>
         <report>
             <html outputDirectory="coverage"/>

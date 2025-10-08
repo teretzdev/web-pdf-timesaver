@@ -1,10 +1,10 @@
 <?php
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../mvp/lib/data.php';
-require_once __DIR__ . '/../mvp/lib/pdf_form_filler.php';
-require_once __DIR__ . '/../mvp/lib/fl100_test_data_generator.php';
-require_once __DIR__ . '/../mvp/lib/field_position_loader.php';
-require_once __DIR__ . '/../mvp/templates/registry.php';
+require_once __DIR__ . '/../lib/data.php';
+require_once __DIR__ . '/../lib/pdf_form_filler.php';
+require_once __DIR__ . '/../lib/fl100_test_data_generator.php';
+require_once __DIR__ . '/../lib/field_position_loader.php';
+require_once __DIR__ . '/../templates/registry.php';
 
 use WebPdfTimeSaver\Mvp\DataStore;
 use WebPdfTimeSaver\Mvp\PdfFormFiller;

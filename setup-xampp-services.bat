@@ -93,7 +93,7 @@ echo   - MySQL (auto-start enabled)
 echo.
 echo Your application is now accessible at:
 echo   http://localhost/Web-PDFTimeSaver/
-echo   http://localhost/Web-PDFTimeSaver/mvp/
+echo   http://localhost/Web-PDFTimeSaver/
 echo.
 echo Services will automatically start when Windows boots.
 echo.

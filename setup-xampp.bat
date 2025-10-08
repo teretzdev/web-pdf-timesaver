@@ -73,7 +73,7 @@ echo Setup complete!
 echo.
 echo Your application is now accessible at:
 echo   http://localhost/Web-PDFTimeSaver/
-echo   http://localhost/Web-PDFTimeSaver/mvp/
+echo   http://localhost/Web-PDFTimeSaver/
 echo.
 echo The project has been copied to C:\xampp\htdocs\Web-PDFTimeSaver\
 echo All PHP dependencies are installed and configured.

@@ -4,7 +4,7 @@
  * Tests keyboard navigation, screen reader compatibility, and WCAG compliance
  */
 
-require_once __DIR__ . '/../mvp/lib/data.php';
+require_once __DIR__ . '/../lib/data.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class AccessibilityTest extends PHPUnit\Framework\TestCase
@@ -53,7 +53,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test sidebar navigation
         ob_start();
-        include __DIR__ . '/../mvp/views/sidebar.php';
+        include __DIR__ . '/../views/sidebar.php';
         $sidebarOutput = ob_get_clean();
         
         // Check for keyboard navigation attributes
@@ -61,7 +61,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
         
         // Test client card keyboard navigation
         ob_start();
-        include __DIR__ . '/../mvp/views/client_card.php';
+        include __DIR__ . '/../views/client_card.php';
         $cardOutput = ob_get_clean();
         
         // Check for keyboard event handlers
@@ -70,7 +70,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
         
         // Test keyboard shortcuts
         ob_start();
-        include __DIR__ . '/../mvp/views/keyboard_shortcuts.php';
+        include __DIR__ . '/../views/keyboard_shortcuts.php';
         $shortcutsOutput = ob_get_clean();
         
         // Check for keyboard shortcut handlers
@@ -86,7 +86,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test sidebar ARIA attributes
         ob_start();
-        include __DIR__ . '/../mvp/views/sidebar.php';
+        include __DIR__ . '/../views/sidebar.php';
         $sidebarOutput = ob_get_clean();
         
         // Check for navigation role
@@ -94,7 +94,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
         
         // Test client card ARIA attributes
         ob_start();
-        include __DIR__ . '/../mvp/views/client_card.php';
+        include __DIR__ . '/../views/client_card.php';
         $cardOutput = ob_get_clean();
         
         // Check for button roles and labels
@@ -103,7 +103,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
         
         // Test modal ARIA attributes
         ob_start();
-        include __DIR__ . '/../mvp/views/clients.php';
+        include __DIR__ . '/../views/clients.php';
         $clientsOutput = ob_get_clean();
         
         // Check for modal attributes
@@ -118,7 +118,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test form labels
         ob_start();
-        include __DIR__ . '/../mvp/views/clients.php';
+        include __DIR__ . '/../views/clients.php';
         $clientsOutput = ob_get_clean();
         
         // Check for proper form labels
@@ -131,7 +131,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
         
         // Test project detail view accessibility
         ob_start();
-        include __DIR__ . '/../mvp/views/project.php';
+        include __DIR__ . '/../views/project.php';
         $projectOutput = ob_get_clean();
         
         // Check for proper heading structure
@@ -150,7 +150,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test CSS for color contrast
         ob_start();
-        include __DIR__ . '/../mvp/views/client_card.php';
+        include __DIR__ . '/../views/client_card.php';
         $cardOutput = ob_get_clean();
         
         // Check for color definitions
@@ -166,7 +166,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
         
         // Test button accessibility
         ob_start();
-        include __DIR__ . '/../mvp/views/project.php';
+        include __DIR__ . '/../views/project.php';
         $projectOutput = ob_get_clean();
         
         // Check for button styling
@@ -181,7 +181,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test sidebar semantic structure
         ob_start();
-        include __DIR__ . '/../mvp/views/sidebar.php';
+        include __DIR__ . '/../views/sidebar.php';
         $sidebarOutput = ob_get_clean();
         
         // Check for semantic elements
@@ -191,7 +191,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
         
         // Test client detail semantic structure
         ob_start();
-        include __DIR__ . '/../mvp/views/client.php';
+        include __DIR__ . '/../views/client.php';
         $clientOutput = ob_get_clean();
         
         // Check for proper heading hierarchy
@@ -203,7 +203,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
         
         // Test form semantic structure
         ob_start();
-        include __DIR__ . '/../mvp/views/clients.php';
+        include __DIR__ . '/../views/clients.php';
         $clientsOutput = ob_get_clean();
         
         // Check for form elements
@@ -220,7 +220,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test error handler component
         ob_start();
-        include __DIR__ . '/../mvp/views/error_handler.php';
+        include __DIR__ . '/../views/error_handler.php';
         $errorOutput = ob_get_clean();
         
         // Check for error announcement attributes
@@ -229,7 +229,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
         
         // Test loading states accessibility
         ob_start();
-        include __DIR__ . '/../mvp/views/loading.php';
+        include __DIR__ . '/../views/loading.php';
         $loadingOutput = ob_get_clean();
         
         // Check for loading announcements
@@ -244,7 +244,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test responsive CSS
         ob_start();
-        include __DIR__ . '/../mvp/views/client_card.php';
+        include __DIR__ . '/../views/client_card.php';
         $cardOutput = ob_get_clean();
         
         // Check for responsive design
@@ -253,7 +253,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
         
         // Test mobile accessibility
         ob_start();
-        include __DIR__ . '/../mvp/views/project.php';
+        include __DIR__ . '/../views/project.php';
         $projectOutput = ob_get_clean();
         
         // Check for touch-friendly sizing
@@ -268,7 +268,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test keyboard shortcuts component
         ob_start();
-        include __DIR__ . '/../mvp/views/keyboard_shortcuts.php';
+        include __DIR__ . '/../views/keyboard_shortcuts.php';
         $shortcutsOutput = ob_get_clean();
         
         // Check for skip links
@@ -280,7 +280,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
         
         // Test main content accessibility
         ob_start();
-        include __DIR__ . '/../mvp/views/layout_header.php';
+        include __DIR__ . '/../views/layout_header.php';
         $headerOutput = ob_get_clean();
         
         // Check for main content landmark
@@ -294,7 +294,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test client creation form
         ob_start();
-        include __DIR__ . '/../mvp/views/clients.php';
+        include __DIR__ . '/../views/clients.php';
         $clientsOutput = ob_get_clean();
         
         // Check for form accessibility
@@ -315,7 +315,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test project documents table
         ob_start();
-        include __DIR__ . '/../mvp/views/project.php';
+        include __DIR__ . '/../views/project.php';
         $projectOutput = ob_get_clean();
         
         // Check for table accessibility
@@ -338,7 +338,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test modal accessibility
         ob_start();
-        include __DIR__ . '/../mvp/views/clients.php';
+        include __DIR__ . '/../views/clients.php';
         $clientsOutput = ob_get_clean();
         
         // Check for modal accessibility
@@ -348,7 +348,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
         
         // Test dropdown accessibility
         ob_start();
-        include __DIR__ . '/../mvp/views/sidebar.php';
+        include __DIR__ . '/../views/sidebar.php';
         $sidebarOutput = ob_get_clean();
         
         // Check for dropdown accessibility
@@ -363,7 +363,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test HTML lang attribute
         ob_start();
-        include __DIR__ . '/../mvp/views/layout_header.php';
+        include __DIR__ . '/../views/layout_header.php';
         $headerOutput = ob_get_clean();
         
         // Check for language declaration
@@ -380,7 +380,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test image accessibility
         ob_start();
-        include __DIR__ . '/../mvp/views/sidebar.php';
+        include __DIR__ . '/../views/sidebar.php';
         $sidebarOutput = ob_get_clean();
         
         // Check for alt text
@@ -391,7 +391,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
         
         // Test icon accessibility
         ob_start();
-        include __DIR__ . '/../mvp/views/client_card.php';
+        include __DIR__ . '/../views/client_card.php';
         $cardOutput = ob_get_clean();
         
         // Check for icon accessibility
@@ -405,7 +405,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
     {
         // Test focus management in modals
         ob_start();
-        include __DIR__ . '/../mvp/views/clients.php';
+        include __DIR__ . '/../views/clients.php';
         $clientsOutput = ob_get_clean();
         
         // Check for focus management
@@ -413,7 +413,7 @@ class AccessibilityTest extends PHPUnit\Framework\TestCase
         
         // Test tab order
         ob_start();
-        include __DIR__ . '/../mvp/views/project.php';
+        include __DIR__ . '/../views/project.php';
         $projectOutput = ob_get_clean();
         
         // Check for tabindex management

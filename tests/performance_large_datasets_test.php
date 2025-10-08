@@ -4,7 +4,7 @@
  * Tests application performance with large amounts of data
  */
 
-require_once __DIR__ . '/../mvp/lib/data.php';
+require_once __DIR__ . '/../lib/data.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class PerformanceLargeDatasetsTest extends PHPUnit\Framework\TestCase

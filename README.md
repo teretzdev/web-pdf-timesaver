@@ -2,11 +2,11 @@
 
 A web-based application that allows you to upload PDF files, fill in form fields, and download the completed document.
 
-## MVP (Clio Draft-inspired)
+## App
 
-- Entry point: `mvp/index.php`
+- Entry point: `index.php`
 - Data: JSON store at `data/mvp.json`
-- Templates: `mvp/templates/registry.php`
+- Templates: `templates/registry.php`
 - Generate & Download: from Project → Generate → Download
 
 ## Tests
@@ -62,7 +62,7 @@ Then open your browser and go to `http://localhost:8000`
 ### Using Apache/Nginx
 
 1. Copy the files to your web server directory
-2. Ensure mod_rewrite is enabled (for Apache)
+2. Ensure mod_rewrite is enabled (for Apache) or proper Nginx config
 3. Set proper permissions for the `uploads/` and `output/` directories
 4. Access the application through your web browser
 
@@ -77,14 +77,16 @@ Then open your browser and go to `http://localhost:8000`
 
 ```
 Web-PDFTimeSaver/
-├── index.php                 # Root entry (redirects to mvp/index.php)
-├── mvp/                      # New MVP app (projects, project, populate)
-├── legacy/                   # Old scripts moved here
-├── tests/                    # Test suite (run_all.php)
+├── index.php               # Router (projects, project, populate)
+├── lib/                    # App libraries and services
+├── templates/              # Template registry
+├── views/                  # Views (layout, pages)
+├── legacy/                 # Archived older code
+├── tests/                  # Test suite (run_all.php)
 ├── uploads/                # Directory for uploaded PDFs
 ├── output/                 # Directory for filled PDFs
-├── .htaccess              # Apache configuration
-└── README.md              # This file
+├── .htaccess               # Apache configuration
+└── README.md               # This file
 ```
 
 ## Configuration

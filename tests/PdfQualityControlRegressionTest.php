@@ -7,8 +7,8 @@ use WebPdfTimeSaver\Mvp\TemplateRegistry;
 use setasign\Fpdi\Fpdi;
 
 require_once __DIR__ . '/../vendor/autoload.php';
-require_once __DIR__ . '/../mvp/lib/fill_service.php';
-require_once __DIR__ . '/../mvp/templates/registry.php';
+require_once __DIR__ . '/../lib/fill_service.php';
+require_once __DIR__ . '/../templates/registry.php';
 
 final class PdfQualityControlRegressionTest extends TestCase {
 	public function test_fl100_generation_has_background_and_reasonable_size(): void {

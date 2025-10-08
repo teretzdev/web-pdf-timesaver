@@ -4,9 +4,9 @@
  * Tests to ensure existing PDF functionality still works after refactoring
  */
 
-require_once __DIR__ . '/../mvp/lib/data.php';
-require_once __DIR__ . '/../mvp/lib/pdf_field_service.php';
-require_once __DIR__ . '/../mvp/lib/fill_service.php';
+require_once __DIR__ . '/../lib/data.php';
+require_once __DIR__ . '/../lib/pdf_field_service.php';
+require_once __DIR__ . '/../lib/fill_service.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class RegressionPDFFunctionalityTest extends PHPUnit\Framework\TestCase

@@ -1,8 +1,8 @@
 <?php
 declare(strict_types=1);
 
-require __DIR__ . '/../mvp/lib/data.php';
-require __DIR__ . '/../mvp/templates/registry.php';
+require __DIR__ . '/../lib/data.php';
+require __DIR__ . '/../templates/registry.php';
 
 use WebPdfTimeSaver\Mvp\DataStore;
 use WebPdfTimeSaver\Mvp\TemplateRegistry;
@@ -22,7 +22,7 @@ $store->addProjectDocument($project['id'], $tplId);
 // 1) Projects view DOM checks
 $projects = $store->getProjects();
 $filters = [ 'q' => '', 'status' => '', 'sort' => 'updated_desc' ];
-ob_start(); include __DIR__ . '/../mvp/views/projects.php'; $projHtml = ob_get_clean();
+ob_start(); include __DIR__ . '/../views/projects.php'; $projHtml = ob_get_clean();
 $xp = load_dom($projHtml);
 ok_dom($xp->query("//input[@name='q']")->length === 1, 'Projects has search input');
 ok_dom($xp->query("//select[@name='status']")->length >= 1, 'Projects has status filter');
@@ -31,7 +31,7 @@ ok_dom($xp->query("//form[@action='?route=actions/create-project']//input[@name=
 
 // 2) Project view DOM checks
 $documents = $store->getProjectDocuments($project['id']);
-ob_start(); include __DIR__ . '/../mvp/views/project.php'; $projectHtml = ob_get_clean();
+ob_start(); include __DIR__ . '/../views/project.php'; $projectHtml = ob_get_clean();
 $xp = load_dom($projectHtml);
 ok_dom($xp->query("//form[@action='?route=actions/update-project-name']//input[@name='name']")->length === 1, 'Project has editable name');
 ok_dom($xp->query("//form[@action='?route=actions/duplicate-project']")->length === 1, 'Project has duplicate button');
@@ -44,7 +44,7 @@ $pd = $documents[0];
 $projectDocument = $pd;
 $template = $templates[$pd['templateId']];
 $values = [];
-ob_start(); include __DIR__ . '/../mvp/views/populate.php'; $popHtml = ob_get_clean();
+ob_start(); include __DIR__ . '/../views/populate.php'; $popHtml = ob_get_clean();
 $xp = load_dom($popHtml);
 ok_dom($xp->query("//form[@action='?route=actions/save-fields']//input[@type='hidden' and @name='projectDocumentId']")->length === 1, 'Populate form posts with hidden id');
 ok_dom($xp->query("//div[h3[contains(text(),'Attorney')]]//input[@name='attorney.name']")->length === 1, 'Populate has attorney.name field');
