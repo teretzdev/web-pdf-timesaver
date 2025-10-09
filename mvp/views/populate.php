@@ -21,6 +21,12 @@ if (!empty($projectDocument['projectId'])) {
             <span class="btn-icon">💾</span>
             <span>Save Form</span>
         </button>
+        <?php if (!empty($projectDocument['id'])): ?>
+        <a class="btn secondary" href="?route=actions/generate&pd=<?php echo htmlspecialchars($projectDocument['id']); ?>" style="margin-left:8px;">
+            <span class="btn-icon">⚙️</span>
+            <span>Generate PDF</span>
+        </a>
+        <?php endif; ?>
     </div>
 </div>
 

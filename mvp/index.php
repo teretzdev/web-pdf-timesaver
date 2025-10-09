@@ -16,9 +16,9 @@ use WebPdfTimeSaver\Mvp\PdfFieldService;
 
 $store = new DataStore(__DIR__ . '/../data/mvp.json');
 $templates = TemplateRegistry::load();
+$logger = new \WebPdfTimeSaver\Mvp\Logger();
 $fill = new FillService(__DIR__ . '/../output', $logger);
 $pdfFieldService = new PdfFieldService();
-$logger = new \WebPdfTimeSaver\Mvp\Logger();
 
 $route = $_GET['route'] ?? 'dashboard';
 
