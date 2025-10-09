@@ -28,9 +28,9 @@ final class FillService {
 		$this->logger->debug('Values (masked): ' . json_encode($this->maskPii($values)), ['pdId' => $pd]);
 		$startedAt = microtime(true);
 		try {
-			// Prefer positioned rendering when positions exist
-			$templateId = (string)($template['id'] ?? 't_fl100_gc120');
-			$result = $this->formFiller->fillPdfFormWithPositions($template, $values, $templateId);
+            // Use robust FL-100 form filler (handles backgrounds and full overlay)
+            // This avoids incorrect (0,0) placements when positions are missing/incomplete
+            $result = $this->formFiller->fillPdfForm($template, $values);
 			$durationMs = (int)round((microtime(true) - $startedAt) * 1000);
 			$path = $result['path'] ?? ($result['outputPath'] ?? null);
 			$metrics = [];

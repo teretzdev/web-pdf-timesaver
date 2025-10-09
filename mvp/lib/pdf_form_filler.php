@@ -265,7 +265,7 @@ final class PdfFormFiller {
         // Fill all fields using modular positioning system (page 1 for now)
         $this->fieldFillerManager->fillAllFields($pdf, $dataToUse, $logFile);
 
-        // Append remaining pages as backgrounds using native sizes
+        // Append remaining pages as backgrounds and add header fields for identification
         if ($pageCount > 1) {
             for ($i = 2; $i <= $pageCount; $i++) {
                 try {
@@ -274,6 +274,15 @@ final class PdfFormFiller {
                     $orientation = ($size['width'] > $size['height']) ? 'L' : 'P';
                     $pdf->AddPage($orientation, [$size['width'], $size['height']]);
                     $pdf->useTemplate($tplId, 0, 0, $size['width'], $size['height']);
+
+                    // Add minimal header data commonly present on each page (case number)
+                    $pdf->SetFont('Arial', '', 10);
+                    $pdf->SetTextColor(0, 0, 0);
+                    if (!empty($dataToUse['case_number'])) {
+                        // Top-right area for case number on each page
+                        $pdf->SetXY(150, 28);
+                        $pdf->Write(0, (string)$dataToUse['case_number']);
+                    }
                 } catch (\Throwable $e) {
                     file_put_contents($logFile, date('Y-m-d H:i:s') . " FL-100 DEBUG: importPage({$i}) failed: " . $e->getMessage() . PHP_EOL, FILE_APPEND);
                     // best-effort: reuse first-page background image if available
@@ -281,6 +290,13 @@ final class PdfFormFiller {
                     if (file_exists($bgImage)) {
                         $pdf->AddPage('P', [210, 297]);
                         $pdf->Image($bgImage, 0, 0, 210, 297);
+                        // Header data with fallback background
+                        $pdf->SetFont('Arial', '', 10);
+                        $pdf->SetTextColor(0, 0, 0);
+                        if (!empty($dataToUse['case_number'])) {
+                            $pdf->SetXY(150, 28);
+                            $pdf->Write(0, (string)$dataToUse['case_number']);
+                        }
                     }
                 }
             }
