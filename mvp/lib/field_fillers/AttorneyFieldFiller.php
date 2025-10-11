@@ -3,61 +3,81 @@ declare(strict_types=1);
 
 namespace WebPdfTimeSaver\Mvp\FieldFillers;
 
+require_once __DIR__ . '/../field_position_loader.php';
+
 final class AttorneyFieldFiller implements FieldFillerInterface {
+    private $positionLoader;
     
-    public function fillFields($pdf, array $data, string $logFile): void {
-        file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Filling attorney section' . PHP_EOL, FILE_APPEND);
+    public function __construct() {
+        $this->positionLoader = new \WebPdfTimeSaver\Mvp\FieldPositionLoader();
+    }
+    
+    public function fillFields($pdf, array $data, \WebPdfTimeSaver\Mvp\Logger $logger): void {
+        $logger->debug('Filling attorney section');
         
-        // Use smaller font for tighter line fitting
-        $pdf->SetFont('Arial', '', 10);
+        $positions = $this->positionLoader->loadFieldPositions('t_fl100_gc120');
         
-        // Attorney Name - positioned in the attorney name field (reduced top margin)
-        if (!empty($data['attorney_name'])) {
-            $pdf->SetXY(35, 30);
-            $pdf->Write(0, $data['attorney_name']);
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Attorney name at (50, 32): ' . $data['attorney_name'] . PHP_EOL, FILE_APPEND);
+        // Attorney Name
+        if (!empty($data['attorney_name']) && isset($positions['attorney_name'])) {
+            $pos = $positions['attorney_name'];
+            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $pdf->SetXY($pos['x'], $pos['y']);
+            $pdf->Cell($pos['width'], 5, $data['attorney_name'], 0, 0, 'L');
+            $logger->debug('Attorney name filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['attorney_name']]);
         }
         
-        // State Bar Number - positioned in the bar number field (reduced top margin)
-        if (!empty($data['attorney_bar_number'])) {
-            $pdf->SetXY(145, 30);
-            $pdf->Write(0, $data['attorney_bar_number']);
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Bar number at (155, 32): ' . $data['attorney_bar_number'] . PHP_EOL, FILE_APPEND);
+        // State Bar Number
+        if (!empty($data['attorney_bar_number']) && isset($positions['attorney_bar_number'])) {
+            $pos = $positions['attorney_bar_number'];
+            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $pdf->SetXY($pos['x'], $pos['y']);
+            $pdf->Cell($pos['width'], 5, $data['attorney_bar_number'], 0, 0, 'L');
+            $logger->debug('Bar number filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['attorney_bar_number']]);
         }
         
-        // Law Firm Name - positioned in the firm name field (reduced line spacing)
-        if (!empty($data['attorney_firm'])) {
-            $pdf->SetXY(35, 35);
-            $pdf->Write(0, $data['attorney_firm']);
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Firm name at (35, 35): ' . $data['attorney_firm'] . PHP_EOL, FILE_APPEND);
+        // Law Firm Name
+        if (!empty($data['attorney_firm']) && isset($positions['attorney_firm'])) {
+            $pos = $positions['attorney_firm'];
+            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $pdf->SetXY($pos['x'], $pos['y']);
+            $pdf->Cell($pos['width'], 5, $data['attorney_firm'], 0, 0, 'L');
+            $logger->debug('Firm name filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['attorney_firm']]);
         }
         
-        // Address - positioned in the address field (tightened line spacing)
-        if (!empty($data['attorney_address'])) {
-            $pdf->SetXY(35, 40);
-            $pdf->Write(0, $data['attorney_address']);
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Address at (35, 40): ' . $data['attorney_address'] . PHP_EOL, FILE_APPEND);
+        // Address
+        if (!empty($data['attorney_address']) && isset($positions['attorney_address'])) {
+            $pos = $positions['attorney_address'];
+            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $pdf->SetXY($pos['x'], $pos['y']);
+            $pdf->Cell($pos['width'], 5, $data['attorney_address'], 0, 0, 'L');
+            $logger->debug('Address filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['attorney_address']]);
         }
         
-        // City, State, ZIP - positioned in the city/state/zip field (tightened line spacing)
-        if (!empty($data['attorney_city_state_zip'])) {
-            $pdf->SetXY(35, 45);
-            $pdf->Write(0, $data['attorney_city_state_zip']);
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: City/State/ZIP at (35, 45): ' . $data['attorney_city_state_zip'] . PHP_EOL, FILE_APPEND);
+        // City, State, ZIP
+        if (!empty($data['attorney_city_state_zip']) && isset($positions['attorney_city_state_zip'])) {
+            $pos = $positions['attorney_city_state_zip'];
+            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $pdf->SetXY($pos['x'], $pos['y']);
+            $pdf->Cell($pos['width'], 5, $data['attorney_city_state_zip'], 0, 0, 'L');
+            $logger->debug('City/State/ZIP filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['attorney_city_state_zip']]);
         }
         
-        // Phone - positioned in the phone field (aligned baseline)
-        if (!empty($data['attorney_phone'])) {
-            $pdf->SetXY(35, 50);
-            $pdf->Write(0, $data['attorney_phone']);
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Phone at (35, 50): ' . $data['attorney_phone'] . PHP_EOL, FILE_APPEND);
+        // Phone
+        if (!empty($data['attorney_phone']) && isset($positions['attorney_phone'])) {
+            $pos = $positions['attorney_phone'];
+            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $pdf->SetXY($pos['x'], $pos['y']);
+            $pdf->Cell($pos['width'], 5, $data['attorney_phone'], 0, 0, 'L');
+            $logger->debug('Phone filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['attorney_phone']]);
         }
         
-        // Email - positioned in the email field (aligned baseline with phone)
-        if (!empty($data['attorney_email'])) {
-            $pdf->SetXY(120, 50);
-            $pdf->Write(0, $data['attorney_email']);
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Email at (120, 50): ' . $data['attorney_email'] . PHP_EOL, FILE_APPEND);
+        // Email
+        if (!empty($data['attorney_email']) && isset($positions['attorney_email'])) {
+            $pos = $positions['attorney_email'];
+            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $pdf->SetXY($pos['x'], $pos['y']);
+            $pdf->Cell($pos['width'], 5, $data['attorney_email'], 0, 0, 'L');
+            $logger->debug('Email filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['attorney_email']]);
         }
     }
     

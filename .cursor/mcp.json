@@ -1,0 +1,10 @@
+{
+  "mcpServers": {
+    "pdf-reader": {
+      "command": "npx",
+      "args": ["-y", "@sylphlab/pdf-reader-mcp"],
+      "cwd": "C:\\Users\\Shadow\\Web-PDFTimeSaver"
+    }
+  }
+}
+

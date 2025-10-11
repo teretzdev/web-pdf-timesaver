@@ -1,10 +1,10 @@
 <?php $tpl = $template; ?>
 <h2>Preview — <?php echo htmlspecialchars(($tpl['code'] ?? '') . ' ' . ($tpl['name'] ?? '')); ?></h2>
 
-<div class="row" style="gap: 16px; margin-bottom: 16px;">
-    <a href="?route=populate&pd=<?php echo htmlspecialchars($projectDocument['id']); ?>" class="btn secondary">Edit Fields</a>
-    <a href="?route=actions/generate&pd=<?php echo htmlspecialchars($projectDocument['id']); ?>" class="btn">Generate PDF</a>
-    <a href="?route=project&id=<?php echo htmlspecialchars($projectDocument['projectId']); ?>" class="btn secondary">Back to Project</a>
+<div class="clio-card" style="display: flex; gap: 16px; margin-bottom: 16px;">
+    <a href="?route=populate&pd=<?php echo htmlspecialchars($projectDocument['id']); ?>" class="clio-btn-secondary">Edit Fields</a>
+    <a href="?route=actions/generate&pd=<?php echo htmlspecialchars($projectDocument['id']); ?>" class="clio-btn">Generate PDF</a>
+    <a href="?route=project&id=<?php echo htmlspecialchars($projectDocument['projectId']); ?>" class="clio-btn-secondary">Back to Matter</a>
 </div>
 
 <div class="panel">
@@ -97,9 +97,9 @@
 <?php if (!empty($projectDocument['outputPath']) && file_exists($projectDocument['outputPath'])): ?>
     <div class="panel">
         <h3>Generated PDF</h3>
-        <div class="row" style="gap: 12px;">
-            <a href="?route=actions/download&pd=<?php echo htmlspecialchars($projectDocument['id']); ?>" class="btn">Download PDF</a>
-            <a href="?route=actions/sign&pd=<?php echo htmlspecialchars($projectDocument['id']); ?>" class="btn secondary">Sign Document</a>
+        <div style="display: flex; gap: 12px;">
+            <a href="?route=actions/download&pd=<?php echo htmlspecialchars($projectDocument['id']); ?>" class="clio-btn">Download PDF</a>
+            <a href="?route=actions/sign&pd=<?php echo htmlspecialchars($projectDocument['id']); ?>" class="clio-btn-secondary">Sign Document</a>
         </div>
         <div class="muted" style="margin-top: 8px;">
             Generated: <?php echo date('F j, Y \a\t g:i A', filemtime($projectDocument['outputPath'])); ?>

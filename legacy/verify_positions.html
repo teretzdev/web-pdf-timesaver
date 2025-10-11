@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>FL-100 Position Verification Tool</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #0b6bcb;
+            padding-bottom: 10px;
+        }
+        .instructions {
+            background: #e3f2fd;
+            padding: 15px;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+        .pdf-viewer {
+            border: 2px solid #ddd;
+            margin: 20px 0;
+            min-height: 800px;
+        }
+        iframe {
+            width: 100%;
+            height: 1000px;
+            border: none;
+        }
+        .field-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin: 20px 0;
+        }
+        .field-item {
+            background: #f8f9fa;
+            padding: 10px;
+            border-left: 4px solid #28a745;
+            font-size: 12px;
+        }
+        .field-name {
+            font-weight: bold;
+            color: #0b6bcb;
+        }
+        .field-pos {
+            color: #666;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>FL-100 Position Verification Tool</h1>
+        
+        <div class="instructions">
+            <h3>How to Verify Positions:</h3>
+            <ol>
+                <li>Review the PDF below showing all 31 populated fields</li>
+                <li>Each field is labeled (ATTORNEY:, CASE#:, etc.) for easy identification</li>
+                <li>Check if fields appear in the correct form sections</li>
+                <li>Note any fields that need position adjustment</li>
+                <li>Refresh this page after making adjustments to see updates</li>
+            </ol>
+        </div>
+
+        <h2>Current Field Positions</h2>
+        <div class="field-list">
+            <div class="field-item">
+                <div class="field-name">attorney_name</div>
+                <div class="field-pos">x: 12mm, y: 32mm</div>
+            </div>
+            <div class="field-item">
+                <div class="field-name">attorney_bar_number</div>
+                <div class="field-pos">x: 145mm, y: 32mm</div>
+            </div>
+            <div class="field-item">
+                <div class="field-name">case_number</div>
+                <div class="field-pos">x: 170mm, y: 122mm (BOLD)</div>
+            </div>
+            <div class="field-item">
+                <div class="field-name">court_county</div>
+                <div class="field-pos">x: 85mm, y: 80mm (BOLD)</div>
+            </div>
+            <div class="field-item">
+                <div class="field-name">petitioner_name</div>
+                <div class="field-pos">x: 25mm, y: 112mm (BOLD)</div>
+            </div>
+            <div class="field-item">
+                <div class="field-name">respondent_name</div>
+                <div class="field-pos">x: 25mm, y: 118mm (BOLD)</div>
+            </div>
+            <div class="field-item">
+                <div class="field-name">property_division [checkbox]</div>
+                <div class="field-pos">x: 16mm, y: 145mm</div>
+            </div>
+            <div class="field-item">
+                <div class="field-name">spousal_support [checkbox]</div>
+                <div class="field-pos">x: 16mm, y: 152mm</div>
+            </div>
+        </div>
+
+        <h2>Generated PDF Preview</h2>
+        <div class="pdf-viewer">
+            <iframe src="../output/mvp_20251009_195652_t_fl100_gc120_positioned.pdf"></iframe>
+        </div>
+
+        <div class="instructions" style="background: #fff3cd;">
+            <h3>Position Adjustment Guide:</h3>
+            <p><strong>If a field needs to move:</strong></p>
+            <ul>
+                <li><strong>Move Right:</strong> Increase x value</li>
+                <li><strong>Move Left:</strong> Decrease x value</li>
+                <li><strong>Move Down:</strong> Increase y value</li>
+                <li><strong>Move Up:</strong> Decrease y value</li>
+            </ul>
+            <p><strong>Coordinate System:</strong></p>
+            <ul>
+                <li>Origin (0, 0) = Top-left corner of page</li>
+                <li>Page size: 215.9mm wide × 279.4mm tall (US Letter)</li>
+                <li>Units: millimeters</li>
+            </ul>
+        </div>
+    </div>
+</body>
+</html>
+

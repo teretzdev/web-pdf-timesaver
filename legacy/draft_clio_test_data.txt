@@ -1,0 +1,58 @@
+FL-100 TEST DATA FOR DRAFT.CLIO.COM
+=====================================
+
+Use this data to fill out the FL-100 form at http://draft.clio.com
+
+ATTORNEY INFORMATION:
+- Attorney Name: John Michael Smith, Esq.
+- State Bar No: 123456
+- Firm Name: Smith & Associates Family Law
+- Address: 1234 Legal Plaza, Suite 500
+- City, State, ZIP: Los Angeles, CA 90210
+- Telephone: (555) 123-4567
+- Email: jsmith@smithlaw.com
+
+CASE INFORMATION:
+- Case Number: FL-2024-001234
+- County: Los Angeles
+- Court Address: 111 N Hill St, Los Angeles, CA 90012
+
+PARTY INFORMATION:
+- Petitioner Name: Sarah Elizabeth Johnson
+- Petitioner Address: 123 Main Street, Los Angeles, CA 90210
+- Petitioner Phone: (555) 987-6543
+- Respondent Name: Michael David Johnson
+- Respondent Address: 456 Oak Avenue, Los Angeles, CA 90211
+
+MARRIAGE INFORMATION:
+- Marriage Date: 06/15/2010
+- Separation Date: 03/20/2024
+- Marriage Location: Las Vegas, Nevada
+- Grounds for Dissolution: Irreconcilable differences
+- Dissolution Type: Dissolution of Marriage
+
+RELIEF REQUESTED:
+- Property Division: Yes (check)
+- Spousal Support: Yes (check)
+- Attorney Fees: Yes (check)
+- Name Change: No
+
+CHILDREN:
+- Has Children: Yes
+- Children Count: 2
+
+ADDITIONAL INFORMATION:
+- Additional Info: Request for temporary custody orders.
+
+SIGNATURE:
+- Attorney Signature: John M. Smith
+- Signature Date: 10/09/2025
+
+=====================================
+INSTRUCTIONS:
+1. Go to http://draft.clio.com
+2. Find and select the FL-100 form (Petition - Marriage/Domestic Partnership)
+3. Fill out all fields with the data above
+4. Generate/Download the PDF
+5. Save it as "fl100_draft_clio_reference.pdf" in the project folder
+

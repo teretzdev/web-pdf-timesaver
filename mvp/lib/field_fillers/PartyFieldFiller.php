@@ -3,44 +3,63 @@ declare(strict_types=1);
 
 namespace WebPdfTimeSaver\Mvp\FieldFillers;
 
+require_once __DIR__ . '/../field_position_loader.php';
+
 final class PartyFieldFiller implements FieldFillerInterface {
+    private $positionLoader;
     
-    public function fillFields($pdf, array $data, string $logFile): void {
-        file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Filling party section' . PHP_EOL, FILE_APPEND);
+    public function __construct() {
+        $this->positionLoader = new \WebPdfTimeSaver\Mvp\FieldPositionLoader();
+    }
+    
+    public function fillFields($pdf, array $data, \WebPdfTimeSaver\Mvp\Logger $logger): void {
+        $logger->debug('Filling party section');
         
-        // Petitioner Name - positioned on petitioner name line (nudged)
-        if (!empty($data['petitioner_name'])) {
-            $pdf->SetXY(58, 148);
-            $pdf->Write(0, $data['petitioner_name']);
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Petitioner at (60, 150): ' . $data['petitioner_name'] . PHP_EOL, FILE_APPEND);
+        $positions = $this->positionLoader->loadFieldPositions('t_fl100_gc120');
+        
+        // Petitioner Name
+        if (!empty($data['petitioner_name']) && isset($positions['petitioner_name'])) {
+            $pos = $positions['petitioner_name'];
+            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $pdf->SetXY($pos['x'], $pos['y']);
+            $pdf->Cell($pos['width'], 5, $data['petitioner_name'], 0, 0, 'L');
+            $logger->debug('Petitioner filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['petitioner_name']]);
         }
         
-        // Respondent Name - positioned on respondent name line (nudged)
-        if (!empty($data['respondent_name'])) {
-            $pdf->SetXY(58, 156);
-            $pdf->Write(0, $data['respondent_name']);
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Respondent at (60, 160): ' . $data['respondent_name'] . PHP_EOL, FILE_APPEND);
+        // Respondent Name
+        if (!empty($data['respondent_name']) && isset($positions['respondent_name'])) {
+            $pos = $positions['respondent_name'];
+            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $pdf->SetXY($pos['x'], $pos['y']);
+            $pdf->Cell($pos['width'], 5, $data['respondent_name'], 0, 0, 'L');
+            $logger->debug('Respondent filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['respondent_name']]);
         }
         
-        // Petitioner Address - positioned on petitioner address line (nudged)
-        if (!empty($data['petitioner_address'])) {
-            $pdf->SetXY(53, 166);
-            $pdf->Write(0, $data['petitioner_address']);
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Petitioner address at (55, 170): ' . $data['petitioner_address'] . PHP_EOL, FILE_APPEND);
+        // Petitioner Address
+        if (!empty($data['petitioner_address']) && isset($positions['petitioner_address'])) {
+            $pos = $positions['petitioner_address'];
+            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $pdf->SetXY($pos['x'], $pos['y']);
+            $pdf->Cell($pos['width'], 5, $data['petitioner_address'], 0, 0, 'L');
+            $logger->debug('Petitioner address filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['petitioner_address']]);
         }
         
-        // Petitioner Phone - positioned on petitioner phone line (nudged)
-        if (!empty($data['petitioner_phone'])) {
-            $pdf->SetXY(53, 175);
-            $pdf->Write(0, $data['petitioner_phone']);
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Petitioner phone at (55, 180): ' . $data['petitioner_phone'] . PHP_EOL, FILE_APPEND);
+        // Petitioner Phone
+        if (!empty($data['petitioner_phone']) && isset($positions['petitioner_phone'])) {
+            $pos = $positions['petitioner_phone'];
+            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $pdf->SetXY($pos['x'], $pos['y']);
+            $pdf->Cell($pos['width'], 5, $data['petitioner_phone'], 0, 0, 'L');
+            $logger->debug('Petitioner phone filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['petitioner_phone']]);
         }
         
-        // Respondent Address - positioned on respondent address line (nudged)
-        if (!empty($data['respondent_address'])) {
-            $pdf->SetXY(53, 185);
-            $pdf->Write(0, $data['respondent_address']);
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Respondent address at (55, 190): ' . $data['respondent_address'] . PHP_EOL, FILE_APPEND);
+        // Respondent Address
+        if (!empty($data['respondent_address']) && isset($positions['respondent_address'])) {
+            $pos = $positions['respondent_address'];
+            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $pdf->SetXY($pos['x'], $pos['y']);
+            $pdf->Cell($pos['width'], 5, $data['respondent_address'], 0, 0, 'L');
+            $logger->debug('Respondent address filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['respondent_address']]);
         }
     }
     

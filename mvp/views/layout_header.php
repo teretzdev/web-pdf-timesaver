@@ -3,10 +3,10 @@
 require_once __DIR__ . '/breadcrumb.php';
 ?>
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
     <title>Clio</title>
     <style>
         * { 
@@ -23,177 +23,143 @@ require_once __DIR__ . '/breadcrumb.php';
             font-size: 14px;
         }
         
-        /* Clio Header */
-        .clio-header {
-            background: #ffffff;
-            border-bottom: 1px solid #e1e5e9;
-            height: 60px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 24px;
+        /* Header removed - using sidebar only */
+        
+        /* Sidebar */
+        .clio-sidebar {
             position: fixed;
-            top: 0;
             left: 0;
-            right: 0;
+            top: 0;
+            width: 200px;
+            height: 100vh;
+            background: #f8f9fa;
+            border-right: 1px solid #ddd;
+            padding: 20px 0;
+            overflow-y: auto;
             z-index: 1000;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            display: block !important;
+            visibility: visible !important;
         }
         
-        .clio-logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        .clio-sidebar-nav {
+            list-style: none;
+            margin: 0;
+            padding: 0;
         }
         
-        .clio-logo img {
-            width: 32px;
-            height: 32px;
+        .clio-sidebar-nav li {
+            margin: 0;
         }
         
-        .clio-logo-text {
-            font-size: 20px;
-            font-weight: 700;
-            color: #2c3e50;
-            letter-spacing: -0.5px;
-        }
-        
-        .clio-nav {
-            display: flex;
-            align-items: center;
-            gap: 32px;
-        }
-        
-        .clio-nav-item {
-            color: #6c757d;
+        .clio-sidebar-nav a {
+            display: block;
+            padding: 12px 20px;
+            color: #555;
             text-decoration: none;
+            font-size: 14px;
             font-weight: 500;
-            font-size: 14px;
-            padding: 8px 0;
-            border-bottom: 2px solid transparent;
             transition: all 0.2s ease;
+            border-left: 3px solid transparent;
         }
         
-        .clio-nav-item:hover,
-        .clio-nav-item.active {
-            color: #1976d2;
-            border-bottom-color: #1976d2;
+        .clio-sidebar-nav a:hover {
+            background: #e9ecef;
+            color: #333;
         }
         
-        .clio-user-menu {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        
-        .clio-user-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background: #1976d2;
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-            font-size: 14px;
+        .clio-sidebar-nav a.active {
+            background: #fff;
+            color: #007bff;
+            border-left-color: #007bff;
         }
         
         /* Main Content */
         .clio-main-content {
-            margin-top: 60px;
-            background: #f5f6fa;
-            min-height: calc(100vh - 60px);
+            margin-left: 200px;
+            background: #fff;
+            min-height: 100vh;
         }
         
         .clio-content-header {
             background: #ffffff;
-            border-bottom: 1px solid #e1e5e9;
-            padding: 24px 32px;
+            border-bottom: 1px solid #ddd;
+            padding: 15px 20px;
         }
         
         .clio-content-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: #2c3e50;
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
             margin: 0;
         }
         
         .clio-content-body {
-            padding: 32px;
+            padding: 20px;
         }
         
         /* Clio Components */
         .clio-btn {
-            background: #1976d2;
+            background: #007bff;
             color: #ffffff;
             border: none;
-            padding: 10px 16px;
-            border-radius: 4px;
-            font-size: 14px;
+            padding: 8px 12px;
+            border-radius: 3px;
+            font-size: 13px;
             font-weight: 500;
             cursor: pointer;
-            transition: all 0.2s ease;
             text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
+            display: inline-block;
         }
         
         .clio-btn:hover {
-            background: #1565c0;
+            background: #0056b3;
         }
         
         .clio-btn-secondary {
             background: #ffffff;
-            color: #495057;
-            border: 1px solid #dee2e6;
+            color: #555;
+            border: 1px solid #ccc;
         }
         
         .clio-btn-secondary:hover {
-            background: #f8f9fa;
-            border-color: #adb5bd;
+            background: #f5f5f5;
         }
         
         .clio-card {
             background: #ffffff;
-            border: 1px solid #e1e5e9;
-            border-radius: 8px;
-            padding: 24px;
-            margin-bottom: 24px;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 15px;
         }
         
         .clio-table {
             width: 100%;
             border-collapse: collapse;
             background: #ffffff;
-            border: 1px solid #e1e5e9;
-            border-radius: 8px;
-            overflow: hidden;
+            border: 1px solid #ddd;
+            border-radius: 4px;
         }
         
         .clio-table th {
-            background: #f8f9fa;
-            padding: 16px 20px;
+            background: #f5f5f5;
+            padding: 10px 12px;
             text-align: left;
-            font-weight: 600;
-            color: #2c3e50;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            border-bottom: 1px solid #e1e5e9;
+            font-weight: 500;
+            color: #333;
+            font-size: 13px;
+            border-bottom: 1px solid #ddd;
         }
         
         .clio-table td {
-            padding: 16px 20px;
-            border-bottom: 1px solid #f1f3f4;
-            color: #495057;
+            padding: 10px 12px;
+            border-bottom: 1px solid #eee;
+            color: #555;
             font-size: 14px;
         }
         
         .clio-table tr:hover {
-            background: #f8f9fa;
+            background: #f9f9f9;
         }
         
         .clio-input {
@@ -211,20 +177,6 @@ require_once __DIR__ . '/breadcrumb.php';
             box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
         }
 
-        /* Keystroke brightness effect */
-        .keystroke-bright {
-            background: #ffffff !important;
-            color: #1976d2 !important;
-            box-shadow: 0 0 8px rgba(25, 118, 210, 0.4) !important;
-            border-color: #1976d2 !important;
-            transform: scale(1.02);
-            transition: all 0.15s ease-out !important;
-        }
-
-        /* Enhanced input styling for brightness effect */
-        input[type="text"], input[type="email"], input[type="tel"], input[type="number"], input[type="date"], textarea, select {
-            transition: all 0.2s ease;
-        }
         
         .clio-form-group {
             margin-bottom: 20px;
@@ -240,12 +192,10 @@ require_once __DIR__ . '/breadcrumb.php';
         
         /* Status badges */
         .clio-status {
-            padding: 4px 8px;
-            border-radius: 12px;
-            font-size: 12px;
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
             font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
         }
         
         .clio-status-active {
@@ -263,48 +213,73 @@ require_once __DIR__ . '/breadcrumb.php';
             color: #0c5460;
         }
         
+        /* Feature detection and fallbacks */
+        @supports not (display: flex) {
+            .clio-header { display: block; }
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
+            .clio-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .clio-sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .clio-main-content {
+                margin-left: 0;
+            }
+            
             .clio-content-body {
                 padding: 20px;
             }
         }
+
+        /* Orientation-specific adjustments */
+        @media (orientation: portrait) { /* placeholder for portrait-specific styles */ }
+        @media (orientation: landscape) { /* placeholder for landscape-specific styles */ }
     </style>
 </head>
 <body>
-    <!-- Clio Header -->
-    <header class="clio-header">
-        <div class="clio-logo">
-            <img src="../logo.png" alt="Clio">
-            <span class="clio-logo-text">Clio</span>
-        </div>
-        
-        <nav class="clio-nav">
-            <a href="?route=dashboard" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'dashboard' ? 'active' : ''; ?>">Dashboard</a>
-            <a href="?route=projects" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'projects' ? 'active' : ''; ?>">Matters</a>
-            <a href="?route=clients" class="clio-nav-item <?php echo ($_GET['route'] ?? 'clients') === 'clients' ? 'active' : ''; ?>">Contacts</a>
-            <a href="?route=activities" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'activities' ? 'active' : ''; ?>">Activities</a>
-            <a href="?route=bills" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'bills' ? 'active' : ''; ?>">Bills</a>
-            <a href="?route=documents" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'documents' ? 'active' : ''; ?>">Documents</a>
-            <a href="?route=reports" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'reports' ? 'active' : ''; ?>">Reports</a>
-            <a href="?route=settings" class="clio-nav-item <?php echo ($_GET['route'] ?? '') === 'settings' ? 'active' : ''; ?>">Settings</a>
-        </nav>
-        
-        <div class="clio-user-menu">
-            <div class="clio-user-avatar">JD</div>
-        </div>
-    </header>
+    <!-- Header removed - using sidebar only -->
     
+    <!-- Sidebar -->
+    <nav class="clio-sidebar">
+        <ul class="clio-sidebar-nav">
+            <?php 
+            $currentRoute = $_GET['route'] ?? 'dashboard';
+            $navItems = [
+                ['route' => 'dashboard', 'label' => 'Dashboard'],
+                ['route' => 'clients', 'label' => 'Clients'],
+                ['route' => 'projects', 'label' => 'Projects'],
+                ['route' => 'documents', 'label' => 'Documents']
+            ];
+            
+            foreach ($navItems as $item): 
+                $isActive = $currentRoute === $item['route'];
+            ?>
+                <li>
+                    <a href="?route=<?php echo $item['route']; ?>" 
+                       class="<?php echo $isActive ? 'active' : ''; ?>">
+                        <?php echo $item['label']; ?>
+                    </a>
+                </li>
+            <?php endforeach; ?>
+        </ul>
+    </nav>
+
     <!-- Main Content -->
     <main class="clio-main-content">
         <div class="clio-content-header">
             <h1 class="clio-content-title">
                 <?php 
-                $route = $_GET['route'] ?? 'dashboard';
-                switch($route) {
+                switch($currentRoute) {
                     case 'dashboard': echo 'Dashboard'; break;
-                    case 'projects': echo 'Matters'; break;
-                    case 'clients': echo 'Contacts'; break;
+                    case 'projects': echo 'Projects'; break;
+                    case 'clients': echo 'Clients'; break;
                     case 'activities': echo 'Activities'; break;
                     case 'bills': echo 'Bills'; break;
                     case 'documents': echo 'Documents'; break;

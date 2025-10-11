@@ -6,6 +6,7 @@ namespace WebPdfTimeSaver\Mvp;
 require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/field_position_loader.php';
 require_once __DIR__ . '/field_fillers/FieldFillerManager.php';
+require_once __DIR__ . '/fl100_test_data_generator.php';
 
 use setasign\Fpdi\Fpdi;
 use WebPdfTimeSaver\Mvp\FieldFillers\FieldFillerManager;
@@ -27,7 +28,7 @@ final class PdfFormFiller {
         $this->logger = $logger ?? new Logger();
         
         if (!is_dir($this->outputDir)) { 
-            mkdir($this->outputDir, 0777, true); 
+            mkdir($this->outputDir, 0755, true); 
         }
     }
 
@@ -263,7 +264,7 @@ final class PdfFormFiller {
         file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Using ' . (empty($values) ? 'generated test data' : 'provided values') . ' for form filling' . PHP_EOL, FILE_APPEND);
         
         // Fill all fields using modular positioning system (page 1 for now)
-        $this->fieldFillerManager->fillAllFields($pdf, $dataToUse, $logFile);
+        $this->fieldFillerManager->fillAllFields($pdf, $dataToUse, $this->logger);
 
         // Append remaining pages as backgrounds using native sizes
         if ($pageCount > 1) {
@@ -807,7 +808,6 @@ final class PdfFormFiller {
      * Fill PDF form using positioned fields from the field editor
      */
     public function fillPdfFormWithPositions(array $template, array $values, string $templateId = 't_fl100_gc120'): array {
-        $templateFile = $this->getTemplateFile($template['id'] ?? '');
         $filename = 'mvp_' . date('Ymd_His') . '_' . ($template['id'] ?? 'doc') . '_positioned.pdf';
         $outputPath = rtrim($this->outputDir, '/\\') . DIRECTORY_SEPARATOR . $filename;
 
@@ -815,52 +815,130 @@ final class PdfFormFiller {
         $positions = $this->positionLoader->loadFieldPositions($templateId);
         
         if (empty($positions)) {
-            // Fall back to default positioning if no positions saved
+            $this->logger->info('No positions found for template ' . $templateId . ', using default fillPdfForm', $this->context);
             return $this->fillPdfForm($template, $values);
         }
 
         $logFile = __DIR__ . '/../../logs/pdf_debug.log';
+        file_put_contents($logFile, date('Y-m-d H:i:s') . ' MULTIPAGE: Starting multi-page fill with ' . count($positions) . ' field positions' . PHP_EOL, FILE_APPEND);
+        
         $pdf = new Fpdi();
-        $pdf->SetFont('Arial', '', 10);
+        $pdf->SetFont('Arial', '', 9);
         $pdf->SetTextColor(0, 0, 0);
 
-        // Use the unencrypted template PDF as background for the first page
-        $templatePdf = __DIR__ . '/../../uploads/fl100.pdf';
-        try {
-            if (file_exists($templatePdf)) {
-                $pageCount = $pdf->setSourceFile($templatePdf);
-                $tplId = $pdf->importPage(1);
-                $size = $pdf->getTemplateSize($tplId);
-                $orientation = ($size['width'] > $size['height']) ? 'L' : 'P';
-                $pdf->AddPage($orientation, [$size['width'], $size['height']]);
-                $pdf->useTemplate($tplId, 0, 0, $size['width'], $size['height']);
+        // Determine page count from template or positions
+        $pageCount = $template['pageCount'] ?? $this->getMaxPageFromPositions($positions);
+        file_put_contents($logFile, date('Y-m-d H:i:s') . ' MULTIPAGE: Template has ' . $pageCount . ' pages' . PHP_EOL, FILE_APPEND);
+        
+        // Clean template ID for background images (extract form code only)
+        // t_fl100_gc120 -> fl100
+        $cleanTemplateId = str_replace('t_', '', $templateId);
+        $cleanTemplateId = explode('_', $cleanTemplateId)[0]; // Get just 'fl100' from 'fl100_gc120'
+        
+        // Process each page
+        $totalFieldsPlaced = 0;
+        for ($pageNum = 1; $pageNum <= $pageCount; $pageNum++) {
+            // Add page
+            $pdf->AddPage('P', [215.9, 279.4]);
+            
+            // Try to add background image for this page
+            $bgImage = __DIR__ . "/../../uploads/{$cleanTemplateId}_page{$pageNum}_background.png";
+            if (file_exists($bgImage)) {
+                $pdf->Image($bgImage, 0, 0, 215.9, 279.4);
+                file_put_contents($logFile, date('Y-m-d H:i:s') . " MULTIPAGE: Page $pageNum background applied" . PHP_EOL, FILE_APPEND);
             } else {
-                $pdf->AddPage();
+                file_put_contents($logFile, date('Y-m-d H:i:s') . " MULTIPAGE: No background for page $pageNum at $bgImage" . PHP_EOL, FILE_APPEND);
             }
-        } catch (\Throwable $e) {
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: positioned template import failed: ' . $e->getMessage() . PHP_EOL, FILE_APPEND);
-            $pdf->AddPage();
+            
+            // Place fields for this page
+            $fieldsPlaced = $this->placeFieldsForPage($pdf, $values, $positions, $pageNum, $logFile);
+            $totalFieldsPlaced += $fieldsPlaced;
+            
+            file_put_contents($logFile, date('Y-m-d H:i:s') . " MULTIPAGE: Placed $fieldsPlaced fields on page $pageNum" . PHP_EOL, FILE_APPEND);
         }
 
-        // Convert editor pixel coordinates to millimeters for FPDF/FPDI (assuming 72 DPI if not specified)
-        $pxToMm = function($px, $dpi = 96.0) { return ($px / $dpi) * 25.4; };
+        file_put_contents($logFile, date('Y-m-d H:i:s') . ' MULTIPAGE: Total fields placed: ' . $totalFieldsPlaced . ' across ' . $pageCount . ' pages' . PHP_EOL, FILE_APPEND);
+        
+        $pdf->Output('F', $outputPath);
+        $this->assertPdfQuality($outputPath, $logFile);
 
-        // Fill fields using positioned coordinates with unit conversion
+        return [
+            'success' => true, 
+            'filename' => $filename,
+            'file' => $filename, 
+            'path' => $outputPath, 
+            'used_positions' => count($positions),
+            'fields_placed' => $totalFieldsPlaced,
+            'pages' => $pageCount
+        ];
+    }
+    
+    /**
+     * Place fields on a specific page
+     */
+    private function placeFieldsForPage(Fpdi $pdf, array $values, array $positions, int $pageNum, string $logFile): int {
+        $fieldsPlaced = 0;
+        
         foreach ($values as $fieldKey => $value) {
-            if (!empty($value) && isset($positions[$fieldKey])) {
-                $position = $positions[$fieldKey];
-                $xPx = (float)($position['x'] ?? 0);
-                $yPx = (float)($position['y'] ?? 0);
-                $xMm = $pxToMm($xPx);
-                $yMm = $pxToMm($yPx);
-                $pdf->SetXY($xMm, $yMm);
+            if (empty($value)) {
+                continue;
+            }
+            
+            if (!isset($positions[$fieldKey])) {
+                continue;
+            }
+            
+            $position = $positions[$fieldKey];
+            $fieldPage = (int)($position['page'] ?? 1);
+            
+            // Skip if field doesn't belong on this page
+            if ($fieldPage !== $pageNum) {
+                continue;
+            }
+            
+            $x = (float)($position['x'] ?? 0);
+            $y = (float)($position['y'] ?? 0);
+            $fontSize = (int)($position['fontSize'] ?? 9);
+            $fontStyle = (string)($position['fontStyle'] ?? '');
+            
+            // Set font for this field
+            $pdf->SetFont('Arial', $fontStyle, $fontSize);
+            
+            // Position and write the value
+            $pdf->SetXY($x, $y);
+            
+            // Handle different field types
+            if (isset($position['type'])) {
+                if ($position['type'] === 'checkbox') {
+                    if ($value == '1' || strtolower($value) === 'yes' || strtolower($value) === 'true') {
+                        $pdf->Cell(5, 5, 'X', 0, 0, 'C');
+                    }
+                } else {
+                    $width = (float)($position['width'] ?? 100);
+                    $pdf->Cell($width, 5, (string)$value, 0, 0, 'L');
+                }
+            } else {
                 $pdf->Write(0, (string)$value);
             }
+            
+            $fieldsPlaced++;
+            file_put_contents($logFile, date('Y-m-d H:i:s') . " MULTIPAGE: Page $pageNum - Placed $fieldKey at ($x, $y)" . PHP_EOL, FILE_APPEND);
         }
-
-        $pdf->Output('F', $outputPath);
-
-        return ['success' => true, 'file' => $filename, 'path' => $outputPath, 'used_positions' => count($positions)];
+        
+        return $fieldsPlaced;
+    }
+    
+    /**
+     * Get maximum page number from positions array
+     */
+    private function getMaxPageFromPositions(array $positions): int {
+        $maxPage = 1;
+        foreach ($positions as $position) {
+            if (isset($position['page']) && $position['page'] > $maxPage) {
+                $maxPage = $position['page'];
+            }
+        }
+        return $maxPage;
     }
 
 

@@ -5,8 +5,12 @@
 # Logs and temp
 /logs/
 *.log
+*.log.*
 *.tmp
 *.temp
+*.bak
+*.backup
+*.backup.*
 
 # Build artifacts and generated output
 /output/
@@ -16,6 +20,10 @@
 /mcp-server/node_modules/
 /mcp-field-editor/dist/
 /mcp-server/dist/
+
+# Root level node modules
+/node_modules/
+/package-lock.json
 
 # OS & Editor files
 .DS_Store

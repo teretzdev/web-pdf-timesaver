@@ -1,0 +1,6 @@
+{
+  "dependencies": {
+    "pdf-parse": "^2.2.3",
+    "puppeteer": "^24.23.0"
+  }
+}

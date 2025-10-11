@@ -1,1 +1,123 @@
+# Apache Configuration for Web-PDFTimeSaver
+# Security headers and access restrictions
 
+# Enable mod_rewrite if available
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    RewriteBase /
+</IfModule>
+
+# Security Headers
+<IfModule mod_headers.c>
+    # Prevent clickjacking attacks
+    Header always set X-Frame-Options "SAMEORIGIN"
+    
+    # Enable XSS protection
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # Prevent MIME type sniffing
+    Header always set X-Content-Type-Options "nosniff"
+    
+    # Referrer policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    
+    # Remove server signature
+    Header unset Server
+    Header unset X-Powered-By
+</IfModule>
+
+# PHP Security Settings
+<IfModule mod_php7.c>
+    php_flag display_errors Off
+    php_flag log_errors On
+    php_value error_log logs/php_errors.log
+    php_flag expose_php Off
+    php_value upload_max_filesize 10M
+    php_value post_max_size 10M
+    php_value max_execution_time 300
+    php_value memory_limit 256M
+</IfModule>
+
+# Deny access to sensitive files
+<FilesMatch "\.(json|log|conf|bak|backup|tmp|md|lock)$">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Deny access to hidden files (except .well-known)
+<FilesMatch "^\.(?!well-known)">
+    <IfModule mod_authz_core.c>
+        Require all denied
+    </IfModule>
+    <IfModule !mod_authz_core.c>
+        Order allow,deny
+        Deny from all
+    </IfModule>
+</FilesMatch>
+
+# Protect sensitive directories
+<IfModule mod_authz_core.c>
+    <DirectoryMatch "^.*/\.(git|svn|hg|bzr)">
+        Require all denied
+    </DirectoryMatch>
+    <DirectoryMatch "^.*/data">
+        Require all denied
+    </DirectoryMatch>
+    <DirectoryMatch "^.*/logs">
+        Require all denied
+    </DirectoryMatch>
+    <DirectoryMatch "^.*/vendor">
+        Require all denied
+    </DirectoryMatch>
+    <DirectoryMatch "^.*/node_modules">
+        Require all denied
+    </DirectoryMatch>
+</IfModule>
+
+# Allow access to output and uploads directories for downloads
+<Directory "output">
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
+    <FilesMatch "\.(pdf)$">
+        Header set Content-Type "application/pdf"
+        Header set Content-Disposition "attachment"
+    </FilesMatch>
+</Directory>
+
+<Directory "uploads">
+    <IfModule mod_authz_core.c>
+        Require all granted
+    </IfModule>
+    <FilesMatch "\.(pdf)$">
+        Header set Content-Type "application/pdf"
+    </FilesMatch>
+</Directory>
+
+# Disable directory browsing
+Options -Indexes
+
+# Default charset
+AddDefaultCharset UTF-8
+
+# Compression
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
+
+# Cache control for static files
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType application/pdf "access plus 1 month"
+</IfModule>
