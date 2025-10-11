@@ -821,25 +821,47 @@ final class PdfFormFiller {
 
         $logFile = __DIR__ . '/../../logs/pdf_debug.log';
         $pdf = new Fpdi();
-        $pdf->SetFont('Arial', '', 10);
-        $pdf->SetTextColor(0, 0, 0);
 
-        // Use the unencrypted template PDF as background for the first page
+        // Guarantee a visible background similar to fillFL100Form to avoid tiny PDFs
         $templatePdf = __DIR__ . '/../../uploads/fl100.pdf';
+        $bgImage = dirname($templatePdf) . '/fl100_background.png';
+        $backgroundApplied = false;
         try {
-            if (file_exists($templatePdf)) {
+            if (file_exists($bgImage)) {
+                $pdf->AddPage('P', [210, 297]);
+                $pdf->Image($bgImage, 0, 0, 210, 297);
+                file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Background image applied for page 1' . PHP_EOL, FILE_APPEND);
+                $backgroundApplied = true;
+            } elseif (file_exists($templatePdf)) {
                 $pageCount = $pdf->setSourceFile($templatePdf);
                 $tplId = $pdf->importPage(1);
                 $size = $pdf->getTemplateSize($tplId);
                 $orientation = ($size['width'] > $size['height']) ? 'L' : 'P';
                 $pdf->AddPage($orientation, [$size['width'], $size['height']]);
                 $pdf->useTemplate($tplId, 0, 0, $size['width'], $size['height']);
+                // Add a QC-friendly marker so tests can detect background application
+                file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 BG: FL-100 template used as background' . PHP_EOL, FILE_APPEND);
+                $backgroundApplied = true;
             } else {
+                // Draw a minimal but visible layout as a last resort
                 $pdf->AddPage();
+                $this->createFL100FormLayout($pdf, $logFile);
+                file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Drawn layout applied for page 1 (no template)' . PHP_EOL, FILE_APPEND);
+                $backgroundApplied = true;
             }
         } catch (\Throwable $e) {
             file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: positioned template import failed: ' . $e->getMessage() . PHP_EOL, FILE_APPEND);
             $pdf->AddPage();
+            $this->createFL100FormLayout($pdf, $logFile);
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Drawn layout applied for page 1' . PHP_EOL, FILE_APPEND);
+            $backgroundApplied = true;
+        }
+
+        // Set font after background is applied
+        $pdf->SetFont('Arial', '', 10);
+        $pdf->SetTextColor(0, 0, 0);
+        if ($backgroundApplied) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Page 1 background applied' . PHP_EOL, FILE_APPEND);
         }
 
         // Convert editor pixel coordinates to millimeters for FPDF/FPDI (assuming 72 DPI if not specified)
@@ -859,8 +881,16 @@ final class PdfFormFiller {
         }
 
         $pdf->Output('F', $outputPath);
+        // Quality control checks (size/pages warnings logged inside)
+        $this->assertPdfQuality($outputPath, $logFile);
 
-        return ['success' => true, 'file' => $filename, 'path' => $outputPath, 'used_positions' => count($positions)];
+        return [
+            'success' => true,
+            'filename' => $filename,
+            'file' => $filename,
+            'path' => $outputPath,
+            'used_positions' => count($positions)
+        ];
     }
 
 
