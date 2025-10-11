@@ -3,11 +3,13 @@ declare(strict_types=1);
 
 namespace WebPdfTimeSaver\Mvp\FieldFillers;
 
+use WebPdfTimeSaver\Mvp\Logger;
+
 interface FieldFillerInterface {
     /**
      * Fill fields for this section
      */
-    public function fillFields($pdf, array $data, string $logFile): void;
+    public function fillFields($pdf, array $data, Logger $logger): void;
     
     /**
      * Get the section name

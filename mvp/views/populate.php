@@ -77,7 +77,7 @@ if (!empty($projectDocument['projectId'])) {
     <div class="panel" style="margin-top: 24px;">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
             <h3 style="color: #0b6bcb; margin: 0;">Custom Fields</h3>
-            <button type="button" id="add-custom-field-btn" class="btn secondary" style="font-size: 12px; padding: 6px 12px;">
+            <button type="button" id="add-custom-field-btn" class="clio-btn-secondary" style="font-size: 12px; padding: 6px 12px;">
                 + Add Custom Field
             </button>
         </div>
@@ -115,8 +115,8 @@ if (!empty($projectDocument['projectId'])) {
     </div>
 
 </form>
-}
 
+<style>
 input[type="text"]:focus, input[type="number"]:focus, input[type="date"]:focus, textarea:focus, select:focus {
     outline: none;
     border-color: #0b6bcb !important;
@@ -370,8 +370,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         </label>
                     </div>
                     <div style="display: flex; gap: 8px; justify-content: flex-end;">
-                        <button type="button" class="btn secondary" onclick="this.closest('.modal').remove()">Cancel</button>
-                        <button type="submit" class="btn">${fieldId ? 'Update' : 'Add'} Field</button>
+                        <button type="button" class="clio-btn-secondary" onclick="this.closest('.modal').remove()">Cancel</button>
+                        <button type="submit" class="clio-btn">${fieldId ? 'Update' : 'Add'} Field</button>
                     </div>
                 </form>
             </div>
@@ -557,3 +557,4 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     };
 });
+</style>

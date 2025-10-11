@@ -3,38 +3,91 @@ declare(strict_types=1);
 
 namespace WebPdfTimeSaver\Mvp;
 
+require_once __DIR__ . '/logger.php';
+
 final class DataStore {
 	private string $path;
 	private array $db;
+	private ?Logger $logger;
 
-	public function __construct(string $path) {
+	public function __construct(string $path, ?Logger $logger = null) {
 		$this->path = $path;
-		if (!is_dir(dirname($path))) {
-			mkdir(dirname($path), 0777, true);
+		$this->logger = $logger ?? new Logger();
+		
+		try {
+			if (!is_dir(dirname($path))) {
+				if (!mkdir(dirname($path), 0755, true)) {
+					$this->logger->error('Failed to create data directory: ' . dirname($path));
+					throw new \RuntimeException('Failed to create data directory');
+				}
+			}
+			$this->db = $this->load();
+		} catch (\Throwable $e) {
+			$this->logger->error('DataStore initialization failed: ' . $e->getMessage());
+			throw $e;
 		}
-		$this->db = $this->load();
 	}
 
 	private function load(): array {
+		$emptyDb = [ 'clients' => [], 'projects' => [], 'projectDocuments' => [], 'fieldValues' => [], 'customFields' => [] ];
+		
 		if (!file_exists($this->path)) {
-			return [ 'clients' => [], 'projects' => [], 'projectDocuments' => [], 'fieldValues' => [], 'customFields' => [] ];
+			$this->logger->info('Data file does not exist, starting with empty database', ['path' => $this->path]);
+			return $emptyDb;
 		}
+		
 		$raw = @file_get_contents($this->path);
-		if ($raw === false) { return [ 'clients' => [], 'projects' => [], 'projectDocuments' => [], 'fieldValues' => [], 'customFields' => [] ]; }
+		if ($raw === false) {
+			$this->logger->error('Failed to read data file', ['path' => $this->path]);
+			return $emptyDb;
+		}
+		
 		$data = json_decode($raw, true);
 		if (json_last_error() !== JSON_ERROR_NONE) {
-			// If the JSON is corrupted, don't blow up: return empty skeleton and preserve existing file.
-			return [ 'clients' => [], 'projects' => [], 'projectDocuments' => [], 'fieldValues' => [], 'customFields' => [] ];
+			$this->logger->error('JSON decode error in data file', [
+				'path' => $this->path,
+				'error' => json_last_error_msg()
+			]);
+			// Backup corrupted file
+			$backupPath = $this->path . '.corrupted.' . date('Y-m-d_H-i-s');
+			@copy($this->path, $backupPath);
+			$this->logger->info('Backed up corrupted file', ['backup' => $backupPath]);
+			return $emptyDb;
 		}
-		return array_merge([ 'clients' => [], 'projects' => [], 'projectDocuments' => [], 'fieldValues' => [], 'customFields' => [] ], $data ?? []);
+		
+		$this->logger->debug('Data loaded successfully', [
+			'clients' => count($data['clients'] ?? []),
+			'projects' => count($data['projects'] ?? []),
+			'documents' => count($data['projectDocuments'] ?? [])
+		]);
+		
+		return array_merge($emptyDb, $data ?? []);
 	}
 
 	private function save(): void {
-		$encoded = json_encode($this->db, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
-		if ($encoded === false) { return; }
-		$tmp = $this->path . '.tmp';
-		if (file_put_contents($tmp, $encoded, LOCK_EX) === false) { return; }
-		@rename($tmp, $this->path);
+		try {
+			$encoded = json_encode($this->db, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES);
+			if ($encoded === false) {
+				$this->logger->error('JSON encode failed', ['error' => json_last_error_msg()]);
+				throw new \RuntimeException('Failed to encode data to JSON');
+			}
+			
+			$tmp = $this->path . '.tmp';
+			if (file_put_contents($tmp, $encoded, LOCK_EX) === false) {
+				$this->logger->error('Failed to write temporary file', ['path' => $tmp]);
+				throw new \RuntimeException('Failed to write data file');
+			}
+			
+			if (!@rename($tmp, $this->path)) {
+				$this->logger->error('Failed to rename temporary file', ['from' => $tmp, 'to' => $this->path]);
+				throw new \RuntimeException('Failed to save data file');
+			}
+			
+			$this->logger->debug('Data saved successfully');
+		} catch (\Throwable $e) {
+			$this->logger->error('Save operation failed: ' . $e->getMessage());
+			// Don't re-throw - allow application to continue even if save fails
+		}
 	}
 
 	private function newId(string $prefix): string {

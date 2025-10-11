@@ -3,44 +3,72 @@ declare(strict_types=1);
 
 namespace WebPdfTimeSaver\Mvp\FieldFillers;
 
+require_once __DIR__ . '/../field_position_loader.php';
+
 final class CourtFieldFiller implements FieldFillerInterface {
+    private $positionLoader;
     
-    public function fillFields($pdf, array $data, string $logFile): void {
-        file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Filling court section' . PHP_EOL, FILE_APPEND);
+    public function __construct() {
+        $this->positionLoader = new \WebPdfTimeSaver\Mvp\FieldPositionLoader();
+    }
+    
+    public function fillFields($pdf, array $data, \WebPdfTimeSaver\Mvp\Logger $logger): void {
+        $logger->debug('Filling court section');
         
-        // Case Number - Top right box, positioned in the case number field (nudged)
-        if (!empty($data['case_number'])) {
-            $pdf->SetXY(150, 28);
-            $pdf->Write(0, $data['case_number']);
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Case number at (145, 30): ' . $data['case_number'] . PHP_EOL, FILE_APPEND);
+        $positions = $this->positionLoader->loadFieldPositions('t_fl100_gc120');
+        
+        // Case Number
+        if (!empty($data['case_number']) && isset($positions['case_number'])) {
+            $pos = $positions['case_number'];
+            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $pdf->SetXY($pos['x'], $pos['y']);
+            $pdf->Cell($pos['width'], 5, $data['case_number'], 0, 0, 'L');
+            $logger->debug('Case number filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['case_number']]);
         }
         
-        // County - positioned on county line (nudged)
-        if (!empty($data['court_county'])) {
-            $pdf->SetXY(52, 115);
-            $pdf->Write(0, $data['court_county']);
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: County at (55, 110): ' . $data['court_county'] . PHP_EOL, FILE_APPEND);
+        // County
+        if (!empty($data['court_county']) && isset($positions['court_county'])) {
+            $pos = $positions['court_county'];
+            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $pdf->SetXY($pos['x'], $pos['y']);
+            $pdf->Cell($pos['width'], 5, $data['court_county'], 0, 0, 'L');
+            $logger->debug('County filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['court_county']]);
         }
         
-        // Court Address - positioned on court address line (nudged)
-        if (!empty($data['court_address'])) {
-            $pdf->SetXY(52, 122);
-            $pdf->Write(0, $data['court_address']);
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Court address at (55, 120): ' . $data['court_address'] . PHP_EOL, FILE_APPEND);
+        // Court Address
+        if (!empty($data['court_address']) && isset($positions['court_address'])) {
+            $pos = $positions['court_address'];
+            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $pdf->SetXY($pos['x'], $pos['y']);
+            $pdf->Cell($pos['width'], 5, $data['court_address'], 0, 0, 'L');
+            $logger->debug('Court address filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['court_address']]);
         }
         
-        // Case Type - positioned on case type line (nudged)
-        if (!empty($data['case_type'])) {
-            $pdf->SetXY(52, 129);
-            $pdf->Write(0, $data['case_type']);
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Case type at (55, 130): ' . $data['case_type'] . PHP_EOL, FILE_APPEND);
+        // Case Type
+        if (!empty($data['case_type']) && isset($positions['case_type'])) {
+            $pos = $positions['case_type'];
+            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $pdf->SetXY($pos['x'], $pos['y']);
+            $pdf->Cell($pos['width'], 5, $data['case_type'], 0, 0, 'L');
+            $logger->debug('Case type filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['case_type']]);
         }
         
-        // Filing Date - positioned on filing date line (nudged)
-        if (!empty($data['filing_date'])) {
-            $pdf->SetXY(52, 136);
-            $pdf->Write(0, $data['filing_date']);
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Filing date at (55, 140): ' . $data['filing_date'] . PHP_EOL, FILE_APPEND);
+        // Filing Date
+        if (!empty($data['filing_date']) && isset($positions['filing_date'])) {
+            $pos = $positions['filing_date'];
+            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $pdf->SetXY($pos['x'], $pos['y']);
+            $pdf->Cell($pos['width'], 5, $data['filing_date'], 0, 0, 'L');
+            $logger->debug('Filing date filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['filing_date']]);
+        }
+        
+        // Additional Info
+        if (!empty($data['additional_info']) && isset($positions['additional_info'])) {
+            $pos = $positions['additional_info'];
+            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $pdf->SetXY($pos['x'], $pos['y']);
+            $pdf->Cell($pos['width'], 5, $data['additional_info'], 0, 0, 'L');
+            $logger->debug('Additional info filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['additional_info']]);
         }
     }
     
@@ -54,7 +82,8 @@ final class CourtFieldFiller implements FieldFillerInterface {
             'court_county',
             'court_address', 
             'case_type',
-            'filing_date'
+            'filing_date',
+            'additional_info'
         ];
     }
 }

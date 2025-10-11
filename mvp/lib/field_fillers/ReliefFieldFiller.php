@@ -3,44 +3,63 @@ declare(strict_types=1);
 
 namespace WebPdfTimeSaver\Mvp\FieldFillers;
 
+require_once __DIR__ . '/../field_position_loader.php';
+
 final class ReliefFieldFiller implements FieldFillerInterface {
+    private $positionLoader;
     
-    public function fillFields($pdf, array $data, string $logFile): void {
-        file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Filling relief section' . PHP_EOL, FILE_APPEND);
+    public function __construct() {
+        $this->positionLoader = new \WebPdfTimeSaver\Mvp\FieldPositionLoader();
+    }
+    
+    public function fillFields($pdf, array $data, \WebPdfTimeSaver\Mvp\Logger $logger): void {
+        $logger->debug('Filling relief section');
         
-        // Dissolution Type checkbox - positioned on dissolution checkbox (nudged)
-        if (!empty($data['dissolution_type'])) {
-            $pdf->SetXY(28, 238);
-            $pdf->Write(0, 'X');
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Dissolution type checkbox at (30, 240)' . PHP_EOL, FILE_APPEND);
+        $positions = $this->positionLoader->loadFieldPositions('t_fl100_gc120');
+        
+        // Dissolution Type checkbox
+        if (!empty($data['dissolution_type']) && isset($positions['dissolution_type'])) {
+            $pos = $positions['dissolution_type'];
+            $pdf->SetFont('Arial', '', $pos['fontSize'] ?? 9);
+            $pdf->SetXY($pos['x'], $pos['y']);
+            $pdf->Cell($pos['width'], 5, 'X', 0, 0, 'C');
+            $logger->debug('Dissolution type checkbox filled', ['x' => $pos['x'], 'y' => $pos['y']]);
         }
         
-        // Property Division checkbox - positioned on property division checkbox (nudged)
-        if (!empty($data['property_division'])) {
-            $pdf->SetXY(28, 247);
-            $pdf->Write(0, 'X');
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Property division checkbox at (30, 250)' . PHP_EOL, FILE_APPEND);
+        // Property Division checkbox
+        if (!empty($data['property_division']) && isset($positions['property_division'])) {
+            $pos = $positions['property_division'];
+            $pdf->SetFont('Arial', '', $pos['fontSize'] ?? 9);
+            $pdf->SetXY($pos['x'], $pos['y']);
+            $pdf->Cell($pos['width'], 5, 'X', 0, 0, 'C');
+            $logger->debug('Property division checkbox filled', ['x' => $pos['x'], 'y' => $pos['y']]);
         }
         
-        // Spousal Support checkbox - positioned on spousal support checkbox (nudged)
-        if (!empty($data['spousal_support'])) {
-            $pdf->SetXY(28, 256);
-            $pdf->Write(0, 'X');
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Spousal support checkbox at (30, 260)' . PHP_EOL, FILE_APPEND);
+        // Spousal Support checkbox
+        if (!empty($data['spousal_support']) && isset($positions['spousal_support'])) {
+            $pos = $positions['spousal_support'];
+            $pdf->SetFont('Arial', '', $pos['fontSize'] ?? 9);
+            $pdf->SetXY($pos['x'], $pos['y']);
+            $pdf->Cell($pos['width'], 5, 'X', 0, 0, 'C');
+            $logger->debug('Spousal support checkbox filled', ['x' => $pos['x'], 'y' => $pos['y']]);
         }
         
-        // Attorney Fees checkbox - positioned on attorney fees checkbox (nudged)
-        if (!empty($data['attorney_fees'])) {
-            $pdf->SetXY(28, 265);
-            $pdf->Write(0, 'X');
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Attorney fees checkbox at (30, 270)' . PHP_EOL, FILE_APPEND);
+        // Attorney Fees checkbox
+        if (!empty($data['attorney_fees']) && isset($positions['attorney_fees'])) {
+            $pos = $positions['attorney_fees'];
+            $pdf->SetFont('Arial', '', $pos['fontSize'] ?? 9);
+            $pdf->SetXY($pos['x'], $pos['y']);
+            $pdf->Cell($pos['width'], 5, 'X', 0, 0, 'C');
+            $logger->debug('Attorney fees checkbox filled', ['x' => $pos['x'], 'y' => $pos['y']]);
         }
         
-        // Name Change checkbox - positioned on name change checkbox (nudged)
-        if (!empty($data['name_change'])) {
-            $pdf->SetXY(28, 274);
-            $pdf->Write(0, 'X');
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Name change checkbox at (30, 280)' . PHP_EOL, FILE_APPEND);
+        // Name Change checkbox
+        if (!empty($data['name_change']) && isset($positions['name_change'])) {
+            $pos = $positions['name_change'];
+            $pdf->SetFont('Arial', '', $pos['fontSize'] ?? 9);
+            $pdf->SetXY($pos['x'], $pos['y']);
+            $pdf->Cell($pos['width'], 5, 'X', 0, 0, 'C');
+            $logger->debug('Name change checkbox filled', ['x' => $pos['x'], 'y' => $pos['y']]);
         }
     }
     

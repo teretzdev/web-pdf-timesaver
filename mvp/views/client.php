@@ -3,7 +3,8 @@
 // Breadcrumb navigation disabled for now
 ?>
 
-<div class="client-header">
+<div class="clio-card">
+<div class="client-header" role="region" aria-label="Client header">
     <div class="client-info">
         <h1><a href="?route=client&id=<?php echo htmlspecialchars($client['id']); ?>" class="client-name-link"><?php echo htmlspecialchars($client['displayName'] ?? 'Client'); ?></a></h1>
         <div class="client-meta">
@@ -16,23 +17,23 @@
         </div>
     </div>
     <div class="client-actions">
-        <a href="?route=clients" class="btn secondary">← Back to Clients</a>
+        <a href="?route=clients" class="clio-btn-secondary" aria-label="Back to clients">← Back to Clients</a>
     </div>
 </div>
 
-<div class="client-tabs">
+<div class="client-tabs" role="tablist" aria-label="Client tabs">
     <div class="tab-nav">
-        <a href="?route=client&id=<?php echo htmlspecialchars($client['id']); ?>" class="tab-link active">Projects (<?php echo count($projects); ?>)</a>
-        <a href="#" class="tab-link">Client vault</a>
-        <a href="#" class="tab-link">Profile</a>
-        <a href="#" class="tab-link">Notes (0)</a>
+        <a href="?route=client&id=<?php echo htmlspecialchars($client['id']); ?>" class="tab-link active" role="tab" aria-selected="true">Projects (<?php echo count($projects); ?>)</a>
     </div>
 </div>
 
+</div>
+
+<div class="clio-card">
 <div class="projects-section">
     <div class="projects-header">
         <h2>Projects</h2>
-        <button class="btn" id="add-project-btn">Add new project</button>
+        <button class="clio-btn" id="add-project-btn">Add new project</button>
     </div>
     
     <?php if (empty($projects)): ?>
@@ -40,7 +41,7 @@
             <div class="empty-icon">📁</div>
             <h3>No projects yet</h3>
             <p>Create your first project for this client to get started.</p>
-            <button class="btn" onclick="document.getElementById('add-project-btn').click()">Add your first project</button>
+            <button class="clio-btn" onclick="document.getElementById('add-project-btn').click()">Add your first project</button>
         </div>
     <?php else: ?>
         <div class="projects-list">
@@ -70,7 +71,7 @@
                             </select>
                         </div>
                         <div class="action-buttons">
-                            <button class="btn btn-sm btn-danger delete-project" data-project-id="<?php echo htmlspecialchars($project['id']); ?>">
+                            <button class="clio-btn-secondary btn-sm btn-danger delete-project" data-project-id="<?php echo htmlspecialchars($project['id']); ?>">
                                 Delete project
                             </button>
                         </div>
@@ -79,6 +80,7 @@
             <?php endforeach; ?>
         </div>
     <?php endif; ?>
+</div>
 </div>
 
 <!-- Add Project Modal -->
@@ -95,8 +97,8 @@
                 <input type="text" id="project-name" name="name" placeholder="Enter project name" required>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn secondary" onclick="closeAddProjectModal()">Cancel</button>
-                <button type="submit" class="btn">Add Project</button>
+                <button type="button" class="clio-btn-secondary" onclick="closeAddProjectModal()">Cancel</button>
+                <button type="submit" class="clio-btn">Add Project</button>
             </div>
         </form>
     </div>

@@ -3,24 +3,75 @@
 
 declare(strict_types=1);
 
-require __DIR__ . '/lib/data.php';
-require __DIR__ . '/templates/registry.php';
-require __DIR__ . '/lib/fill_service.php';
-require __DIR__ . '/lib/pdf_field_service.php';
-require __DIR__ . '/lib/logger.php';
+require_once __DIR__ . '/lib/data.php';
+require_once __DIR__ . '/templates/registry.php';
+require_once __DIR__ . '/lib/fill_service.php';
+require_once __DIR__ . '/lib/pdf_field_service.php';
+require_once __DIR__ . '/lib/logger.php';
 
 use WebPdfTimeSaver\Mvp\DataStore;
 use WebPdfTimeSaver\Mvp\TemplateRegistry;
 use WebPdfTimeSaver\Mvp\FillService;
 use WebPdfTimeSaver\Mvp\PdfFieldService;
 
-$store = new DataStore(__DIR__ . '/../data/mvp.json');
+// Initialize logger FIRST so it can be passed to all services
+$logger = new \WebPdfTimeSaver\Mvp\Logger();
+$store = new DataStore(__DIR__ . '/../data/mvp.json', $logger);
 $templates = TemplateRegistry::load();
 $fill = new FillService(__DIR__ . '/../output', $logger);
 $pdfFieldService = new PdfFieldService();
-$logger = new \WebPdfTimeSaver\Mvp\Logger();
+// Toggle verbose debug logging with env MVP_DEBUG_LOG=1
+$isDebug = getenv('MVP_DEBUG_LOG') === '1';
 
-$route = $_GET['route'] ?? 'dashboard';
+// Input validation and sanitization helpers
+function sanitizeString(string $input, int $maxLength = 255): string {
+    $sanitized = strip_tags(trim($input));
+    return mb_substr($sanitized, 0, $maxLength);
+}
+
+function sanitizeId(string $input): string {
+    // IDs should only contain alphanumeric, underscore, and hyphen
+    return preg_replace('/[^a-zA-Z0-9_-]/', '', $input);
+}
+
+function validateEmail(string $email): string {
+    $email = filter_var(trim($email), FILTER_SANITIZE_EMAIL);
+    return filter_var($email, FILTER_VALIDATE_EMAIL) ? $email : '';
+}
+
+function validatePhone(string $phone): string {
+    // Remove all non-numeric characters except + and spaces
+    return preg_replace('/[^0-9+\s()-]/', '', $phone);
+}
+
+function validateDate(string $date): string {
+    // Basic date validation
+    $timestamp = strtotime($date);
+    return $timestamp !== false ? date('Y-m-d', $timestamp) : '';
+}
+
+function validateRoute(string $route): string {
+    // Routes should only contain lowercase letters, numbers, hyphens, and slashes
+    $sanitized = preg_replace('/[^a-z0-9\/-]/', '', strtolower($route));
+    return mb_substr($sanitized, 0, 100);
+}
+
+$route = validateRoute($_GET['route'] ?? 'dashboard');
+
+// Handle API routes
+if (strpos($route, 'api/') === 0) {
+    $apiRoute = substr($route, 4); // Remove 'api/' prefix
+    
+    switch ($apiRoute) {
+        case 'positions/update':
+            handlePositionUpdate();
+            break;
+        default:
+            http_response_code(404);
+            echo json_encode(['error' => 'API endpoint not found']);
+            exit;
+    }
+}
 
 function render(string $view, array $vars = []): void {
 	global $store, $templates, $fill, $pdfFieldService, $logger;
@@ -33,6 +84,66 @@ function render(string $view, array $vars = []): void {
 	include __DIR__ . '/views/layout_header.php';
 	include __DIR__ . "/views/{$view}.php";
 	include __DIR__ . '/views/layout_footer.php';
+}
+
+function handlePositionUpdate(): void {
+    header('Content-Type: application/json');
+    
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405);
+        echo json_encode(['error' => 'Method not allowed']);
+        return;
+    }
+    
+    $input = file_get_contents('php://input');
+    $positions = json_decode($input, true);
+    
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Invalid JSON']);
+        return;
+    }
+    
+    if (!is_array($positions)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Positions must be an array']);
+        return;
+    }
+    
+    try {
+        $positionsFile = __DIR__ . '/../data/t_fl100_gc120_positions.json';
+        
+        // Backup current positions
+        if (file_exists($positionsFile)) {
+            $backupFile = $positionsFile . '.backup.' . date('Y-m-d_H-i-s');
+            copy($positionsFile, $backupFile);
+        }
+        
+        // Save new positions
+        $result = file_put_contents($positionsFile, json_encode($positions, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        
+        if ($result === false) {
+            throw new Exception('Failed to write positions file');
+        }
+        
+        // Log the update
+        $logger = new \WebPdfTimeSaver\Mvp\Logger();
+        $logger->info('Position update', [
+            'fieldCount' => count($positions),
+            'timestamp' => date('Y-m-d H:i:s')
+        ]);
+        
+        echo json_encode([
+            'success' => true,
+            'message' => 'Positions updated successfully',
+            'fieldCount' => count($positions),
+            'timestamp' => date('Y-m-d H:i:s')
+        ]);
+        
+    } catch (Exception $e) {
+        http_response_code(500);
+        echo json_encode(['error' => $e->getMessage()]);
+    }
 }
 
 // Seed demo data for easy navigation when empty
@@ -104,7 +215,7 @@ case 'projects':
 		break;
 
 	case 'client':
-		$cid = (string)($_GET['id'] ?? '');
+		$cid = sanitizeId((string)($_GET['id'] ?? ''));
 		$client = method_exists($store, 'getClient') ? $store->getClient($cid) : null;
 		if (!$client) { header('Location: ?route=clients'); exit; }
 		$projects = method_exists($store, 'getProjectsByClient') ? $store->getProjectsByClient($cid) : [];
@@ -112,7 +223,7 @@ case 'projects':
 		break;
 
 	case 'project':
-		$id = (string)($_GET['id'] ?? '');
+		$id = sanitizeId((string)($_GET['id'] ?? ''));
 		$project = $store->getProject($id);
 		if (!$project) {
 			header('HTTP/1.1 404 Not Found');
@@ -139,31 +250,39 @@ case 'projects':
 		exit;
 
 	case 'populate':
-		$logFile = __DIR__ . '/../logs/pdf_debug.log';
-		$pdId = (string)($_GET['pd'] ?? '');
-		file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Accessing populate form for PD ID: ' . $pdId . PHP_EOL, FILE_APPEND);
+        $logFile = __DIR__ . '/../logs/pdf_debug.log';
+        $pdId = sanitizeId((string)($_GET['pd'] ?? ''));
+        if ($isDebug) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Accessing populate form for PD ID: ' . $pdId . PHP_EOL, FILE_APPEND);
+        }
 		
 		$projDoc = $store->getProjectDocumentById($pdId);
-		if (!$projDoc) {
-			file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Project document not found' . PHP_EOL, FILE_APPEND);
+        if (!$projDoc) {
+            if ($isDebug) {
+                file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Project document not found' . PHP_EOL, FILE_APPEND);
+            }
 			header('HTTP/1.1 404 Not Found');
 			echo 'Document not found';
 			exit;
 		}
 		
-		$template = $templates[$projDoc['templateId']] ?? null;
-		file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Template ID: ' . ($projDoc['templateId'] ?? 'NONE') . PHP_EOL, FILE_APPEND);
-		file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Template found: ' . ($template ? 'YES' : 'NO') . PHP_EOL, FILE_APPEND);
+        $template = $templates[$projDoc['templateId']] ?? null;
+        if ($isDebug) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Template ID: ' . ($projDoc['templateId'] ?? 'NONE') . PHP_EOL, FILE_APPEND);
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Template found: ' . ($template ? 'YES' : 'NO') . PHP_EOL, FILE_APPEND);
+        }
 		
-		$values = $store->getFieldValues($pdId);
-		$customFields = $store->getCustomFields($pdId);
-		
-		file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Rendering populate form with values: ' . json_encode($values) . PHP_EOL, FILE_APPEND);
+        $values = $store->getFieldValues($pdId);
+        $customFields = $store->getCustomFields($pdId);
+        
+        if ($isDebug) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Rendering populate form with values: ' . json_encode($values) . PHP_EOL, FILE_APPEND);
+        }
 		render('populate', [ 'projectDocument' => $projDoc, 'template' => $template, 'values' => $values, 'customFields' => $customFields ]);
 		break;
 
 	case 'populate_test':
-		$pdId = (string)($_GET['pd'] ?? '');
+		$pdId = sanitizeId((string)($_GET['pd'] ?? ''));
 		$projDoc = $store->getProjectDocumentById($pdId);
 		if (!$projDoc) {
 			header('HTTP/1.1 404 Not Found');
@@ -183,25 +302,25 @@ case 'projects':
 
 	case 'actions/create-project':
 		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ?route=projects'); exit; }
-		$name = trim((string)($_POST['name'] ?? 'Untitled Project'));
-		$clientId = (string)($_POST['clientId'] ?? '');
+		$name = sanitizeString((string)($_POST['name'] ?? 'Untitled Project'), 200);
+		$clientId = sanitizeId((string)($_POST['clientId'] ?? ''));
 		$project = $clientId !== '' && method_exists($store, 'createProjectForClient') ? $store->createProjectForClient($clientId, $name) : $store->createProject($name);
 		header('Location: ?route=project&id=' . urlencode($project['id']));
 		exit;
 
 	case 'actions/add-document':
 		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ?route=projects'); exit; }
-		$projectId = (string)($_POST['projectId'] ?? '');
-		$templateId = (string)($_POST['templateId'] ?? '');
+		$projectId = sanitizeId((string)($_POST['projectId'] ?? ''));
+		$templateId = sanitizeId((string)($_POST['templateId'] ?? ''));
 		$store->addProjectDocument($projectId, $templateId);
 		header('Location: ?route=project&id=' . urlencode($projectId));
 		exit;
 
 	case 'actions/create-client':
 		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ?route=clients'); exit; }
-		$displayName = trim((string)($_POST['displayName'] ?? ''));
-		$email = trim((string)($_POST['email'] ?? ''));
-		$phone = trim((string)($_POST['phone'] ?? ''));
+		$displayName = sanitizeString((string)($_POST['displayName'] ?? ''), 200);
+		$email = validateEmail((string)($_POST['email'] ?? ''));
+		$phone = validatePhone((string)($_POST['phone'] ?? ''));
 		if ($displayName !== '' && method_exists($store, 'createClient')) { $store->createClient($displayName, $email, $phone); }
 		header('Location: ?route=clients');
 		exit;
@@ -268,31 +387,41 @@ case 'projects':
 		exit;
 
 	case 'actions/save-fields':
-		$logFile = __DIR__ . '/../logs/pdf_debug.log';
-		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Request method: ' . $_SERVER['REQUEST_METHOD'] . PHP_EOL, FILE_APPEND);
-		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: POST data: ' . json_encode($_POST) . PHP_EOL, FILE_APPEND);
+        $logFile = __DIR__ . '/../logs/pdf_debug.log';
+        if ($isDebug) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Request method: ' . $_SERVER['REQUEST_METHOD'] . PHP_EOL, FILE_APPEND);
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: POST data: ' . json_encode($_POST) . PHP_EOL, FILE_APPEND);
+        }
 		
 		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { 
-			file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Not POST request, redirecting' . PHP_EOL, FILE_APPEND);
+            if ($isDebug) {
+                file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Not POST request, redirecting' . PHP_EOL, FILE_APPEND);
+            }
 			header('Location: ?route=projects'); 
 			exit; 
 		}
 		
-		$pdId = (string)($_POST['projectDocumentId'] ?? '');
-		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: PD ID: ' . $pdId . PHP_EOL, FILE_APPEND);
+		$pdId = sanitizeId((string)($_POST['projectDocumentId'] ?? ''));
+        if ($isDebug) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: PD ID: ' . $pdId . PHP_EOL, FILE_APPEND);
+        }
 		
 		$data = $_POST;
 		unset($data['projectDocumentId']);
-		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Data to save: ' . json_encode($data) . PHP_EOL, FILE_APPEND);
+        if ($isDebug) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Data to save: ' . json_encode($data) . PHP_EOL, FILE_APPEND);
+        }
 		
 		$store->saveFieldValues($pdId, $data);
-		file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Values saved successfully' . PHP_EOL, FILE_APPEND);
+        if ($isDebug) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Values saved successfully' . PHP_EOL, FILE_APPEND);
+        }
 		
 		header('Location: ?route=populate&pd=' . urlencode($pdId) . '&saved=1');
 		exit;
 
 	case 'actions/generate':
-		$pdId = (string)($_GET['pd'] ?? '');
+		$pdId = sanitizeId((string)($_GET['pd'] ?? ''));
 		$projDoc = $store->getProjectDocumentById($pdId);
 		if (!$projDoc) { header('Location: ?route=dashboard'); exit; }
 		$template = $templates[$projDoc['templateId']] ?? null;
@@ -300,9 +429,11 @@ case 'projects':
 		
 		// Debug: Log what we're working with
 		$logFile = __DIR__ . '/../logs/pdf_debug.log';
-		file_put_contents($logFile, date('Y-m-d H:i:s') . ' GENERATE DEBUG: PD ID: ' . $pdId . PHP_EOL, FILE_APPEND);
-		file_put_contents($logFile, date('Y-m-d H:i:s') . ' GENERATE DEBUG: Template: ' . json_encode($template) . PHP_EOL, FILE_APPEND);
-		file_put_contents($logFile, date('Y-m-d H:i:s') . ' GENERATE DEBUG: Values: ' . json_encode($values) . PHP_EOL, FILE_APPEND);
+        if ($isDebug) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' GENERATE DEBUG: PD ID: ' . $pdId . PHP_EOL, FILE_APPEND);
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' GENERATE DEBUG: Template: ' . json_encode($template) . PHP_EOL, FILE_APPEND);
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' GENERATE DEBUG: Values: ' . json_encode($values) . PHP_EOL, FILE_APPEND);
+        }
 		
         try {
             $result = $fill->generateSimplePdf($template ?? [], $values, ['pdId' => $pdId]);

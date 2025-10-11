@@ -13,7 +13,7 @@ final class Logger {
         $this->maxBytes = $maxBytes;
         $this->maxFiles = max(1, $maxFiles);
         $dir = dirname($this->path);
-        if (!is_dir($dir)) { @mkdir($dir, 0777, true); }
+        if (!is_dir($dir)) { @mkdir($dir, 0755, true); }
     }
 
     public function debug(string $msg, array $context = []): void { $this->write('DEBUG', $msg, $context); }

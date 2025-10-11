@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FL-100 Position Editor</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f5f5;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 300;
+        }
+
+        .header-controls {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .main-container {
+            display: flex;
+            height: calc(100vh - 80px);
+        }
+
+        .pdf-viewer {
+            flex: 1;
+            background: white;
+            position: relative;
+            overflow: auto;
+        }
+
+        .pdf-canvas {
+            border: 1px solid #ddd;
+            margin: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            cursor: crosshair;
+        }
+
+        .field-marker {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #e74c3c;
+            border: 2px solid white;
+            border-radius: 50%;
+            cursor: pointer;
+            z-index: 10;
+            transition: all 0.2s ease;
+        }
+
+        .field-marker:hover {
+            transform: scale(1.5);
+            background: #c0392b;
+        }
+
+        .field-marker.selected {
+            background: #3498db;
+            border-color: #2980b9;
+        }
+
+        .field-marker.suggested {
+            background: #f39c12;
+            border-color: #e67e22;
+        }
+
+        .controls-panel {
+            width: 400px;
+            background: white;
+            border-left: 1px solid #ddd;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .panel-section {
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .panel-section h3 {
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .field-list {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .field-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem;
+            border: 1px solid #eee;
+            margin-bottom: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        .field-item:hover {
+            background: #f8f9fa;
+        }
+
+        .field-item.selected {
+            background: #e3f2fd;
+            border-color: #2196f3;
+        }
+
+        .field-name {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .field-coords {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .position-controls {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .control-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .control-group label {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 0.25rem;
+        }
+
+        .control-group input {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .btn {
+            padding: 0.75rem 1rem;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+        }
+
+        .btn-success {
+            background: #27ae60;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+        }
+
+        .btn-warning {
+            background: #f39c12;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #e67e22;
+        }
+
+        .status-bar {
+            background: #ecf0f1;
+            padding: 0.5rem 1rem;
+            border-top: 1px solid #ddd;
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .zoom-controls {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .zoom-controls button {
+            padding: 0.25rem 0.5rem;
+            border: 1px solid #ddd;
+            background: white;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        .zoom-controls button:hover {
+            background: #f8f9fa;
+        }
+
+        .comparison-view {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.8);
+            z-index: 1000;
+        }
+
+        .comparison-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            max-width: 80%;
+            max-height: 80%;
+            overflow: auto;
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        .analysis-summary {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.5rem;
+        }
+
+        .summary-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .summary-label {
+            font-weight: 500;
+            color: #2c3e50;
+        }
+
+        .summary-value {
+            color: #666;
+        }
+
+        .summary-value.good {
+            color: #27ae60;
+        }
+
+        .summary-value.warning {
+            color: #f39c12;
+        }
+
+        .summary-value.error {
+            color: #e74c3c;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>FL-100 Position Editor</h1>
+        <div class="header-controls">
+            <div class="zoom-controls">
+                <button onclick="zoomOut()">-</button>
+                <span id="zoom-level">100%</span>
+                <button onclick="zoomIn()">+</button>
+            </div>
+            <button class="btn btn-primary" onclick="loadPdf()">Load PDF</button>
+            <button class="btn btn-warning" onclick="showComparison()">Compare</button>
+            <button class="btn btn-success" onclick="savePositions()">Save Positions</button>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="pdf-viewer">
+            <canvas id="pdf-canvas" class="pdf-canvas"></canvas>
+            <div id="field-markers"></div>
+        </div>
+
+        <div class="controls-panel">
+            <div class="panel-section">
+                <h3>Field Positions</h3>
+                <div class="field-list" id="field-list">
+                    <!-- Field items will be populated by JavaScript -->
+                </div>
+            </div>
+
+            <div class="panel-section">
+                <h3>Position Controls</h3>
+                <div class="position-controls">
+                    <div class="control-group">
+                        <label>X Position (mm)</label>
+                        <input type="number" id="x-position" step="0.1" onchange="updatePosition()">
+                    </div>
+                    <div class="control-group">
+                        <label>Y Position (mm)</label>
+                        <input type="number" id="y-position" step="0.1" onchange="updatePosition()">
+                    </div>
+                    <div class="control-group">
+                        <label>Width (mm)</label>
+                        <input type="number" id="field-width" step="0.1" onchange="updatePosition()">
+                    </div>
+                    <div class="control-group">
+                        <label>Font Size</label>
+                        <input type="number" id="font-size" step="1" onchange="updatePosition()">
+                    </div>
+                </div>
+                <button class="btn btn-primary" onclick="applyChanges()" style="margin-top: 1rem; width: 100%;">
+                    Apply Changes
+                </button>
+            </div>
+
+            <div class="panel-section">
+                <h3>Analysis Summary</h3>
+                <div class="analysis-summary" id="analysis-summary">
+                    <div class="summary-item">
+                        <span class="summary-label">Total Fields:</span>
+                        <span class="summary-value" id="total-fields">0</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Misaligned:</span>
+                        <span class="summary-value" id="misaligned-fields">0</span>
+                    </div>
+                    <div class="summary-item">
+                        <span class="summary-label">Accuracy:</span>
+                        <span class="summary-value" id="accuracy">0%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="status-bar">
+        <span id="status-text">Ready</span>
+        <span style="float: right;">Click on PDF to adjust field positions</span>
+    </div>
+
+    <div class="comparison-view" id="comparison-view">
+        <div class="comparison-content">
+            <button class="close-btn" onclick="hideComparison()">&times;</button>
+            <h2>Position Comparison</h2>
+            <div id="comparison-content">
+                <!-- Comparison content will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let currentPdf = null;
+        let fieldPositions = {};
+        let selectedField = null;
+        let zoomLevel = 1;
+        let canvas = null;
+        let ctx = null;
+
+        // Initialize the editor
+        document.addEventListener('DOMContentLoaded', function() {
+            canvas = document.getElementById('pdf-canvas');
+            ctx = canvas.getContext('2d');
+            
+            // Load initial positions
+            loadFieldPositions();
+            
+            // Set up canvas click handler
+            canvas.addEventListener('click', handleCanvasClick);
+            
+            updateStatus('Ready - Load a PDF to begin');
+        });
+
+        // Load field positions from JSON file
+        async function loadFieldPositions() {
+            try {
+                const response = await fetch('data/t_fl100_gc120_positions.json');
+                if (response.ok) {
+                    fieldPositions = await response.json();
+                    populateFieldList();
+                    updateAnalysisSummary();
+                } else {
+                    console.error('Failed to load field positions');
+                }
+            } catch (error) {
+                console.error('Error loading field positions:', error);
+            }
+        }
+
+        // Populate the field list
+        function populateFieldList() {
+            const fieldList = document.getElementById('field-list');
+            fieldList.innerHTML = '';
+
+            Object.entries(fieldPositions).forEach(([fieldName, position]) => {
+                const fieldItem = document.createElement('div');
+                fieldItem.className = 'field-item';
+                fieldItem.onclick = () => selectField(fieldName);
+                
+                fieldItem.innerHTML = `
+                    <div>
+                        <div class="field-name">${fieldName.replace(/_/g, ' ')}</div>
+                        <div class="field-coords">x: ${position.x}mm, y: ${position.y}mm</div>
+                    </div>
+                `;
+                
+                fieldList.appendChild(fieldItem);
+            });
+        }
+
+        // Select a field
+        function selectField(fieldName) {
+            selectedField = fieldName;
+            const position = fieldPositions[fieldName];
+            
+            // Update UI
+            document.querySelectorAll('.field-item').forEach(item => {
+                item.classList.remove('selected');
+            });
+            event.target.closest('.field-item').classList.add('selected');
+            
+            // Update position controls
+            document.getElementById('x-position').value = position.x;
+            document.getElementById('y-position').value = position.y;
+            document.getElementById('field-width').value = position.width || 0;
+            document.getElementById('font-size').value = position.fontSize || 9;
+            
+            // Highlight field marker
+            document.querySelectorAll('.field-marker').forEach(marker => {
+                marker.classList.remove('selected');
+            });
+            const marker = document.querySelector(`[data-field="${fieldName}"]`);
+            if (marker) {
+                marker.classList.add('selected');
+            }
+            
+            updateStatus(`Selected field: ${fieldName}`);
+        }
+
+        // Handle canvas click
+        function handleCanvasClick(event) {
+            if (!selectedField) return;
+            
+            const rect = canvas.getBoundingClientRect();
+            const x = (event.clientX - rect.left) / zoomLevel;
+            const y = (event.clientY - rect.top) / zoomLevel;
+            
+            // Convert pixels to millimeters (approximate)
+            const mmX = (x / canvas.width) * 215.9; // A4 width in mm
+            const mmY = (y / canvas.height) * 279.4; // A4 height in mm
+            
+            // Update position
+            fieldPositions[selectedField].x = mmX;
+            fieldPositions[selectedField].y = mmY;
+            
+            // Update UI
+            document.getElementById('x-position').value = mmX.toFixed(1);
+            document.getElementById('y-position').value = mmY.toFixed(1);
+            
+            // Update field marker
+            updateFieldMarker(selectedField);
+            
+            updateStatus(`Updated ${selectedField} position: ${mmX.toFixed(1)}mm, ${mmY.toFixed(1)}mm`);
+        }
+
+        // Update field marker position
+        function updateFieldMarker(fieldName) {
+            const position = fieldPositions[fieldName];
+            const marker = document.querySelector(`[data-field="${fieldName}"]`);
+            
+            if (marker) {
+                const x = (position.x / 215.9) * canvas.width * zoomLevel;
+                const y = (position.y / 279.4) * canvas.height * zoomLevel;
+                
+                marker.style.left = `${x}px`;
+                marker.style.top = `${y}px`;
+            }
+        }
+
+        // Update position from controls
+        function updatePosition() {
+            if (!selectedField) return;
+            
+            const x = parseFloat(document.getElementById('x-position').value);
+            const y = parseFloat(document.getElementById('y-position').value);
+            const width = parseFloat(document.getElementById('field-width').value);
+            const fontSize = parseInt(document.getElementById('font-size').value);
+            
+            fieldPositions[selectedField].x = x;
+            fieldPositions[selectedField].y = y;
+            fieldPositions[selectedField].width = width;
+            fieldPositions[selectedField].fontSize = fontSize;
+            
+            updateFieldMarker(selectedField);
+        }
+
+        // Apply changes
+        function applyChanges() {
+            if (!selectedField) return;
+            
+            updatePosition();
+            updateFieldList();
+            updateAnalysisSummary();
+            
+            updateStatus(`Applied changes to ${selectedField}`);
+        }
+
+        // Update field list display
+        function updateFieldList() {
+            populateFieldList();
+        }
+
+        // Load PDF (mock implementation)
+        function loadPdf() {
+            // In a real implementation, this would load an actual PDF
+            // For now, we'll create a mock PDF canvas
+            canvas.width = 800;
+            canvas.height = 1000;
+            
+            // Draw a mock PDF background
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw some mock content
+            ctx.fillStyle = '#000000';
+            ctx.font = '16px Arial';
+            ctx.fillText('FL-100 Petition Form', 50, 50);
+            ctx.fillText('Attorney Information:', 50, 100);
+            ctx.fillText('Case Information:', 50, 200);
+            ctx.fillText('Party Information:', 50, 300);
+            
+            // Create field markers
+            createFieldMarkers();
+            
+            updateStatus('PDF loaded - Click on fields to adjust positions');
+        }
+
+        // Create field markers
+        function createFieldMarkers() {
+            const markersContainer = document.getElementById('field-markers');
+            markersContainer.innerHTML = '';
+            
+            Object.entries(fieldPositions).forEach(([fieldName, position]) => {
+                const marker = document.createElement('div');
+                marker.className = 'field-marker';
+                marker.setAttribute('data-field', fieldName);
+                marker.onclick = (e) => {
+                    e.stopPropagation();
+                    selectField(fieldName);
+                };
+                
+                updateFieldMarker(fieldName);
+                markersContainer.appendChild(marker);
+            });
+        }
+
+        // Zoom controls
+        function zoomIn() {
+            zoomLevel = Math.min(zoomLevel * 1.2, 3);
+            updateZoom();
+        }
+
+        function zoomOut() {
+            zoomLevel = Math.max(zoomLevel / 1.2, 0.5);
+            updateZoom();
+        }
+
+        function updateZoom() {
+            document.getElementById('zoom-level').textContent = Math.round(zoomLevel * 100) + '%';
+            canvas.style.transform = `scale(${zoomLevel})`;
+            canvas.style.transformOrigin = 'top left';
+            
+            // Update field markers
+            createFieldMarkers();
+        }
+
+        // Show comparison view
+        function showComparison() {
+            document.getElementById('comparison-view').style.display = 'block';
+            
+            // Generate comparison content
+            const comparisonContent = document.getElementById('comparison-content');
+            comparisonContent.innerHTML = `
+                <h3>Position Analysis</h3>
+                <p>This feature would compare your PDF with reference implementations from:</p>
+                <ul>
+                    <li>draft.clio.com</li>
+                    <li>pdftimesavers.desktopmasters.com</li>
+                </ul>
+                <p>Use the MCP automation tools to perform this comparison.</p>
+            `;
+        }
+
+        // Hide comparison view
+        function hideComparison() {
+            document.getElementById('comparison-view').style.display = 'none';
+        }
+
+        // Save positions
+        async function savePositions() {
+            try {
+                const response = await fetch('api/positions/update', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(fieldPositions)
+                });
+                
+                if (response.ok) {
+                    updateStatus('Positions saved successfully');
+                } else {
+                    updateStatus('Failed to save positions');
+                }
+            } catch (error) {
+                console.error('Error saving positions:', error);
+                updateStatus('Error saving positions');
+            }
+        }
+
+        // Update analysis summary
+        function updateAnalysisSummary() {
+            const totalFields = Object.keys(fieldPositions).length;
+            const misalignedFields = 0; // This would be calculated from actual analysis
+            
+            document.getElementById('total-fields').textContent = totalFields;
+            document.getElementById('misaligned-fields').textContent = misalignedFields;
+            document.getElementById('accuracy').textContent = totalFields > 0 ? 
+                Math.round(((totalFields - misalignedFields) / totalFields) * 100) + '%' : '0%';
+        }
+
+        // Update status
+        function updateStatus(message) {
+            document.getElementById('status-text').textContent = message;
+        }
+    </script>
+</body>
+</html>

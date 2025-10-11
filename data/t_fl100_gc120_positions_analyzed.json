@@ -1,0 +1,228 @@
+{
+  "attorney_name": {
+    "x": 8,
+    "y": 28,
+    "width": 95,
+    "fontSize": 9,
+    "type": "text"
+  },
+  "attorney_firm": {
+    "x": 8,
+    "y": 33,
+    "width": 95,
+    "fontSize": 9,
+    "type": "text"
+  },
+  "attorney_address": {
+    "x": 8,
+    "y": 38,
+    "width": 95,
+    "fontSize": 9,
+    "type": "text"
+  },
+  "attorney_city_state_zip": {
+    "x": 8,
+    "y": 43,
+    "width": 95,
+    "fontSize": 9,
+    "type": "text"
+  },
+  "attorney_phone": {
+    "x": 8,
+    "y": 48,
+    "width": 60,
+    "fontSize": 9,
+    "type": "text"
+  },
+  "attorney_email": {
+    "x": 8,
+    "y": 58,
+    "width": 95,
+    "fontSize": 9,
+    "type": "text"
+  },
+  "attorney_bar_number": {
+    "x": 140,
+    "y": 28,
+    "width": 40,
+    "fontSize": 9,
+    "type": "text"
+  },
+  "court_county": {
+    "x": 80,
+    "y": 77,
+    "width": 65,
+    "fontSize": 10,
+    "fontStyle": "B",
+    "type": "text"
+  },
+  "court_address": {
+    "x": 25,
+    "y": 84,
+    "width": 110,
+    "fontSize": 8,
+    "type": "text"
+  },
+  "case_type": {
+    "x": 25,
+    "y": 94,
+    "width": 90,
+    "fontSize": 7,
+    "type": "text"
+  },
+  "filing_date": {
+    "x": 120,
+    "y": 94,
+    "width": 35,
+    "fontSize": 7,
+    "type": "text"
+  },
+  "case_number": {
+    "x": 172,
+    "y": 119,
+    "width": 35,
+    "fontSize": 9,
+    "fontStyle": "B",
+    "type": "text"
+  },
+  "petitioner_name": {
+    "x": 25,
+    "y": 109,
+    "width": 125,
+    "fontSize": 9,
+    "fontStyle": "B",
+    "type": "text"
+  },
+  "respondent_name": {
+    "x": 25,
+    "y": 115,
+    "width": 125,
+    "fontSize": 9,
+    "fontStyle": "B",
+    "type": "text"
+  },
+  "petitioner_address": {
+    "x": 25,
+    "y": 122,
+    "width": 125,
+    "fontSize": 7,
+    "type": "text"
+  },
+  "petitioner_phone": {
+    "x": 25,
+    "y": 127,
+    "width": 60,
+    "fontSize": 7,
+    "type": "text"
+  },
+  "respondent_address": {
+    "x": 25,
+    "y": 134,
+    "width": 125,
+    "fontSize": 7,
+    "type": "text"
+  },
+  "dissolution_type": {
+    "x": 65,
+    "y": 143,
+    "width": 70,
+    "fontSize": 8,
+    "type": "select"
+  },
+  "marriage_date": {
+    "x": 120,
+    "y": 177,
+    "width": 35,
+    "fontSize": 8,
+    "type": "date"
+  },
+  "separation_date": {
+    "x": 165,
+    "y": 177,
+    "width": 30,
+    "fontSize": 8,
+    "type": "date"
+  },
+  "marriage_location": {
+    "x": 85,
+    "y": 186,
+    "width": 80,
+    "fontSize": 7,
+    "type": "text"
+  },
+  "grounds_for_dissolution": {
+    "x": 40,
+    "y": 196,
+    "width": 100,
+    "fontSize": 7,
+    "type": "text"
+  },
+  "property_division": {
+    "x": 16,
+    "y": 143,
+    "width": 3.5,
+    "height": 3.5,
+    "fontSize": 9,
+    "type": "checkbox"
+  },
+  "spousal_support": {
+    "x": 16,
+    "y": 150,
+    "width": 3.5,
+    "height": 3.5,
+    "fontSize": 9,
+    "type": "checkbox"
+  },
+  "attorney_fees": {
+    "x": 16,
+    "y": 157,
+    "width": 3.5,
+    "height": 3.5,
+    "fontSize": 9,
+    "type": "checkbox"
+  },
+  "name_change": {
+    "x": 51,
+    "y": 169,
+    "width": 3.5,
+    "height": 3.5,
+    "fontSize": 9,
+    "type": "checkbox"
+  },
+  "has_children": {
+    "x": 70,
+    "y": 218,
+    "width": 20,
+    "fontSize": 8,
+    "type": "text"
+  },
+  "children_count": {
+    "x": 90,
+    "y": 223,
+    "width": 10,
+    "fontSize": 8,
+    "type": "number"
+  },
+  "additional_info": {
+    "x": 25,
+    "y": 240,
+    "width": 165,
+    "fontSize": 7,
+    "type": "textarea"
+  },
+  "attorney_signature": {
+    "x": 25,
+    "y": 262,
+    "width": 75,
+    "fontSize": 9,
+    "fontStyle": "I",
+    "type": "text"
+  },
+  "signature_date": {
+    "x": 140,
+    "y": 262,
+    "width": 35,
+    "fontSize": 8,
+    "type": "date"
+  }
+}

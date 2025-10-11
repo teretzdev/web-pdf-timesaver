@@ -37,7 +37,7 @@
     <div class="panel">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
             <h3 style="color: #28a745; margin: 0;">🎯 Custom Fields</h3>
-            <button type="button" id="add-custom-field-btn" class="btn secondary" style="font-size: 12px; padding: 6px 12px;">
+            <button type="button" id="add-custom-field-btn" class="clio-btn-secondary" style="font-size: 12px; padding: 6px 12px;">
                 + Add Custom Field
             </button>
         </div>
@@ -95,9 +95,9 @@
 
 <!-- Action Buttons -->
 <div style="margin-top: 24px; display: flex; gap: 12px;">
-    <button class="btn" onclick="saveAllMappings()">Save All Mappings</button>
-    <a class="btn secondary" href="?route=populate&pd=<?php echo htmlspecialchars($projectDocument['id']); ?>">Go to Populate Form</a>
-    <a class="btn secondary" href="?route=project&id=<?php echo htmlspecialchars($projectDocument['projectId']); ?>">Back to Project</a>
+    <button class="clio-btn" onclick="saveAllMappings()">Save All Mappings</button>
+    <a class="clio-btn-secondary" href="?route=populate&pd=<?php echo htmlspecialchars($projectDocument['id']); ?>">Go to Populate Form</a>
+    <a class="clio-btn-secondary" href="?route=project&id=<?php echo htmlspecialchars($projectDocument['projectId']); ?>">Back to Matter</a>
 </div>
 
 <style>
@@ -266,8 +266,8 @@ function showMappingModal(pdfFieldName) {
                 </select>
             </div>
             <div style="display: flex; gap: 8px; justify-content: flex-end;">
-                <button type="button" class="btn secondary" onclick="this.closest('.modal').remove()">Cancel</button>
-                <button type="button" class="btn" onclick="createMappedField('${pdfFieldName}')">Create Field</button>
+                <button type="button" class="clio-btn-secondary" onclick="this.closest('.modal').remove()">Cancel</button>
+                <button type="button" class="clio-btn" onclick="createMappedField('${pdfFieldName}')">Create Field</button>
             </div>
         </div>
     `;
@@ -402,8 +402,8 @@ function showAddCustomFieldModal() {
                     </select>
                 </div>
                 <div style="display: flex; gap: 8px; justify-content: flex-end;">
-                    <button type="button" class="btn secondary" onclick="this.closest('.modal').remove()">Cancel</button>
-                    <button type="submit" class="btn">Add Field</button>
+                    <button type="button" class="clio-btn-secondary" onclick="this.closest('.modal').remove()">Cancel</button>
+                    <button type="submit" class="clio-btn">Add Field</button>
                 </div>
             </form>
         </div>

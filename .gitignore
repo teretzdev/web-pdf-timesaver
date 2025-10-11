@@ -5,8 +5,12 @@
 # Logs and temp
 /logs/
 *.log
+*.log.*
 *.tmp
 *.temp
+*.bak
+*.backup
+*.backup.*
 
 # Build artifacts and generated output
 /output/

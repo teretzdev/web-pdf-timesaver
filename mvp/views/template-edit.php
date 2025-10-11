@@ -1,8 +1,8 @@
 <h2>Edit Template — <?php echo htmlspecialchars($template['code'] ?? ''); ?> <?php echo htmlspecialchars($template['name'] ?? ''); ?></h2>
 
-<div class="row" style="gap: 16px; margin-bottom: 16px;">
-    <a href="?route=templates" class="btn secondary">Back to Templates</a>
-    <a href="?route=projects" class="btn secondary">Projects</a>
+<div class="clio-card" style="display: flex; gap: 16px; margin-bottom: 16px;">
+    <a href="?route=templates" class="clio-btn-secondary">Back to Templates</a>
+    <a href="?route=projects" class="clio-btn-secondary">Matters</a>
 </div>
 
 <div class="panel">

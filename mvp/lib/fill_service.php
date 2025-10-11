@@ -15,7 +15,7 @@ final class FillService {
 
     public function __construct(string $outputDir = __DIR__ . '/../../output', ?Logger $logger = null) {
 		$this->outputDir = $outputDir;
-		if (!is_dir($this->outputDir)) { mkdir($this->outputDir, 0777, true); }
+		if (!is_dir($this->outputDir)) { mkdir($this->outputDir, 0755, true); }
         $this->logger = $logger ?? new Logger();
 		$this->formFiller = new PdfFormFiller($outputDir, __DIR__ . '/../../uploads', $this->logger);
 	}

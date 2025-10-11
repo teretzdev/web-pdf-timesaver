@@ -34,15 +34,15 @@ final class FieldFillerManager {
     /**
      * Fill all fields using the modular system
      */
-    public function fillAllFields($pdf, array $data, string $logFile): void {
-        file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Starting modular field filling' . PHP_EOL, FILE_APPEND);
+    public function fillAllFields($pdf, array $data, \WebPdfTimeSaver\Mvp\Logger $logger): void {
+        $logger->debug('Starting modular field filling');
         
         foreach ($this->fillers as $filler) {
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Processing ' . $filler->getSectionName() . ' section' . PHP_EOL, FILE_APPEND);
-            $filler->fillFields($pdf, $data, $logFile);
+            $logger->debug('Processing ' . $filler->getSectionName() . ' section');
+            $filler->fillFields($pdf, $data, $logger);
         }
         
-        file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Completed modular field filling' . PHP_EOL, FILE_APPEND);
+        $logger->debug('Completed modular field filling');
     }
     
     /**

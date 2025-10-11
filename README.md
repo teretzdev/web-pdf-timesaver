@@ -78,44 +78,137 @@ Then open your browser and go to `http://localhost:8000`
 ```
 Web-PDFTimeSaver/
 ├── index.php                 # Root entry (redirects to mvp/index.php)
-├── mvp/                      # New MVP app (projects, project, populate)
-├── legacy/                   # Old scripts moved here
-├── tests/                    # Test suite (run_all.php)
-├── uploads/                # Directory for uploaded PDFs
-├── output/                 # Directory for filled PDFs
-├── .htaccess              # Apache configuration
-└── README.md              # This file
+├── .htaccess                 # Apache security and configuration
+├── composer.json             # PHP dependencies
+├── package.json              # Node dependencies
+├── config/                   # Centralized configuration
+│   └── app.php               # Application settings
+├── mvp/                      # Main MVP application
+│   ├── index.php             # Router and entry point
+│   ├── lib/                  # Business logic and services
+│   ├── templates/            # Template registry
+│   └── views/                # UI views
+├── legacy/                   # Archived test and analysis tools
+├── data/                     # JSON data storage (protected)
+├── logs/                     # Application logs (protected)
+├── uploads/                  # Uploaded PDF templates
+├── output/                   # Generated PDF documents
+├── tests/                    # Test suite
+├── vendor/                   # Composer dependencies (protected)
+└── README.md                 # This file
 ```
 
 ## Configuration
 
-The application can be configured by modifying the following files:
+### Application Configuration
+The main configuration file is `config/app.php`. You can customize:
+- File upload limits and allowed types
+- PDF processing settings
+- Logging configuration
+- Security settings
+- Feature flags
 
-- `.htaccess`: Server configuration and security settings
-- `simple_pdf_processor.php`: PDF processing settings and form field definitions
+### Environment Variables
+Override configuration via environment variables:
+- `APP_DEBUG=1` - Enable debug mode
+- `APP_ENV=development` - Set environment (development/production)
+- `LOG_LEVEL=debug` - Set logging level (debug/info/error)
+- `SEED_DEMO=1` - Seed demo data on first run
+
+### Server Configuration
+- `.htaccess` - Apache security headers and access restrictions
+- `nginx/nginx.conf` - Nginx configuration (if using Nginx)
+- `nginx/php-fpm.conf` - PHP-FPM settings (if using Nginx)
 
 ## Security Notes
 
-- Uploaded files are validated for type and size
-- File names are sanitized to prevent directory traversal
-- Sensitive configuration files are protected from direct access
-- Session-based file management prevents unauthorized access
+### File Security
+- Uploaded files are validated for type and size (10MB max)
+- File names are sanitized to prevent directory traversal attacks
+- Only PDF files are accepted
+
+### Directory Protection
+The `.htaccess` file protects sensitive directories:
+- `/data` - JSON data storage
+- `/logs` - Application logs
+- `/vendor` - Composer dependencies
+- `/config` - Configuration files
+
+### Security Headers
+The application implements security headers:
+- `X-Frame-Options: SAMEORIGIN` - Prevents clickjacking
+- `X-XSS-Protection: 1; mode=block` - XSS protection
+- `X-Content-Type-Options: nosniff` - MIME type sniffing protection
+- `Referrer-Policy: strict-origin-when-cross-origin` - Referrer control
+
+### File Permissions
+Recommended directory permissions:
+- Directories: `0755` (rwxr-xr-x)
+- Files: `0644` (rw-r--r--)
+- Writable directories (`data/`, `logs/`, `output/`, `uploads/`): `0755` with web server write access
+
+### Best Practices
+- Keep sensitive data files (.json, .log, .conf) outside web root when possible
+- Use environment variables for sensitive configuration (see `config/app.php`)
+- Regularly review and rotate log files
+- Keep dependencies updated: `composer update` and `npm update`
 
 ## Troubleshooting
 
 ### Common Issues
 
-1. **Upload fails**: Check file size (max 10MB) and file type (PDF only)
-2. **Permission errors**: Ensure `uploads/` and `output/` directories are writable
-3. **PDF not displaying**: Check if the PDF file is valid and not corrupted
-4. **Download not working**: Verify that the filled PDF was created successfully
+1. **Upload fails**
+   - Check file size (max 10MB configured in `config/app.php`)
+   - Verify file type is PDF only
+   - Check `uploads/` directory permissions (should be writable)
+
+2. **Permission errors**
+   - Ensure these directories are writable: `data/`, `logs/`, `output/`, `uploads/`
+   - On Linux/Mac: `chmod 755 data logs output uploads`
+   - On Windows: Give write permissions to the web server user
+
+3. **PDF generation fails**
+   - Check `logs/app.log` and `logs/pdf_debug.log` for error details
+   - Verify PDF template exists in `uploads/` directory
+   - Ensure enough disk space in `output/` directory
+
+4. **JSON syntax errors**
+   - Validate JSON files in `data/` directory
+   - Use online JSON validators or `php -r "json_decode(file_get_contents('file.json'));"`
+   - Check for trailing commas or duplicate keys
+
+5. **Session/login issues**
+   - Clear browser cookies and cache
+   - Check session directory permissions
+   - Verify session timeout in `config/app.php`
 
 ### Error Messages
 
-- "Only PDF files are allowed": Upload a valid PDF file
-- "File size must be less than 10MB": Reduce the file size or compress the PDF
-- "Failed to upload file": Check directory permissions
-- "No PDF file in session": Upload a PDF file first before trying to fill it
+- **"Only PDF files are allowed"**: Upload a valid PDF file
+- **"File size must be less than 10MB"**: Reduce file size or adjust limit in `config/app.php`
+- **"Failed to upload file"**: Check directory permissions and disk space
+- **"No PDF file in session"**: Upload a PDF file before filling
+- **"JSON syntax error"**: Fix malformed JSON in data files
+- **"Permission denied"**: Adjust file/directory permissions (see Security Notes)
+
+### Debug Mode
+
+Enable debug mode for detailed error information:
+1. Set `APP_DEBUG=1` environment variable, or
+2. Edit `config/app.php`: `'debug' => true`
+3. Check `logs/app.log` for detailed error traces
+
+**Warning**: Disable debug mode in production!
+
+### Legacy Files
+
+Old test and analysis tools have been moved to the `/legacy` directory. These include:
+- Field position measurement tools
+- PDF comparison utilities
+- Analysis scripts
+- Test generators
+
+These files are kept for reference but are not part of the main application.
 
 ## Development
 
