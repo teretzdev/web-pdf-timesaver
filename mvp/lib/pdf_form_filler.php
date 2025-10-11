@@ -41,8 +41,8 @@ final class PdfFormFiller {
             throw new \RuntimeException('PDF QC: file not found at ' . $path);
         }
         $size = filesize($path) ?: 0;
-        if ($size < 1024) {
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' PDF QC WARN: Very small PDF size ' . $size . ' bytes' . PHP_EOL, FILE_APPEND);
+        if ($size < 10000) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' PDF QC WARN: Small PDF size ' . $size . ' bytes (<10KB)' . PHP_EOL, FILE_APPEND);
         }
         // Check page count using FPDI
         try {
@@ -821,44 +821,82 @@ final class PdfFormFiller {
 
         $logFile = __DIR__ . '/../../logs/pdf_debug.log';
         $pdf = new Fpdi();
+
+        // Ensure a visible background to avoid tiny PDFs
+        $templatePdf = __DIR__ . '/../../uploads/fl100.pdf';
+        $bgImage = __DIR__ . '/../../uploads/fl100_background.png';
+        $backgroundApplied = false;
+        
+        // Try background image first; generate it from the template if missing
+        if (!file_exists($bgImage) && file_exists($templatePdf)) {
+            $generated = $this->convertPdfToImage($templatePdf, $logFile);
+            // convertPdfToImage returns the same $bgImage path on success
+            if ($generated && file_exists($generated)) {
+                $bgImage = $generated;
+            }
+        }
+
+        if (file_exists($bgImage)) {
+            // A4 portrait
+            $pdf->AddPage('P', [210, 297]);
+            $pdf->Image($bgImage, 0, 0, 210, 297);
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Background image applied for page 1' . PHP_EOL, FILE_APPEND);
+            $backgroundApplied = true;
+        } else {
+            // Try to import the actual template PDF as background
+            try {
+                if (file_exists($templatePdf)) {
+                    $pageCount = $pdf->setSourceFile($templatePdf);
+                    $tplId = $pdf->importPage(1);
+                    $size = $pdf->getTemplateSize($tplId);
+                    $orientation = ($size['width'] > $size['height']) ? 'L' : 'P';
+                    $pdf->AddPage($orientation, [$size['width'], $size['height']]);
+                    $pdf->useTemplate($tplId, 0, 0, $size['width'], $size['height']);
+                    file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 BG: FL-100 template used as background' . PHP_EOL, FILE_APPEND);
+                    $backgroundApplied = true;
+                }
+            } catch (\Throwable $e) {
+                file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: positioned template import failed: ' . $e->getMessage() . PHP_EOL, FILE_APPEND);
+            }
+        }
+
+        // Fallback: draw layout to ensure non-trivial PDF content
+        if (!$backgroundApplied) {
+            $pdf->AddPage();
+            $this->createFL100FormLayout($pdf, $logFile);
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Drawn layout applied for page 1' . PHP_EOL, FILE_APPEND);
+        }
+
+        // Set default font/color for overlay text
         $pdf->SetFont('Arial', '', 10);
         $pdf->SetTextColor(0, 0, 0);
-
-        // Use the unencrypted template PDF as background for the first page
-        $templatePdf = __DIR__ . '/../../uploads/fl100.pdf';
-        try {
-            if (file_exists($templatePdf)) {
-                $pageCount = $pdf->setSourceFile($templatePdf);
-                $tplId = $pdf->importPage(1);
-                $size = $pdf->getTemplateSize($tplId);
-                $orientation = ($size['width'] > $size['height']) ? 'L' : 'P';
-                $pdf->AddPage($orientation, [$size['width'], $size['height']]);
-                $pdf->useTemplate($tplId, 0, 0, $size['width'], $size['height']);
-            } else {
-                $pdf->AddPage();
-            }
-        } catch (\Throwable $e) {
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: positioned template import failed: ' . $e->getMessage() . PHP_EOL, FILE_APPEND);
-            $pdf->AddPage();
-        }
+        file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Page 1 background applied' . PHP_EOL, FILE_APPEND);
 
         // Convert editor pixel coordinates to millimeters for FPDF/FPDI (assuming 72 DPI if not specified)
         $pxToMm = function($px, $dpi = 96.0) { return ($px / $dpi) * 25.4; };
 
         // Fill fields using positioned coordinates with unit conversion
         foreach ($values as $fieldKey => $value) {
-            if (!empty($value) && isset($positions[$fieldKey])) {
-                $position = $positions[$fieldKey];
-                $xPx = (float)($position['x'] ?? 0);
-                $yPx = (float)($position['y'] ?? 0);
-                $xMm = $pxToMm($xPx);
-                $yMm = $pxToMm($yPx);
-                $pdf->SetXY($xMm, $yMm);
-                $pdf->Write(0, (string)$value);
-            }
+            if (!isset($positions[$fieldKey])) { continue; }
+            $stringValue = (string)$value;
+            if ($stringValue === '') { continue; }
+            $position = $positions[$fieldKey] ?? [];
+            $xPxRaw = $position['x'] ?? null;
+            $yPxRaw = $position['y'] ?? null;
+            if (!is_numeric($xPxRaw) || !is_numeric($yPxRaw)) { continue; }
+            $xPx = (float)$xPxRaw;
+            $yPx = (float)$yPxRaw;
+            // Guard against obviously invalid positions
+            if ($xPx < 0 || $yPx < 0) { continue; }
+            $xMm = $pxToMm($xPx);
+            $yMm = $pxToMm($yPx);
+            $pdf->SetXY($xMm, $yMm);
+            $pdf->Write(0, $stringValue);
         }
 
         $pdf->Output('F', $outputPath);
+        // Quality control check
+        $this->assertPdfQuality($outputPath, $logFile);
 
         return ['success' => true, 'file' => $filename, 'path' => $outputPath, 'used_positions' => count($positions)];
     }
