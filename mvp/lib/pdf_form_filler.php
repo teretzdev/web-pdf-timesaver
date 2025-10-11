@@ -333,8 +333,8 @@ final class PdfFormFiller {
         
         $imageFile = dirname($pdfFile) . '/fl100_background.png';
         
-        // Try using ImageMagick command line (if available)
-        $magickCmd = "magick convert \"{$pdfFile}[0]\" \"{$imageFile}\" 2>&1";
+        // Try using ImageMagick command line (if available) at high density for larger, clearer PNG
+        $magickCmd = "magick convert -density 300 \"{$pdfFile}[0]\" \"{$imageFile}\" 2>&1";
         $output = [];
         $returnCode = 0;
         exec($magickCmd, $output, $returnCode);
@@ -348,9 +348,9 @@ final class PdfFormFiller {
         
 		// Try using Ghostscript (if available)
 		$gsBinary = $this->findGhostscriptBinary($logFile);
-		$gsCmd = $gsBinary
-			? "\"{$gsBinary}\" -dSAFER -dNOPAUSE -dBATCH -sDEVICE=png16m -r200 -dFirstPage=1 -dLastPage=1 -sOutputFile=\"{$imageFile}\" \"{$pdfFile}\" 2>&1"
-			: null;
+        $gsCmd = $gsBinary
+            ? "\"{$gsBinary}\" -dSAFER -dNOPAUSE -dBATCH -sDEVICE=png16m -r300 -dFirstPage=1 -dLastPage=1 -sOutputFile=\"{$imageFile}\" \"{$pdfFile}\" 2>&1"
+            : null;
         $output = [];
         $returnCode = 0;
 		if ($gsCmd !== null) {
@@ -391,7 +391,7 @@ final class PdfFormFiller {
         // Prefer ImageMagick if available
         $output = [];
         $returnCode = 0;
-        $magickCmd = "magick convert \"{$officialPdf}[0]\" \"{$backgroundImage}\" 2>&1";
+        $magickCmd = "magick convert -density 300 \"{$officialPdf}[0]\" \"{$backgroundImage}\" 2>&1";
         exec($magickCmd, $output, $returnCode);
         if ($returnCode === 0 && file_exists($backgroundImage)) {
             file_put_contents($logFile, date('Y-m-d H:i:s') . ' BGGEN: Background generated via ImageMagick' . PHP_EOL, FILE_APPEND);
@@ -403,9 +403,9 @@ final class PdfFormFiller {
 		$output = [];
 		$returnCode = 0;
 		$gsBinary = $this->findGhostscriptBinary($logFile);
-		$gsCmd = $gsBinary
-			? "\"{$gsBinary}\" -dSAFER -dNOPAUSE -dBATCH -sDEVICE=png16m -r200 -dFirstPage=1 -dLastPage=1 -sOutputFile=\"{$backgroundImage}\" \"{$officialPdf}\" 2>&1"
-			: null;
+        $gsCmd = $gsBinary
+            ? "\"{$gsBinary}\" -dSAFER -dNOPAUSE -dBATCH -sDEVICE=png16m -r300 -dFirstPage=1 -dLastPage=1 -sOutputFile=\"{$backgroundImage}\" \"{$officialPdf}\" 2>&1"
+            : null;
 		if ($gsCmd !== null) {
 			exec($gsCmd, $output, $returnCode);
 		}
@@ -824,22 +824,52 @@ final class PdfFormFiller {
         $pdf->SetFont('Arial', '', 10);
         $pdf->SetTextColor(0, 0, 0);
 
-        // Use the unencrypted template PDF as background for the first page
+        // Prefer a full-page PNG background (larger, ensures reasonable output size)
         $templatePdf = __DIR__ . '/../../uploads/fl100.pdf';
-        try {
-            if (file_exists($templatePdf)) {
-                $pageCount = $pdf->setSourceFile($templatePdf);
-                $tplId = $pdf->importPage(1);
-                $size = $pdf->getTemplateSize($tplId);
-                $orientation = ($size['width'] > $size['height']) ? 'L' : 'P';
-                $pdf->AddPage($orientation, [$size['width'], $size['height']]);
-                $pdf->useTemplate($tplId, 0, 0, $size['width'], $size['height']);
-            } else {
-                $pdf->AddPage();
+        $bgImage = __DIR__ . '/../../uploads/fl100_background.png';
+        $officialPdf = __DIR__ . '/../../uploads/fl100_official.pdf';
+
+        // If background is missing or suspiciously small, try to (re)generate at higher DPI
+        $bgSize = file_exists($bgImage) ? (filesize($bgImage) ?: 0) : 0;
+        if ($bgSize < 100 * 1024) {
+            $sourceForBg = file_exists($officialPdf) ? $officialPdf : ($templatePdf ?: '');
+            if ($sourceForBg !== '') {
+                $this->generateFl100BackgroundImage($sourceForBg, $bgImage, $logFile);
+                $bgSize = file_exists($bgImage) ? (filesize($bgImage) ?: 0) : 0;
             }
-        } catch (\Throwable $e) {
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: positioned template import failed: ' . $e->getMessage() . PHP_EOL, FILE_APPEND);
-            $pdf->AddPage();
+        }
+
+        // Apply page 1 background
+        if (file_exists($bgImage) && $bgSize > 0) {
+            // A4 size: 210mm x 297mm
+            $pdf->AddPage('P', [210, 297]);
+            $pdf->Image($bgImage, 0, 0, 210, 297);
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Background image applied for page 1' . PHP_EOL, FILE_APPEND);
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Page 1 background applied' . PHP_EOL, FILE_APPEND);
+        } else {
+            // Fallback: import the unencrypted template PDF page as background
+            try {
+                if (file_exists($templatePdf)) {
+                    $pageCount = $pdf->setSourceFile($templatePdf);
+                    $tplId = $pdf->importPage(1);
+                    $size = $pdf->getTemplateSize($tplId);
+                    $orientation = ($size['width'] > $size['height']) ? 'L' : 'P';
+                    $pdf->AddPage($orientation, [$size['width'], $size['height']]);
+                    $pdf->useTemplate($tplId, 0, 0, $size['width'], $size['height']);
+                    file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: FL-100 template used as background' . PHP_EOL, FILE_APPEND);
+                    file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Page 1 background applied' . PHP_EOL, FILE_APPEND);
+                } else {
+                    // As a last resort, draw a lightweight layout so the page is not blank
+                    $pdf->AddPage();
+                    $this->createFL100FormLayout($pdf, $logFile);
+                    file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Drawn layout applied for page 1' . PHP_EOL, FILE_APPEND);
+                }
+            } catch (\Throwable $e) {
+                file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: positioned template import failed: ' . $e->getMessage() . PHP_EOL, FILE_APPEND);
+                $pdf->AddPage();
+                $this->createFL100FormLayout($pdf, $logFile);
+                file_put_contents($logFile, date('Y-m-d H:i:s') . ' FL-100 DEBUG: Drawn layout applied for page 1' . PHP_EOL, FILE_APPEND);
+            }
         }
 
         // Convert editor pixel coordinates to millimeters for FPDF/FPDI (assuming 72 DPI if not specified)
@@ -859,6 +889,8 @@ final class PdfFormFiller {
         }
 
         $pdf->Output('F', $outputPath);
+        // Quality control check (also writes useful warnings to log)
+        $this->assertPdfQuality($outputPath, $logFile);
 
         return ['success' => true, 'file' => $filename, 'path' => $outputPath, 'used_positions' => count($positions)];
     }
