@@ -41,8 +41,8 @@ final class PdfFormFiller {
             throw new \RuntimeException('PDF QC: file not found at ' . $path);
         }
         $size = filesize($path) ?: 0;
-        if ($size < 1024) {
-            file_put_contents($logFile, date('Y-m-d H:i:s') . ' PDF QC WARN: Very small PDF size ' . $size . ' bytes' . PHP_EOL, FILE_APPEND);
+        if ($size < 10000) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' PDF QC WARN: Small PDF size ' . $size . ' bytes (<10KB)' . PHP_EOL, FILE_APPEND);
         }
         // Check page count using FPDI
         try {
@@ -877,15 +877,21 @@ final class PdfFormFiller {
 
         // Fill fields using positioned coordinates with unit conversion
         foreach ($values as $fieldKey => $value) {
-            if (!empty($value) && isset($positions[$fieldKey])) {
-                $position = $positions[$fieldKey];
-                $xPx = (float)($position['x'] ?? 0);
-                $yPx = (float)($position['y'] ?? 0);
-                $xMm = $pxToMm($xPx);
-                $yMm = $pxToMm($yPx);
-                $pdf->SetXY($xMm, $yMm);
-                $pdf->Write(0, (string)$value);
-            }
+            if (!isset($positions[$fieldKey])) { continue; }
+            $stringValue = (string)$value;
+            if ($stringValue === '') { continue; }
+            $position = $positions[$fieldKey] ?? [];
+            $xPxRaw = $position['x'] ?? null;
+            $yPxRaw = $position['y'] ?? null;
+            if (!is_numeric($xPxRaw) || !is_numeric($yPxRaw)) { continue; }
+            $xPx = (float)$xPxRaw;
+            $yPx = (float)$yPxRaw;
+            // Guard against obviously invalid positions
+            if ($xPx < 0 || $yPx < 0) { continue; }
+            $xMm = $pxToMm($xPx);
+            $yMm = $pxToMm($yPx);
+            $pdf->SetXY($xMm, $yMm);
+            $pdf->Write(0, $stringValue);
         }
 
         $pdf->Output('F', $outputPath);
