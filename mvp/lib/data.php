@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace WebPdfTimeSaver\Mvp;
 
 require_once __DIR__ . '/logger.php';
+require_once __DIR__ . '/../templates/registry.php';
 
 final class DataStore {
 	private string $path;
@@ -370,6 +371,11 @@ final class DataStore {
 			}
 		}
 		return null;
+	}
+
+	/** Return available templates from the registry. */
+	public function getTemplates(): array {
+		return TemplateRegistry::load();
 	}
 }
 
