@@ -25,7 +25,7 @@ if (!empty($project['clientId']) && $store && method_exists($store, 'getClient')
             <?php endif; ?>
         </div>
     </div>
-    <div class="project-actions">
+    <div class="project-actions button-group">
         <form method="post" action="?route=actions/duplicate-project" style="display: inline;">
             <input type="hidden" name="id" value="<?php echo htmlspecialchars($project['id']); ?>">
             <button class="clio-btn-secondary" type="submit">Duplicate</button>
@@ -35,11 +35,11 @@ if (!empty($project['clientId']) && $store && method_exists($store, 'getClient')
 </div>
 
 <div class="clio-card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
         <h2 style="margin: 0; color: #2c3e50; font-size: 24px; font-weight: 700;">Documents</h2>
-        <form method="post" action="?route=actions/add-document" style="display: inline;">
+        <form method="post" action="?route=actions/add-document" class="button-group" style="display: flex; gap: 8px; align-items: center;">
             <input type="hidden" name="projectId" value="<?php echo htmlspecialchars($project['id']); ?>">
-            <select name="templateId" required style="margin-right: 8px; padding: 8px 12px; border: 1px solid #dee2e6; border-radius: 4px;">
+            <select name="templateId" required style="padding: 8px 12px; border: 1px solid #dee2e6; border-radius: 4px;">
                 <?php foreach ($templates as $tpl): ?>
                     <option value="<?php echo htmlspecialchars($tpl['id']); ?>"><?php echo htmlspecialchars($tpl['code'] . ' — ' . $tpl['name']); ?></option>
                 <?php endforeach; ?>
@@ -50,8 +50,9 @@ if (!empty($project['clientId']) && $store && method_exists($store, 'getClient')
 </div>
 
 <div class="clio-card">
-    <table class="clio-table">
-        <thead>
+    <div class="table-responsive">
+        <table class="clio-table">
+            <thead>
             <tr>
                 <th>Document</th>
                 <th>Status</th>
@@ -94,6 +95,7 @@ if (!empty($project['clientId']) && $store && method_exists($store, 'getClient')
             <?php endforeach; ?>
         </tbody>
     </table>
+    </div>
 </div>
 
 <div class="clio-card">

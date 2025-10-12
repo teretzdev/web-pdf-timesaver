@@ -77,7 +77,7 @@ $archivedCount = count(array_filter($clients, fn($c) => ($c['status'] ?? 'active
             </div>
         </div>
         
-        <div style="display: flex; gap: 12px; align-items: center;">
+        <div class="button-group" style="display: flex; gap: 12px; align-items: center;">
             <a href="?route=dashboard" class="clio-btn-secondary">
                 <span>←</span>
                 <span>Back to Dashboard</span>
@@ -109,8 +109,9 @@ $archivedCount = count(array_filter($clients, fn($c) => ($c['status'] ?? 'active
     </div>
 <?php else: ?>
     <div class="clio-card">
-        <table class="clio-table">
-            <thead>
+        <div class="table-responsive">
+            <table class="clio-table">
+                <thead>
                 <tr>
                     <th>Client</th>
                     <th>Email</th>
@@ -167,7 +168,7 @@ $archivedCount = count(array_filter($clients, fn($c) => ($c['status'] ?? 'active
                             </span>
                         </td>
                         <td>
-                            <div style="display: flex; gap: 8px;">
+                            <div class="button-group" style="display: flex; gap: 8px;">
                                 <a href="?route=client&id=<?php echo htmlspecialchars($client['id']); ?>" class="clio-btn-secondary" style="padding: 6px 12px; font-size: 12px;">View</a>
                                 <form method="post" action="?route=actions/update-client-status" style="display: inline;">
                                     <input type="hidden" name="clientId" value="<?php echo htmlspecialchars($client['id']); ?>">
@@ -182,6 +183,7 @@ $archivedCount = count(array_filter($clients, fn($c) => ($c['status'] ?? 'active
                 <?php endforeach; ?>
             </tbody>
         </table>
+        </div>
     </div>
 <?php endif; ?>
 
@@ -208,7 +210,7 @@ $archivedCount = count(array_filter($clients, fn($c) => ($c['status'] ?? 'active
                     <input type="tel" id="client-phone" name="phone" placeholder="Enter phone number" class="clio-input">
                 </div>
             </fieldset>
-            <div style="display: flex; justify-content: flex-end; gap: 12px; padding-top: 20px; border-top: 1px solid #e1e5e9; margin-top: 20px;">
+            <div class="button-group" style="display: flex; justify-content: flex-end; gap: 12px; padding-top: 20px; border-top: 1px solid #e1e5e9; margin-top: 20px;">
                 <button type="button" class="clio-btn-secondary" onclick="closeAddClientModal()">Cancel</button>
                 <button type="submit" class="clio-btn">Add Client</button>
             </div>

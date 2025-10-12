@@ -19,9 +19,9 @@ if (!empty($projectDocument['projectId'])) {
 <?php endif; ?>
 
 <div class="clio-card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; flex-wrap: wrap; gap: 12px;">
         <h3 style="margin: 0; color: #2c3e50; font-size: 20px;">Document: <?php echo htmlspecialchars(($tpl['code'] ?? '') . ' ' . ($tpl['name'] ?? '')); ?></h3>
-        <div style="display: flex; gap: 12px;">
+        <div class="button-group" style="display: flex; gap: 12px;">
             <button type="submit" form="populate-form" class="clio-btn">Save Form</button>
             <a href="?route=project&id=<?php echo htmlspecialchars($projectDocument['projectId']); ?>" class="clio-btn-secondary">Back to Matter</a>
         </div>
@@ -35,7 +35,7 @@ if (!empty($projectDocument['projectId'])) {
         <?php foreach ($tpl['panels'] as $panel): ?>
             <div class="clio-card">
                 <h3 style="margin: 0 0 20px 0; color: #2c3e50; font-size: 18px; font-weight: 600;"><?php echo htmlspecialchars($panel['label']); ?></h3>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                <div class="grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
                     <?php foreach ($tpl['fields'] as $field): if (($field['panelId'] ?? '') !== $panel['id']) continue; ?>
                         <div class="clio-form-group">
                             <label class="clio-form-label">

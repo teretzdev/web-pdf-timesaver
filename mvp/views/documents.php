@@ -1,10 +1,10 @@
 <div class="clio-card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
         <div>
             <h2 style="margin: 0 0 6px 0; color: #2c3e50; font-size: 24px; font-weight: 700;">Documents</h2>
             <p style="margin: 0; color: #6c757d; font-size: 14px;"><?php echo count($documents); ?> documents</p>
         </div>
-        <div>
+        <div class="button-group" style="display: flex; gap: 12px;">
             <a href="?route=dashboard" class="clio-btn-secondary">
                 <span>←</span>
                 <span>Back to Dashboard</span>
@@ -21,8 +21,9 @@
     </div>
 <?php else: ?>
     <div class="clio-card">
-        <table class="clio-table">
-            <thead>
+        <div class="table-responsive">
+            <table class="clio-table">
+                <thead>
                 <tr>
                     <th>Document</th>
                     <th>Matter</th>
@@ -68,7 +69,7 @@
                             ?>
                         </td>
                         <td>
-                            <div style="display: flex; gap: 8px;">
+                            <div class="button-group" style="display: flex; gap: 8px;">
                                 <?php if (!empty($doc['signedPath'])): ?>
                                     <a href="?route=actions/download-signed&pd=<?php echo htmlspecialchars($doc['id']); ?>" class="clio-btn" style="padding: 6px 12px; font-size: 12px;">Download Signed</a>
                                 <?php elseif (!empty($doc['outputPath'])): ?>
@@ -83,5 +84,6 @@
                 <?php endforeach; ?>
             </tbody>
         </table>
+        </div>
     </div>
 <?php endif; ?>
