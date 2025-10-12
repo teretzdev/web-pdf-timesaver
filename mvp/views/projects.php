@@ -1,10 +1,10 @@
 <div class="clio-card">
-    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
         <div>
             <h2 style="margin: 0 0 6px 0; color: #2c3e50; font-size: 24px; font-weight: 700;">All Matters</h2>
             <p style="margin: 0; color: #6c757d; font-size: 14px;"><?php echo count($projects); ?> matters</p>
         </div>
-        <div>
+        <div class="button-group" style="display: flex; gap: 12px;">
             <a href="?route=dashboard" class="clio-btn-secondary">
                 <span>←</span>
                 <span>Back to Dashboard</span>
@@ -21,7 +21,8 @@
     </div>
 <?php else: ?>
     <div class="clio-card">
-        <table class="clio-table">
+        <div class="table-responsive">
+            <table class="clio-table">
             <thead>
                 <tr>
                     <th>Matter</th>
@@ -72,7 +73,7 @@
                             ?>
                         </td>
                         <td>
-                            <div style="display: flex; gap: 8px;">
+                            <div class="button-group" style="display: flex; gap: 8px;">
                                 <a href="?route=project&id=<?php echo htmlspecialchars($project['id']); ?>" class="clio-btn-secondary" style="padding: 6px 12px; font-size: 12px;">View</a>
                                 <form method="post" action="?route=actions/update-project-status" style="display: inline;">
                                     <input type="hidden" name="id" value="<?php echo htmlspecialchars($project['id']); ?>">
@@ -87,6 +88,7 @@
                 <?php endforeach; ?>
             </tbody>
         </table>
+        </div>
     </div>
 <?php endif; ?>
 

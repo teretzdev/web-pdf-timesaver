@@ -6,7 +6,7 @@ require_once __DIR__ . '/breadcrumb.php';
 <html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Clio</title>
     <style>
         * { 
@@ -177,6 +177,48 @@ require_once __DIR__ . '/breadcrumb.php';
             box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
         }
 
+        /* Mobile Menu Toggle Button */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1002;
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        .mobile-menu-toggle:active {
+            background: #0056b3;
+        }
+
+        /* Mobile Overlay */
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .mobile-overlay.active {
+            opacity: 1;
+        }
+
         
         .clio-form-group {
             margin-bottom: 20px;
@@ -218,11 +260,27 @@ require_once __DIR__ . '/breadcrumb.php';
             .clio-header { display: block; }
         }
 
+        /* Responsive Tables */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .mobile-overlay {
+                display: block;
+            }
+
             .clio-sidebar {
                 transform: translateX(-100%);
                 transition: transform 0.3s ease;
+                box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
             }
             
             .clio-sidebar.open {
@@ -233,21 +291,93 @@ require_once __DIR__ . '/breadcrumb.php';
                 margin-left: 0;
             }
             
+            .clio-content-header {
+                padding: 60px 20px 15px 20px; /* Add top padding for hamburger menu */
+            }
+
             .clio-content-body {
-                padding: 20px;
+                padding: 15px;
+            }
+
+            /* Touch-friendly buttons */
+            .clio-btn, .clio-btn-secondary {
+                min-height: 44px;
+                padding: 12px 16px;
+                font-size: 16px;
+            }
+
+            /* Stack button groups vertically */
+            .button-group {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                width: 100%;
+            }
+
+            .button-group .clio-btn,
+            .button-group .clio-btn-secondary {
+                width: 100%;
+            }
+
+            /* Forms: single column on mobile */
+            .grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Inputs: prevent zoom on focus */
+            .clio-input, .clio-input:focus {
+                font-size: 16px;
+            }
+
+            /* Tables: force horizontal scroll */
+            .clio-table {
+                min-width: 600px;
+            }
+
+            /* Card adjustments */
+            .clio-card {
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+
+            /* Content title */
+            .clio-content-title {
+                font-size: 16px;
+            }
+
+            /* Responsive flex containers */
+            [style*="display: flex"] {
+                flex-wrap: wrap;
             }
         }
 
-        /* Orientation-specific adjustments */
-        @media (orientation: portrait) { /* placeholder for portrait-specific styles */ }
-        @media (orientation: landscape) { /* placeholder for landscape-specific styles */ }
+        /* Very small screens */
+        @media (max-width: 480px) {
+            .clio-content-body {
+                padding: 10px;
+            }
+
+            .clio-btn, .clio-btn-secondary {
+                padding: 14px 16px;
+            }
+
+            h2, h3 {
+                font-size: 18px !important;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- Header removed - using sidebar only -->
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle menu">
+        ☰
+    </button>
+
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobile-overlay"></div>
     
     <!-- Sidebar -->
-    <nav class="clio-sidebar">
+    <nav class="clio-sidebar" id="clio-sidebar">
         <ul class="clio-sidebar-nav">
             <?php 
             $currentRoute = $_GET['route'] ?? 'dashboard';
