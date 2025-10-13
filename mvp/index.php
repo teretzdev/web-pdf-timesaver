@@ -56,6 +56,109 @@ function validateRoute(string $route): string {
     return mb_substr($sanitized, 0, 100);
 }
 
+function handleUniversalProcess(): void {
+    header('Content-Type: application/json');
+    
+    $response = ['success' => false, 'message' => '', 'data' => []];
+    
+    try {
+        if (!isset($_FILES['pdf_file']) || $_FILES['pdf_file']['error'] !== UPLOAD_ERR_OK) {
+            throw new Exception('File upload failed');
+        }
+        
+        require_once __DIR__ . '/lib/pdf_field_extractor.php';
+        
+        $uploadedFile = $_FILES['pdf_file'];
+        $templateId = sanitizeId($_POST['template_id'] ?? 'auto_' . time());
+        $tmpPath = $uploadedFile['tmp_name'];
+        $permanentPath = __DIR__ . '/../uploads/' . $templateId . '.pdf';
+        
+        // Save uploaded PDF
+        if (!move_uploaded_file($tmpPath, $permanentPath)) {
+            throw new Exception('Failed to save PDF');
+        }
+        
+        $response['data']['pdf_saved'] = $permanentPath;
+        $response['data']['template_id'] = $templateId;
+        
+        // STEP 1: Try to detect if PDF has fillable fields
+        $parser = new \Smalot\PdfParser\Parser();
+        $hasFields = false;
+        $fieldCount = 0;
+        
+        try {
+            $pdf = $parser->parseFile($permanentPath);
+            $pages = $pdf->getPages();
+            
+            foreach ($pages as $page) {
+                $annotations = $page->get('Annots');
+                if ($annotations) {
+                    $annotArray = $annotations->getContent();
+                    if (is_array($annotArray)) {
+                        foreach ($annotArray as $annot) {
+                            if (is_object($annot) && $annot->get('T')) {
+                                $fieldCount++;
+                                $hasFields = true;
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            $response['data']['parser_error'] = $e->getMessage();
+        }
+        
+        $response['data']['has_fillable_fields'] = $hasFields;
+        $response['data']['field_count'] = $fieldCount;
+        
+        // STEP 2: Extract field positions
+        $extractor = new \WebPdfTimeSaver\Mvp\PdfFieldExtractor();
+        $extractResult = $extractor->extractAndGenerateBackgrounds(
+            $permanentPath,
+            $templateId,
+            __DIR__ . '/../uploads'
+        );
+        
+        $fields = $extractResult['fields'];
+        $backgrounds = $extractResult['backgrounds'];
+        
+        // STEP 3: Analyze results
+        if (!empty($fields)) {
+            // SUCCESS: Auto-detected fields with positions
+            $response['success'] = true;
+            $response['message'] = "Auto-detected {$fieldCount} fillable fields!";
+            $response['data']['method'] = 'autofill';
+            $response['data']['fields'] = $fields;
+            $response['data']['backgrounds'] = $backgrounds;
+            $response['data']['position_file'] = $extractResult['positionFile'];
+            
+            // Analyze field types
+            $typeCount = [];
+            foreach ($fields as $field) {
+                $type = $field['type'] ?? 'unknown';
+                $typeCount[$type] = ($typeCount[$type] ?? 0) + 1;
+            }
+            $response['data']['field_types'] = $typeCount;
+            
+        } elseif ($backgrounds > 0) {
+            // PARTIAL: No fields but backgrounds generated
+            $response['success'] = true;
+            $response['message'] = "PDF is encrypted/blank. Generated {$backgrounds} background images for manual positioning.";
+            $response['data']['method'] = 'manual_overlay';
+            $response['data']['backgrounds'] = $backgrounds;
+            
+        } else {
+            throw new Exception('Could not extract fields or generate backgrounds from PDF');
+        }
+        
+    } catch (Exception $e) {
+        $response['message'] = $e->getMessage();
+    }
+    
+    echo json_encode($response, JSON_PRETTY_PRINT);
+    exit;
+}
+
 $route = validateRoute($_GET['route'] ?? 'dashboard');
 
 // Handle API routes
@@ -720,6 +823,185 @@ case 'projects':
 	case 'support':
 		render('support');
 		break;
+
+	case 'extract-fields':
+		render('extract_fields');
+		break;
+
+	case 'test-autofill':
+		render('test_autofill');
+		break;
+
+	case 'universal-processor':
+		render('universal_processor');
+		break;
+	
+	case 'pdf-lib-demo':
+		render('pdf_lib_demo');
+		break;
+	
+	case 'actions/universal-process':
+		handleUniversalProcess();
+		break;
+
+	case 'actions/extract-pdf-fields':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ?route=extract-fields'); exit; }
+		
+		require_once __DIR__ . '/lib/pdf_field_extractor.php';
+		
+		$error = null;
+		$success = null;
+		$fields = [];
+		$positionFile = null;
+		
+		try {
+			// Validate upload
+			if (!isset($_FILES['pdf_file']) || $_FILES['pdf_file']['error'] !== UPLOAD_ERR_OK) {
+				throw new \Exception('Please upload a valid PDF file');
+			}
+			
+			$templateId = sanitizeId((string)($_POST['template_id'] ?? ''));
+			if (empty($templateId)) {
+				throw new \Exception('Please provide a valid template ID');
+			}
+			
+			// Move uploaded file to permanent location (keep it for background generation)
+			$uploadedFile = $_FILES['pdf_file'];
+			$permanentFile = __DIR__ . '/../uploads/' . $templateId . '.pdf';
+			
+			if (!move_uploaded_file($uploadedFile['tmp_name'], $permanentFile)) {
+				throw new \Exception('Failed to upload file');
+			}
+			
+			// Use hybrid approach: extract fields AND generate background images
+			$extractor = new \WebPdfTimeSaver\Mvp\PdfFieldExtractor();
+			$result = $extractor->extractAndGenerateBackgrounds(
+				$permanentFile, 
+				$templateId, 
+				__DIR__ . '/../uploads'  // Save backgrounds in uploads/
+			);
+			
+			$fields = $result['fields'];
+			$backgrounds = $result['backgrounds'];
+			$positionFile = $result['positionFile'];
+			
+			if (empty($fields)) {
+				// Even if no fields extracted, backgrounds might still be generated
+				if (!empty($backgrounds)) {
+					$success = 'Generated ' . count($backgrounds) . ' background images. ' .
+					          'Field extraction failed (PDF may be encrypted), but you can still use manual positioning.';
+				} else {
+					throw new \Exception('Failed to extract fields or generate backgrounds. PDF may be corrupted or incompatible.');
+				}
+			} else {
+				$successMsg = 'Successfully extracted ' . count($fields) . ' fields';
+				if (!empty($backgrounds)) {
+					$successMsg .= ' and generated ' . count($backgrounds) . ' background images';
+				}
+				$successMsg .= '!';
+				$success = $successMsg;
+			}
+			
+		} catch (\Exception $e) {
+			$error = $e->getMessage();
+		}
+		
+		render('extract_fields', [
+			'error' => $error,
+			'success' => $success,
+			'fields' => $fields,
+			'positionFile' => $positionFile,
+			'backgrounds' => $backgrounds ?? []
+		]);
+		exit;
+
+	case 'actions/test-autofill':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ?route=test-autofill'); exit; }
+		
+		require_once __DIR__ . '/lib/pdf_field_extractor.php';
+		require_once __DIR__ . '/lib/pdf_form_filler.php';
+		
+		$error = null;
+		$success = null;
+		$extractionResult = null;
+		$generatedPdf = null;
+		
+		try {
+			$pdfFile = __DIR__ . '/../uploads/fl100.pdf';
+			$templateId = 't_fl100_gc120';
+			
+			if (!file_exists($pdfFile)) {
+				throw new \Exception('FL-100 PDF not found at: ' . $pdfFile);
+			}
+			
+			$logger->info('Test autofill: Starting extraction', ['file' => $pdfFile]);
+			
+			// Step 1: Extract fields and generate backgrounds
+			$extractor = new \WebPdfTimeSaver\Mvp\PdfFieldExtractor();
+			$extractionResult = $extractor->extractAndGenerateBackgrounds(
+				$pdfFile,
+				$templateId,
+				__DIR__ . '/../uploads'
+			);
+			
+			$logger->info('Test autofill: Extraction complete', [
+				'fields' => count($extractionResult['fields']),
+				'backgrounds' => count($extractionResult['backgrounds'])
+			]);
+			
+			// Step 2: Create test data
+			require_once __DIR__ . '/lib/fl100_test_data_generator.php';
+			$testData = \WebPdfTimeSaver\Mvp\FL100TestDataGenerator::generateCompleteTestData();
+			
+			// Step 3: Load the template
+			$template = $templates[$templateId] ?? null;
+			if (!$template) {
+				throw new \Exception('Template not found: ' . $templateId);
+			}
+			
+			// Step 4: Generate PDF using positioned fields
+			$filler = new \WebPdfTimeSaver\Mvp\PdfFormFiller(__DIR__ . '/../output', __DIR__ . '/../uploads', $logger);
+			$filler->setContext(['test' => true, 'method' => 'hybrid-autofill']);
+			
+			// Use the new method with extracted positions
+			$generatedPdf = $filler->fillPdfFormWithPositions($template, $testData, $templateId);
+			
+			$logger->info('Test autofill: PDF generated', $generatedPdf);
+			
+			$success = 'Successfully generated test PDF using auto-detected field positions!';
+			
+		} catch (\Exception $e) {
+			$error = $e->getMessage();
+			$logger->error('Test autofill failed: ' . $e->getMessage());
+		}
+		
+		render('test_autofill', [
+			'error' => $error,
+			'success' => $success,
+			'extractionResult' => $extractionResult,
+			'generatedPdf' => $generatedPdf
+		]);
+		exit;
+
+	case 'actions/download-test-pdf':
+		$filename = $_GET['file'] ?? '';
+		if (!$filename) {
+			header('Location: ?route=test-autofill');
+			exit;
+		}
+		
+		$outputDir = realpath(__DIR__ . '/../output');
+		$path = $outputDir . DIRECTORY_SEPARATOR . basename($filename);
+		
+		if (!file_exists($path)) {
+			header('Location: ?route=test-autofill');
+			exit;
+		}
+		
+		header('Content-Type: application/pdf');
+		header('Content-Disposition: attachment; filename="' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $filename) . '"');
+		readfile($path);
+		exit;
 
 	default:
 		header('Location: ?route=dashboard');
