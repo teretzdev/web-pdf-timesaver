@@ -385,7 +385,11 @@ require_once __DIR__ . '/breadcrumb.php';
                 ['route' => 'dashboard', 'label' => 'Dashboard'],
                 ['route' => 'clients', 'label' => 'Clients'],
                 ['route' => 'projects', 'label' => 'Projects'],
-                ['route' => 'documents', 'label' => 'Documents']
+                ['route' => 'documents', 'label' => 'Documents'],
+                ['route' => 'pdf-lib-demo', 'label' => '⚡ PDF-Lib Demo'],
+                ['route' => 'universal-processor', 'label' => '🤖 Universal Processor'],
+                ['route' => 'extract-fields', 'label' => '🔧 Field Extractor'],
+                ['route' => 'test-autofill', 'label' => '🚀 Test Auto-Fill']
             ];
             
             foreach ($navItems as $item): 

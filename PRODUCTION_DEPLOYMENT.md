@@ -411,3 +411,4 @@ If issues persist, provide:
 - Output of: `sudo nginx -T | grep -A 20 "server_name pdftimesaver"`
 - Screenshot of browser error (if visible)
 
+
