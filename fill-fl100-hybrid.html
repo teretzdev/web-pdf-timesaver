@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FL-100 Form Filler - Hybrid Approach</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .header {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .header h1 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+        .tech-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            margin: 5px;
+            font-size: 14px;
+        }
+        .warning-banner {
+            background: #fff3cd;
+            border: 2px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            color: #856404;
+        }
+        .success-banner {
+            background: #d4edda;
+            border: 2px solid #28a745;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            color: #155724;
+        }
+        .main-grid {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            gap: 20px;
+        }
+        .panel {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        .panel-header {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        .panel-content {
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: #495057;
+            font-size: 13px;
+        }
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #dee2e6;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        .btn {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            width: 100%;
+            margin-top: 10px;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+        }
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d, #5a6268);
+        }
+        #previewCanvas {
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            max-width: 100%;
+            display: block;
+            margin: 0 auto;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+            background: white;
+        }
+        .section-header {
+            background: #f8f9fa;
+            padding: 10px;
+            margin: 20px -20px 15px -20px;
+            font-weight: bold;
+            color: #495057;
+            border-left: 4px solid #667eea;
+            padding-left: 20px;
+        }
+        .info-text {
+            font-size: 12px;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        .status {
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 6px;
+            font-size: 14px;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 FL-100 Form Filler</h1>
+            <p style="color: #6c757d; margin: 10px 0;">Petition for Dissolution - Hybrid Approach</p>
+            <div>
+                <span class="tech-badge">🔧 PHP Backend</span>
+                <span class="tech-badge">🎨 FPDF Text Overlay</span>
+                <span class="tech-badge">📐 Manual Positions</span>
+                <span class="tech-badge">🖼️ Ghostscript Background</span>
+            </div>
+            
+            <div class="warning-banner">
+                <strong>⚠️ FL-100 is Password-Protected</strong><br>
+                pdf-lib cannot extract fields from this encrypted PDF. We use a hybrid approach:<br>
+                1. Ghostscript generates background images ✅<br>
+                2. PHP overlays text at manually-adjusted positions ✅<br>
+                3. Works perfectly even with encryption! ✅
+            </div>
+        </div>
+
+        <div class="main-grid">
+            <!-- Left Panel: Form Data -->
+            <div class="panel">
+                <div class="panel-header">📝 Form Data Entry</div>
+                <div class="panel-content">
+                    <div class="success-banner">
+                        ✅ Using existing manual positions from:<br>
+                        <code>data/t_fl100_gc120_positions.json</code>
+                    </div>
+
+                    <div class="section-header">Petitioner Information</div>
+                    
+                    <div class="form-group">
+                        <label>Petitioner Name *</label>
+                        <input type="text" id="petitionerName" value="Jennifer Martinez" placeholder="Full legal name">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Attorney Name</label>
+                        <input type="text" id="attorneyName" value="Sarah Johnson, Esq." placeholder="Attorney name (if represented)">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Attorney Firm</label>
+                        <input type="text" id="attorneyFirm" value="Johnson & Associates" placeholder="Law firm name">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Attorney State Bar Number</label>
+                        <input type="text" id="attorneyBar" value="12345" placeholder="State Bar #">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Street Address</label>
+                        <input type="text" id="attorneyStreet" value="123 Legal Plaza" placeholder="Street address">
+                    </div>
+
+                    <div class="form-group">
+                        <label>City</label>
+                        <input type="text" id="attorneyCity" value="Los Angeles" placeholder="City">
+                    </div>
+
+                    <div class="form-group">
+                        <label>State</label>
+                        <input type="text" id="attorneyState" value="CA" placeholder="CA">
+                    </div>
+
+                    <div class="form-group">
+                        <label>ZIP Code</label>
+                        <input type="text" id="attorneyZip" value="90012" placeholder="ZIP">
+                    </div>
+
+                    <div class="section-header">Respondent Information</div>
+
+                    <div class="form-group">
+                        <label>Respondent Name *</label>
+                        <input type="text" id="respondentName" value="Michael Martinez" placeholder="Spouse's full legal name">
+                    </div>
+
+                    <div class="section-header">Marriage Details</div>
+
+                    <div class="form-group">
+                        <label>Date of Marriage *</label>
+                        <input type="date" id="marriageDate" value="2015-06-15">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Date of Separation</label>
+                        <input type="date" id="separationDate" value="2024-01-10">
+                    </div>
+
+                    <div class="form-group">
+                        <label>Minor Children</label>
+                        <select id="minorChildren">
+                            <option value="no">No</option>
+                            <option value="yes" selected>Yes</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Number of Children</label>
+                        <input type="number" id="childrenCount" value="2" min="0" max="10">
+                    </div>
+
+                    <button class="btn btn-success" onclick="fillFL100()">✅ Generate FL-100 Form</button>
+                    <button class="btn btn-secondary" onclick="loadSampleData()">📋 Load Sample Data</button>
+
+                    <div id="fillStatus"></div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Preview -->
+            <div class="panel">
+                <div class="panel-header">🎨 Form Preview</div>
+                <div class="panel-content">
+                    <canvas id="previewCanvas" width="850" height="1100"></canvas>
+                    
+                    <div style="margin-top: 20px; text-align: center;">
+                        <button class="btn" onclick="downloadFL100()" id="downloadBtn" style="display: none;">
+                            💾 Download Filled FL-100
+                        </button>
+                    </div>
+
+                    <div class="info-text" style="text-align: center; margin-top: 15px;">
+                        Preview shows Page 1 with your data overlaid on the official FL-100 form
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let filledPdfUrl = null;
+
+        function loadSampleData() {
+            document.getElementById('petitionerName').value = 'Jennifer Martinez';
+            document.getElementById('attorneyName').value = 'Sarah Johnson, Esq.';
+            document.getElementById('attorneyFirm').value = 'Johnson & Associates';
+            document.getElementById('attorneyBar').value = '12345';
+            document.getElementById('attorneyStreet').value = '123 Legal Plaza';
+            document.getElementById('attorneyCity').value = 'Los Angeles';
+            document.getElementById('attorneyState').value = 'CA';
+            document.getElementById('attorneyZip').value = '90012';
+            document.getElementById('respondentName').value = 'Michael Martinez';
+            document.getElementById('marriageDate').value = '2015-06-15';
+            document.getElementById('separationDate').value = '2024-01-10';
+            document.getElementById('minorChildren').value = 'yes';
+            document.getElementById('childrenCount').value = '2';
+            
+            showStatus('Sample data loaded! Click "Generate FL-100 Form" to create the PDF.', 'success');
+        }
+
+        async function fillFL100() {
+            showStatus('Generating FL-100 form...', 'info');
+
+            const formData = {
+                petitioner_name: document.getElementById('petitionerName').value,
+                attorney_name: document.getElementById('attorneyName').value,
+                attorney_firm: document.getElementById('attorneyFirm').value,
+                attorney_bar: document.getElementById('attorneyBar').value,
+                attorney_street: document.getElementById('attorneyStreet').value,
+                attorney_city: document.getElementById('attorneyCity').value,
+                attorney_state: document.getElementById('attorneyState').value,
+                attorney_zip: document.getElementById('attorneyZip').value,
+                respondent_name: document.getElementById('respondentName').value,
+                marriage_date: document.getElementById('marriageDate').value,
+                separation_date: document.getElementById('separationDate').value,
+                minor_children: document.getElementById('minorChildren').value,
+                children_count: document.getElementById('childrenCount').value
+            };
+
+            try {
+                const response = await fetch('fill-fl100-form.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(formData)
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    filledPdfUrl = result.pdf_url;
+                    showStatus(`✅ ${result.message}`, 'success');
+                    document.getElementById('downloadBtn').style.display = 'block';
+                    
+                    // Load preview
+                    loadPreview(result.preview_url || 'backgrounds/fl100_page1_background.png');
+                } else {
+                    showStatus(`❌ Error: ${result.message}`, 'error');
+                }
+            } catch (error) {
+                showStatus(`❌ Error: ${error.message}`, 'error');
+            }
+        }
+
+        function loadPreview(imageUrl) {
+            const canvas = document.getElementById('previewCanvas');
+            const ctx = canvas.getContext('2d');
+            const img = new Image();
+            
+            img.onload = function() {
+                canvas.width = img.width * 0.5;
+                canvas.height = img.height * 0.5;
+                ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            };
+            
+            img.src = imageUrl;
+        }
+
+        function downloadFL100() {
+            if (filledPdfUrl) {
+                window.open(filledPdfUrl, '_blank');
+            }
+        }
+
+        function showStatus(message, type) {
+            const statusDiv = document.getElementById('fillStatus');
+            statusDiv.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        // Load background preview on page load
+        window.onload = function() {
+            loadPreview('backgrounds/fl100_page1_background.png');
+        };
+    </script>
+</body>
+</html>
+
