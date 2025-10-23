@@ -1,0 +1,379 @@
+{
+  "success": true,
+  "method": "pdf-lib-direct",
+  "fields": [
+    {
+      "name": "topmostSubform[0].Page1[0].f1_01[0]",
+      "type": "text",
+      "page": 1,
+      "x": 20.67,
+      "y": 41.63,
+      "width": 182.53,
+      "height": 4.94,
+      "fontSize": 7,
+      "rect_pdf": [
+        58.6,
+        659.967,
+        517.4,
+        14
+      ]
+    },
+    {
+      "name": "topmostSubform[0].Page1[0].f1_02[0]",
+      "type": "text",
+      "page": 1,
+      "x": 20.67,
+      "y": 50.09,
+      "width": 182.53,
+      "height": 4.94,
+      "fontSize": 7,
+      "rect_pdf": [
+        58.6,
+        635.966,
+        517.4,
+        14.000999999999976
+      ]
+    },
+    {
+      "name": "topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[0]",
+      "type": "checkbox",
+      "page": 1,
+      "x": 25.75,
+      "y": 63.59,
+      "width": 2.82,
+      "height": 2.82,
+      "fontSize": 7,
+      "rect_pdf": [
+        73,
+        603.719,
+        8,
+        8
+      ]
+    },
+    {
+      "name": "topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[1]",
+      "type": "checkbox",
+      "page": 1,
+      "x": 63.5,
+      "y": 63.59,
+      "width": 2.82,
+      "height": 2.82,
+      "fontSize": 7,
+      "rect_pdf": [
+        180,
+        603.719,
+        8,
+        8
+      ]
+    },
+    {
+      "name": "topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[2]",
+      "type": "checkbox",
+      "page": 1,
+      "x": 88.9,
+      "y": 63.59,
+      "width": 2.82,
+      "height": 2.82,
+      "fontSize": 7,
+      "rect_pdf": [
+        252,
+        603.719,
+        8,
+        8
+      ]
+    },
+    {
+      "name": "topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[3]",
+      "type": "checkbox",
+      "page": 1,
+      "x": 114.3,
+      "y": 63.59,
+      "width": 2.82,
+      "height": 2.82,
+      "fontSize": 7,
+      "rect_pdf": [
+        324,
+        603.719,
+        8,
+        8
+      ]
+    },
+    {
+      "name": "topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[4]",
+      "type": "checkbox",
+      "page": 1,
+      "x": 137.16,
+      "y": 63.59,
+      "width": 2.82,
+      "height": 2.82,
+      "fontSize": 7,
+      "rect_pdf": [
+        388.8,
+        603.719,
+        8,
+        8
+      ]
+    },
+    {
+      "name": "topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[5]",
+      "type": "checkbox",
+      "page": 1,
+      "x": 25.75,
+      "y": 68.26,
+      "width": 2.82,
+      "height": 2.82,
+      "fontSize": 7,
+      "rect_pdf": [
+        72.999,
+        590.47,
+        8,
+        8
+      ]
+    },
+    {
+      "name": "topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_03[0]",
+      "type": "text",
+      "page": 1,
+      "x": 147.32,
+      "y": 67.73,
+      "width": 10.16,
+      "height": 3.88,
+      "fontSize": 7,
+      "rect_pdf": [
+        417.6,
+        588.97,
+        28.799999999999955,
+        10.999000000000024
+      ]
+    },
+    {
+      "name": "topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[6]",
+      "type": "checkbox",
+      "page": 1,
+      "x": 25.75,
+      "y": 81.14,
+      "width": 2.82,
+      "height": 2.82,
+      "fontSize": 7,
+      "rect_pdf": [
+        72.999,
+        553.97,
+        8,
+        8
+      ]
+    },
+    {
+      "name": "topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_04[0]",
+      "type": "text",
+      "page": 1,
+      "x": 57.29,
+      "y": 80.43,
+      "width": 100.19,
+      "height": 4.23,
+      "fontSize": 7,
+      "rect_pdf": [
+        162.4,
+        551.97,
+        284,
+        11.999000000000024
+      ]
+    },
+    {
+      "name": "topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_2[0]",
+      "type": "checkbox",
+      "page": 1,
+      "x": 155.43,
+      "y": 92.78,
+      "width": 2.82,
+      "height": 2.82,
+      "fontSize": 7,
+      "rect_pdf": [
+        440.6,
+        520.971,
+        8,
+        8
+      ]
+    },
+    {
+      "name": "topmostSubform[0].Page1[0].f1_05[0]",
+      "type": "text",
+      "page": 1,
+      "x": 191.77,
+      "y": 67.73,
+      "width": 11.43,
+      "height": 4.23,
+      "fontSize": 7,
+      "rect_pdf": [
+        543.6,
+        587.97,
+        32.39999999999998,
+        11.999000000000024
+      ]
+    },
+    {
+      "name": "topmostSubform[0].Page1[0].f1_06[0]",
+      "type": "text",
+      "page": 1,
+      "x": 176.6,
+      "y": 80.43,
+      "width": 26.6,
+      "height": 4.23,
+      "fontSize": 7,
+      "rect_pdf": [
+        500.6,
+        551.97,
+        75.39999999999998,
+        11.999000000000024
+      ]
+    },
+    {
+      "name": "topmostSubform[0].Page1[0].Address_ReadOrder[0].f1_07[0]",
+      "type": "text",
+      "page": 1,
+      "x": 20.67,
+      "y": 100.89,
+      "width": 116.22,
+      "height": 4.94,
+      "fontSize": 7,
+      "rect_pdf": [
+        58.6,
+        491.966,
+        329.45,
+        14.000999999999976
+      ]
+    },
+    {
+      "name": "topmostSubform[0].Page1[0].Address_ReadOrder[0].f1_08[0]",
+      "type": "text",
+      "page": 1,
+      "x": 20.67,
+      "y": 109.36,
+      "width": 116.22,
+      "height": 4.94,
+      "fontSize": 7,
+      "rect_pdf": [
+        58.6,
+        467.968,
+        329.45,
+        14.000999999999976
+      ]
+    },
+    {
+      "name": "topmostSubform[0].Page1[0].f1_09[0]",
+      "type": "text",
+      "page": 1,
+      "x": 137.51,
+      "y": 100.89,
+      "width": 65.69,
+      "height": 13.41,
+      "fontSize": 9.4,
+      "rect_pdf": [
+        389.8,
+        467.968,
+        186.2,
+        37.99899999999997
+      ]
+    },
+    {
+      "name": "topmostSubform[0].Page1[0].f1_10[0]",
+      "type": "text",
+      "page": 1,
+      "x": 20.67,
+      "y": 117.83,
+      "width": 182.53,
+      "height": 4.94,
+      "fontSize": 7,
+      "rect_pdf": [
+        58.6,
+        443.967,
+        517.4,
+        14.001000000000033
+      ]
+    },
+    {
+      "name": "topmostSubform[0].Page1[0].f1_11[0]",
+      "type": "text",
+      "page": 1,
+      "x": 147.32,
+      "y": 131.23,
+      "width": 15.24,
+      "height": 8.47,
+      "fontSize": 7,
+      "rect_pdf": [
+        417.6,
+        395.968,
+        43.19999999999999,
+        24.000999999999976
+      ]
+    },
+    {
+      "name": "topmostSubform[0].Page1[0].f1_12[0]",
+      "type": "text",
+      "page": 1,
+      "x": 167.64,
+      "y": 131.23,
+      "width": 10.16,
+      "height": 8.47,
+      "fontSize": 7,
+      "rect_pdf": [
+        475.2,
+        395.968,
+        28.80000000000001,
+        24.000999999999976
+      ]
+    },
+    {
+      "name": "topmostSubform[0].Page1[0].f1_13[0]",
+      "type": "text",
+      "page": 1,
+      "x": 182.88,
+      "y": 131.23,
+      "width": 20.32,
+      "height": 8.47,
+      "fontSize": 7,
+      "rect_pdf": [
+        518.4,
+        395.968,
+        57.60000000000002,
+        24.000999999999976
+      ]
+    },
+    {
+      "name": "topmostSubform[0].Page1[0].f1_14[0]",
+      "type": "text",
+      "page": 1,
+      "x": 147.32,
+      "y": 148.17,
+      "width": 10.16,
+      "height": 8.47,
+      "fontSize": 7,
+      "rect_pdf": [
+        417.6,
+        347.966,
+        28.799999999999955,
+        24.000999999999976
+      ]
+    },
+    {
+      "name": "topmostSubform[0].Page1[0].f1_15[0]",
+      "type": "text",
+      "page": 1,
+      "x": 162.56,
+      "y": 148.17,
+      "width": 35.56,
+      "height": 8.47,
+      "fontSize": 7,
+      "rect_pdf": [
+        460.8,
+        347.966,
+        100.80000000000001,
+        24.000999999999976
+      ]
+    }
+  ],
+  "pageCount": 6,
+  "warnings": [],
+  "errors": [],
+  "extractedAt": "2025-10-21T02:33:23.764Z",
+  "source": "w9.pdf"
+}

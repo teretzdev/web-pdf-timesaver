@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manual PDF Field Position Mapper</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .container {
+            display: flex;
+            height: calc(100vh - 80px);
+        }
+
+        .sidebar {
+            width: 300px;
+            background: white;
+            border-right: 1px solid #ddd;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .toolbar {
+            background: white;
+            padding: 1rem;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .pdf-viewer {
+            flex: 1;
+            background: #f9f9f9;
+            position: relative;
+            overflow: auto;
+        }
+
+        .pdf-canvas {
+            border: 1px solid #ddd;
+            margin: 1rem;
+            cursor: crosshair;
+            position: relative;
+        }
+
+        .field-marker {
+            position: absolute;
+            border: 2px solid #e74c3c;
+            background: rgba(231, 76, 60, 0.1);
+            cursor: move;
+            min-width: 50px;
+            min-height: 20px;
+        }
+
+        .field-marker.selected {
+            border-color: #3498db;
+            background: rgba(52, 152, 219, 0.1);
+        }
+
+        .field-marker .resize-handle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #e74c3c;
+            border: 1px solid white;
+            bottom: -4px;
+            right: -4px;
+            cursor: se-resize;
+        }
+
+        .field-marker.selected .resize-handle {
+            background: #3498db;
+        }
+
+        .field-list {
+            margin-top: 1rem;
+        }
+
+        .field-item {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .field-item:hover {
+            background: #e9ecef;
+        }
+
+        .field-item.selected {
+            background: #d1ecf1;
+            border-color: #3498db;
+        }
+
+        .field-item .field-name {
+            font-weight: bold;
+            margin-bottom: 0.25rem;
+        }
+
+        .field-item .field-info {
+            font-size: 0.8rem;
+            color: #666;
+        }
+
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .btn-success {
+            background: #27ae60;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.25rem;
+            font-weight: bold;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .status {
+            padding: 0.5rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .field-counter {
+            background: #6c757d;
+            color: white;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Manual PDF Field Position Mapper</h1>
+        <p>Click and drag to create field markers, then export positions</p>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <div class="form-group">
+                <label for="pdf-file">Select PDF File:</label>
+                <input type="file" id="pdf-file" accept=".pdf">
+            </div>
+
+            <div class="form-group">
+                <label for="template-id">Template ID:</label>
+                <input type="text" id="template-id" placeholder="e.g., t_w9_manual">
+            </div>
+
+            <div class="toolbar">
+                <button class="btn" id="add-field-btn">Add Field</button>
+                <button class="btn btn-danger" id="delete-field-btn" disabled>Delete</button>
+            </div>
+
+            <div class="status info" id="status">
+                Upload a PDF file to begin mapping fields
+            </div>
+
+            <div class="field-list" id="field-list">
+                <!-- Field items will be added here -->
+            </div>
+
+            <div class="toolbar">
+                <button class="btn btn-success" id="export-btn" disabled>Export Positions</button>
+                <button class="btn" id="clear-btn">Clear All</button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="toolbar">
+                <span>PDF Viewer</span>
+                <div class="field-counter" id="field-counter">0 fields</div>
+            </div>
+            <div class="pdf-viewer" id="pdf-viewer">
+                <div class="status info">
+                    Please select a PDF file to begin field mapping
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class ManualPositionMapper {
+            constructor() {
+                this.fields = [];
+                this.selectedField = null;
+                this.isDrawing = false;
+                this.startPos = null;
+                this.pdfCanvas = null;
+                this.canvas = null;
+                this.ctx = null;
+                
+                this.initializeElements();
+                this.bindEvents();
+            }
+
+            initializeElements() {
+                this.pdfFileInput = document.getElementById('pdf-file');
+                this.templateIdInput = document.getElementById('template-id');
+                this.addFieldBtn = document.getElementById('add-field-btn');
+                this.deleteFieldBtn = document.getElementById('delete-field-btn');
+                this.exportBtn = document.getElementById('export-btn');
+                this.clearBtn = document.getElementById('clear-btn');
+                this.statusDiv = document.getElementById('status');
+                this.fieldList = document.getElementById('field-list');
+                this.fieldCounter = document.getElementById('field-counter');
+                this.pdfViewer = document.getElementById('pdf-viewer');
+            }
+
+            bindEvents() {
+                this.pdfFileInput.addEventListener('change', (e) => this.handlePdfUpload(e));
+                this.addFieldBtn.addEventListener('click', () => this.startFieldCreation());
+                this.deleteFieldBtn.addEventListener('click', () => this.deleteSelectedField());
+                this.exportBtn.addEventListener('click', () => this.exportPositions());
+                this.clearBtn.addEventListener('click', () => this.clearAllFields());
+            }
+
+            handlePdfUpload(event) {
+                const file = event.target.files[0];
+                if (!file) return;
+
+                this.showStatus('Loading PDF...', 'info');
+                
+                // For demo purposes, create a placeholder canvas
+                // In real implementation, use PDF.js to render the PDF
+                this.createPdfCanvas();
+                this.showStatus('PDF loaded. Click "Add Field" to start mapping.', 'success');
+            }
+
+            createPdfCanvas() {
+                // Create a placeholder canvas for demo
+                // In real implementation, this would render the actual PDF
+                this.canvas = document.createElement('canvas');
+                this.canvas.width = 600;
+                this.canvas.height = 800;
+                this.canvas.className = 'pdf-canvas';
+                this.canvas.style.background = 'white';
+                this.canvas.style.border = '1px solid #ddd';
+                
+                this.ctx = this.canvas.getContext('2d');
+                
+                // Draw a sample form layout
+                this.drawSampleForm();
+                
+                this.pdfViewer.innerHTML = '';
+                this.pdfViewer.appendChild(this.canvas);
+                
+                this.bindCanvasEvents();
+            }
+
+            drawSampleForm() {
+                const ctx = this.ctx;
+                ctx.fillStyle = '#000';
+                ctx.font = '12px Arial';
+                
+                // Draw sample form fields
+                const fields = [
+                    { label: 'Name:', x: 50, y: 100 },
+                    { label: 'Address:', x: 50, y: 150 },
+                    { label: 'Phone:', x: 50, y: 200 },
+                    { label: 'Email:', x: 50, y: 250 },
+                    { label: 'Date:', x: 50, y: 300 },
+                    { label: 'Signature:', x: 50, y: 400 }
+                ];
+                
+                fields.forEach(field => {
+                    ctx.fillText(field.label, field.x, field.y);
+                    // Draw field boxes
+                    ctx.strokeRect(field.x + 80, field.y - 15, 150, 20);
+                });
+            }
+
+            bindCanvasEvents() {
+                this.canvas.addEventListener('mousedown', (e) => this.handleMouseDown(e));
+                this.canvas.addEventListener('mousemove', (e) => this.handleMouseMove(e));
+                this.canvas.addEventListener('mouseup', (e) => this.handleMouseUp(e));
+            }
+
+            startFieldCreation() {
+                this.isDrawing = true;
+                this.canvas.style.cursor = 'crosshair';
+                this.showStatus('Click and drag to create a field marker', 'info');
+            }
+
+            handleMouseDown(event) {
+                if (!this.isDrawing) return;
+                
+                const rect = this.canvas.getBoundingClientRect();
+                this.startPos = {
+                    x: event.clientX - rect.left,
+                    y: event.clientY - rect.top
+                };
+            }
+
+            handleMouseMove(event) {
+                if (!this.isDrawing || !this.startPos) return;
+                
+                const rect = this.canvas.getBoundingClientRect();
+                const currentPos = {
+                    x: event.clientX - rect.left,
+                    y: event.clientY - rect.top
+                };
+                
+                // Draw preview rectangle
+                this.redrawCanvas();
+                this.ctx.strokeStyle = '#e74c3c';
+                this.ctx.lineWidth = 2;
+                this.ctx.setLineDash([5, 5]);
+                this.ctx.strokeRect(
+                    this.startPos.x,
+                    this.startPos.y,
+                    currentPos.x - this.startPos.x,
+                    currentPos.y - this.startPos.y
+                );
+                this.ctx.setLineDash([]);
+            }
+
+            handleMouseUp(event) {
+                if (!this.isDrawing || !this.startPos) return;
+                
+                const rect = this.canvas.getBoundingClientRect();
+                const endPos = {
+                    x: event.clientX - rect.left,
+                    y: event.clientY - rect.top
+                };
+                
+                const width = Math.abs(endPos.x - this.startPos.x);
+                const height = Math.abs(endPos.y - this.startPos.y);
+                
+                if (width > 10 && height > 10) {
+                    this.createField(this.startPos.x, this.startPos.y, width, height);
+                }
+                
+                this.isDrawing = false;
+                this.startPos = null;
+                this.canvas.style.cursor = 'default';
+                this.showStatus('Field created. Click "Add Field" to create another.', 'success');
+            }
+
+            createField(x, y, width, height) {
+                const fieldName = prompt('Enter field name:', `field_${this.fields.length + 1}`);
+                if (!fieldName) return;
+                
+                const field = {
+                    id: Date.now(),
+                    name: fieldName,
+                    type: 'text',
+                    x: x,
+                    y: y,
+                    width: width,
+                    height: height,
+                    page: 1
+                };
+                
+                this.fields.push(field);
+                this.renderFieldMarker(field);
+                this.updateFieldList();
+                this.updateFieldCounter();
+            }
+
+            renderFieldMarker(field) {
+                const marker = document.createElement('div');
+                marker.className = 'field-marker';
+                marker.style.left = field.x + 'px';
+                marker.style.top = field.y + 'px';
+                marker.style.width = field.width + 'px';
+                marker.style.height = field.height + 'px';
+                marker.dataset.fieldId = field.id;
+                
+                marker.innerHTML = `
+                    <div class="resize-handle"></div>
+                `;
+                
+                marker.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    this.selectField(field.id);
+                });
+                
+                this.canvas.parentNode.appendChild(marker);
+            }
+
+            selectField(fieldId) {
+                // Remove previous selection
+                document.querySelectorAll('.field-marker').forEach(marker => {
+                    marker.classList.remove('selected');
+                });
+                document.querySelectorAll('.field-item').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                
+                // Select new field
+                const marker = document.querySelector(`[data-field-id="${fieldId}"]`);
+                const fieldItem = document.querySelector(`[data-field-id="${fieldId}"]`);
+                
+                if (marker) {
+                    marker.classList.add('selected');
+                }
+                
+                this.selectedField = this.fields.find(f => f.id === fieldId);
+                this.deleteFieldBtn.disabled = !this.selectedField;
+                
+                this.updateFieldList();
+            }
+
+            deleteSelectedField() {
+                if (!this.selectedField) return;
+                
+                this.fields = this.fields.filter(f => f.id !== this.selectedField.id);
+                
+                const marker = document.querySelector(`[data-field-id="${this.selectedField.id}"]`);
+                if (marker) {
+                    marker.remove();
+                }
+                
+                this.selectedField = null;
+                this.deleteFieldBtn.disabled = true;
+                this.updateFieldList();
+                this.updateFieldCounter();
+            }
+
+            updateFieldList() {
+                this.fieldList.innerHTML = '';
+                
+                this.fields.forEach(field => {
+                    const item = document.createElement('div');
+                    item.className = 'field-item';
+                    item.dataset.fieldId = field.id;
+                    
+                    if (this.selectedField && field.id === this.selectedField.id) {
+                        item.classList.add('selected');
+                    }
+                    
+                    item.innerHTML = `
+                        <div class="field-name">${field.name}</div>
+                        <div class="field-info">${field.type} • ${Math.round(field.x)}, ${Math.round(field.y)} • ${Math.round(field.width)}×${Math.round(field.height)}</div>
+                    `;
+                    
+                    item.addEventListener('click', () => this.selectField(field.id));
+                    
+                    this.fieldList.appendChild(item);
+                });
+            }
+
+            updateFieldCounter() {
+                this.fieldCounter.textContent = `${this.fields.length} fields`;
+                this.exportBtn.disabled = this.fields.length === 0;
+            }
+
+            exportPositions() {
+                const templateId = this.templateIdInput.value.trim();
+                if (!templateId) {
+                    this.showStatus('Please enter a template ID', 'error');
+                    return;
+                }
+                
+                // Convert to the expected format
+                const positions = {};
+                this.fields.forEach(field => {
+                    positions[field.name] = {
+                        name: field.name,
+                        type: field.type,
+                        page: field.page,
+                        x: parseFloat((field.x * 0.352778).toFixed(2)), // Convert to mm
+                        y: parseFloat((field.y * 0.352778).toFixed(2)),
+                        width: parseFloat((field.width * 0.352778).toFixed(2)),
+                        height: parseFloat((field.height * 0.352778).toFixed(2)),
+                        fontSize: 10,
+                        confidence: 1.0,
+                        method: 'manual-mapping'
+                    };
+                });
+                
+                // Create download
+                const json = JSON.stringify(positions, null, 2);
+                const blob = new Blob([json], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${templateId}_positions.json`;
+                a.click();
+                
+                URL.revokeObjectURL(url);
+                
+                this.showStatus(`Exported ${this.fields.length} fields to ${templateId}_positions.json`, 'success');
+            }
+
+            clearAllFields() {
+                if (confirm('Are you sure you want to clear all fields?')) {
+                    this.fields = [];
+                    this.selectedField = null;
+                    this.deleteFieldBtn.disabled = true;
+                    
+                    document.querySelectorAll('.field-marker').forEach(marker => {
+                        marker.remove();
+                    });
+                    
+                    this.updateFieldList();
+                    this.updateFieldCounter();
+                    this.redrawCanvas();
+                    
+                    this.showStatus('All fields cleared', 'info');
+                }
+            }
+
+            redrawCanvas() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.drawSampleForm();
+            }
+
+            showStatus(message, type) {
+                this.statusDiv.textContent = message;
+                this.statusDiv.className = `status ${type}`;
+            }
+        }
+
+        // Initialize the mapper when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new ManualPositionMapper();
+        });
+    </script>
+</body>
+</html>

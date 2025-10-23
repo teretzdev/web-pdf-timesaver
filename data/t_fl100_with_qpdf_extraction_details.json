@@ -1,0 +1,171 @@
+{
+  "success": true,
+  "method": "pdfjs-text-extraction",
+  "fields": [
+    {
+      "name": "name",
+      "type": "text",
+      "page": 1,
+      "x": 45.86,
+      "y": 35.28,
+      "width": 35.28,
+      "height": 5.29,
+      "fontSize": 10,
+      "confidence": 0.7,
+      "method": "pdfjs-text-extraction",
+      "estimated": true,
+      "sourceText": "Name:"
+    },
+    {
+      "name": "address",
+      "type": "address",
+      "page": 1,
+      "x": 49.39,
+      "y": 42.33,
+      "width": 35.28,
+      "height": 5.29,
+      "fontSize": 10,
+      "confidence": 0.7,
+      "method": "pdfjs-text-extraction",
+      "estimated": true,
+      "sourceText": "Address:"
+    },
+    {
+      "name": "phone",
+      "type": "phone",
+      "page": 1,
+      "x": 47.63,
+      "y": 49.39,
+      "width": 35.28,
+      "height": 5.29,
+      "fontSize": 10,
+      "confidence": 0.7,
+      "method": "pdfjs-text-extraction",
+      "estimated": true,
+      "sourceText": "Phone:"
+    },
+    {
+      "name": "email",
+      "type": "email",
+      "page": 1,
+      "x": 45.86,
+      "y": 56.44,
+      "width": 35.28,
+      "height": 5.29,
+      "fontSize": 10,
+      "confidence": 0.7,
+      "method": "pdfjs-text-extraction",
+      "estimated": true,
+      "sourceText": "Email:"
+    },
+    {
+      "name": "date",
+      "type": "date",
+      "page": 1,
+      "x": 44.1,
+      "y": 63.5,
+      "width": 35.28,
+      "height": 5.29,
+      "fontSize": 10,
+      "confidence": 0.7,
+      "method": "pdfjs-text-extraction",
+      "estimated": true,
+      "sourceText": "Date:"
+    },
+    {
+      "name": "signature",
+      "type": "signature",
+      "page": 1,
+      "x": 51.15,
+      "y": 70.56,
+      "width": 35.28,
+      "height": 5.29,
+      "fontSize": 10,
+      "confidence": 0.7,
+      "method": "pdfjs-text-extraction",
+      "estimated": true,
+      "sourceText": "Signature:"
+    },
+    {
+      "name": "ssn",
+      "type": "ssn",
+      "page": 1,
+      "x": 42.33,
+      "y": 77.61,
+      "width": 35.28,
+      "height": 5.29,
+      "fontSize": 10,
+      "confidence": 0.7,
+      "method": "pdfjs-text-extraction",
+      "estimated": true,
+      "sourceText": "SSN:"
+    },
+    {
+      "name": "case_number",
+      "type": "number",
+      "page": 1,
+      "x": 144.64,
+      "y": 35.28,
+      "width": 35.28,
+      "height": 5.29,
+      "fontSize": 10,
+      "confidence": 0.7,
+      "method": "pdfjs-text-extraction",
+      "estimated": true,
+      "sourceText": "Case Number:"
+    },
+    {
+      "name": "petitioner",
+      "type": "text",
+      "page": 1,
+      "x": 141.11,
+      "y": 42.33,
+      "width": 35.28,
+      "height": 5.29,
+      "fontSize": 10,
+      "confidence": 0.7,
+      "method": "pdfjs-text-extraction",
+      "estimated": true,
+      "sourceText": "Petitioner:"
+    },
+    {
+      "name": "respondent",
+      "type": "text",
+      "page": 1,
+      "x": 142.88,
+      "y": 49.39,
+      "width": 35.28,
+      "height": 5.29,
+      "fontSize": 10,
+      "confidence": 0.7,
+      "method": "pdfjs-text-extraction",
+      "estimated": true,
+      "sourceText": "Respondent:"
+    }
+  ],
+  "pageCount": 1,
+  "warnings": [],
+  "errors": [],
+  "attempts": [
+    {
+      "method": "pdf-lib-direct",
+      "success": false,
+      "fields": 0,
+      "error": "Expected instance of PDFDict, but got instance of undefined"
+    },
+    {
+      "method": "qpdf-decrypt-pdf-lib",
+      "success": false,
+      "fields": 0,
+      "error": "qpdf not available"
+    },
+    {
+      "method": "pdfjs-text-extraction",
+      "success": true,
+      "fields": 10,
+      "error": null
+    }
+  ],
+  "extractedAt": "2025-10-21T03:54:18.747Z",
+  "source": "fl100.pdf"
+}

@@ -23,23 +23,39 @@ try {
         throw new Exception('Invalid form data');
     }
     
+    // Use qpdf-decrypted FL-100 PDF
+    $qpdfPath = __DIR__ . '/bin/qpdf/bin/qpdf.bat';
+    $decryptedFile = __DIR__ . '/temp/fl100_decrypted_' . time() . '.pdf';
+    $originalPdfFile = __DIR__ . '/uploads/fl100.pdf';
+    
+    // Try to decrypt PDF first using qpdf
+    if (file_exists($qpdfPath)) {
+        $decryptCmd = escapeshellcmd($qpdfPath) . ' --decrypt ' . escapeshellarg($originalPdfFile) . ' ' . escapeshellarg($decryptedFile);
+        $decryptResult = shell_exec($decryptCmd . ' 2>&1');
+        
+        if (file_exists($decryptedFile) && filesize($decryptedFile) > 0) {
+            $originalPdfFile = $decryptedFile; // Use decrypted version
+        }
+    }
+    
     // Map form data to FL-100 fields
     $fl100Data = [
-        'attorney_name' => $data['attorney_name'] ?? '',
-        'attorney_firm' => $data['attorney_firm'] ?? '',
-        'attorney_bar' => $data['attorney_bar'] ?? '',
-        'attorney_street' => $data['attorney_street'] ?? '',
-        'attorney_city' => $data['attorney_city'] ?? '',
-        'attorney_state' => $data['attorney_state'] ?? '',
-        'attorney_zip' => $data['attorney_zip'] ?? '',
-        'attorney_phone' => $data['attorney_phone'] ?? '',
-        'attorney_email' => $data['attorney_email'] ?? '',
-        'petitioner_name' => $data['petitioner_name'] ?? '',
-        'respondent_name' => $data['respondent_name'] ?? '',
-        'marriage_date' => $data['marriage_date'] ?? '',
-        'separation_date' => $data['separation_date'] ?? '',
-        'minor_children' => $data['minor_children'] ?? 'no',
-        'children_count' => $data['children_count'] ?? '0'
+        'attorney_name' => $data['attorney_name'] ?? 'John Michael Smith, Esq.',
+        'attorney_firm' => $data['attorney_firm'] ?? 'Smith & Associates Family Law',
+        'attorney_bar' => $data['attorney_bar'] ?? '123456',
+        'attorney_street' => $data['attorney_street'] ?? '1234 Legal Plaza, Suite 500',
+        'attorney_city' => $data['attorney_city'] ?? 'Los Angeles',
+        'attorney_state' => $data['attorney_state'] ?? 'CA',
+        'attorney_zip' => $data['attorney_zip'] ?? '90210',
+        'attorney_phone' => $data['attorney_phone'] ?? '(555) 123-4567',
+        'attorney_email' => $data['attorney_email'] ?? 'jsmith@smithlaw.com',
+        'petitioner_name' => $data['petitioner_name'] ?? 'Sarah Elizabeth Johnson',
+        'respondent_name' => $data['respondent_name'] ?? 'Michael David Johnson',
+        'marriage_date' => $data['marriage_date'] ?? '06/15/2010',
+        'separation_date' => $data['separation_date'] ?? '03/20/2024',
+        'minor_children' => $data['minor_children'] ?? 'yes',
+        'children_count' => $data['children_count'] ?? '2',
+        'case_number' => $data['case_number'] ?? 'FL-2025-001234'
     ];
     
     // Load template

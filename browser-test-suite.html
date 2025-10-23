@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Browser Test Suite</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 20px;
+            background: #f5f6fa;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .test-section {
+            margin: 20px 0;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+        }
+        .test-result {
+            padding: 10px;
+            margin: 5px 0;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+        .pass { background: #d4edda; color: #155724; }
+        .fail { background: #f8d7da; color: #721c24; }
+        .info { background: #d1ecf1; color: #0c5460; }
+        .test-btn {
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        .test-btn:hover { background: #0056b3; }
+        .summary {
+            background: #e9ecef;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 Browser Test Suite</h1>
+        <p>Comprehensive testing of Web-PDFTimeSaver functionality</p>
+        
+        <div class="summary" id="summary">
+            <h3>Test Summary</h3>
+            <p>Total Tests: <span id="totalTests">0</span></p>
+            <p>Passed: <span id="passedTests">0</span></p>
+            <p>Failed: <span id="failedTests">0</span></p>
+            <p>Success Rate: <span id="successRate">0%</span></p>
+        </div>
+        
+        <div class="test-section">
+            <h3>1. File System Tests</h3>
+            <button class="test-btn" onclick="testFileSystem()">Test Files</button>
+            <div id="fileSystemResults"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>2. HTTP Endpoint Tests</h3>
+            <button class="test-btn" onclick="testEndpoints()">Test Endpoints</button>
+            <div id="endpointResults"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>3. Navigation Tests</h3>
+            <button class="test-btn" onclick="testNavigation()">Test Navigation</button>
+            <div id="navigationResults"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>4. Demo Page Tests</h3>
+            <button class="test-btn" onclick="testDemoPage()">Test Demo Page</button>
+            <div id="demoResults"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>5. Universal Processor Tests</h3>
+            <button class="test-btn" onclick="testUniversalProcessor()">Test Processor</button>
+            <div id="processorResults"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>6. Background Generation Tests</h3>
+            <button class="test-btn" onclick="testBackgrounds()">Test Backgrounds</button>
+            <div id="backgroundResults"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>7. Position Files Tests</h3>
+            <button class="test-btn" onclick="testPositions()">Test Positions</button>
+            <div id="positionResults"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>8. Visual Editor Tests</h3>
+            <button class="test-btn" onclick="testVisualEditor()">Test Visual Editor</button>
+            <div id="visualResults"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>9. FL-105 Form Tests</h3>
+            <button class="test-btn" onclick="testFL105()">Test FL-105 Form</button>
+            <div id="fl105Results"></div>
+        </div>
+        
+        <div class="test-section">
+            <h3>10. Run All Tests</h3>
+            <button class="test-btn" onclick="runAllTests()" style="background: #28a745;">Run All Tests</button>
+        </div>
+    </div>
+
+    <script>
+        let testResults = {
+            total: 0,
+            passed: 0,
+            failed: 0
+        };
+
+        function addResult(containerId, message, type = 'info') {
+            const container = document.getElementById(containerId);
+            const div = document.createElement('div');
+            div.className = `test-result ${type}`;
+            div.textContent = message;
+            container.appendChild(div);
+            
+            testResults.total++;
+            if (type === 'pass') testResults.passed++;
+            if (type === 'fail') testResults.failed++;
+            
+            updateSummary();
+        }
+
+        function updateSummary() {
+            document.getElementById('totalTests').textContent = testResults.total;
+            document.getElementById('passedTests').textContent = testResults.passed;
+            document.getElementById('failedTests').textContent = testResults.failed;
+            const rate = testResults.total > 0 ? Math.round((testResults.passed / testResults.total) * 100) : 0;
+            document.getElementById('successRate').textContent = rate + '%';
+        }
+
+        async function testFileSystem() {
+            const container = document.getElementById('fileSystemResults');
+            container.innerHTML = '';
+            
+            const files = [
+                'mvp/index.php',
+                'mvp/views/layout_header.php',
+                'demo-working-autofill.php',
+                'uploads/w9.pdf',
+                'uploads/fl100.pdf'
+            ];
+            
+            for (const file of files) {
+                try {
+                    const response = await fetch(file);
+                    if (response.ok) {
+                        addResult('fileSystemResults', `✅ ${file} exists`, 'pass');
+                    } else {
+                        addResult('fileSystemResults', `❌ ${file} missing (${response.status})`, 'fail');
+                    }
+                } catch (error) {
+                    addResult('fileSystemResults', `❌ ${file} error: ${error.message}`, 'fail');
+                }
+            }
+        }
+
+        async function testEndpoints() {
+            const container = document.getElementById('endpointResults');
+            container.innerHTML = '';
+            
+            const endpoints = [
+                'mvp/?route=dashboard',
+                'mvp/?route=demo-working-autofill',
+                'demo-working-autofill.php',
+                'mvp/?route=universal-processor',
+                'mvp/?route=extract-fields'
+            ];
+            
+            for (const endpoint of endpoints) {
+                try {
+                    const response = await fetch(endpoint);
+                    if (response.ok) {
+                        addResult('endpointResults', `✅ ${endpoint} (HTTP ${response.status})`, 'pass');
+                    } else {
+                        addResult('endpointResults', `❌ ${endpoint} (HTTP ${response.status})`, 'fail');
+                    }
+                } catch (error) {
+                    addResult('endpointResults', `❌ ${endpoint} error: ${error.message}`, 'fail');
+                }
+            }
+        }
+
+        async function testNavigation() {
+            const container = document.getElementById('navigationResults');
+            container.innerHTML = '';
+            
+            try {
+                const response = await fetch('mvp/?route=dashboard');
+                const html = await response.text();
+                
+                if (html.includes('demo-working-autofill')) {
+                    addResult('navigationResults', '✅ Demo route link found in navigation', 'pass');
+                } else {
+                    addResult('navigationResults', '❌ Demo route link missing from navigation', 'fail');
+                }
+                
+                if (html.includes('Auto Field Detection')) {
+                    addResult('navigationResults', '✅ Auto Field Detection label found', 'pass');
+                } else {
+                    addResult('navigationResults', '❌ Auto Field Detection label missing', 'fail');
+                }
+                
+                if (html.includes('Dashboard')) {
+                    addResult('navigationResults', '✅ Dashboard loads correctly', 'pass');
+                } else {
+                    addResult('navigationResults', '❌ Dashboard not loading', 'fail');
+                }
+                
+            } catch (error) {
+                addResult('navigationResults', `❌ Navigation test error: ${error.message}`, 'fail');
+            }
+        }
+
+        async function testDemoPage() {
+            const container = document.getElementById('demoResults');
+            container.innerHTML = '';
+            
+            try {
+                const response = await fetch('demo-working-autofill.php');
+                const html = await response.text();
+                
+                if (html.includes('Auto Field Detection Demo')) {
+                    addResult('demoResults', '✅ Demo page title found', 'pass');
+                } else {
+                    addResult('demoResults', '❌ Demo page title missing', 'fail');
+                }
+                
+                if (html.includes('Load W-9 Demo')) {
+                    addResult('demoResults', '✅ W-9 demo button found', 'pass');
+                } else {
+                    addResult('demoResults', '❌ W-9 demo button missing', 'fail');
+                }
+                
+                if (html.includes('universal-process')) {
+                    addResult('demoResults', '✅ Universal processor endpoint referenced', 'pass');
+                } else {
+                    addResult('demoResults', '❌ Universal processor endpoint missing', 'fail');
+                }
+                
+                if (html.includes('displayResults')) {
+                    addResult('demoResults', '✅ Results display function found', 'pass');
+                } else {
+                    addResult('demoResults', '❌ Results display function missing', 'fail');
+                }
+                
+            } catch (error) {
+                addResult('demoResults', `❌ Demo page test error: ${error.message}`, 'fail');
+            }
+        }
+
+        async function testUniversalProcessor() {
+            const container = document.getElementById('processorResults');
+            container.innerHTML = '';
+            
+            try {
+                // Test the endpoint with a simple request
+                const formData = new FormData();
+                formData.append('template_id', 'test_browser');
+                
+                const response = await fetch('mvp/?route=actions/universal-process', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                const data = await response.json();
+                
+                if (data.success !== undefined) {
+                    addResult('processorResults', '✅ Universal processor responds with JSON', 'pass');
+                } else {
+                    addResult('processorResults', '❌ Universal processor invalid response', 'fail');
+                }
+                
+                if (data.message) {
+                    addResult('processorResults', `ℹ️ Response message: ${data.message}`, 'info');
+                }
+                
+            } catch (error) {
+                addResult('processorResults', `❌ Universal processor error: ${error.message}`, 'fail');
+            }
+        }
+
+        async function testBackgrounds() {
+            const container = document.getElementById('backgroundResults');
+            container.innerHTML = '';
+            
+            try {
+                // Check for background images
+                const response = await fetch('uploads/');
+                const html = await response.text();
+                
+                const backgroundCount = (html.match(/_background\.png/g) || []).length;
+                
+                if (backgroundCount > 0) {
+                    addResult('backgroundResults', `✅ Found ${backgroundCount} background images`, 'pass');
+                } else {
+                    addResult('backgroundResults', '❌ No background images found', 'fail');
+                }
+                
+                // Test specific background files
+                const backgrounds = ['test_w9_page1_background.png', 'test_fl100_page1_background.png'];
+                for (const bg of backgrounds) {
+                    try {
+                        const bgResponse = await fetch(`uploads/${bg}`);
+                        if (bgResponse.ok) {
+                            addResult('backgroundResults', `✅ ${bg} accessible`, 'pass');
+                        } else {
+                            addResult('backgroundResults', `❌ ${bg} not accessible`, 'fail');
+                        }
+                    } catch (error) {
+                        addResult('backgroundResults', `❌ ${bg} error: ${error.message}`, 'fail');
+                    }
+                }
+                
+            } catch (error) {
+                addResult('backgroundResults', `❌ Background test error: ${error.message}`, 'fail');
+            }
+        }
+
+        async function testPositions() {
+            const container = document.getElementById('positionResults');
+            container.innerHTML = '';
+            
+            try {
+                // Test position files
+                const positionFiles = ['t_fl100_gc120_positions.json'];
+                for (const file of positionFiles) {
+                    try {
+                        const response = await fetch(`data/${file}`);
+                        if (response.ok) {
+                            const data = await response.json();
+                            const fieldCount = Object.keys(data).length;
+                            addResult('positionResults', `✅ ${file} has ${fieldCount} fields`, 'pass');
+                        } else {
+                            addResult('positionResults', `❌ ${file} not accessible`, 'fail');
+                        }
+                    } catch (error) {
+                        addResult('positionResults', `❌ ${file} error: ${error.message}`, 'fail');
+                    }
+                }
+                
+            } catch (error) {
+                addResult('positionResults', `❌ Position test error: ${error.message}`, 'fail');
+            }
+        }
+
+        async function testVisualEditor() {
+            const container = document.getElementById('visualResults');
+            container.innerHTML = '';
+            
+            try {
+                const response = await fetch('mvp/visual-field-editor.php?template=t_fl100_gc120');
+                const html = await response.text();
+                
+                if (html.includes('Visual Field Editor')) {
+                    addResult('visualResults', '✅ Visual editor loads', 'pass');
+                } else {
+                    addResult('visualResults', '❌ Visual editor not loading', 'fail');
+                }
+                
+                if (html.includes('extractAndGenerateBackgrounds')) {
+                    addResult('visualResults', '✅ Auto-generation logic found', 'pass');
+                } else {
+                    addResult('visualResults', '❌ Auto-generation logic missing', 'fail');
+                }
+                
+                if (html.includes('PdfFieldExtractor')) {
+                    addResult('visualResults', '✅ PdfFieldExtractor usage found', 'pass');
+                } else {
+                    addResult('visualResults', '❌ PdfFieldExtractor usage missing', 'fail');
+                }
+                
+            } catch (error) {
+                addResult('visualResults', `❌ Visual editor test error: ${error.message}`, 'fail');
+            }
+        }
+
+        async function testFL105() {
+            const container = document.getElementById('fl105Results');
+            container.innerHTML = '';
+            
+            try {
+                // Test FL-105 PDF exists
+                const pdfResponse = await fetch('uploads/fl105.pdf');
+                if (pdfResponse.ok) {
+                    addResult('fl105Results', '✅ FL-105 PDF file exists', 'pass');
+                } else {
+                    addResult('fl105Results', '❌ FL-105 PDF file not found', 'fail');
+                }
+                
+                // Test FL-105 test data generator
+                const dataResponse = await fetch('get-fl105-test-data.php');
+                if (dataResponse.ok) {
+                    const data = await dataResponse.json();
+                    if (data && Object.keys(data).length > 0) {
+                        addResult('fl105Results', `✅ Test data generator (${Object.keys(data).length} fields)`, 'pass');
+                    } else {
+                        addResult('fl105Results', '❌ Test data generator returned empty', 'fail');
+                    }
+                } else {
+                    addResult('fl105Results', '❌ Test data generator not accessible', 'fail');
+                }
+                
+                // Test FL-105 demo page
+                const demoResponse = await fetch('test-fl105-demo.php');
+                if (demoResponse.ok) {
+                    const html = await demoResponse.text();
+                    if (html.includes('FL-105')) {
+                        addResult('fl105Results', '✅ FL-105 demo page loads', 'pass');
+                    } else {
+                        addResult('fl105Results', '❌ FL-105 demo page content missing', 'fail');
+                    }
+                } else {
+                    addResult('fl105Results', '❌ FL-105 demo page not accessible', 'fail');
+                }
+                
+                // Test form filler
+                const fillerResponse = await fetch('fill-fl105-form.php');
+                if (fillerResponse.status === 200 || fillerResponse.status === 400) {
+                    addResult('fl105Results', '✅ FL-105 form filler endpoint accessible', 'pass');
+                } else {
+                    addResult('fl105Results', '❌ FL-105 form filler not accessible', 'fail');
+                }
+                
+            } catch (error) {
+                addResult('fl105Results', `❌ FL-105 test error: ${error.message}`, 'fail');
+            }
+        }
+
+        async function runAllTests() {
+            testResults = { total: 0, passed: 0, failed: 0 };
+            
+            await testFileSystem();
+            await testEndpoints();
+            await testNavigation();
+            await testDemoPage();
+            await testUniversalProcessor();
+            await testBackgrounds();
+            await testPositions();
+            await testVisualEditor();
+            await testFL105();
+            
+            // Final summary
+            const container = document.createElement('div');
+            container.className = 'test-section';
+            container.innerHTML = `
+                <h3>🎯 Final Test Results</h3>
+                <div class="test-result ${testResults.failed === 0 ? 'pass' : 'fail'}">
+                    ${testResults.failed === 0 ? '✅ ALL TESTS PASSED' : '❌ SOME TESTS FAILED'}
+                </div>
+                <div class="test-result info">
+                    Total: ${testResults.total} | Passed: ${testResults.passed} | Failed: ${testResults.failed}
+                </div>
+            `;
+            document.querySelector('.container').appendChild(container);
+        }
+    </script>
+</body>
+</html>
+

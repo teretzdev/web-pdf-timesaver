@@ -18,7 +18,7 @@
         "page": 1
     },
     "attorney_name": {
-        "x": 45,
+        "x": 70,
         "y": 95,
         "width": 100,
         "height": 8,
@@ -45,7 +45,7 @@
         "page": 1
     },
     "attorney_address": {
-        "x": 45,
+        "x": 60,
         "y": 125,
         "width": 100,
         "height": 8,
@@ -63,7 +63,7 @@
         "page": 1
     },
     "attorney_phone": {
-        "x": 45,
+        "x": 55,
         "y": 145,
         "width": 80,
         "height": 8,
@@ -81,8 +81,8 @@
         "page": 1
     },
     "petitioner_name": {
-        "x": 120,
-        "y": 95,
+        "x": 140,
+        "y": 100,
         "width": 100,
         "height": 8,
         "fontSize": 10,
@@ -90,8 +90,8 @@
         "page": 1
     },
     "petitioner_address": {
-        "x": 120,
-        "y": 105,
+        "x": 132,
+        "y": 108,
         "width": 100,
         "height": 8,
         "fontSize": 10,
@@ -108,7 +108,7 @@
         "page": 1
     },
     "respondent_name": {
-        "x": 120,
+        "x": 135,
         "y": 135,
         "width": 100,
         "height": 8,
@@ -117,7 +117,7 @@
         "page": 1
     },
     "respondent_address": {
-        "x": 120,
+        "x": 128,
         "y": 145,
         "width": 100,
         "height": 8,
@@ -126,8 +126,8 @@
         "page": 1
     },
     "marriage_date": {
-        "x": 45,
-        "y": 180,
+        "x": 75,
+        "y": 175,
         "width": 60,
         "height": 8,
         "fontSize": 10,
@@ -135,7 +135,7 @@
         "page": 1
     },
     "separation_date": {
-        "x": 120,
+        "x": 145,
         "y": 180,
         "width": 60,
         "height": 8,
@@ -153,8 +153,8 @@
         "page": 1
     },
     "has_children": {
-        "x": 45,
-        "y": 50,
+        "x": 80,
+        "y": 60,
         "width": 20,
         "height": 8,
         "fontSize": 10,
@@ -162,8 +162,8 @@
         "page": 2
     },
     "children_count": {
-        "x": 80,
-        "y": 50,
+        "x": 100,
+        "y": 55,
         "width": 20,
         "height": 8,
         "fontSize": 10,

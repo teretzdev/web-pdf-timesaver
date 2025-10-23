@@ -27,7 +27,34 @@ final class PdfFieldExtractor {
         
         $fields = [];
         
-        // Try PDF parser library FIRST - it extracts REAL coordinates from PDF annotations
+        // Try Node.js extraction FIRST - most reliable for W-9 and encrypted PDFs
+        try {
+            require_once __DIR__ . '/auto_position_extractor.php';
+            $autoExtractor = new \WebPdfTimeSaver\Mvp\AutoPositionExtractor();
+            
+            if ($autoExtractor->isAvailable()) {
+                error_log("Attempting Node.js extraction for: " . basename($pdfPath));
+                $result = $autoExtractor->extractPositions($pdfPath, 'temp_' . time());
+                
+                if ($result['success'] && !empty($result['fields'])) {
+                    // Convert array format to keyed object format
+                    foreach ($result['fields'] as $field) {
+                        $fields[$field['name']] = $field;
+                    }
+                    
+                    error_log("Successfully extracted " . count($fields) . " fields using Node.js pipeline");
+                    return $fields;
+                } else {
+                    error_log("Node.js extraction failed: " . implode(', ', $result['errors'] ?? []));
+                }
+            } else {
+                error_log("Node.js extraction not available");
+            }
+        } catch (\Exception $e) {
+            error_log("Node.js extraction failed: " . $e->getMessage());
+        }
+
+        // Try PDF parser library SECOND - it extracts REAL coordinates from PDF annotations
         try {
             $fields = $this->extractUsingPdfParser($pdfPath);
 
