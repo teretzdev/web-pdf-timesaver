@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PDF Field Extraction Dashboard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .header {
+            background: #2c3e50;
+            color: white;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .upload-section {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+
+        .btn {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background 0.2s;
+        }
+
+        .btn:hover {
+            background: #2980b9;
+        }
+
+        .btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+
+        .btn-success {
+            background: #27ae60;
+        }
+
+        .btn-success:hover {
+            background: #229954;
+        }
+
+        .btn-danger {
+            background: #e74c3c;
+        }
+
+        .btn-danger:hover {
+            background: #c0392b;
+        }
+
+        .progress-section {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #ecf0f1;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #3498db;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .method-status {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .method-item {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .method-item.success {
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
+        }
+
+        .method-item.failed {
+            background: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24;
+        }
+
+        .method-item.pending {
+            background: #fff3cd;
+            border-color: #ffeaa7;
+            color: #856404;
+        }
+
+        .results-section {
+            background: white;
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .field-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .field-card {
+            background: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            padding: 1rem;
+        }
+
+        .field-card .field-name {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .field-card .field-info {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 0.25rem;
+        }
+
+        .field-card .field-coords {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .status {
+            padding: 1rem;
+            border-radius: 4px;
+            margin-bottom: 1rem;
+            font-weight: bold;
+        }
+
+        .status.info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status.error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .status.warning {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 8px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .stat-card .stat-number {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #3498db;
+        }
+
+        .stat-card .stat-label {
+            color: #666;
+            margin-top: 0.5rem;
+        }
+
+        .actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .log-section {
+            background: #2c3e50;
+            color: #ecf0f1;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 2rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .log-entry {
+            margin-bottom: 0.5rem;
+            padding: 0.25rem 0;
+        }
+
+        .log-entry.success {
+            color: #2ecc71;
+        }
+
+        .log-entry.error {
+            color: #e74c3c;
+        }
+
+        .log-entry.warning {
+            color: #f39c12;
+        }
+
+        .log-entry.info {
+            color: #3498db;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>PDF Field Extraction Dashboard</h1>
+        <p>Universal PDF field position extraction with 5-tier fallback system</p>
+    </div>
+
+    <div class="container">
+        <div class="upload-section">
+            <h2>Upload PDF for Field Extraction</h2>
+            <form id="upload-form">
+                <div class="form-group">
+                    <label for="pdf-file">Select PDF File:</label>
+                    <input type="file" id="pdf-file" accept=".pdf" required>
+                </div>
+                <div class="form-group">
+                    <label for="template-id">Template ID:</label>
+                    <input type="text" id="template-id" placeholder="e.g., t_w9_universal" required>
+                </div>
+                <button type="submit" class="btn" id="extract-btn">Extract Field Positions</button>
+            </form>
+        </div>
+
+        <div class="progress-section hidden" id="progress-section">
+            <h2>Extraction Progress</h2>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress-fill"></div>
+            </div>
+            <div class="method-status" id="method-status">
+                <!-- Method status items will be added here -->
+            </div>
+            <div class="log-section" id="extraction-log">
+                <!-- Log entries will be added here -->
+            </div>
+        </div>
+
+        <div class="results-section hidden" id="results-section">
+            <h2>Extraction Results</h2>
+            <div class="stats" id="stats">
+                <!-- Stats will be added here -->
+            </div>
+            <div class="field-grid" id="field-grid">
+                <!-- Field cards will be added here -->
+            </div>
+            <div class="actions">
+                <button class="btn btn-success" id="download-btn">Download Positions JSON</button>
+                <button class="btn" id="test-btn">Test in MVP</button>
+                <button class="btn btn-danger" id="manual-btn">Manual Mapping Tool</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class ExtractionDashboard {
+            constructor() {
+                this.currentExtraction = null;
+                this.extractionResults = null;
+                this.initializeElements();
+                this.bindEvents();
+            }
+
+            initializeElements() {
+                this.uploadForm = document.getElementById('upload-form');
+                this.pdfFileInput = document.getElementById('pdf-file');
+                this.templateIdInput = document.getElementById('template-id');
+                this.extractBtn = document.getElementById('extract-btn');
+                this.progressSection = document.getElementById('progress-section');
+                this.progressFill = document.getElementById('progress-fill');
+                this.methodStatus = document.getElementById('method-status');
+                this.extractionLog = document.getElementById('extraction-log');
+                this.resultsSection = document.getElementById('results-section');
+                this.stats = document.getElementById('stats');
+                this.fieldGrid = document.getElementById('field-grid');
+                this.downloadBtn = document.getElementById('download-btn');
+                this.testBtn = document.getElementById('test-btn');
+                this.manualBtn = document.getElementById('manual-btn');
+            }
+
+            bindEvents() {
+                this.uploadForm.addEventListener('submit', (e) => this.handleExtraction(e));
+                this.downloadBtn.addEventListener('click', () => this.downloadResults());
+                this.testBtn.addEventListener('click', () => this.testInMvp());
+                this.manualBtn.addEventListener('click', () => this.openManualTool());
+            }
+
+            async handleExtraction(event) {
+                event.preventDefault();
+                
+                const file = this.pdfFileInput.files[0];
+                const templateId = this.templateIdInput.value.trim();
+                
+                if (!file || !templateId) {
+                    this.showStatus('Please select a PDF file and enter a template ID', 'error');
+                    return;
+                }
+
+                this.showProgress();
+                this.extractBtn.disabled = true;
+                
+                try {
+                    // Upload file to server
+                    const formData = new FormData();
+                    formData.append('pdf', file);
+                    formData.append('template_id', templateId);
+                    
+                    const response = await fetch('api/extract-fields.php', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    
+                    const result = await response.json();
+                    this.handleExtractionResult(result);
+                    
+                } catch (error) {
+                    this.handleExtractionError(error);
+                } finally {
+                    this.extractBtn.disabled = false;
+                }
+            }
+
+            showProgress() {
+                this.progressSection.classList.remove('hidden');
+                this.resultsSection.classList.add('hidden');
+                this.progressFill.style.width = '0%';
+                this.methodStatus.innerHTML = '';
+                this.extractionLog.innerHTML = '';
+                
+                this.addLogEntry('Starting universal field extraction...', 'info');
+                this.updateMethodStatus('pdf-lib-direct', 'pending', 'Attempting direct extraction...');
+            }
+
+            updateMethodStatus(method, status, message) {
+                const methodItem = document.createElement('div');
+                methodItem.className = `method-item ${status}`;
+                methodItem.textContent = `${method}: ${message}`;
+                this.methodStatus.appendChild(methodItem);
+                
+                this.addLogEntry(`${method}: ${message}`, status);
+            }
+
+            addLogEntry(message, type = 'info') {
+                const logEntry = document.createElement('div');
+                logEntry.className = `log-entry ${type}`;
+                logEntry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+                this.extractionLog.appendChild(logEntry);
+                this.extractionLog.scrollTop = this.extractionLog.scrollHeight;
+            }
+
+            handleExtractionResult(result) {
+                this.extractionResults = result;
+                
+                if (result.success) {
+                    this.addLogEntry(`✅ Extraction successful using ${result.method}`, 'success');
+                    this.progressFill.style.width = '100%';
+                    this.showResults(result);
+                } else {
+                    this.addLogEntry('❌ All extraction methods failed', 'error');
+                    this.progressFill.style.width = '100%';
+                    this.showError(result);
+                }
+            }
+
+            handleExtractionError(error) {
+                this.addLogEntry(`❌ Extraction failed: ${error.message}`, 'error');
+                this.progressFill.style.width = '100%';
+                this.showStatus(`Extraction failed: ${error.message}`, 'error');
+            }
+
+            showResults(result) {
+                this.resultsSection.classList.remove('hidden');
+                
+                // Show stats
+                this.stats.innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-number">${result.fields.length}</div>
+                        <div class="stat-label">Fields Extracted</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${result.pageCount}</div>
+                        <div class="stat-label">Pages</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${result.method}</div>
+                        <div class="stat-label">Method Used</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">${Math.round(result.fields.reduce((acc, f) => acc + (f.confidence || 0.5), 0) / result.fields.length * 100)}%</div>
+                        <div class="stat-label">Avg Confidence</div>
+                    </div>
+                `;
+                
+                // Show fields
+                this.fieldGrid.innerHTML = '';
+                result.fields.forEach(field => {
+                    const fieldCard = document.createElement('div');
+                    fieldCard.className = 'field-card';
+                    fieldCard.innerHTML = `
+                        <div class="field-name">${field.name}</div>
+                        <div class="field-info">Type: ${field.type}</div>
+                        <div class="field-info">Page: ${field.page}</div>
+                        <div class="field-coords">Position: ${field.x}, ${field.y} • Size: ${field.width}×${field.height}mm</div>
+                        <div class="field-coords">Confidence: ${Math.round((field.confidence || 0.5) * 100)}%</div>
+                    `;
+                    this.fieldGrid.appendChild(fieldCard);
+                });
+            }
+
+            showError(result) {
+                this.resultsSection.classList.remove('hidden');
+                this.stats.innerHTML = `
+                    <div class="stat-card">
+                        <div class="stat-number">0</div>
+                        <div class="stat-label">Fields Extracted</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number">Failed</div>
+                        <div class="stat-label">Status</div>
+                    </div>
+                `;
+                
+                this.fieldGrid.innerHTML = `
+                    <div class="status error">
+                        All extraction methods failed. Try the manual mapping tool or check if the PDF has fillable form fields.
+                    </div>
+                `;
+            }
+
+            showStatus(message, type) {
+                // Create a temporary status element
+                const status = document.createElement('div');
+                status.className = `status ${type}`;
+                status.textContent = message;
+                
+                // Insert at the top of the container
+                const container = document.querySelector('.container');
+                container.insertBefore(status, container.firstChild);
+                
+                // Remove after 5 seconds
+                setTimeout(() => {
+                    status.remove();
+                }, 5000);
+            }
+
+            downloadResults() {
+                if (!this.extractionResults || !this.extractionResults.success) {
+                    this.showStatus('No results to download', 'error');
+                    return;
+                }
+                
+                const templateId = this.templateIdInput.value.trim();
+                const positions = {};
+                
+                this.extractionResults.fields.forEach(field => {
+                    positions[field.name] = field;
+                });
+                
+                const json = JSON.stringify(positions, null, 2);
+                const blob = new Blob([json], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${templateId}_positions.json`;
+                a.click();
+                
+                URL.revokeObjectURL(url);
+                this.showStatus('Positions file downloaded', 'success');
+            }
+
+            testInMvp() {
+                const templateId = this.templateIdInput.value.trim();
+                if (!templateId) {
+                    this.showStatus('Please enter a template ID', 'error');
+                    return;
+                }
+                
+                // Open MVP in new tab with the template
+                window.open(`mvp/index.php?template=${templateId}`, '_blank');
+            }
+
+            openManualTool() {
+                window.open('manual-position-mapper.html', '_blank');
+            }
+        }
+
+        // Initialize dashboard when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new ExtractionDashboard();
+        });
+    </script>
+</body>
+</html>

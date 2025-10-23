@@ -1,0 +1,110 @@
+{
+    "attorney_name": {
+        "x": 45,
+        "y": 80,
+        "width": 120,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 1
+    },
+    "attorney_firm": {
+        "x": 45,
+        "y": 92,
+        "width": 120,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 1
+    },
+    "attorney_bar_number": {
+        "x": 45,
+        "y": 104,
+        "width": 60,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 1
+    },
+    "attorney_address": {
+        "x": 45,
+        "y": 116,
+        "width": 120,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 1
+    },
+    "attorney_city_state_zip": {
+        "x": 45,
+        "y": 128,
+        "width": 120,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 1
+    },
+    "attorney_phone": {
+        "x": 45,
+        "y": 140,
+        "width": 80,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 1
+    },
+    "attorney_email": {
+        "x": 45,
+        "y": 152,
+        "width": 100,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 1
+    },
+    "petitioner_name": {
+        "x": 45,
+        "y": 180,
+        "width": 120,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 2
+    },
+    "respondent_name": {
+        "x": 45,
+        "y": 200,
+        "width": 120,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 2
+    },
+    "marriage_date": {
+        "x": 45,
+        "y": 240,
+        "width": 60,
+        "height": 8,
+        "fontSize": 10,
+        "type": "date",
+        "page": 2
+    },
+    "separation_date": {
+        "x": 45,
+        "y": 252,
+        "width": 60,
+        "height": 8,
+        "fontSize": 10,
+        "type": "date",
+        "page": 2
+    },
+    "children_count": {
+        "x": 45,
+        "y": 280,
+        "width": 20,
+        "height": 8,
+        "fontSize": 10,
+        "type": "number",
+        "page": 2
+    }
+}

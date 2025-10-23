@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Filled W-9 Form - PDF.js Demo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #2c3e50;
+            color: white;
+        }
+        .header {
+            background: #34495e;
+            padding: 20px;
+            text-align: center;
+            border-bottom: 3px solid #27ae60;
+        }
+        .header h1 {
+            margin-bottom: 10px;
+        }
+        .success-badge {
+            background: #27ae60;
+            padding: 8px 16px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .info-panel {
+            background: #34495e;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        .info-item {
+            background: #2c3e50;
+            padding: 15px;
+            border-radius: 6px;
+            border-left: 4px solid #27ae60;
+        }
+        .info-label {
+            color: #bdc3c7;
+            font-size: 12px;
+            margin-bottom: 5px;
+        }
+        .info-value {
+            color: #ecf0f1;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .viewer-container {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+        .toolbar {
+            background: #34495e;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .btn {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .btn:hover {
+            background: #229954;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .btn-secondary {
+            background: #3498db;
+        }
+        .btn-secondary:hover {
+            background: #2980b9;
+        }
+        .zoom-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+        .zoom-level {
+            background: #2c3e50;
+            padding: 8px 16px;
+            border-radius: 6px;
+            min-width: 80px;
+            text-align: center;
+        }
+        #pdfCanvas {
+            display: block;
+            margin: 0 auto;
+            background: white;
+        }
+        .canvas-wrapper {
+            overflow: auto;
+            max-height: calc(100vh - 400px);
+            background: #95a5a6;
+            padding: 20px;
+        }
+        .loading {
+            text-align: center;
+            padding: 60px;
+            color: #7f8c8d;
+            font-size: 18px;
+        }
+        .spinner {
+            border: 4px solid #34495e;
+            border-top: 4px solid #27ae60;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>✅ Filled W-9 Form</h1>
+        <p>Auto-filled using pdf-lib with native AcroForm support</p>
+        <div class="success-badge">🎉 23 Fields Extracted | 9 Fields Filled</div>
+    </div>
+
+    <div class="container">
+        <div class="info-panel">
+            <h3>📊 Form Details</h3>
+            <div class="info-grid">
+                <div class="info-item">
+                    <div class="info-label">Name</div>
+                    <div class="info-value">John Smith</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Business Name</div>
+                    <div class="info-value">Smith Consulting LLC</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Tax Classification</div>
+                    <div class="info-value">Individual/Sole Proprietor</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Address</div>
+                    <div class="info-value">123 Main Street</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">City, State, ZIP</div>
+                    <div class="info-value">Los Angeles, CA 90012</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">SSN</div>
+                    <div class="info-value">123-45-6789</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">EIN</div>
+                    <div class="info-value">98-7654321</div>
+                </div>
+                <div class="info-item">
+                    <div class="info-label">Method</div>
+                    <div class="info-value">Native AcroForms ✅</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="viewer-container">
+            <div class="toolbar">
+                <div class="zoom-controls">
+                    <button class="btn btn-secondary" onclick="zoomOut()">🔍 -</button>
+                    <div class="zoom-level" id="zoomLevel">100%</div>
+                    <button class="btn btn-secondary" onclick="zoomIn()">🔍 +</button>
+                </div>
+                <div>
+                    <button class="btn btn-secondary" onclick="prevPage()">← Previous</button>
+                    <span id="pageInfo" style="margin: 0 10px;">Page 1 of 6</span>
+                    <button class="btn btn-secondary" onclick="nextPage()">Next →</button>
+                </div>
+                <div>
+                    <a href="output/filled_w9.pdf" download class="btn">💾 Download PDF</a>
+                </div>
+            </div>
+            
+            <div class="canvas-wrapper" id="canvasWrapper">
+                <div class="loading">
+                    <div class="spinner"></div>
+                    <div>Loading filled W-9 form...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script>
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+        let pdfDoc = null;
+        let currentPage = 1;
+        let currentScale = 1.5;
+        const canvas = document.createElement('canvas');
+        canvas.id = 'pdfCanvas';
+
+        async function loadPDF() {
+            const loadingTask = pdfjsLib.getDocument('output/filled_w9.pdf');
+            pdfDoc = await loadingTask.promise;
+            
+            document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${pdfDoc.numPages}`;
+            document.querySelector('.canvas-wrapper').innerHTML = '';
+            document.querySelector('.canvas-wrapper').appendChild(canvas);
+            
+            renderPage(currentPage);
+        }
+
+        async function renderPage(pageNum) {
+            const page = await pdfDoc.getPage(pageNum);
+            const viewport = page.getViewport({ scale: currentScale });
+            
+            canvas.width = viewport.width;
+            canvas.height = viewport.height;
+            
+            const ctx = canvas.getContext('2d');
+            const renderContext = {
+                canvasContext: ctx,
+                viewport: viewport
+            };
+            
+            await page.render(renderContext).promise;
+            document.getElementById('zoomLevel').textContent = Math.round(currentScale * 100) + '%';
+        }
+
+        function zoomIn() {
+            currentScale += 0.25;
+            renderPage(currentPage);
+        }
+
+        function zoomOut() {
+            if (currentScale > 0.5) {
+                currentScale -= 0.25;
+                renderPage(currentPage);
+            }
+        }
+
+        function nextPage() {
+            if (currentPage < pdfDoc.numPages) {
+                currentPage++;
+                document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${pdfDoc.numPages}`;
+                renderPage(currentPage);
+            }
+        }
+
+        function prevPage() {
+            if (currentPage > 1) {
+                currentPage--;
+                document.getElementById('pageInfo').textContent = `Page ${currentPage} of ${pdfDoc.numPages}`;
+                renderPage(currentPage);
+            }
+        }
+
+        // Load PDF on page load
+        loadPDF();
+    </script>
+</body>
+</html>

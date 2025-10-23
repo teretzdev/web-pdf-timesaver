@@ -1,0 +1,245 @@
+{
+    "court_county": {
+        "x": 120,
+        "y": 45,
+        "width": 80,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 1
+    },
+    "case_number": {
+        "x": 120,
+        "y": 55,
+        "width": 80,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 1
+    },
+    "attorney_name": {
+        "x": 45,
+        "y": 95,
+        "width": 100,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 1
+    },
+    "attorney_firm": {
+        "x": 45,
+        "y": 105,
+        "width": 100,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 1
+    },
+    "attorney_bar_number": {
+        "x": 45,
+        "y": 115,
+        "width": 60,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 1
+    },
+    "attorney_address": {
+        "x": 45,
+        "y": 125,
+        "width": 100,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 1
+    },
+    "attorney_city_state_zip": {
+        "x": 45,
+        "y": 135,
+        "width": 100,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 1
+    },
+    "attorney_phone": {
+        "x": 45,
+        "y": 145,
+        "width": 80,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 1
+    },
+    "attorney_email": {
+        "x": 45,
+        "y": 155,
+        "width": 100,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 1
+    },
+    "petitioner_name": {
+        "x": 120,
+        "y": 95,
+        "width": 100,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 1
+    },
+    "petitioner_address": {
+        "x": 120,
+        "y": 105,
+        "width": 100,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 1
+    },
+    "petitioner_phone": {
+        "x": 120,
+        "y": 115,
+        "width": 80,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 1
+    },
+    "respondent_name": {
+        "x": 120,
+        "y": 135,
+        "width": 100,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 1
+    },
+    "respondent_address": {
+        "x": 120,
+        "y": 145,
+        "width": 100,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 1
+    },
+    "marriage_date": {
+        "x": 45,
+        "y": 180,
+        "width": 60,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 1
+    },
+    "separation_date": {
+        "x": 120,
+        "y": 180,
+        "width": 60,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 1
+    },
+    "marriage_location": {
+        "x": 45,
+        "y": 190,
+        "width": 100,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 1
+    },
+    "has_children": {
+        "x": 45,
+        "y": 50,
+        "width": 20,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 2
+    },
+    "children_count": {
+        "x": 80,
+        "y": 50,
+        "width": 20,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 2
+    },
+    "children_details": {
+        "x": 45,
+        "y": 70,
+        "width": 150,
+        "height": 20,
+        "fontSize": 10,
+        "type": "text",
+        "page": 2
+    },
+    "property_division": {
+        "x": 45,
+        "y": 120,
+        "width": 150,
+        "height": 20,
+        "fontSize": 10,
+        "type": "text",
+        "page": 2
+    },
+    "spousal_support": {
+        "x": 45,
+        "y": 150,
+        "width": 150,
+        "height": 20,
+        "fontSize": 10,
+        "type": "text",
+        "page": 2
+    },
+    "relief_requested": {
+        "x": 45,
+        "y": 200,
+        "width": 150,
+        "height": 30,
+        "fontSize": 10,
+        "type": "text",
+        "page": 2
+    },
+    "additional_information": {
+        "x": 45,
+        "y": 50,
+        "width": 150,
+        "height": 40,
+        "fontSize": 10,
+        "type": "text",
+        "page": 3
+    },
+    "petitioner_signature": {
+        "x": 45,
+        "y": 200,
+        "width": 100,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 3
+    },
+    "attorney_signature": {
+        "x": 45,
+        "y": 220,
+        "width": 100,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 3
+    },
+    "signature_date": {
+        "x": 45,
+        "y": 240,
+        "width": 60,
+        "height": 8,
+        "fontSize": 10,
+        "type": "text",
+        "page": 3
+    }
+}

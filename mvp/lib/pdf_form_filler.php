@@ -7,6 +7,7 @@ require_once __DIR__ . '/../../vendor/autoload.php';
 require_once __DIR__ . '/field_position_loader.php';
 require_once __DIR__ . '/field_fillers/FieldFillerManager.php';
 require_once __DIR__ . '/fl100_test_data_generator.php';
+require_once __DIR__ . '/logger.php';
 
 use setasign\Fpdi\Fpdi;
 use WebPdfTimeSaver\Mvp\FieldFillers\FieldFillerManager;
