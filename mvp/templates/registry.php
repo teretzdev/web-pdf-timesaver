@@ -11,6 +11,9 @@ final class TemplateRegistry {
 				'id' => 't_fl100_gc120',
 				'code' => 'FL-100',
 				'name' => 'Petition—Marriage/Domestic Partnership',
+				'version' => '1.0',
+				'createdAt' => '2025-01-01T00:00:00Z',
+				'updatedAt' => '2025-01-01T00:00:00Z',
 				'pageCount' => 3,
 				'panels' => [
 					[ 'id' => 'attorney', 'label' => 'Attorney' ],
@@ -284,6 +287,9 @@ final class TemplateRegistry {
 				'id' => 't_fl105_gc120',
 				'code' => 'FL-105/GC-120',
 				'name' => 'Declaration Under UCCJEA',
+				'version' => '1.0',
+				'createdAt' => '2025-01-01T00:00:00Z',
+				'updatedAt' => '2025-01-01T00:00:00Z',
 				'pageCount' => 1,
 				'panels' => [
 					[ 'id' => 'attorney', 'label' => 'Attorney' ],
