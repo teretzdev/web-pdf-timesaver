@@ -1,0 +1,72 @@
+{
+    "templateId": "t_test_browser",
+    "pdf": "FL-100_decrypted.pdf",
+    "positionsFile": "t_test_browser_positions.json",
+    "generatedAt": "2025-11-17T00:52:08.133Z",
+    "summary": {
+        "fields": 3,
+        "avgScore": 0.55,
+        "fails": 3,
+        "warns": 0,
+        "pass": false
+    },
+    "results": [
+        {
+            "name": "pek_rect_1_0",
+            "page": 1,
+            "x": 62.3,
+            "y": 72.28,
+            "width": 41.3808594,
+            "height": 5.27,
+            "type": "text",
+            "confidence": 0.88,
+            "score": 0.55,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "fail",
+            "canonicalName": "pek_rect_1_0"
+        },
+        {
+            "name": "label_inferred_1_0",
+            "page": 1,
+            "x": 93.07,
+            "y": 85.97,
+            "width": 63.5,
+            "height": 5,
+            "type": "text",
+            "confidence": 0.86,
+            "score": 0.55,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "fail",
+            "canonicalName": "label_inferred_1_0"
+        },
+        {
+            "name": "checkbox_0",
+            "page": 1,
+            "x": 62.3,
+            "y": 110.25,
+            "width": 5,
+            "height": 5,
+            "type": "checkbox",
+            "confidence": 0.85,
+            "score": 0.55,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_0"
+        }
+    ]
+}

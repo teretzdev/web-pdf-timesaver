@@ -1,0 +1,76 @@
+{
+    "pek_rect_1_0": {
+        "name": "pek_rect_1_0",
+        "canonicalName": "pek_rect_1_0",
+        "type": "text",
+        "page": 1,
+        "x": 52.1,
+        "y": 247.25,
+        "width": 50.8176709,
+        "height": 5.43,
+        "fontSize": 10,
+        "confidence": 0.88,
+        "method": "ensemble",
+        "methodSource": "pdf-extract-kit-wrapper",
+        "methodsAgreed": 4,
+        "sources": [
+            "pdf-extract-kit-wrapper"
+        ],
+        "aliases": [
+            "pek_rect_1_0",
+            "pek_rect_2_3",
+            "pek_label_1_1",
+            "pek_label_1_2"
+        ],
+        "agreementRatio": 4,
+        "originalName": "pek_rect_1_0"
+    },
+    "label_inferred_1_0": {
+        "name": "label_inferred_1_0",
+        "canonicalName": "label_inferred_1_0",
+        "type": "text",
+        "page": 1,
+        "x": 37.44,
+        "y": 262.53,
+        "width": 63.5,
+        "height": 5,
+        "fontSize": 10,
+        "confidence": 0.86,
+        "method": "ensemble",
+        "methodSource": "ffdnet-detector",
+        "methodsAgreed": 2,
+        "sources": [
+            "ffdnet-detector"
+        ],
+        "aliases": [
+            "label_inferred_1_0",
+            "label_inferred_1_1"
+        ],
+        "agreementRatio": 2,
+        "originalName": "label_inferred_1_0"
+    },
+    "checkbox_0": {
+        "name": "checkbox_0",
+        "canonicalName": "checkbox_0",
+        "type": "checkbox",
+        "page": 1,
+        "x": 63.41,
+        "y": 98.56,
+        "width": 5,
+        "height": 5,
+        "fontSize": 3.4,
+        "confidence": 0.8,
+        "method": "ensemble",
+        "methodSource": "ocr-field-detection",
+        "methodsAgreed": 2,
+        "sources": [
+            "ocr-field-detection"
+        ],
+        "aliases": [
+            "checkbox_0",
+            "checkbox_1"
+        ],
+        "agreementRatio": 2,
+        "originalName": "checkbox_0"
+    }
+}

@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace WebPdfTimeSaver\Mvp\FieldFillers;
 
 require_once __DIR__ . '/../field_position_loader.php';
+require_once __DIR__ . '/../font_manager.php';
 
 final class PartyFieldFiller implements FieldFillerInterface {
     private $positionLoader;
@@ -20,7 +21,8 @@ final class PartyFieldFiller implements FieldFillerInterface {
         // Petitioner Name
         if (!empty($data['petitioner_name']) && isset($positions['petitioner_name'])) {
             $pos = $positions['petitioner_name'];
-            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $fontSettings = \WebPdfTimeSaver\Mvp\FontManager::getFontSettings($pos, 't_fl100_gc120', 'name');
+            \WebPdfTimeSaver\Mvp\FontManager::applyFont($pdf, $fontSettings);
             $pdf->SetXY($pos['x'], $pos['y']);
             $pdf->Cell($pos['width'], 5, $data['petitioner_name'], 0, 0, 'L');
             $logger->debug('Petitioner filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['petitioner_name']]);
@@ -29,7 +31,8 @@ final class PartyFieldFiller implements FieldFillerInterface {
         // Respondent Name
         if (!empty($data['respondent_name']) && isset($positions['respondent_name'])) {
             $pos = $positions['respondent_name'];
-            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $fontSettings = \WebPdfTimeSaver\Mvp\FontManager::getFontSettings($pos, 't_fl100_gc120', 'name');
+            \WebPdfTimeSaver\Mvp\FontManager::applyFont($pdf, $fontSettings);
             $pdf->SetXY($pos['x'], $pos['y']);
             $pdf->Cell($pos['width'], 5, $data['respondent_name'], 0, 0, 'L');
             $logger->debug('Respondent filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['respondent_name']]);
@@ -38,7 +41,8 @@ final class PartyFieldFiller implements FieldFillerInterface {
         // Petitioner Address
         if (!empty($data['petitioner_address']) && isset($positions['petitioner_address'])) {
             $pos = $positions['petitioner_address'];
-            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $fontSettings = \WebPdfTimeSaver\Mvp\FontManager::getFontSettings($pos, 't_fl100_gc120', 'address');
+            \WebPdfTimeSaver\Mvp\FontManager::applyFont($pdf, $fontSettings);
             $pdf->SetXY($pos['x'], $pos['y']);
             $pdf->Cell($pos['width'], 5, $data['petitioner_address'], 0, 0, 'L');
             $logger->debug('Petitioner address filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['petitioner_address']]);
@@ -47,7 +51,8 @@ final class PartyFieldFiller implements FieldFillerInterface {
         // Petitioner Phone
         if (!empty($data['petitioner_phone']) && isset($positions['petitioner_phone'])) {
             $pos = $positions['petitioner_phone'];
-            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $fontSettings = \WebPdfTimeSaver\Mvp\FontManager::getFontSettings($pos, 't_fl100_gc120', 'phone');
+            \WebPdfTimeSaver\Mvp\FontManager::applyFont($pdf, $fontSettings);
             $pdf->SetXY($pos['x'], $pos['y']);
             $pdf->Cell($pos['width'], 5, $data['petitioner_phone'], 0, 0, 'L');
             $logger->debug('Petitioner phone filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['petitioner_phone']]);
@@ -56,7 +61,8 @@ final class PartyFieldFiller implements FieldFillerInterface {
         // Respondent Address
         if (!empty($data['respondent_address']) && isset($positions['respondent_address'])) {
             $pos = $positions['respondent_address'];
-            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $fontSettings = \WebPdfTimeSaver\Mvp\FontManager::getFontSettings($pos, 't_fl100_gc120', 'address');
+            \WebPdfTimeSaver\Mvp\FontManager::applyFont($pdf, $fontSettings);
             $pdf->SetXY($pos['x'], $pos['y']);
             $pdf->Cell($pos['width'], 5, $data['respondent_address'], 0, 0, 'L');
             $logger->debug('Respondent address filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['respondent_address']]);

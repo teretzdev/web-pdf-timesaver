@@ -1,15 +1,15 @@
 <h2>Templates</h2>
 
-<div class="clio-card" style="display: flex; gap: 16px; margin-bottom: 16px;">
-    <a href="?route=projects" class="clio-btn-secondary">Back to Matters</a>
-    <a href="?route=clients" class="clio-btn-secondary">Clients</a>
+<div class="pdftimesaver-card" style="display: flex; gap: 16px; margin-bottom: 16px;">
+    <a href="?route=projects" class="pdftimesaver-btn-secondary">Back to Matters</a>
+    <a href="?route=clients" class="pdftimesaver-btn-secondary">Clients</a>
 </div>
 
-<div class="clio-card">
+<div class="pdftimesaver-card">
     <h3 style="margin: 0 0 16px 0;">Available Templates</h3>
     <p style="color: #6c757d; margin-bottom: 20px;">Manage document templates and their fields. Templates define the structure and fields for your legal documents.</p>
 
-<table class="clio-table">
+<table class="pdftimesaver-table">
     <thead>
         <tr>
             <th>Code</th>
@@ -35,8 +35,8 @@
                     <span style="color: #6c757d;"><?php echo count($template['panels'] ?? []); ?> panels</span>
                 </td>
                 <td>
-                    <a href="?route=template-edit&id=<?php echo htmlspecialchars($template['id']); ?>" class="clio-btn-secondary">Edit Fields</a>
-                    <a href="?route=projects" class="clio-btn-secondary">Use Template</a>
+                    <a href="?route=template-edit&id=<?php echo htmlspecialchars($template['id']); ?>" class="pdftimesaver-btn-secondary">Edit Fields</a>
+                    <a href="?route=projects" class="pdftimesaver-btn-secondary">Use Template</a>
                 </td>
             </tr>
         <?php endforeach; ?>
@@ -45,14 +45,14 @@
 </div>
 
 <?php if (empty($templates)): ?>
-    <div class="clio-card" style="text-align: center; padding: 60px 20px;">
+    <div class="pdftimesaver-card" style="text-align: center; padding: 60px 20px;">
         <div style="font-size: 48px; margin-bottom: 16px;">📝</div>
         <h3 style="margin: 0 0 8px 0;">No Templates Available</h3>
         <p style="color: #6c757d;">Templates are defined in the system configuration. Contact your administrator to add new templates.</p>
     </div>
 <?php endif; ?>
 
-<div class="clio-card">
+<div class="pdftimesaver-card">
     <h3 style="margin: 0 0 16px 0;">Template Information</h3>
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px;">
         <div>

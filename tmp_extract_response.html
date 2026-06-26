@@ -1,0 +1,3371 @@
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>PDFTimeSaver</title>
+    <style>
+        * { 
+            box-sizing: border-box; 
+            margin: 0;
+            padding: 0;
+        }
+        
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; 
+            background: #f5f6fa; 
+            color: #2c3e50;
+            line-height: 1.4;
+            font-size: 14px;
+        }
+        
+        /* Header removed - using sidebar only */
+        
+        /* Sidebar */
+        .pdftimesaver-sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: 200px;
+            height: 100vh;
+            background: #f8f9fa;
+            border-right: 1px solid #ddd;
+            padding: 20px 0;
+            overflow-y: auto;
+            z-index: 1000;
+            display: block !important;
+            visibility: visible !important;
+            transition: width 0.18s ease;
+        }
+        
+        .pdftimesaver-sidebar-nav {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .pdftimesaver-sidebar-nav li {
+            margin: 0;
+        }
+        
+        .pdftimesaver-sidebar-nav a {
+            display: block;
+            padding: 12px 20px;
+            color: #555;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+        
+        .pdftimesaver-sidebar-nav a:hover {
+            background: #e9ecef;
+            color: #333;
+        }
+        
+        .pdftimesaver-sidebar-nav a.active {
+            background: #fff;
+            color: #007bff;
+            border-left-color: #007bff;
+        }
+        
+        /* Main Content */
+        .pdftimesaver-main-content {
+            margin-left: 200px;
+            background: #fff;
+            min-height: 100vh;
+            transition: margin-left 0.18s ease;
+        }
+
+        @media (min-width: 769px) {
+            body.sidebar-auto-collapse .pdftimesaver-sidebar {
+                width: 64px;
+                overflow-x: hidden;
+            }
+
+            body.sidebar-auto-collapse .pdftimesaver-main-content {
+                margin-left: 64px;
+            }
+
+            body.sidebar-auto-collapse .pdftimesaver-sidebar:hover,
+            body.sidebar-auto-collapse .pdftimesaver-sidebar:focus-within {
+                width: 200px;
+            }
+
+            body.sidebar-auto-collapse .pdftimesaver-sidebar-nav a {
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: clip;
+                padding-left: 14px;
+                padding-right: 14px;
+            }
+        }
+        
+        .pdftimesaver-content-header {
+            background: #ffffff;
+            border-bottom: 1px solid #ddd;
+            padding: 15px 20px;
+        }
+        
+        .pdftimesaver-content-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin: 0;
+        }
+        
+        .pdftimesaver-content-body {
+            padding: 20px;
+        }
+        
+        /* PDFTimeSaver Components */
+        .pdftimesaver-btn {
+            background: #007bff;
+            color: #ffffff;
+            border: none;
+            padding: 8px 12px;
+            border-radius: 3px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+        }
+        
+        .pdftimesaver-btn:hover {
+            background: #0056b3;
+        }
+        
+        .pdftimesaver-btn-secondary {
+            background: #ffffff;
+            color: #555;
+            border: 1px solid #ccc;
+        }
+        
+        .pdftimesaver-btn-secondary:hover {
+            background: #f5f5f5;
+        }
+        
+        .pdftimesaver-card {
+            background: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .pdftimesaver-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .pdftimesaver-table th {
+            background: #f5f5f5;
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 500;
+            color: #333;
+            font-size: 13px;
+            border-bottom: 1px solid #ddd;
+        }
+        
+        .pdftimesaver-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #eee;
+            color: #555;
+            font-size: 14px;
+        }
+        
+        .pdftimesaver-table tr:hover {
+            background: #f9f9f9;
+        }
+        
+        .pdftimesaver-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+        
+        .pdftimesaver-input:focus {
+            outline: none;
+            border-color: #1976d2;
+            box-shadow: 0 0 0 2px rgba(25, 118, 210, 0.2);
+        }
+
+        /* Mobile Menu Toggle Button */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 1002;
+            background: #007bff;
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            min-width: 44px;
+            min-height: 44px;
+        }
+
+        .mobile-menu-toggle:active {
+            background: #0056b3;
+        }
+
+        /* Mobile Overlay */
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+
+        .mobile-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        
+        .pdftimesaver-form-group {
+            margin-bottom: 20px;
+        }
+        
+        .pdftimesaver-form-label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #2c3e50;
+            font-size: 14px;
+        }
+        
+        /* Status badges */
+        .pdftimesaver-status {
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-size: 11px;
+            font-weight: 500;
+        }
+        
+        .pdftimesaver-status-active {
+            background: #d4edda;
+            color: #155724;
+        }
+        
+        .pdftimesaver-status-archived {
+            background: #f8d7da;
+            color: #721c24;
+        }
+        
+        .pdftimesaver-status-in-progress {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+        
+        /* Feature detection and fallbacks */
+        @supports not (display: flex) {
+            .pdftimesaver-header { display: block; }
+        }
+
+        /* Responsive Tables */
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .mobile-overlay {
+                display: block;
+            }
+
+            .pdftimesaver-sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                box-shadow: 2px 0 8px rgba(0, 0, 0, 0.15);
+            }
+            
+            .pdftimesaver-sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .pdftimesaver-main-content {
+                margin-left: 0;
+            }
+            
+            .pdftimesaver-content-header {
+                padding: 60px 20px 15px 20px; /* Add top padding for hamburger menu */
+            }
+
+            .pdftimesaver-content-body {
+                padding: 15px;
+            }
+
+            /* Touch-friendly buttons */
+            .pdftimesaver-btn, .pdftimesaver-btn-secondary {
+                min-height: 44px;
+                padding: 12px 16px;
+                font-size: 16px;
+            }
+
+            /* Stack button groups vertically */
+            .button-group {
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                width: 100%;
+            }
+
+            .button-group .pdftimesaver-btn,
+            .button-group .pdftimesaver-btn-secondary {
+                width: 100%;
+            }
+
+            /* Forms: single column on mobile */
+            .grid {
+                grid-template-columns: 1fr !important;
+            }
+
+            /* Inputs: prevent zoom on focus */
+            .pdftimesaver-input, .pdftimesaver-input:focus {
+                font-size: 16px;
+            }
+
+            /* Tables: force horizontal scroll */
+            .pdftimesaver-table {
+                min-width: 600px;
+            }
+
+            /* Card adjustments */
+            .pdftimesaver-card {
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+
+            /* Content title */
+            .pdftimesaver-content-title {
+                font-size: 16px;
+            }
+
+            /* Responsive flex containers */
+            [style*="display: flex"] {
+                flex-wrap: wrap;
+            }
+        }
+
+        /* Very small screens */
+        @media (max-width: 480px) {
+            .pdftimesaver-content-body {
+                padding: 10px;
+            }
+
+            .pdftimesaver-btn, .pdftimesaver-btn-secondary {
+                padding: 14px 16px;
+            }
+
+            h2, h3 {
+                font-size: 18px !important;
+            }
+        }
+
+        /* Drafting Interface Overrides */
+        .drafting-layout .pdftimesaver-main-content {
+            margin-left: 0; /* Override sidebar margin for full-screen drafting */
+        }
+
+        @media (max-width: 768px) {
+            .pdftimesaver-drafting-header {
+                left: 0 !important;
+            }
+        }
+
+        /* Workflow Progress Indicator */
+        .workflow-progress {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+            padding: 0 20px;
+        }
+
+        .workflow-step {
+            display: flex;
+            align-items: center;
+            padding: 8px 16px;
+            margin: 0 4px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .workflow-step.active {
+            background: #007bff;
+            color: white;
+        }
+
+        .workflow-step.completed {
+            background: #28a745;
+            color: white;
+        }
+
+        .workflow-step.pending {
+            background: #f8f9fa;
+            color: #6c757d;
+            border: 1px solid #dee2e6;
+        }
+
+        .workflow-step:not(:last-child)::after {
+            content: '→';
+            margin-left: 8px;
+            color: #6c757d;
+        }
+
+        .workflow-step.active:not(:last-child)::after,
+        .workflow-step.completed:not(:last-child)::after {
+            color: white;
+        }
+
+        /* Enhanced Button Styling */
+        .pdftimesaver-btn-large {
+            padding: 12px 24px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 6px;
+            transition: all 0.3s ease;
+        }
+
+        .pdftimesaver-btn-large:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        }
+
+        /* File Upload Zone Enhancements */
+        .file-upload-zone {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .file-upload-zone::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(0, 123, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .file-upload-zone:hover::before {
+            left: 100%;
+        }
+
+        /* Client Files List Enhancements */
+        .client-file-item {
+            transition: all 0.3s ease;
+            border-radius: 6px;
+        }
+
+        .client-file-item:hover {
+            background: #f8f9fa;
+            transform: translateX(4px);
+        }
+
+        .client-file-item .file-actions {
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .client-file-item:hover .file-actions {
+            opacity: 1;
+        }
+
+        /* Status Dropdown Enhancements */
+        .status-dropdown {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .status-dropdown:hover {
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+        }
+
+        .status-dropdown:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+        }
+
+        /* Modal Enhancements */
+        .modal {
+            backdrop-filter: blur(4px);
+        }
+
+        .modal-content {
+            animation: modalSlideIn 0.3s ease;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        /* Form Field Enhancements */
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.1);
+            transform: translateY(-1px);
+        }
+
+        /* Breadcrumb Enhancements */
+        .breadcrumb {
+            margin-bottom: 20px;
+            padding: 12px 0;
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .breadcrumb-list {
+            display: flex;
+            align-items: center;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            gap: 8px;
+        }
+
+        .breadcrumb-item {
+            display: flex;
+            align-items: center;
+        }
+
+        .breadcrumb-link {
+            color: #0b6bcb;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: color 0.2s ease;
+        }
+
+        .breadcrumb-link:hover {
+            color: #0a5bb8;
+            text-decoration: underline;
+        }
+
+        .breadcrumb-text {
+            color: #65748b;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .breadcrumb-item.active .breadcrumb-text {
+            color: #1a2b3b;
+            font-weight: 600;
+        }
+
+        .breadcrumb-separator {
+            color: #d7dce3;
+            font-size: 14px;
+            margin: 0 4px;
+        }
+
+        .breadcrumb a {
+            color: #007bff;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .breadcrumb a:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        .breadcrumb-current {
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        /* Loading States */
+        .loading {
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            margin: -10px 0 0 -10px;
+            border: 2px solid #f3f3f3;
+            border-top: 2px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Success/Error States */
+        .success-message {
+            background: #d4edda;
+            color: #155724;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border: 1px solid #c3e6cb;
+            margin: 10px 0;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 12px 16px;
+            border-radius: 6px;
+            border: 1px solid #f5c6cb;
+            margin: 10px 0;
+        }
+
+        /* Accessibility Improvements */
+        .pdftimesaver-btn:focus,
+        .status-dropdown:focus,
+        .modal-close:focus {
+            outline: 2px solid #007bff;
+            outline-offset: 2px;
+        }
+
+        /* Drafting Interface Styles */
+        .pdftimesaver-drafting-header {
+            position: fixed;
+            top: 0;
+            left: 200px;
+            right: 0;
+            height: 60px;
+            background: #ffffff;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+            z-index: 999;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .header-left {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .header-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            padding: 0 20px;
+        }
+
+        .header-right {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+            /* Drafting Content Layout */
+            .drafting-layout {
+                margin-top: 60px; /* Account for fixed header */
+                display: flex;
+                min-height: calc(100vh - 60px);
+            }
+
+            .document-list-panel {
+                width: 280px;
+                background: #f8f9fa;
+                border-right: 1px solid #ddd;
+                padding: 20px;
+                overflow-y: auto;
+                max-height: calc(100vh - 60px);
+            }
+
+            .document-list-panel h3 {
+                margin: 0 0 16px 0;
+                font-size: 16px;
+                font-weight: 600;
+                color: #2c3e50;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .document-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+
+            .document-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                padding: 12px;
+                border-bottom: 1px solid #e9ecef;
+                cursor: pointer;
+                transition: all 0.2s ease;
+                border-radius: 4px;
+                margin-bottom: 4px;
+            }
+
+            .document-item:hover {
+                background: #e9ecef;
+            }
+
+            .document-item.active {
+                background: #007bff;
+                color: white;
+            }
+
+            .document-item.active .status-indicator {
+                background: rgba(255,255,255,0.2);
+                color: white;
+            }
+
+            .document-info {
+                flex: 1;
+            }
+
+            .document-name {
+                font-size: 13px;
+                font-weight: 500;
+                margin-bottom: 4px;
+            }
+
+            .document-status {
+                font-size: 11px;
+            }
+
+            .status-indicator {
+                padding: 2px 6px;
+                border-radius: 3px;
+                font-size: 10px;
+                font-weight: 500;
+                text-transform: uppercase;
+            }
+
+            .status-in-progress {
+                background: #fff3cd;
+                color: #856404;
+            }
+
+            .status-review {
+                background: #d1ecf1;
+                color: #0c5460;
+            }
+
+            .status-completed {
+                background: #d4edda;
+                color: #155724;
+            }
+
+            .status-ready-to-sign {
+                background: #e2e3e5;
+                color: #383d41;
+            }
+
+            .document-actions {
+                opacity: 0;
+                transition: opacity 0.2s ease;
+            }
+
+            .document-item:hover .document-actions {
+                opacity: 1;
+            }
+
+            .action-link {
+                color: #007bff;
+                text-decoration: none;
+                font-size: 12px;
+                font-weight: 500;
+            }
+
+            .action-link:hover {
+                text-decoration: underline;
+            }
+
+            .drafting-main-content {
+                flex: 1;
+                padding: 20px;
+                overflow-y: auto;
+            }
+
+            .client-vault-panel {
+                width: 280px;
+                background: #f8f9fa;
+                border-left: 1px solid #ddd;
+                padding: 20px;
+                overflow-y: auto;
+                max-height: calc(100vh - 60px);
+            }
+
+        .client-vault-panel h3 {
+            margin: 0 0 16px 0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        /* File Upload Zone */
+        .file-upload-zone {
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 30px 20px;
+            text-align: center;
+            transition: all 0.3s ease;
+            background: #fff;
+            margin-bottom: 20px;
+        }
+
+        .file-upload-zone:hover,
+        .file-upload-zone.dragover {
+            border-color: #007bff;
+            background: rgba(0, 123, 255, 0.05);
+        }
+
+        .file-upload-zone p {
+            margin: 0 0 8px 0;
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .browse-link {
+            color: #1976d2;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .browse-link:hover {
+            text-decoration: underline;
+        }
+
+        .file-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #e9ecef;
+            font-size: 13px;
+        }
+
+        .file-item:hover {
+            background: #f8f9fa;
+        }
+
+        .file-delete-btn {
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            padding: 0 8px;
+            font-size: 18px;
+        }
+
+        .file-delete-btn:hover {
+            color: #c82333;
+        }
+
+        /* Workflow Instructions */
+        .workflow-instructions {
+            background: #f8f9fa;
+            border-left: 4px solid #007bff;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+
+        .workflow-instructions p {
+            margin: 0 0 8px 0;
+            color: #495057;
+            font-size: 14px;
+        }
+
+        .workflow-instructions p:last-child {
+            margin-bottom: 0;
+        }
+
+        /* PDF Preview Container */
+        .pdf-preview-container {
+            position: relative;
+            border: 2px solid #dee2e6;
+            border-radius: 8px;
+            overflow: hidden;
+            background: #fff;
+            margin-bottom: 20px;
+        }
+
+        .pdf-container {
+            position: relative;
+            width: 100%;
+            height: 800px;
+            overflow: auto;
+            background: #f8f9fa;
+        }
+
+        #pdf-iframe {
+            border: none;
+            width: 100%;
+            height: 100%;
+        }
+
+        .pdf-field-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 10;
+        }
+
+        .pdf-field {
+            position: absolute;
+            border: 2px solid #007bff;
+            background: rgba(255,255,255,0.9);
+            pointer-events: auto;
+        }
+
+        .pdf-field-input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            padding: 2px 6px;
+            font-size: 12px;
+            background: transparent;
+        }
+
+        .pdf-field-input:focus {
+            outline: none;
+            background: #fff;
+            box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+        }
+
+        /* Custom Field Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: #fff;
+            border-radius: 8px;
+            padding: 24px;
+            width: 500px;
+            max-width: 90vw;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-header h3 {
+            margin: 0;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6c757d;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+        }
+
+        /* Custom Field Styling */
+        .custom-field {
+            border-color: #28a745 !important;
+            background: rgba(40, 167, 69, 0.1) !important;
+        }
+
+        .custom-field-indicator {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            width: 16px;
+            height: 16px;
+            background: #28a745;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .custom-field:hover .custom-field-indicator {
+            background: #218838;
+        }
+
+        /* Positioning Instructions */
+        #positioning-instructions {
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+            to { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        }
+
+        /* Print Styles */
+        @media print {
+            .pdftimesaver-drafting-header,
+            .client-vault-panel,
+            .modal {
+                display: none !important;
+            }
+            
+            .pdftimesaver-main-content {
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+        }
+    </style>
+</head>
+<body class="">
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" id="mobile-menu-toggle" aria-label="Toggle menu">
+        ☰
+    </button>
+
+    <!-- Mobile Overlay -->
+    <div class="mobile-overlay" id="mobile-overlay"></div>
+    
+    <!-- Sidebar -->
+    <nav class="pdftimesaver-sidebar" id="pdftimesaver-sidebar">
+        <ul class="pdftimesaver-sidebar-nav">
+                            <li>
+                    <a href="?route=dashboard" 
+                       class="">
+                        Dashboard                    </a>
+                </li>
+                            <li>
+                    <a href="?route=clients" 
+                       class="">
+                        Clients                    </a>
+                </li>
+                            <li>
+                    <a href="?route=projects" 
+                       class="">
+                        Projects                    </a>
+                </li>
+                            <li>
+                    <a href="?route=settings" 
+                       class="">
+                        Settings                    </a>
+                </li>
+                            <li>
+                    <a href="?route=form-management" 
+                       class="">
+                        🗂️ Form Management                    </a>
+                </li>
+                            <li>
+                    <a href="?route=field-manager" 
+                       class="">
+                        🧩 Field Manager                    </a>
+                </li>
+                            <li>
+                    <a href="?route=firm-defaults" 
+                       class="">
+                        🏢 Firm Information                    </a>
+                </li>
+                    </ul>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="pdftimesaver-main-content">
+        <div class="pdftimesaver-content-header">
+            <h1 class="pdftimesaver-content-title">
+                Dashboard            </h1>
+        </div>
+        <div class="pdftimesaver-content-body">
+                                    
+<div class="pdftimesaver-card">
+    <h2 style="margin: 0 0 20px 0; color: #2c3e50; font-size: 24px; font-weight: 700;">
+        PDF Field Extractor
+    </h2>
+    <p style="color: #6c757d; margin-bottom: 24px;">
+        Upload a fillable PDF to automatically extract form field positions. This will generate a position file
+        that can be used for automatic form filling.
+    </p>
+</div>
+
+
+    <div class="pdftimesaver-card" style="background: #d4edda; color: #155724; margin-bottom: 16px;">
+        ✅ Successfully extracted 148 fields and generated 3 background images!    </div>
+
+    <div class="pdftimesaver-card">
+        <h3 style="margin: 0 0 16px 0; color: #2c3e50; font-size: 18px;">
+            Extracted 148 Form Fields
+        </h3>
+        
+        <div class="table-responsive">
+            <table class="pdftimesaver-table">
+                <thead>
+                    <tr>
+                        <th>Field Name</th>
+                        <th>Type</th>
+                        <th>Page</th>
+                        <th>Position (X, Y)</th>
+                        <th>Size (W × H)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_PartiesSignedVoluntaryPaternityDec_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (25.1, 246.8)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_Amended_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (114.0, 80.3)                            </td>
+                            <td>
+                                3.5 × 3.5                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_DissolutionOf_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (16.7, 85.1)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_Marriage_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (66.0, 85.1)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_DomesticPartnership_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (100.0, 85.2)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_NullityOf_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (16.7, 93.7)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_Marriage_cb_1                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (66.0, 93.8)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_DomesticPartnership_cb_1                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (100.0, 93.8)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_LegalSeparationOf_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (16.7, 89.4)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_Marriage_cb_2                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (66.0, 89.3)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_DomesticPartnership_cb_2                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (100.0, 89.3)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_AttyFor_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (38.1, 45.1)                            </td>
+                            <td>
+                                101.0 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_Email_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (32.1, 41.1)                            </td>
+                            <td>
+                                107.0 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_Fax_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (93.9, 36.8)                            </td>
+                            <td>
+                                45.3 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_Phone_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (31.4, 36.8)                            </td>
+                            <td>
+                                45.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_AttyZip_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (115.4, 32.8)                            </td>
+                            <td>
+                                23.8 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_AttyState_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (93.4, 32.8)                            </td>
+                            <td>
+                                10.4 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_AttyCity_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (19.1, 32.8)                            </td>
+                            <td>
+                                65.9 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_AttyStreet_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (33.2, 28.7)                            </td>
+                            <td>
+                                106.0 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_AttyFirm_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (25.8, 24.8)                            </td>
+                            <td>
+                                113.4 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_AttyName_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (20.5, 20.6)                            </td>
+                            <td>
+                                118.6 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_BarNo_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (108.9, 16.6)                            </td>
+                            <td>
+                                30.0 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_CourtInfo_0_CrtCounty_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (81.3, 50.6)                            </td>
+                            <td>
+                                56.8 × 3.5                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_CourtInfo_0_Branch_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (39.3, 65.0)                            </td>
+                            <td>
+                                98.8 × 3.5                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_CourtInfo_0_CityZip_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (39.4, 61.4)                            </td>
+                            <td>
+                                98.8 × 3.5                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_CourtInfo_0_Street_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (39.4, 54.2)                            </td>
+                            <td>
+                                98.8 × 3.5                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_CourtInfo_0_MailingAdd_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (39.3, 57.8)                            </td>
+                            <td>
+                                98.8 × 3.5                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_TitlePartyName_0_Party2_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (35.2, 74.6)                            </td>
+                            <td>
+                                103.6 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_TitlePartyName_0_Party1_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (35.2, 71.1)                            </td>
+                            <td>
+                                103.6 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CaptionP1_sf_0_CaseNumber_0_CaseNumber_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (142.0, 84.5)                            </td>
+                            <td>
+                                53.2 × 4.1                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_WeAreMarried_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (25.1, 104.7)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_DPEstablishedInCalifornia_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (25.1, 110.0)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_DPNOTEstablishedinCA_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (25.1, 115.2)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_RespondentMeetsResidencyReqs_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (48.5, 126.1)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_PetitionerMeetsResidencyReqs_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (25.1, 126.1)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_DateOfMarriage_dt_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (75.5, 164.5)                            </td>
+                            <td>
+                                33.0 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_DateOfSeparation_dt_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (157.7, 164.5)                            </td>
+                            <td>
+                                44.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_MonthsSeparated_tf_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (120.7, 168.9)                            </td>
+                            <td>
+                                12.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CheckBox61_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (25.1, 164.5)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_CheckBox61_1                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (25.1, 173.1)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_DatePartnersSeparated_dt_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (157.2, 177.5)                            </td>
+                            <td>
+                                45.8 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_DateTimeField1_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (37.4, 177.5)                            </td>
+                            <td>
+                                71.7 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_ThereAreNoMinorChildren_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (25.1, 193.2)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_MinorChildren_sf_0_MinorChildrenList_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (25.1, 197.5)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_MinorChildren_sf_0_Child1Name_tf_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (32.1, 205.5)                            </td>
+                            <td>
+                                76.2 × 4.3                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_MinorChildren_sf_0_Child4Name_tf_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (32.1, 220.6)                            </td>
+                            <td>
+                                76.2 × 4.3                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_MinorChildren_sf_0_Child3Name_tf_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (32.1, 215.4)                            </td>
+                            <td>
+                                76.2 × 4.3                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_MinorChildren_sf_0_Child2Name_tf_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (32.1, 210.5)                            </td>
+                            <td>
+                                76.2 × 4.3                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_MinorChildren_sf_0_Child1Age_tf_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (143.1, 205.5)                            </td>
+                            <td>
+                                17.8 × 4.3                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_MinorChildren_sf_0_Child4Age_tf_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (143.1, 220.6)                            </td>
+                            <td>
+                                17.8 × 4.3                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_MinorChildren_sf_0_Child3Age_tf_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (143.1, 215.4)                            </td>
+                            <td>
+                                17.8 × 4.3                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_MinorChildren_sf_0_Child2Age_tf_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (143.1, 210.5)                            </td>
+                            <td>
+                                17.8 × 4.3                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_MinorChildren_sf_0_Child1Birthdate_dt_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (111.8, 205.5)                            </td>
+                            <td>
+                                29.5 × 4.3                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_MinorChildren_sf_0_Child4Birthdate_dt_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (112.0, 220.6)                            </td>
+                            <td>
+                                29.1 × 4.3                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_MinorChildren_sf_0_Child3Date_dt_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (112.0, 215.4)                            </td>
+                            <td>
+                                29.1 × 4.3                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_MinorChildren_sf_0_Child2Birthdate_dt_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (112.0, 210.5)                            </td>
+                            <td>
+                                29.1 × 4.3                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_MinorChildren_sf_0_UnbornChild_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (121.1, 226.4)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_MinorChildren_sf_0_Attachment4b_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (38.6, 226.4)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_DPNOTEstablishedinCA_cb_1                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (25.1, 137.5)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_SameSexMarriedInCA_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (25.1, 145.9)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_RespondentsResidence_tf_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (158.3, 154.2)                            </td>
+                            <td>
+                                44.7 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_PetitionersResidence_tf_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (70.1, 154.2)                            </td>
+                            <td>
+                                44.6 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_MonthsSeparated_tf_1                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (145.6, 168.9)                            </td>
+                            <td>
+                                10.1 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_MonthsSeparated_tf_2                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (179.0, 181.4)                            </td>
+                            <td>
+                                10.1 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page1_0_MonthsSeparated_tf_3                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>1</td>
+                            <td>
+                                (158.3, 181.4)                            </td>
+                            <td>
+                                10.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_Nullity_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (25.1, 53.1)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_BasedOnIncest_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (40.9, 58.0)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_BasedOnBigamy_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (74.9, 58.0)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_NullityofVoidableMarriageOrDP_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (25.1, 63.9)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_BasedonAge_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (40.9, 68.6)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_PriorExistingMarriageOrDP_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (40.9, 77.1)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_BasedOnUnsoundMind_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (40.9, 81.9)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_BasedonFraud_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (135.4, 68.6)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_BasedOnForce_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (135.4, 75.2)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_BasedonPhysicalIncapacity_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (135.4, 81.9)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_SepTypeDef_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (61.4, 43.2)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_SepTypeDef_cb_1                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (25.1, 43.1)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_SepBasis_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (40.9, 47.8)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_SepBasis_cb_1                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (108.2, 47.8)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ToPetitioner_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (120.6, 97.3)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ToRespondent_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (143.0, 97.3)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ToBothJointly_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (161.9, 97.3)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ToOther_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (175.9, 97.3)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ToPetitioner_cb_1                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (120.6, 103.3)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ToRespondent_cb_1                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (143.0, 103.3)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ToBothJointly_cb_1                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (161.9, 103.3)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ToOther_cb_1                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (175.9, 103.3)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ForPetitioner_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (120.6, 108.6)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ForOther_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (175.9, 108.6)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ForRespondent_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (143.0, 108.6)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_FormFL_311_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (54.3, 114.8)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_FormFL_312_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (91.3, 114.8)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_FormFL_341C_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (131.9, 114.8)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_FormFL_341D_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (54.3, 120.4)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_FormFL_341E_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (91.3, 120.4)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_Attachment6e1_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (131.9, 120.4)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ChildSupport_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (31.4, 152.4)                            </td>
+                            <td>
+                                171.4 × 10.8                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_OtherChildSupport_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (25.1, 152.4)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_EndJurixReRespondent_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (144.2, 178.0)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_EndJurixRePetitioner_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (113.9, 178.0)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_EndJurixReSupport_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (25.1, 178.0)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_PaySupporttoPetitioner_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (105.5, 173.3)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_PaySupportoRespondent_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (135.5, 173.3)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_PaySupport_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (25.1, 173.3)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_PartiesSignedVoluntaryPaternityDec_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (25.1, 183.4)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ReserveJurixSupportResp_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (158.3, 183.5)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ReserveJurixSupportPet_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (128.8, 183.5)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_OtherSupport_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (31.2, 189.1)                            </td>
+                            <td>
+                                171.2 × 17.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_Other_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (25.1, 189.2)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_WhereSPListed_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (174.4, 219.0)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_ConfirmSeparateProperty_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (25.1, 218.9)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_WhereSPListed_cb_1                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (112.4, 218.9)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_WhereSPListed_cb_2                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (34.2, 224.7)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_SeparatePropertyList1_tf_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (32.5, 228.8)                            </td>
+                            <td>
+                                140.6 × 4.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_SeparatePropertyList3_tf_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (32.5, 238.6)                            </td>
+                            <td>
+                                140.6 × 4.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_SeparatePropertyList2_tf_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (32.5, 233.7)                            </td>
+                            <td>
+                                140.6 × 4.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_ConfirmPropertyList1To_tf_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (175.2, 228.8)                            </td>
+                            <td>
+                                27.2 × 4.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_ConfirmPropertyList3To_tf_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (175.2, 238.6)                            </td>
+                            <td>
+                                27.2 × 4.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_SeparatePropertyList4_tf_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (32.5, 243.6)                            </td>
+                            <td>
+                                140.6 × 4.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_ConfirmPropertyList4To_tf_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (175.2, 243.6)                            </td>
+                            <td>
+                                27.2 × 4.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_SeparatePropertyList4_tf_1                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (32.5, 248.5)                            </td>
+                            <td>
+                                140.6 × 4.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_ConfirmPropertyList4To_tf_1                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (175.2, 248.5)                            </td>
+                            <td>
+                                27.2 × 4.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_ConfirmPropertyList2To_tf_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (175.2, 233.7)                            </td>
+                            <td>
+                                27.2 × 4.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_NoSeparateProperty_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (25.1, 213.5)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_CaseNumber_0_CaseNumber_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (140.8, 20.8)                            </td>
+                            <td>
+                                61.0 × 4.1                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_Parties_0_Party2_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (35.4, 21.8)                            </td>
+                            <td>
+                                103.6 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page2_0_Parties_0_Party1_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>2</td>
+                            <td>
+                                (35.4, 18.3)                            </td>
+                            <td>
+                                103.6 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page3_0_CaseNumber_0_CaseNumber_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>3</td>
+                            <td>
+                                (140.8, 21.1)                            </td>
+                            <td>
+                                61.0 × 4.1                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page3_0_Parties_0_Party2_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>3</td>
+                            <td>
+                                (35.2, 22.3)                            </td>
+                            <td>
+                                103.6 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page3_0_Parties_0_Party1_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>3</td>
+                            <td>
+                                (35.2, 18.8)                            </td>
+                            <td>
+                                103.6 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page3_0_SigDate_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>3</td>
+                            <td>
+                                (22.6, 166.8)                            </td>
+                            <td>
+                                55.9 × 3.6                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page3_0_PrintPetitionerName_tf_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>3</td>
+                            <td>
+                                (22.5, 170.6)                            </td>
+                            <td>
+                                68.7 × 5.1                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page3_0_NoCommOrQuasiCommProperty_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>3</td>
+                            <td>
+                                (25.1, 36.4)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page3_0_CommQuasiProperty_sf_0_WhereCPListed_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>3</td>
+                            <td>
+                                (110.2, 46.1)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page3_0_CommQuasiProperty_sf_0_WhereCPListed_cb_1                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>3</td>
+                            <td>
+                                (34.4, 46.1)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page3_0_CommQuasiProperty_sf_0_PropertyListed_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>3</td>
+                            <td>
+                                (25.1, 41.5)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page3_0_CommQuasiProperty_sf_0_ListProperty_ft_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>3</td>
+                            <td>
+                                (41.1, 51.2)                            </td>
+                            <td>
+                                159.7 × 38.8                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page3_0_CommQuasiProperty_sf_0_WhereCPListed_cb_2                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>3</td>
+                            <td>
+                                (34.4, 51.4)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page3_0_FeesAndCost_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>3</td>
+                            <td>
+                                (25.1, 100.8)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page3_0_AttyFeePay_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>3</td>
+                            <td>
+                                (117.9, 100.8)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page3_0_AttyFeePay_cb_1                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>3</td>
+                            <td>
+                                (90.8, 100.8)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page3_0_RestoreFormerName_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>3</td>
+                            <td>
+                                (25.1, 106.2)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page3_0_SpecifyFormerName_tf_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>3</td>
+                            <td>
+                                (101.8, 106.2)                            </td>
+                            <td>
+                                100.3 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page3_0_SpecifyOtherRequests_tf_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>3</td>
+                            <td>
+                                (32.2, 111.1)                            </td>
+                            <td>
+                                171.0 × 26.3                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page3_0_ContinuedOnAttachment_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>3</td>
+                            <td>
+                                (33.9, 139.9)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page3_0_OtherRequests_cb_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    checkbox                                </span>
+                            </td>
+                            <td>3</td>
+                            <td>
+                                (25.1, 111.2)                            </td>
+                            <td>
+                                3.2 × 3.2                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page3_0_SigDate_1                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>3</td>
+                            <td>
+                                (22.8, 181.6)                            </td>
+                            <td>
+                                55.7 × 3.6                            </td>
+                        </tr>
+                                            <tr>
+                            <td style="font-family: 'Courier New', monospace; font-size: 13px;">
+                                FL_100_0_Page3_0_PrintPetitionerAttorneyName_tf_0                            </td>
+                            <td>
+                                <span class="pdftimesaver-status pdftimesaver-status-active">
+                                    text                                </span>
+                            </td>
+                            <td>3</td>
+                            <td>
+                                (22.7, 185.7)                            </td>
+                            <td>
+                                68.7 × 4.7                            </td>
+                        </tr>
+                                    </tbody>
+            </table>
+        </div>
+        
+                    <div style="margin-top: 20px; padding: 16px; background: #e7f3ff; border-left: 4px solid #007bff;">
+                <strong>✅ Position file generated:</strong><br>
+                <code style="font-size: 13px; color: #333;">/var/web/desktopmasters.com/pdftimesaver/mvp/lib/../../data/selcheck_fl100_positions.json</code>
+            </div>
+                
+                    <div style="margin-top: 16px; padding: 16px; background: #d4edda; border-left: 4px solid #28a745;">
+                <strong>✅ Background images generated:</strong><br>
+                                    <div style="margin-top: 8px;">
+                        <code style="font-size: 13px; color: #333;">Page 1: selcheck_fl100_page1_background.png</code>
+                    </div>
+                                    <div style="margin-top: 8px;">
+                        <code style="font-size: 13px; color: #333;">Page 2: selcheck_fl100_page2_background.png</code>
+                    </div>
+                                    <div style="margin-top: 8px;">
+                        <code style="font-size: 13px; color: #333;">Page 3: selcheck_fl100_page3_background.png</code>
+                    </div>
+                                <div style="margin-top: 12px; padding: 12px; background: #fff; border-radius: 4px;">
+                    <small style="color: #666;">
+                        These background images will be used as the PDF template. Your form fields will be overlaid on top using the extracted positions.
+                    </small>
+                </div>
+            </div>
+                            <div style="margin-top: 16px; padding: 16px; background: #e7f3ff; border-left: 4px solid #2563eb;">
+                <strong>Background conversion mode:</strong><br>
+                <code style="font-size: 13px; color: #333;">selectable_full</code>
+                <span style="color: #6c757d;">→</span>
+                <code style="font-size: 13px; color: #333;">raster_background_png</code>
+            </div>
+            </div>
+
+<div class="pdftimesaver-card">
+    <form method="post" action="?route=actions/extract-pdf-fields" enctype="multipart/form-data" id="extract-form">
+        <div class="pdftimesaver-form-group">
+            <label class="pdftimesaver-form-label">Select or Upload PDF</label>
+            <div style="margin-bottom: 12px;">
+                <label style="display: block; margin-bottom: 8px; font-weight: 600;">Option 1: Select Existing PDF</label>
+                <select id="existing_pdf" class="pdftimesaver-input" style="width: 100%;">
+                    <option value="">-- Select an existing PDF --</option>
+                </select>
+                <small style="color: #6c757d; display: block; margin-top: 4px;">
+                    Choose a PDF that's already been uploaded
+                </small>
+            </div>
+            <div style="margin-top: 16px; margin-bottom: 12px; text-align: center; color: #6c757d;">
+                <strong>OR</strong>
+            </div>
+            <div>
+                <label style="display: block; margin-bottom: 8px; font-weight: 600;">Option 2: Upload New PDF</label>
+                <input type="file" id="pdf_file" name="pdf_file" accept=".pdf" class="pdftimesaver-input">
+                <small style="color: #6c757d; display: block; margin-top: 4px;">
+                    Upload a new PDF file. Works with fillable forms (AcroForm) or static PDFs (for manual positioning).
+                </small>
+            </div>
+        </div>
+        
+        <div class="pdftimesaver-form-group">
+            <label class="pdftimesaver-form-label" for="template_id">Template ID</label>
+            <input type="text" id="template_id" name="template_id" 
+                   placeholder="e.g., t_fl100_gc120" required class="pdftimesaver-input"
+                   pattern="[a-z0-9_]+" title="Only lowercase letters, numbers, and underscores">
+            <small style="color: #6c757d; display: block; margin-top: 4px;">
+                A unique identifier for this template (e.g., t_fl100_gc120, t_fl105_gc120)
+            </small>
+        </div>
+
+        <div class="pdftimesaver-form-group">
+            <label class="pdftimesaver-form-label" for="background_conversion_mode">Background Conversion</label>
+            <select id="background_conversion_mode" name="background_conversion_mode" class="pdftimesaver-input">
+                <option value="raster">Raster backgrounds (legacy / fastest)</option>
+                <option value="selectable_full">Selectable text mode (vector -> OCR -> raster fallback)</option>
+            </select>
+            <small style="color: #6c757d; display: block; margin-top: 4px;">
+                Selectable mode attempts text-preserving output before falling back to image backgrounds.
+            </small>
+        </div>
+        
+        <div class="button-group" style="display: flex; gap: 12px; margin-top: 24px;">
+            <button type="submit" class="pdftimesaver-btn">
+                Extract Fields
+            </button>
+            <a href="?route=dashboard" class="pdftimesaver-btn-secondary">
+                Cancel
+            </a>
+        </div>
+    </form>
+</div>
+
+<div class="pdftimesaver-card">
+    <h3 style="margin: 0 0 16px 0; color: #2c3e50; font-size: 18px;">How It Works</h3>
+    <ol style="color: #6c757d; line-height: 1.8; padding-left: 24px;">
+        <li>Upload a fillable PDF that contains form fields (created in Adobe Acrobat or similar)</li>
+        <li>The system will automatically detect all form field names and their positions</li>
+        <li>A position file will be generated in the <code>data/</code> directory</li>
+        <li>You can then use this template for automatic form filling with perfect field placement</li>
+    </ol>
+    
+    <div style="margin-top: 16px; padding: 12px; background: #fff3cd; border-left: 4px solid #ffc107;">
+        <strong>Note:</strong> If the PDF is password-protected, you'll need to remove the password first.
+        You can use online tools or pdftk to unlock the PDF.
+    </div>
+</div>
+
+<script>
+// Universal PDF selector - works for any PDF
+(function() {
+    const form = document.getElementById('extract-form');
+    const existingSelect = document.getElementById('existing_pdf');
+    const fileInput = document.getElementById('pdf_file');
+    
+    // Load existing PDFs
+    fetch('?route=actions/list-pdfs')
+        .then(response => response.json())
+        .then(data => {
+            if (data.pdfs && data.pdfs.length > 0) {
+                data.pdfs.forEach(pdf => {
+                    const option = document.createElement('option');
+                    option.value = pdf.path;
+                    option.textContent = pdf.name;
+                    existingSelect.appendChild(option);
+                });
+                
+                // Auto-select fl100.pdf if template ID is t_fl100_gc120
+                const templateInput = document.getElementById('template_id');
+                function autoSelectFl100() {
+                    if (templateInput && templateInput.value === 't_fl100_gc120') {
+                        const fl100Option = Array.from(existingSelect.options).find(opt => opt.textContent === 'fl100.pdf');
+                        if (fl100Option && existingSelect.value !== fl100Option.value) {
+                            existingSelect.value = fl100Option.value;
+                            existingSelect.dispatchEvent(new Event('change'));
+                        }
+                    }
+                }
+                // Check immediately
+                autoSelectFl100();
+                // Also listen for changes to template ID
+                if (templateInput) {
+                    templateInput.addEventListener('input', autoSelectFl100);
+                    templateInput.addEventListener('change', autoSelectFl100);
+                }
+            }
+        })
+        .catch(err => console.error('Error loading PDFs:', err));
+    
+    // Handle existing PDF selection
+    existingSelect.addEventListener('change', function() {
+        if (this.value) {
+            fileInput.removeAttribute('required');
+            // Create hidden input with selected PDF path
+            let hiddenInput = document.getElementById('selected_pdf_path');
+            if (!hiddenInput) {
+                hiddenInput = document.createElement('input');
+                hiddenInput.type = 'hidden';
+                hiddenInput.id = 'selected_pdf_path';
+                hiddenInput.name = 'selected_pdf_path';
+                form.appendChild(hiddenInput);
+            }
+            hiddenInput.value = this.value;
+            console.log('Selected PDF:', this.value);
+        } else {
+            fileInput.setAttribute('required', 'required');
+            const hiddenInput = document.getElementById('selected_pdf_path');
+            if (hiddenInput) hiddenInput.remove();
+        }
+    });
+    
+    // Also trigger on input event for better compatibility
+    existingSelect.addEventListener('input', function() {
+        this.dispatchEvent(new Event('change'));
+    });
+    
+    // Handle file upload
+    fileInput.addEventListener('change', function() {
+        if (this.files.length > 0) {
+            existingSelect.value = '';
+            const hiddenInput = document.getElementById('selected_pdf_path');
+            if (hiddenInput) hiddenInput.remove();
+        }
+    });
+    
+    // Form validation
+    form.addEventListener('submit', function(e) {
+        const hasFile = fileInput.files.length > 0;
+        const hasSelected = existingSelect.value !== '';
+        
+        if (!hasFile && !hasSelected) {
+            e.preventDefault();
+            alert('Please either select an existing PDF or upload a new one.');
+            return false;
+        }
+    });
+})();
+</script>
+
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle functionality
+        (function() {
+            const menuToggle = document.getElementById('mobile-menu-toggle');
+            const sidebar = document.getElementById('pdftimesaver-sidebar');
+            const overlay = document.getElementById('mobile-overlay');
+            
+            if (menuToggle && sidebar && overlay) {
+                // Toggle menu
+                function toggleMenu() {
+                    sidebar.classList.toggle('open');
+                    overlay.classList.toggle('active');
+                    
+                    // Update aria-expanded for accessibility
+                    const isOpen = sidebar.classList.contains('open');
+                    menuToggle.setAttribute('aria-expanded', isOpen);
+                }
+                
+                // Open/close menu
+                menuToggle.addEventListener('click', toggleMenu);
+                
+                // Close menu when clicking overlay
+                overlay.addEventListener('click', toggleMenu);
+                
+                // Close menu when clicking a nav link (for better UX)
+                const navLinks = sidebar.querySelectorAll('.pdftimesaver-sidebar-nav a');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', function() {
+                        if (sidebar.classList.contains('open')) {
+                            toggleMenu();
+                        }
+                    });
+                });
+                
+                // Close menu on escape key
+                document.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+                        toggleMenu();
+                    }
+                });
+            }
+        })();
+    </script>
+
+    
+    </body>
+</html>

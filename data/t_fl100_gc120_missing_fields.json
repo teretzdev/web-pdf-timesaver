@@ -1,0 +1,58 @@
+{
+  "missing_petitioner_phone": {
+    "name": "missing_petitioner_phone",
+    "type": "text",
+    "page": 1,
+    "x": 75,
+    "y": 122,
+    "width": 60,
+    "height": 5,
+    "fontSize": 9,
+    "confidence": 0.6,
+    "method": "estimated",
+    "estimated": true,
+    "note": "Estimated position - may need manual adjustment. Usually near petitioner address."
+  },
+  "missing_filing_date": {
+    "name": "missing_filing_date",
+    "type": "text",
+    "page": 1,
+    "x": 145,
+    "y": 18,
+    "width": 40,
+    "height": 5,
+    "fontSize": 9,
+    "confidence": 0.6,
+    "method": "estimated",
+    "estimated": true,
+    "note": "Estimated position - usually in header area near case number"
+  },
+  "missing_marriage_location": {
+    "name": "missing_marriage_location",
+    "type": "text",
+    "page": 1,
+    "x": 80,
+    "y": 145,
+    "width": 80,
+    "height": 5,
+    "fontSize": 9,
+    "confidence": 0.6,
+    "method": "estimated",
+    "estimated": true,
+    "note": "Estimated position - usually near marriage date field"
+  },
+  "missing_grounds_for_dissolution": {
+    "name": "missing_grounds_for_dissolution",
+    "type": "text",
+    "page": 1,
+    "x": 25,
+    "y": 155,
+    "width": 150,
+    "height": 10,
+    "fontSize": 9,
+    "confidence": 0.6,
+    "method": "estimated",
+    "estimated": true,
+    "note": "Estimated position - usually in text area below marriage information"
+  }
+}

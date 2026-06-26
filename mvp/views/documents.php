@@ -1,11 +1,11 @@
-<div class="clio-card">
+<div class="pdftimesaver-card">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; flex-wrap: wrap; gap: 12px;">
         <div>
             <h2 style="margin: 0 0 6px 0; color: #2c3e50; font-size: 24px; font-weight: 700;">Documents</h2>
             <p style="margin: 0; color: #6c757d; font-size: 14px;"><?php echo count($documents); ?> documents</p>
         </div>
         <div class="button-group" style="display: flex; gap: 12px;">
-            <a href="?route=dashboard" class="clio-btn-secondary">
+            <a href="?route=dashboard" class="pdftimesaver-btn-secondary">
                 <span>←</span>
                 <span>Back to Dashboard</span>
             </a>
@@ -14,15 +14,15 @@
 </div>
 
 <?php if (empty($documents)): ?>
-    <div class="clio-card" style="text-align: center; padding: 60px 20px;">
+    <div class="pdftimesaver-card" style="text-align: center; padding: 60px 20px;">
         <div style="font-size: 48px; margin-bottom: 16px;">📄</div>
         <h3 style="margin: 0 0 8px 0; color: #2c3e50; font-size: 20px;">No documents found</h3>
         <p style="margin: 0; color: #6c757d; font-size: 16px;">Documents will appear here when you create them in your matters.</p>
     </div>
 <?php else: ?>
-    <div class="clio-card">
+    <div class="pdftimesaver-card">
         <div class="table-responsive">
-            <table class="clio-table">
+            <table class="pdftimesaver-table">
                 <thead>
                 <tr>
                     <th>Document</th>
@@ -37,7 +37,9 @@
                 <?php foreach ($documents as $doc): ?>
                     <?php
                     $template = $templates[$doc['templateId']] ?? null;
-                    $templateName = $template ? ($template['code'] . ' — ' . $template['name']) : $doc['templateId'];
+                    $templateName = $template
+                        ? formatTemplateDisplayLabel($template, (string)($doc['templateId'] ?? ''))
+                        : (string)($doc['templateId'] ?? '');
                     ?>
                     <tr>
                         <td>
@@ -58,7 +60,7 @@
                             <?php endif; ?>
                         </td>
                         <td>
-                            <span class="clio-status clio-status-<?php echo str_replace('_', '-', $doc['status'] ?? 'in-progress'); ?>">
+                            <span class="pdftimesaver-status pdftimesaver-status-<?php echo str_replace('_', '-', $doc['status'] ?? 'in-progress'); ?>">
                                 <?php echo ucfirst(str_replace('_', ' ', $doc['status'] ?? 'in_progress')); ?>
                             </span>
                         </td>
@@ -71,13 +73,13 @@
                         <td>
                             <div class="button-group" style="display: flex; gap: 8px;">
                                 <?php if (!empty($doc['signedPath'])): ?>
-                                    <a href="?route=actions/download-signed&pd=<?php echo htmlspecialchars($doc['id']); ?>" class="clio-btn" style="padding: 6px 12px; font-size: 12px;">Download Signed</a>
+                                    <a href="?route=actions/download-signed&pd=<?php echo htmlspecialchars($doc['id']); ?>" class="pdftimesaver-btn pdftimesaver-btn-sm">Download Signed</a>
                                 <?php elseif (!empty($doc['outputPath'])): ?>
-                                    <a href="?route=actions/download&pd=<?php echo htmlspecialchars($doc['id']); ?>" class="clio-btn" style="padding: 6px 12px; font-size: 12px;">Download</a>
+                                    <a href="?route=actions/download&pd=<?php echo htmlspecialchars($doc['id']); ?>" class="pdftimesaver-btn pdftimesaver-btn-sm">Download</a>
                                 <?php else: ?>
-                                    <a href="?route=populate&pd=<?php echo htmlspecialchars($doc['id']); ?>" class="clio-btn-secondary" style="padding: 6px 12px; font-size: 12px;">Complete</a>
+                                    <a href="?route=populate&pd=<?php echo htmlspecialchars($doc['id']); ?>" class="pdftimesaver-btn-secondary pdftimesaver-btn-sm">Complete</a>
                                 <?php endif; ?>
-                                <a href="?route=project&id=<?php echo htmlspecialchars($doc['project']['id']); ?>" class="clio-btn-secondary" style="padding: 6px 12px; font-size: 12px;">View Matter</a>
+                                <a href="?route=project&id=<?php echo htmlspecialchars($doc['project']['id']); ?>" class="pdftimesaver-btn-secondary pdftimesaver-btn-sm">View Matter</a>
                             </div>
                         </td>
                     </tr>

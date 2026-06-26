@@ -1,5 +1,3 @@
-<?php require 'layout_header.php'; ?>
-
 <style>
     .demo-container {
         max-width: 1400px;
@@ -123,7 +121,7 @@
 
 <div class="demo-container">
     <h1>🚀 PDF-Lib + PDF.js Demo</h1>
-    <p style="color: #666; margin-bottom: 30px;">Upload a fillable PDF to automatically detect fields and fill them</p>
+    <p style="color: #666; margin-bottom: 30px;">Upload a fillable PDF, detect fields, fill with test data, and download.</p>
     
     <div class="demo-grid">
         <!-- Left Panel: Upload & Detection -->
@@ -377,21 +375,21 @@
     function generateTestData(fieldName) {
         const name = fieldName.toLowerCase();
         
-        if (name.includes('name') && name.includes('first')) return 'John';
-        if (name.includes('name') && name.includes('last')) return 'Smith';
-        if (name.includes('name')) return 'John Smith';
-        if (name.includes('email')) return 'john.smith@example.com';
-        if (name.includes('phone') || name.includes('tel')) return '(555) 123-4567';
-        if (name.includes('address') && name.includes('street')) return '123 Main Street';
-        if (name.includes('address')) return '123 Main St, Los Angeles, CA 90210';
-        if (name.includes('city')) return 'Los Angeles';
-        if (name.includes('state')) return 'CA';
-        if (name.includes('zip')) return '90210';
+        if (name.includes('name') && name.includes('first')) return 'Sample';
+        if (name.includes('name') && name.includes('last')) return 'Sample';
+        if (name.includes('name')) return 'Sample';
+        if (name.includes('email')) return 'Sample';
+        if (name.includes('phone') || name.includes('tel')) return 'Sample';
+        if (name.includes('address') && name.includes('street')) return 'Sample';
+        if (name.includes('address')) return 'Sample';
+        if (name.includes('city')) return 'Sample';
+        if (name.includes('state')) return 'Sample';
+        if (name.includes('zip')) return 'Sample';
         if (name.includes('date')) return new Date().toLocaleDateString();
-        if (name.includes('ssn') || name.includes('social')) return '***-**-1234';
-        if (name.includes('ein') || name.includes('tax')) return '**-*******';
+        if (name.includes('ssn') || name.includes('social')) return 'Sample';
+        if (name.includes('ein') || name.includes('tax')) return 'Sample';
         
-        return `Test ${fieldName}`;
+        return 'Sample';
     }
     
     function showStatus(element, type, message) {
@@ -400,7 +398,4 @@
         element.style.display = 'block';
     }
 </script>
-
-<?php require 'layout_footer.php'; ?>
-
 

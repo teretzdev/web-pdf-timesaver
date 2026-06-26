@@ -259,17 +259,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 <div class="pdf-canvas" id="pdf-canvas">
                     <?php
                     // Determine background image based on template
-                    $bgImagePath = '../uploads/' . str_replace('t_', '', $templateId) . '_page1_background.png';
-                    
-                    // Fallback to checking for common patterns
+                    // IMPORTANT: this MUST mirror PdfFieldExtractor::generatePageBackgrounds()
+                    // so that we load the SAME images the universal processor created.
+                    // That method uses:
+                    //   $cleanTemplateId = str_replace('t_', '', $templateId);
+                    //   "{$cleanTemplateId}_page{$page}_background.png"
+                    $cleanTemplateId = str_replace('t_', '', $templateId);
+                    $bgImagePath = '../uploads/' . $cleanTemplateId . '_page1_background.png';
+
+                    // Fallback to checking for common patterns (legacy templates)
                     if (!file_exists(__DIR__ . '/' . $bgImagePath)) {
-                        $bgImagePath = '../uploads/' . $templateParam . '_page1_background.png';
+                        $altClean = explode('_', $templateParam)[0];
+                        $bgImagePath = '../uploads/' . $altClean . '_page1_background.png';
                     }
                     if (!file_exists(__DIR__ . '/' . $bgImagePath)) {
                         $bgImagePath = '../uploads/fl100_page1_background.png'; // Final fallback
                     }
                     ?>
-                    <img src="<?= htmlspecialchars($bgImagePath) ?>" alt="<?= htmlspecialchars($templateParam) ?> Page 1" class="pdf-background" id="pdf-bg">
+                    <img src="<?= htmlspecialchars($bgImagePath) ?>" alt="<?= htmlspecialchars($templateParam) ?> Page 1" class="pdf-background" id="pdf-bg" data-clean-template="<?= htmlspecialchars($cleanTemplateId) ?>">
                     <!-- Field overlays will be dynamically added here -->
                 </div>
             </div>
@@ -293,19 +300,39 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 </div>
                 <div class="prop-group">
                     <div class="prop-label">X Position (mm)</div>
-                    <input type="number" class="prop-input" id="prop-x" step="0.1" onchange="updatePosition()">
+                    <input type="number" class="prop-input" id="prop-x" step="0.1">
                 </div>
                 <div class="prop-group">
                     <div class="prop-label">Y Position (mm)</div>
-                    <input type="number" class="prop-input" id="prop-y" step="0.1" onchange="updatePosition()">
+                    <input type="number" class="prop-input" id="prop-y" step="0.1">
                 </div>
                 <div class="prop-group">
                     <div class="prop-label">Width (mm)</div>
-                    <input type="number" class="prop-input" id="prop-width" step="0.1" onchange="updatePosition()">
+                    <input type="number" class="prop-input" id="prop-width" step="0.1">
                 </div>
                 <div class="prop-group">
                     <div class="prop-label">Font Size</div>
-                    <input type="number" class="prop-input" id="prop-font-size" min="6" max="18" onchange="updatePosition()">
+                    <input type="number" class="prop-input" id="prop-font-size" min="6" max="18">
+                </div>
+                <div class="prop-group">
+                    <div class="prop-label">Font Family</div>
+                    <select class="prop-input" id="prop-font-family">
+                        <option value="Arial">Arial</option>
+                        <option value="Helvetica">Helvetica</option>
+                        <option value="Times">Times</option>
+                        <option value="Courier">Courier</option>
+                        <option value="Symbol">Symbol</option>
+                        <option value="ZapfDingbats">ZapfDingbats</option>
+                    </select>
+                </div>
+                <div class="prop-group">
+                    <div class="prop-label">Font Style</div>
+                    <select class="prop-input" id="prop-font-style">
+                        <option value="">Regular</option>
+                        <option value="B">Bold</option>
+                        <option value="I">Italic</option>
+                        <option value="BI">Bold Italic</option>
+                    </select>
                 </div>
                 <div class="helper-text">
                     💡 <strong>Tip:</strong> Drag the field on the canvas to reposition, or use the inputs above for precise placement.
@@ -335,9 +362,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         let isDragging = false;
         let dragOffset = { x: 0, y: 0 };
         let zoom = 0.5; // Start at 50% zoom since image is large
-        const MM_TO_PX = 7.87; // Conversion factor: 1700px / 215.9mm = 7.87 px/mm
+        
+        // Conversion factor: millimeters to pixels for canvas display
+        // Canvas dimensions: 1700px × 2200px (matches 200 DPI rendering of US Letter)
+        // US Letter size: 215.9mm × 279.4mm (8.5" × 11")
+        // Calculation: 1700px / 215.9mm = 7.87 px/mm (verified for both width and height)
+        const MM_TO_PX = 7.87;
+        const PAGE_WIDTH_MM = 215.9;  // US Letter width in mm
+        const PAGE_HEIGHT_MM = 279.4; // US Letter height in mm
+        const CANVAS_WIDTH_PX = 1700;
+        const CANVAS_HEIGHT_PX = 2200;
+        
+        // Validate conversion factor matches canvas dimensions
+        const calculatedMM_TO_PX_WIDTH = CANVAS_WIDTH_PX / PAGE_WIDTH_MM;
+        const calculatedMM_TO_PX_HEIGHT = CANVAS_HEIGHT_PX / PAGE_HEIGHT_MM;
+        if (Math.abs(calculatedMM_TO_PX_WIDTH - MM_TO_PX) > 0.01 || Math.abs(calculatedMM_TO_PX_HEIGHT - MM_TO_PX) > 0.01) {
+            console.warn('MM_TO_PX conversion factor mismatch!', {
+                expected: MM_TO_PX,
+                calculatedWidth: calculatedMM_TO_PX_WIDTH,
+                calculatedHeight: calculatedMM_TO_PX_HEIGHT
+            });
+        }
+        
         let currentPage = 1;
         const templateId = '<?= $templateParam ?>';
+        // Must match the PHP-side cleanTemplateId used when generating backgrounds
+        const cleanTemplateId = document.getElementById('pdf-bg').dataset.cleanTemplate;
         
         // Debug: Log loaded positions
         console.log('Loaded positions:', positions);
@@ -370,6 +420,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             overlay.style.left = (pos.x * MM_TO_PX) + 'px';
             overlay.style.top = (pos.y * MM_TO_PX) + 'px';
             overlay.style.width = (pos.width * MM_TO_PX) + 'px';
+            
+            // Apply font properties from position data
+            overlay.style.fontFamily = pos.fontFamily || 'Arial';
+            overlay.style.fontSize = (pos.fontSize || 9) + 'pt';
+            overlay.style.fontWeight = (pos.fontStyle && pos.fontStyle.includes('B')) ? 'bold' : 'normal';
+            overlay.style.fontStyle = (pos.fontStyle && pos.fontStyle.includes('I')) ? 'italic' : 'normal';
+            
             overlay.textContent = String(value).substring(0, 30);
             
             // Add label
@@ -414,6 +471,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 document.getElementById('prop-y').value = pos.y;
                 document.getElementById('prop-width').value = pos.width;
                 document.getElementById('prop-font-size').value = pos.fontSize || 9;
+                document.getElementById('prop-font-family').value = pos.fontFamily || 'Arial';
+                document.getElementById('prop-font-style').value = pos.fontStyle || '';
             } else {
                 console.error('No position data found for field:', key);
             }
@@ -466,9 +525,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             
             if (!overlay) return;
             
-            // Calculate new position relative to canvas
-            let newX = e.clientX - canvasRect.left - dragOffset.x;
-            let newY = e.clientY - canvasRect.top - dragOffset.y;
+            // Convert from screen-space (affected by CSS zoom transform)
+            // back to logical canvas-space so saved mm coordinates stay accurate.
+            const effectiveZoom = zoom > 0 ? zoom : 1;
+            let newX = (e.clientX - canvasRect.left - dragOffset.x) / effectiveZoom;
+            let newY = (e.clientY - canvasRect.top - dragOffset.y) / effectiveZoom;
             
             // Debug logging (first drag only)
             if (!window.dragLoggedOnce) {
@@ -482,9 +543,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
                 window.dragLoggedOnce = true;
             }
             
-            // Constrain to canvas bounds
-            newX = Math.max(0, Math.min(newX, canvasRect.width - overlay.offsetWidth));
-            newY = Math.max(0, Math.min(newY, canvasRect.height - overlay.offsetHeight));
+            // Constrain to logical (unscaled) canvas bounds
+            newX = Math.max(0, Math.min(newX, CANVAS_WIDTH_PX - overlay.offsetWidth));
+            newY = Math.max(0, Math.min(newY, CANVAS_HEIGHT_PX - overlay.offsetHeight));
             
             if (!window.dragLoggedOnce2) {
                 console.log('calculatedNewX AFTER constraint:', newX);
@@ -538,20 +599,53 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
             document.removeEventListener('mouseup', stopDrag);
         }
         
+        function bindPropertyPanelLiveUpdates() {
+            const propertyInputs = document.querySelectorAll('#properties-form .prop-input');
+            propertyInputs.forEach((input) => {
+                // Number inputs should update live while typing;
+                // selects should update immediately on selection.
+                if (input.tagName === 'SELECT') {
+                    input.addEventListener('change', updatePosition);
+                    return;
+                }
+
+                input.addEventListener('input', updatePosition);
+                input.addEventListener('change', updatePosition);
+            });
+        }
+
         function updatePosition() {
             if (!currentField) return;
+
+            const fieldPosition = positions[currentField];
+            if (!fieldPosition) return;
+
+            const parsedX = parseFloat(document.getElementById('prop-x').value);
+            const parsedY = parseFloat(document.getElementById('prop-y').value);
+            const parsedWidth = parseFloat(document.getElementById('prop-width').value);
+            const parsedFontSize = parseInt(document.getElementById('prop-font-size').value, 10);
+
+            // During live edits, users can temporarily clear inputs; avoid writing NaN.
+            if (Number.isFinite(parsedX)) fieldPosition.x = parsedX;
+            if (Number.isFinite(parsedY)) fieldPosition.y = parsedY;
+            if (Number.isFinite(parsedWidth)) fieldPosition.width = parsedWidth;
+            if (Number.isFinite(parsedFontSize)) fieldPosition.fontSize = parsedFontSize;
+
+            fieldPosition.fontFamily = document.getElementById('prop-font-family').value || 'Arial';
+            fieldPosition.fontStyle = document.getElementById('prop-font-style').value || '';
             
-            positions[currentField].x = parseFloat(document.getElementById('prop-x').value);
-            positions[currentField].y = parseFloat(document.getElementById('prop-y').value);
-            positions[currentField].width = parseFloat(document.getElementById('prop-width').value);
-            positions[currentField].fontSize = parseInt(document.getElementById('prop-font-size').value);
-            
-            // Update overlay position
+            // Update overlay font preview and position
             const overlay = document.getElementById('overlay-' + currentField);
             if (overlay) {
-                overlay.style.left = (positions[currentField].x * MM_TO_PX) + 'px';
-                overlay.style.top = (positions[currentField].y * MM_TO_PX) + 'px';
-                overlay.style.width = (positions[currentField].width * MM_TO_PX) + 'px';
+                // Update font properties
+                overlay.style.fontFamily = fieldPosition.fontFamily;
+                overlay.style.fontSize = (fieldPosition.fontSize || 9) + 'pt';
+                overlay.style.fontWeight = fieldPosition.fontStyle.includes('B') ? 'bold' : 'normal';
+                overlay.style.fontStyle = fieldPosition.fontStyle.includes('I') ? 'italic' : 'normal';
+                // Update position
+                overlay.style.left = (fieldPosition.x * MM_TO_PX) + 'px';
+                overlay.style.top = (fieldPosition.y * MM_TO_PX) + 'px';
+                overlay.style.width = (fieldPosition.width * MM_TO_PX) + 'px';
             }
         }
         
@@ -627,6 +721,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         // Initialize on load
         window.addEventListener('load', () => {
             applyZoom(); // Apply initial 50% zoom
+            bindPropertyPanelLiveUpdates();
             initializeFields();
             
             // Auto-select first field
@@ -691,7 +786,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action']) && $_POST['
         
         function loadPage(pageNum) {
             const bgImage = document.getElementById('pdf-bg');
-            const newSrc = `../uploads/${templateId}_page${pageNum}_background.png`;
+            // Use cleanTemplateId so this matches PdfFieldExtractor::generatePageBackgrounds()
+            const newSrc = `../uploads/${cleanTemplateId}_page${pageNum}_background.png`;
             
             // Check if image exists
             const img = new Image();

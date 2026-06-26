@@ -1,0 +1,16 @@
+{
+    "timestamp": "2025-12-13 20:35:37",
+    "pdfPath": "c:\/Users\/Shadow\/Web-PDFTimeSaver\/uploads\/w9.pdf",
+    "overallAccuracy": 0,
+    "fieldsVerified": 0,
+    "fieldsMatched": 0,
+    "fieldsMismatched": 0,
+    "fieldsMissing": 0,
+    "fieldsExtra": 0,
+    "matches": [],
+    "issues": [],
+    "summary": {
+        "status": "FAIL",
+        "message": "Position accuracy: 0.00% (0\/0 fields matched)"
+    }
+}

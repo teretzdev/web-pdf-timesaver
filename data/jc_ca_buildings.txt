@@ -1,0 +1,147 @@
+# Judicial Council of California — Regional Building List
+# Source: https://courts.ca.gov/system/files/solicitation-request-document/rfp-fs-sp-2019-03-jp-attachment-2-regional-building-list-addendum-1.pdf
+# Generated from Judicial Council Attachment 2 (RFP-FS-SP-2019-03-JP)
+# Los Angeles County locations excluded (lacourt.ca.gov provides dept/room data).
+# Format: | JCC ID | Facility Name | Address | City | Zip | County | Region |
+
+| 01-G1 | Berkeley Courthouse | 2120 Martin Luther King, Jr. Way | Berkeley | 94704 | Alameda | BANCRO |
+| 01-H1 | Fremont Hall of Justice | 39439 Paseo Padre Pkwy. | Fremont | 94538 | Alameda | BANCRO |
+| 01-F1 | George E. McDonald Hall of Justice | 2233 Shoreline Drive | Alameda | 94501 | Alameda | BANCRO |
+| 01-D1 | Hayward Hall of Justice | 24405 Amador St. | Hayward | 94544 | Alameda | BANCRO |
+| 01-J1 | New East County Hall of Justice | 5151 Gleason Drive | Dublin | 94568 | Alameda | BANCRO |
+| 01-B3 | Wiley W. Manuel Courthouse | 661 Washington St. | Oakland | 94607 | Alameda | BANCRO |
+| 03-C1 | Amador Superior Court | 500 Argonaut Lane | Jackson | 95642 | Amador | NCRO |
+| 04-A1 | Butte County Courthouse | 1 Court St. | Oroville | 95965 | Butte | NCRO |
+| 04-F1 | North Butte County Courthouse | 1775 Concord Avenue | Chico | 95928 | Butte | NCRO |
+| 05-C1 | Calaveras Superior Court | 400 Government Center Drive | San Andreas | 95249 | Calaveras | NCRO |
+| 07-A3 | Bray Courts | 1020 Ward St. | Martinez | 94553 | Contra Costa | BANCRO |
+| 07-D1 | Concord Courthouse | 2970 Willow Pass Rd. | Concord | 94519 | Contra Costa | BANCRO |
+| 07-A14 | Family Law Center | 751 Pine Street | Martinez | 94553 | Contra Costa | BANCRO |
+| 07-F1 | George D. Carroll Courthouse | 100 37th St. | Richmond | 94805 | Contra Costa | BANCRO |
+| 07-E3 | Richard E. Arnason Justice Center | 1000 Center Drive | Pittsburg | 94565 | Contra Costa | BANCRO |
+| 07-A2 | Wakefield Taylor Courthouse | 725 Court St. | Martinez | 94553 | Contra Costa | BANCRO |
+| 07-C1 | Walnut Creek Courthouse | 640 Ygnacio Valley Rd. | Walnut Creek | 94596 | Contra Costa | BANCRO |
+| 08-A1 | Del Norte County Superior Court | 450 'H' St. | Crescent City | 95531 | Del Norte | BANCRO |
+| 09-C1 | Cameron Park | 3321 Cameron Park Dr. | Cameron Park | 95682 | El Dorado | NCRO |
+| 09-E1 | Johnson Bldg. | 1354 Johnson Blvd. | South Lake Tahoe | 96150 | El Dorado | NCRO |
+| 09-A1 | Main St. Courthouse | 495 Main St. | Placerville | 95667 | El Dorado | NCRO |
+| 10-O1 | B.F. Sisk Courthouse | 1130 O Street | Fresno | 93721 | Fresno | NCRO |
+| 10-G1 | Clovis Court | 1011 5th St. | Clovis | 93612 | Fresno | NCRO |
+| 10-A1 | Fresno County Courthouse | 1100 Van Ness Ave. | Fresno | 93724 | Fresno | NCRO |
+| 10-P1 | Juvenile Delinquency Courthouse | 3333 E. American Avenue | Frenso | 93725 | Fresno | NCRO |
+| 10-F1 | Reedley Court | 815 G Street | Reedley | 93654 | Fresno | NCRO |
+| 11-A1 | Historic Courthouse | 526 West Sycamore St. | Willows | 95988 | Glenn | NCRO |
+| 13-E2 | Brawley Court | 220 E. Main St. | Brawley | 92227 | Imperial | SRO |
+| 15-H1 | Arvin/ Lamont Branch | 12022 Main St. | Lamont | 93241 | Kern | SRO |
+| 15-B1 | Bakersfield Justice Bldg. | 1215 Truxtun Ave. | Bakersfield | 93301 | Kern | SRO |
+| 15-C1 | Bakersfield Juvenile Center | 2100 College Ave. | Bakersfield | 93305 | Kern | SRO |
+| 15-N1 | Bakersfield Shop Lease | 2511 & 2515 M Street | Bakersfield | 93301 | Kern | SRO |
+| 15-A1 | Bakersfield Superior Court | 1315 Truxtun Ave, 1661 L Street | Bakersfield | 93301 | Kern | SRO |
+| 15-A2 | Bakersfield Superior Court Modular | 1415 Truxtun Avenue | Bakersfield | 93301 | Kern | SRO |
+| 15-D1 | Delano/North Kern Court | 1122 Jefferson St. | Delano | 93215 | Kern | SRO |
+| 15-G1 | East Kern Court-Lake Isabella Branch | 7046 Lake Isabella Blvd. | Lake Isabella | 93240 | Kern | SRO |
+| 15-I3 | Mojave Superior Court Modular | 1773 Highway 58 | Mojave | 93501 | Kern | SRO |
+| 15-I1 | Mojave-Main Court Facility | 1773 Hwy. 58 | Mojave | 93501 | Kern | SRO |
+| 15-J2 | Ridgecrest - Division B Courtroom | 420 N China Lake Blvd. | Ridgecrest | 93555 | Kern | SRO |
+| 15-J1 | Ridgecrest-Main Facility | 132 East Coso St. | Ridgecrest | 93555 | Kern | SRO |
+| 15-E1 | Shafter/Wasco Courts Bldg. | 325 Central Valley Hwy | Shafter | 93263 | Kern | SRO |
+| 15-F1 | Taft Courts Bldg. | 311 N Lincoln St. | Taft | 93268 | Kern | SRO |
+| 15-F2 | Taft Superior Court Modular | 311 N Lincoln Street | Taft | 93268 | Kern | SRO |
+| 16-C1 | Avenal Court | 501 E. Kings Street | Avenal | 93204 | Kings | NCRO |
+| 16-A5 | Hanford Courthouse | 1640 Kings County Drive | Hanford | 93230 | Kings | NCRO |
+| 17-B1 | South Civic Center | 7000A S. Center Dr. | Clearlake | 95422 | Lake | BANCRO |
+| 18-C1 | Hall of Justice | 2610 Riverside Drive | Susanville | 96130 | Lassen | NCRO |
+| 20-F1 | Main Courthouse | 200 South G Street | Madera | 93637 | Madera | NCRO |
+| 23-A1 | County Courthouse | 100 N. State St. | Ukiah | 95482 | Mendocino | BANCRO |
+| 24-A8 | Main Merced Courthouse | 2260 N Street | Merced | 95340 | Merced | NCRO |
+| 24-A1 | Old Court | 627 W. 21st Street | Merced | 95340 | Merced | NCRO |
+| 24-G1 | Robert M. Falasco Justice Center | 1159 G Street | Los Banos | 93635 | Merced | NCRO |
+| 25-A1 | Barclay Justice Center | 205 S. East Street | Alturas | 96101 | Modoc | NCRO |
+| 26-B2 | Mammoth Lakes Courthouse | 100 Thompsons Way | Mammoth Lakes | 93546 | Mono | NCRO |
+| 27-B1 | Marina Courthouse | 3180 Del Monte Blvd | Marina | 93933 | Monterey | BANCRO |
+| 27-C1 | Monterey Courthouse | 1200 Aguajito Rd. | Monterey | 93940 | Monterey | BANCRO |
+| 27-A1 | Salinas Courthouse- North Wing | 240 Church St. | Salinas | 93901 | Monterey | BANCRO |
+| 28-A1 | Criminal Court Building | 1111 Third St. | Napa | 94559 | Napa | BANCRO |
+| 28-B1 | Historic Courthouse | 825 Brown St. | Napa | 94559 | Napa | BANCRO |
+| 28-C1 | Napa Juvenile Court | 2350 Old Sonoma Rd. | Napa | 94559 | Napa | BANCRO |
+| 30-B1 | Betty Lou Lamoreaux Justice Center | 341 The City Dr. | Orange | 92868 | Orange | SRO |
+| 30-A2 | Central Justice Center Annex | 909 North Main St. | Santa Ana | 92701 | Orange | SRO |
+| 30-A3 | Civil Complex Center ("CXC") | 751 W. Santa Ana Blvd. | Santa Ana | 92701 | Orange | SRO |
+| 30-E1 | Harbor Justice Center-Newport Beach Facility | 4601 Jamboree Road | Newport Beach | 92660 | Orange | SRO |
+| 30-C1 | North Justice Center | 1275 N. Berkeley Ave. | Fullerton | 92832 | Orange | SRO |
+| 30-D1 | West Justice Center | 8141-8144 13th St. | Westminster | 92683 | Orange | SRO |
+| 31-H2 | Arraignment Court Facility | 11801 Go For Broke Road | Roseville | 95678 | Placer | NCRO |
+| 31-H1 | Hon. Howard G. Gibson Courthouse | 10820 Justice Center Drive | Roseville | 95678 | Placer | NCRO |
+| 33-D1 | Blythe Courthouse - Superior Court | 265 N. Broadway | Blythe | 92225 | Riverside | SRO |
+| 33-A1 | Family Law Court | 4175 Main St. | Riverside | 92501 | Riverside | SRO |
+| 33-A3 | Hall of Justice | 4100 Main St. | Riverside | 92501 | Riverside | SRO |
+| 33-F1 | Hemet | 880 N. State St. | Hemet | 92343 | Riverside | SRO |
+| 33-C3 | Indio Juvenile Court | 47-671 Oasis St. | Indio | 92201 | Riverside | SRO |
+| 33-C1 | Larson Justice Center | 46-200 Oasis Street | Indio | 92201 | Riverside | SRO |
+| 33-M4 | New Southwest Justice Building | 30755 Auld Road | Murrieta | 92563 | Riverside | SRO |
+| 33-N1 | Riverside Juvenile Court | 9991 County Farm Rd. | Riverside | 92503 | Riverside | SRO |
+| 33-N2 | Riverside Juvenile Justice Trailers | 9991 County Farm Road | Riverside | 92503 | Riverside | SRO |
+| 33-M1 | Southwest Justice Center | 30755 Auld Road | Murrieta | 92563 | Riverside | SRO |
+| 34-D1 | Carol Miller Justice Center Court Facility | 301 Bicentennial Circle | Sacramento | 95826 | Sacramento | NCRO |
+| 34-A1 | Gordon Schaber Sacramento Superior Court | 720 Ninth St. | Sacramento | 95814 | Sacramento | NCRO |
+| 34-C2 | Juvenile Courthouse | 9605 Kiefer Road | Sacramento | 95827 | Sacramento | NCRO |
+| 35-C1 | New Hollister Courthouse | 450 Fourth Street | Hollister | 95023 | San Benito | BANCRO |
+| 36-J1 | Barstow Courthouse | 235 East Mountain View Street | Barstow | 92311 | San Bernardino | SRO |
+| 36-A1 | Central Courthouse | 351 N. Arrowhead Ave | San Bernardino | 92415 | San Bernardino | SRO |
+| 36-C1 | Fontana Courthouse | 17780 Arrow Blvd. | Fontana | 92335 | San Bernardino | SRO |
+| 36-C3 | Fontana Jury Assembly Building | 17782 Arrow Blvd. | Fontana | 92335 | San Bernardino | SRO |
+| 36-P1 | Juvenile Dependency Courthouse | 860 E. Gilbert Street | San Bernardino | 92415 | San Bernardino | SRO |
+| 36-A2 | San Bernardino Courthouse - Annex | 351 N. Arrowhead Ave | San Bernardino | 92415 | San Bernardino | SRO |
+| 36-R1 | San Bernardino Justice Center | 247 West Third Street | San Bernardino | 92415 | San Bernardino | SRO |
+| 37-L1 | Central Courthouse | 1100 Union Street | San Diego | 92101 | San Diego | SRO |
+| 37-I1 | East County Regional Center | 250 E. Main St. | El Cajon | 92020 | San Diego | SRO |
+| 37-E1 | Juvenile Court | 2851 Meadow Lark Dr. | San Diego | 92123 | San Diego | SRO |
+| 37-C1 | Kearny Mesa Court | 8950 Clairemont Mesa Blvd. | San Diego | 92123 | San Diego | SRO |
+| 37-F3 | North County Regional Center - Annex | 325 South Melrose Drive | Vista | 92081 | San Diego | SRO |
+| 37-F2 | North County Regional Center - North | 325 South Melrose Drive | Vista | 92081 | San Diego | SRO |
+| 38-A1 | Civic Center Courthouse | 400 McAllister St. | San Francisco | 94102 | San Francisco | BANCRO |
+| 39-D2 | Lodi Branch Dept. 2 | 315 W. Elm St. | Lodi | 95240 | San Joaquin | NCRO |
+| 39-C1 | Manteca Branch Court | 315 E. Center St. | Manteca | 95336 | San Joaquin | NCRO |
+| 39-F1 | Stockton Courthouse | 180 East Weber Avenue | Stockton | 95202 | San Joaquin | NCRO |
+| 39-E1 | Tracy Branch Courthouse | 475 E. 10th St. | Tracy | 95376 | San Joaquin | NCRO |
+| 40-E1 | Grover Beach Branch | 214 S 16th St. | Grover Beach | 93433 | San Luis Obispo | CA |
+| 40-E2 | Grover Beach Clerk's Office | 214 S 16th St. | Grover Beach | 93433 | San Luis Obispo | SRO |
+| 40-C1 | Juvenile Services Center | 1065 Kansas Ave. | San Luis Obispo | 93408 | San Luis Obispo | BANCRO |
+| 40-J1 | Paso Robles Courthouse | 901 Park Street | Paso Robles | 93446 | San Luis Obispo | CA |
+| 41-B1 | Central Branch | 800 North Humboldt St. | San Mateo | 94401 | San Mateo | BANCRO |
+| 41-C1 | Northern Branch Courthouse | 1050 Mission Rd. | South San Francisco | 94080 | San Mateo | BANCRO |
+| 42-B1 | Figueroa Division | 118 E. Figueroa St. | Santa Barbara | 93101 | Santa Barbara | SRO |
+| 42-F7 | Santa Maria Clerks, Bldg E | 312 E. Cook St. | Santa Maria | 93454 | Santa Barbara | SRO |
+| 42-F1 | Santa Maria Courts Bldgs C + D | 312 E. Cook St. | Santa Maria | 93454 | Santa Barbara | SRO |
+| 42-F4 | Santa Maria Courts, Bldg F | 312 E. Cook St. | Santa Maria | 93454 | Santa Barbara | SRO |
+| 42-F5 | Santa Maria Courts, Bldg G | 312 E. Cook St. | Santa Maria | 93454 | Santa Barbara | SRO |
+| 42-F3 | Santa Maria Courts, Bldgs. A + B | 312 E. Cook St. | Santa Maria | 93454 | Santa Barbara | SRO |
+| 42-H1 | Santa Maria Juvenile Court (new) | 4285 California Blvd. | Santa Maria | 93455 | Santa Barbara | SRO |
+| 43-B1 | Downtown Superior Court | 191 N. First St. | San Jose | 95113 | Santa Clara | BANCRO |
+| 43-A1 | Hall of Justice (East) | 190 W. Hedding | San Jose | 95110 | Santa Clara | BANCRO |
+| 43-A2 | Hall of Justice (West) | 200 W. Hedding | San Jose | 95110 | Santa Clara | BANCRO |
+| 43-B2 | Historic Courthouse | 161 N. First St. | San Jose | 95113 | Santa Clara | BANCRO |
+| 43-N1 | Morgan Hill Courthouse | 301 Diana Avenue | Morgan Hill | 95037 | Santa Clara | BANCRO |
+| 43-B5 | New Santa Clara Family Justice Center | 201 N. First Street | San Jose | 95113 | Santa Clara | BANCRO |
+| 43-D1 | Palo Alto Courthouse | 270 Grant St. | Palo Alto | 94306 | Santa Clara | BANCRO |
+| 43-G1 | Santa Clara Courthouse | 1095 Homestead Rd. | Santa Clara | 95050 | Santa Clara | BANCRO |
+| 43-F1 | Sunnyvale Courthouse | 605 W. El Camino Real | Sunnyvale | 94087 | Santa Clara | BANCRO |
+| 44-A3 | Jury Assembly Room | 701 Ocean Street | Santa Cruz | 95060 | Santa Cruz | BANCRO |
+| 44-A1 | Main Courthouse | 701 Ocean St. | Santa Cruz | 95060 | Santa Cruz | BANCRO |
+| 44-B2 | Watsonville Courthouse | 1 Second Street | Watsonville | 95076 | Santa Cruz | BANCRO |
+| 45-A7 | Courthouse Annex | 1500 Court St. | Redding | 96001 | Shasta | NCRO |
+| 45-A9 | Justice Center Court Modular | 1655 West Street | Redding | 96001 | Shasta | NCRO |
+| 45-A1 | Main Courthouse | 1500 Court St. | Redding | 96001 | Shasta | NCRO |
+| 48-A1 | Hall of Justice | 600 Union Ave. | Fairfield | 94533 | Solano | BANCRO |
+| 48-A3 | Old Solano Courthouse | 580 Texas Street | Fairfield | 94533 | Solano | BANCRO |
+| 50-C1 | Ceres Superior Court | 2744 Second St. | Ceres | 95307 | Stanislaus | NCRO |
+| 50-A2 | Hall of Records | 1100 I Street | Modesto | 95353 | Stanislaus | NCRO |
+| 50-A1 | Modesto Main Courthouse | 800 11th Street | Modesto | 95354 | Stanislaus | NCRO |
+| 50-D1 | Turlock Superior Court | 300 Starr Ave. | Turlock | 95380 | Stanislaus | NCRO |
+| 51-C1 | Sutter County Superior Courthouse | 1175 Civic Center Blvd. | Yuba City | 95993 | Sutter | NCRO |
+| 52-E1 | Tehama County Courthouse | 1740 Walnut Street | Red Bluff | 96080 | Tehama | NCRO |
+| 54-I1 | South County Justice Center | 300 East Olive Avenue | Porterville | 93257 | Tulare | NCRO |
+| 54-B1 | Tulare Division | 425 E. Kern St. | Tulare | 93274 | Tulare | NCRO |
+| 56-B1 | East County Courthouse | 3855 Alamo Street | Simi Valley | 93063 | Ventura | SRO |
+| 56-F1 | Juvenile Courthouse | 4353 Vineyard Ave. | Oxnard | 93036 | Ventura | SRO |
+| 57-A10 | Yolo Superior Court | 1000 Main Street | Woodland | 95695 | Yolo | NCRO |

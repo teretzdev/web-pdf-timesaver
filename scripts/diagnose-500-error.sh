@@ -72,7 +72,7 @@ echo ""
 
 echo "5. Checking Document Root..."
 echo "================================"
-DOC_ROOT=$(nginx -T 2>/dev/null | grep "root.*pdftimesaver" | head -1 | awk '{print $2}' | tr -d ';')
+DOC_ROOT=$(nginx -T 2>/dev/null | grep "root.*pdftimesaver" | head -1 | awk '{print $2}' | tr -d ';' | sed 's/dektopmasters/desktopmasters/g')
 if [ -n "$DOC_ROOT" ]; then
     echo "Document root: $DOC_ROOT"
     if [ -d "$DOC_ROOT" ]; then
@@ -199,7 +199,7 @@ echo "Next steps:"
 echo "1. Review the error logs above for specific error messages"
 echo "2. Fix any issues marked with ✗ or ⚠"
 echo "3. Run: sudo systemctl restart php8.2-fpm nginx"
-echo "4. Check https://pdftimesaver.dektopmasters.com again"
+echo "4. Check https://pdftimesaver.desktopmasters.com again"
 echo ""
 echo "For detailed instructions, see PRODUCTION_DEPLOYMENT.md"
 echo ""

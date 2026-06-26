@@ -1,0 +1,96 @@
+{
+    "pek_rect_1_0": {
+        "name": "pek_rect_1_0",
+        "canonicalName": "pek_rect_1_0",
+        "type": "text",
+        "page": 1,
+        "x": 62.3,
+        "y": 72.28,
+        "width": 41.3808594,
+        "height": 5.27,
+        "fontSize": 10,
+        "confidence": 0.88,
+        "method": "ensemble",
+        "methodSource": "pdf-extract-kit-wrapper",
+        "methodsAgreed": 12,
+        "sources": [
+            "pdf-extract-kit-wrapper"
+        ],
+        "aliases": [
+            "pek_rect_1_0",
+            "pek_rect_2_9",
+            "pek_rect_2_10",
+            "pek_rect_3_11",
+            "pek_label_1_1",
+            "pek_label_1_2",
+            "pek_label_1_3",
+            "pek_label_1_4",
+            "pek_label_1_5",
+            "pek_label_1_6",
+            "pek_label_1_7",
+            "pek_label_1_8"
+        ],
+        "agreementRatio": 12,
+        "originalName": "pek_rect_1_0"
+    },
+    "label_inferred_1_0": {
+        "name": "label_inferred_1_0",
+        "canonicalName": "label_inferred_1_0",
+        "type": "text",
+        "page": 1,
+        "x": 93.07,
+        "y": 85.97,
+        "width": 63.5,
+        "height": 5,
+        "fontSize": 10,
+        "confidence": 0.86,
+        "method": "ensemble",
+        "methodSource": "ffdnet-detector",
+        "methodsAgreed": 8,
+        "sources": [
+            "ffdnet-detector"
+        ],
+        "aliases": [
+            "label_inferred_1_0",
+            "label_inferred_1_1",
+            "label_inferred_1_2",
+            "label_inferred_1_3",
+            "label_inferred_1_4",
+            "label_inferred_1_5",
+            "label_inferred_1_6",
+            "label_inferred_1_7"
+        ],
+        "agreementRatio": 8,
+        "originalName": "label_inferred_1_0"
+    },
+    "checkbox_0": {
+        "name": "checkbox_0",
+        "canonicalName": "checkbox_0",
+        "type": "checkbox",
+        "page": 1,
+        "x": 62.3,
+        "y": 110.25,
+        "width": 5,
+        "height": 5,
+        "fontSize": 3.4,
+        "confidence": 0.85,
+        "method": "ensemble",
+        "methodSource": "ocr-field-detection",
+        "methodsAgreed": 8,
+        "sources": [
+            "ocr-field-detection"
+        ],
+        "aliases": [
+            "checkbox_0",
+            "checkbox_1",
+            "checkbox_2",
+            "checkbox_3",
+            "checkbox_4",
+            "checkbox_5",
+            "checkbox_6",
+            "checkbox_7"
+        ],
+        "agreementRatio": 8,
+        "originalName": "checkbox_0"
+    }
+}

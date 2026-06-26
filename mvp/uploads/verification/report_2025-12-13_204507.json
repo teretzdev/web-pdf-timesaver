@@ -1,0 +1,241 @@
+{
+    "timestamp": "2025-12-13 20:45:06",
+    "pdfPath": "c:\/Users\/Shadow\/Web-PDFTimeSaver\/uploads\/w9.pdf",
+    "overallAccuracy": 100,
+    "fieldsVerified": 14,
+    "fieldsMatched": 14,
+    "fieldsMismatched": 0,
+    "fieldsMissing": 0,
+    "fieldsExtra": 0,
+    "matches": [
+        {
+            "field": "topmostSubform[0].Page1[0].f1_01[0]",
+            "expected": {
+                "x": 20.67,
+                "y": 41.63
+            },
+            "actual": {
+                "x": 20.67,
+                "y": 41.63
+            },
+            "difference": {
+                "x": 0,
+                "y": 0,
+                "distance": 0
+            }
+        },
+        {
+            "field": "topmostSubform[0].Page1[0].f1_02[0]",
+            "expected": {
+                "x": 20.67,
+                "y": 50.09
+            },
+            "actual": {
+                "x": 20.67,
+                "y": 50.09
+            },
+            "difference": {
+                "x": 0,
+                "y": 0,
+                "distance": 0
+            }
+        },
+        {
+            "field": "topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[0]",
+            "expected": {
+                "x": 25.75,
+                "y": 63.59
+            },
+            "actual": {
+                "x": 25.75,
+                "y": 63.59
+            },
+            "difference": {
+                "x": 0,
+                "y": 0,
+                "distance": 0
+            }
+        },
+        {
+            "field": "topmostSubform[0].Page1[0].f1_05[0]",
+            "expected": {
+                "x": 191.77,
+                "y": 67.73
+            },
+            "actual": {
+                "x": 191.77,
+                "y": 67.73
+            },
+            "difference": {
+                "x": 0,
+                "y": 0,
+                "distance": 0
+            }
+        },
+        {
+            "field": "topmostSubform[0].Page1[0].f1_06[0]",
+            "expected": {
+                "x": 176.6,
+                "y": 80.43
+            },
+            "actual": {
+                "x": 176.6,
+                "y": 80.43
+            },
+            "difference": {
+                "x": 0,
+                "y": 0,
+                "distance": 0
+            }
+        },
+        {
+            "field": "topmostSubform[0].Page1[0].Address_ReadOrder[0].f1_07[0]",
+            "expected": {
+                "x": 20.67,
+                "y": 100.89
+            },
+            "actual": {
+                "x": 20.67,
+                "y": 100.89
+            },
+            "difference": {
+                "x": 0,
+                "y": 0,
+                "distance": 0
+            }
+        },
+        {
+            "field": "topmostSubform[0].Page1[0].Address_ReadOrder[0].f1_08[0]",
+            "expected": {
+                "x": 20.67,
+                "y": 109.36
+            },
+            "actual": {
+                "x": 20.67,
+                "y": 109.36
+            },
+            "difference": {
+                "x": 0,
+                "y": 0,
+                "distance": 0
+            }
+        },
+        {
+            "field": "topmostSubform[0].Page1[0].f1_09[0]",
+            "expected": {
+                "x": 137.51,
+                "y": 100.89
+            },
+            "actual": {
+                "x": 137.51,
+                "y": 100.89
+            },
+            "difference": {
+                "x": 0,
+                "y": 0,
+                "distance": 0
+            }
+        },
+        {
+            "field": "topmostSubform[0].Page1[0].f1_10[0]",
+            "expected": {
+                "x": 20.67,
+                "y": 117.83
+            },
+            "actual": {
+                "x": 20.67,
+                "y": 117.83
+            },
+            "difference": {
+                "x": 0,
+                "y": 0,
+                "distance": 0
+            }
+        },
+        {
+            "field": "topmostSubform[0].Page1[0].f1_11[0]",
+            "expected": {
+                "x": 147.32,
+                "y": 131.23
+            },
+            "actual": {
+                "x": 147.32,
+                "y": 131.23
+            },
+            "difference": {
+                "x": 0,
+                "y": 0,
+                "distance": 0
+            }
+        },
+        {
+            "field": "topmostSubform[0].Page1[0].f1_12[0]",
+            "expected": {
+                "x": 167.64,
+                "y": 131.23
+            },
+            "actual": {
+                "x": 167.64,
+                "y": 131.23
+            },
+            "difference": {
+                "x": 0,
+                "y": 0,
+                "distance": 0
+            }
+        },
+        {
+            "field": "topmostSubform[0].Page1[0].f1_13[0]",
+            "expected": {
+                "x": 182.88,
+                "y": 131.23
+            },
+            "actual": {
+                "x": 182.88,
+                "y": 131.23
+            },
+            "difference": {
+                "x": 0,
+                "y": 0,
+                "distance": 0
+            }
+        },
+        {
+            "field": "topmostSubform[0].Page1[0].f1_14[0]",
+            "expected": {
+                "x": 147.32,
+                "y": 148.17
+            },
+            "actual": {
+                "x": 147.32,
+                "y": 148.17
+            },
+            "difference": {
+                "x": 0,
+                "y": 0,
+                "distance": 0
+            }
+        },
+        {
+            "field": "topmostSubform[0].Page1[0].f1_15[0]",
+            "expected": {
+                "x": 162.56,
+                "y": 148.17
+            },
+            "actual": {
+                "x": 162.56,
+                "y": 148.17
+            },
+            "difference": {
+                "x": 0,
+                "y": 0,
+                "distance": 0
+            }
+        }
+    ],
+    "issues": [],
+    "summary": {
+        "status": "PASS",
+        "message": "Position accuracy: 100.00% (14\/14 fields matched)"
+    }
+}

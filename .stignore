@@ -1,0 +1,66 @@
+// Syncthing ignore patterns. Synced to all peers by Syncthing itself.
+// Goal: keep dev-only / runtime-mutable files out of two-way sync so prod's
+// PHP can persist without dev clobbering its writes.
+
+// Dev SSH-tunnel override (points DataStore at 127.0.0.1:3307).
+// Held under a name db_env.php does NOT load, so the file is dormant on dev
+// and never reaches prod. Restore by copying back to db.local.php when the
+// tunnel is up.
+config/db.local.disabled.php
+
+// Live JSON datastore — runtime-mutable on every server. Prod is source of truth.
+data/mvp.json
+data/mvp.json.tmp
+data/mvp.json.corrupted.*
+
+// Local test snapshot.
+data/mvp_test.json
+
+// Generated per-form extraction artifacts (created on whichever box ran extraction).
+data/*_extraction_details.json
+data/*_positions.json
+data/*_verification_report.json
+data/*_missing_fields.json
+data/*_positions.backup_*.json
+data/*_positions_fixed.json
+data/*_positions_array.json
+
+// Build / debug output.
+logs
+*.log
+*.log.*
+*.tmp
+*.temp
+*.bak
+*.backup
+*.backup.*
+output
+.cache
+coverage
+
+// Sync conflict artifacts (Syncthing's own).
+*.sync-conflict-*
+*sync-conflict*
+
+// Local secrets / env.
+.env
+.env.*
+
+// Editor / OS noise.
+.DS_Store
+Thumbs.db
+.idea
+.vscode
+
+// Composer / Node deps (each side installs its own).
+vendor
+node_modules
+composer.phar
+package-lock.json
+mcp-field-editor/node_modules
+mcp-server/node_modules
+mcp-field-editor/dist
+mcp-server/dist
+
+// Cursor screenshots (local agent runs).
+.cursor/screenshots

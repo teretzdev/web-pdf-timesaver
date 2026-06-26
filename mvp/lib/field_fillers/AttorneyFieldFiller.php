@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace WebPdfTimeSaver\Mvp\FieldFillers;
 
 require_once __DIR__ . '/../field_position_loader.php';
+require_once __DIR__ . '/../font_manager.php';
 
 final class AttorneyFieldFiller implements FieldFillerInterface {
     private $positionLoader;
@@ -20,7 +21,9 @@ final class AttorneyFieldFiller implements FieldFillerInterface {
         // Attorney Name
         if (!empty($data['attorney_name']) && isset($positions['attorney_name'])) {
             $pos = $positions['attorney_name'];
-            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $fieldType = $pos['type'] ?? \WebPdfTimeSaver\Mvp\FontManager::inferFieldType($key);
+            $fontSettings = \WebPdfTimeSaver\Mvp\FontManager::getFontSettings($pos, 't_fl100_gc120', $fieldType);
+            \WebPdfTimeSaver\Mvp\FontManager::applyFont($pdf, $fontSettings);
             $pdf->SetXY($pos['x'], $pos['y']);
             $pdf->Cell($pos['width'], 5, $data['attorney_name'], 0, 0, 'L');
             $logger->debug('Attorney name filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['attorney_name']]);
@@ -29,7 +32,9 @@ final class AttorneyFieldFiller implements FieldFillerInterface {
         // State Bar Number
         if (!empty($data['attorney_bar_number']) && isset($positions['attorney_bar_number'])) {
             $pos = $positions['attorney_bar_number'];
-            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $fieldType = $pos['type'] ?? \WebPdfTimeSaver\Mvp\FontManager::inferFieldType($key);
+            $fontSettings = \WebPdfTimeSaver\Mvp\FontManager::getFontSettings($pos, 't_fl100_gc120', $fieldType);
+            \WebPdfTimeSaver\Mvp\FontManager::applyFont($pdf, $fontSettings);
             $pdf->SetXY($pos['x'], $pos['y']);
             $pdf->Cell($pos['width'], 5, $data['attorney_bar_number'], 0, 0, 'L');
             $logger->debug('Bar number filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['attorney_bar_number']]);
@@ -38,7 +43,9 @@ final class AttorneyFieldFiller implements FieldFillerInterface {
         // Law Firm Name
         if (!empty($data['attorney_firm']) && isset($positions['attorney_firm'])) {
             $pos = $positions['attorney_firm'];
-            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $fieldType = $pos['type'] ?? \WebPdfTimeSaver\Mvp\FontManager::inferFieldType($key);
+            $fontSettings = \WebPdfTimeSaver\Mvp\FontManager::getFontSettings($pos, 't_fl100_gc120', $fieldType);
+            \WebPdfTimeSaver\Mvp\FontManager::applyFont($pdf, $fontSettings);
             $pdf->SetXY($pos['x'], $pos['y']);
             $pdf->Cell($pos['width'], 5, $data['attorney_firm'], 0, 0, 'L');
             $logger->debug('Firm name filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['attorney_firm']]);
@@ -47,7 +54,9 @@ final class AttorneyFieldFiller implements FieldFillerInterface {
         // Address
         if (!empty($data['attorney_address']) && isset($positions['attorney_address'])) {
             $pos = $positions['attorney_address'];
-            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $fieldType = $pos['type'] ?? \WebPdfTimeSaver\Mvp\FontManager::inferFieldType($key);
+            $fontSettings = \WebPdfTimeSaver\Mvp\FontManager::getFontSettings($pos, 't_fl100_gc120', $fieldType);
+            \WebPdfTimeSaver\Mvp\FontManager::applyFont($pdf, $fontSettings);
             $pdf->SetXY($pos['x'], $pos['y']);
             $pdf->Cell($pos['width'], 5, $data['attorney_address'], 0, 0, 'L');
             $logger->debug('Address filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['attorney_address']]);
@@ -56,7 +65,9 @@ final class AttorneyFieldFiller implements FieldFillerInterface {
         // City, State, ZIP
         if (!empty($data['attorney_city_state_zip']) && isset($positions['attorney_city_state_zip'])) {
             $pos = $positions['attorney_city_state_zip'];
-            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $fieldType = $pos['type'] ?? \WebPdfTimeSaver\Mvp\FontManager::inferFieldType($key);
+            $fontSettings = \WebPdfTimeSaver\Mvp\FontManager::getFontSettings($pos, 't_fl100_gc120', $fieldType);
+            \WebPdfTimeSaver\Mvp\FontManager::applyFont($pdf, $fontSettings);
             $pdf->SetXY($pos['x'], $pos['y']);
             $pdf->Cell($pos['width'], 5, $data['attorney_city_state_zip'], 0, 0, 'L');
             $logger->debug('City/State/ZIP filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['attorney_city_state_zip']]);
@@ -65,7 +76,9 @@ final class AttorneyFieldFiller implements FieldFillerInterface {
         // Phone
         if (!empty($data['attorney_phone']) && isset($positions['attorney_phone'])) {
             $pos = $positions['attorney_phone'];
-            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $fieldType = $pos['type'] ?? \WebPdfTimeSaver\Mvp\FontManager::inferFieldType($key);
+            $fontSettings = \WebPdfTimeSaver\Mvp\FontManager::getFontSettings($pos, 't_fl100_gc120', $fieldType);
+            \WebPdfTimeSaver\Mvp\FontManager::applyFont($pdf, $fontSettings);
             $pdf->SetXY($pos['x'], $pos['y']);
             $pdf->Cell($pos['width'], 5, $data['attorney_phone'], 0, 0, 'L');
             $logger->debug('Phone filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['attorney_phone']]);
@@ -74,7 +87,9 @@ final class AttorneyFieldFiller implements FieldFillerInterface {
         // Email
         if (!empty($data['attorney_email']) && isset($positions['attorney_email'])) {
             $pos = $positions['attorney_email'];
-            $pdf->SetFont('Arial', $pos['fontStyle'] ?? '', $pos['fontSize'] ?? 9);
+            $fieldType = $pos['type'] ?? \WebPdfTimeSaver\Mvp\FontManager::inferFieldType($key);
+            $fontSettings = \WebPdfTimeSaver\Mvp\FontManager::getFontSettings($pos, 't_fl100_gc120', $fieldType);
+            \WebPdfTimeSaver\Mvp\FontManager::applyFont($pdf, $fontSettings);
             $pdf->SetXY($pos['x'], $pos['y']);
             $pdf->Cell($pos['width'], 5, $data['attorney_email'], 0, 0, 'L');
             $logger->debug('Email filled', ['x' => $pos['x'], 'y' => $pos['y'], 'value' => $data['attorney_email']]);

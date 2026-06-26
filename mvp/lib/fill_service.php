@@ -28,12 +28,12 @@ final class FillService {
 		$this->logger->debug('Values (masked): ' . json_encode($this->maskPii($values)), ['pdId' => $pd]);
 		$startedAt = microtime(true);
 		try {
-			// Prefer positioned rendering when positions exist
-			$templateId = (string)($template['id'] ?? 't_fl100_gc120');
-			$result = $this->formFiller->fillPdfFormWithPositions($template, $values, $templateId);
+			// Use universal fillPdfForm which tries AcroForm first, then falls back to position-based
+			$result = $this->formFiller->fillPdfForm($template, $values);
 			$durationMs = (int)round((microtime(true) - $startedAt) * 1000);
 			$path = $result['path'] ?? ($result['outputPath'] ?? null);
-			$metrics = [];
+			$method = $result['method'] ?? 'unknown';
+			$metrics = ['method' => $method];
 			if ($path && file_exists($path)) {
 				$metrics['sizeBytes'] = filesize($path) ?: 0;
 				try {
@@ -78,6 +78,28 @@ final class FillService {
 			$this->logger->error('PDF signing error: ' . $e->getMessage(), ['pdId' => $pd, 'durationMs' => $durationMs]);
 			throw $e;
 		}
+	}
+
+	/**
+	 * Decide between digital signature and visual stamp based on config/availability.
+	 */
+	public function signDocument(string $inputPath, array $context = []): array {
+		$pd = $context['pdId'] ?? null;
+		$this->formFiller->setContext($context);
+		$this->logger->info('signDocument: deciding signing mode', ['pdId' => $pd, 'path' => $inputPath]);
+		$config = require __DIR__ . '/../../config/app.php';
+		$features = $config['features'] ?? [];
+		$signing = $config['signing'] ?? [];
+		$digitalEnabled = (bool)($features['pdf_signing'] ?? false) && (bool)($signing['enabled'] ?? false);
+		if ($digitalEnabled && class_exists('Mpdf\\Mpdf')) {
+			try {
+				return $this->formFiller->applyDigitalSignature($inputPath);
+			} catch (\Throwable $e) {
+				$this->logger->error('Digital signing failed, falling back to visual stamp: ' . $e->getMessage(), ['pdId' => $pd]);
+			}
+		}
+		// Fallback to visual stamp
+		return $this->stampSigned($inputPath, $context);
 	}
 
 	private function maskPii(array $data): array {

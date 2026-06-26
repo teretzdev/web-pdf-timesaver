@@ -14,7 +14,7 @@ class FL105TestDataGenerator {
             'attorney_bar_number' => '234567',
             'attorney_firm' => 'Johnson Family Law',
             'attorney_address_street' => '456 Legal Avenue',
-            'attorney_address_city' => 'Los Angeles',
+            'attorney_address_city' => 'Sample',
             'attorney_address_state' => 'CA',
             'attorney_address_zip' => '90012',
             'attorney_phone' => '(213) 555-7890',
@@ -24,17 +24,17 @@ class FL105TestDataGenerator {
             // Self-represented party
             'party_name' => 'Jennifer Martinez',
             'party_address_street' => '789 Maple Street',
-            'party_address_city' => 'Los Angeles',
+            'party_address_city' => 'Sample',
             'party_address_state' => 'CA',
             'party_address_zip' => '90015',
             'party_phone' => '(213) 555-1234',
             'party_email' => 'jennifer.martinez@email.com',
             
             // Court information
-            'superior_court_county' => 'Los Angeles',
+            'superior_court_county' => 'Sample',
             'street_address' => '111 North Hill Street',
             'mailing_address' => '111 North Hill Street',
-            'city_zip' => 'Los Angeles, CA 90012',
+            'city_zip' => 'Sample',
             'branch_name' => 'Stanley Mosk Courthouse',
             
             // Case details
@@ -46,17 +46,17 @@ class FL105TestDataGenerator {
             'child_1_name' => 'Emma Martinez',
             'child_1_birthdate' => '03/15/2018',
             'child_1_sex' => 'Female',
-            'child_1_current_address' => '789 Maple Street, Los Angeles, CA 90015',
+            'child_1_current_address' => 'Sample',
             'child_1_period_lived' => 'Birth to present',
             
             'child_2_name' => 'Noah Martinez',
             'child_2_birthdate' => '07/22/2020',
             'child_2_sex' => 'Male',
-            'child_2_current_address' => '789 Maple Street, Los Angeles, CA 90015',
+            'child_2_current_address' => 'Sample',
             'child_2_period_lived' => 'Birth to present',
             
             // Residence history
-            'residence_1_address' => '789 Maple Street, Los Angeles, CA 90015',
+            'residence_1_address' => 'Sample',
             'residence_1_dates' => '01/2020 to present',
             'residence_1_persons' => 'Jennifer Martinez (mother), Emma Martinez, Noah Martinez',
             
@@ -67,12 +67,12 @@ class FL105TestDataGenerator {
             // Person with physical custody
             'custody_person_name' => 'Jennifer Martinez',
             'custody_person_relationship' => 'Mother',
-            'custody_person_address' => '789 Maple Street, Los Angeles, CA 90015',
+            'custody_person_address' => 'Sample',
             
             // Court proceedings
             'prior_proceedings_none' => false,
             'prior_proceedings_exist' => true,
-            'prior_court_name' => 'Superior Court of California, County of Los Angeles',
+            'prior_court_name' => 'Sample',
             'prior_case_number' => '22STFL98765',
             'prior_case_type' => 'Dissolution of Marriage',
             
@@ -88,7 +88,7 @@ class FL105TestDataGenerator {
             'declarant_name' => 'Jennifer Martinez',
             'declarant_role' => 'Petitioner',
             'declaration_date' => date('m/d/Y'),
-            'declaration_location' => 'Los Angeles, California',
+            'declaration_location' => 'Sample',
             
             // Signature
             'signature' => 'Jennifer Martinez',

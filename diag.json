@@ -1,0 +1,80 @@
+{
+    "success": true,
+    "pdoConnected": false,
+    "database": "LawDocumentManager.com",
+    "counts": null,
+    "storeClass": "WebPdfTimeSaver\\Mvp\\DataStore",
+    "mysqlParams": {
+        "host": "127.0.0.1",
+        "port": 3306,
+        "database": "LawDocumentManager.com",
+        "user": "ldm",
+        "disabled": false,
+        "incomplete": false,
+        "passwordSet": true
+    },
+    "env": {
+        "DB_HOST": null,
+        "DB_PORT": null,
+        "DB_NAME": null,
+        "DB_USER": null,
+        "DB_PASSWORD_SET": false,
+        "DB_ENABLED": null,
+        "DB_REQUIRED": null
+    },
+    "pdoProbes": {
+        "configured": {
+            "dsn": "mysql:host=127.0.0.1;port=3306;dbname=LawDocumentManager.com;charset=utf8mb4",
+            "connected": false,
+            "error": "SQLSTATE[HY000] [2002] Connection refused"
+        },
+        "localhost:3306": {
+            "dsn": "mysql:host=localhost;port=3306;dbname=LawDocumentManager.com;charset=utf8mb4",
+            "connected": false,
+            "error": "SQLSTATE[HY000] [2002] No such file or directory"
+        },
+        "socket:/var/run/mysqld/mysqld.sock": {
+            "dsn": "mysql:unix_socket=/var/run/mysqld/mysqld.sock;dbname=LawDocumentManager.com;charset=utf8mb4",
+            "connected": false,
+            "error": "SQLSTATE[HY000] [2002] No such file or directory"
+        },
+        "socket:/var/lib/mysql/mysql.sock": {
+            "dsn": "mysql:unix_socket=/var/lib/mysql/mysql.sock;dbname=LawDocumentManager.com;charset=utf8mb4",
+            "connected": false,
+            "error": "SQLSTATE[HY000] [2002] No such file or directory"
+        },
+        "socket:/tmp/mysql.sock": {
+            "dsn": "mysql:unix_socket=/tmp/mysql.sock;dbname=LawDocumentManager.com;charset=utf8mb4",
+            "connected": false,
+            "error": "SQLSTATE[HY000] [2002] No such file or directory"
+        },
+        "socket:/run/mysqld/mysqld.sock": {
+            "dsn": "mysql:unix_socket=/run/mysqld/mysqld.sock;dbname=LawDocumentManager.com;charset=utf8mb4",
+            "connected": false,
+            "error": "SQLSTATE[HY000] [2002] No such file or directory"
+        },
+        "socket:/var/run/mysql/mysql.sock": {
+            "dsn": "mysql:unix_socket=/var/run/mysql/mysql.sock;dbname=LawDocumentManager.com;charset=utf8mb4",
+            "connected": false,
+            "error": "SQLSTATE[HY000] [2002] No such file or directory"
+        }
+    },
+    "socketCandidatesOnDisk": [],
+    "mariadbConfigHints": [],
+    "phpHome": "/home/jjames",
+    "pdoProbe": {
+        "dsn": "mysql:host=127.0.0.1;port=3306;dbname=LawDocumentManager.com;charset=utf8mb4",
+        "connected": false,
+        "error": "SQLSTATE[HY000] [2002] Connection refused"
+    },
+    "dataFile": {
+        "path": "/var/web/desktopmasters.com/pdftimesaver/mvp/../data/mvp.json",
+        "exists": true,
+        "readable": true,
+        "writable": true,
+        "sizeBytes": 691429,
+        "mtime": "2026-05-09T16:48:50-07:00",
+        "parentWritable": true,
+        "phpUser": "jjames"
+    }
+}

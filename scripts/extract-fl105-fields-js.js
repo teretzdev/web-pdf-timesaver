@@ -1,15 +1,70 @@
 #!/usr/bin/env node
 /**
- * Enhanced PDF Field Extractor with Validation
+ * Enhanced PDF Field Extractor with Progress Bars and Activity Indicators
  * Uses pdf-lib to extract fields from PDFs with improved error handling and validation
  */
 
 const fs = require('fs');
 const path = require('path');
 const { PDFDocument, PDFTextField, PDFCheckBox, PDFRadioGroup, PDFDropdown } = require('pdf-lib');
+const fieldMetrics = require('./utils/field-metrics');
+
+// Simple progress bar implementation
+class ProgressBar {
+    constructor(total, width = 50) {
+        this.total = total;
+        this.current = 0;
+        this.width = width;
+        this.startTime = Date.now();
+    }
+
+    update(current, label = '') {
+        this.current = current;
+        const percentage = Math.round((current / this.total) * 100);
+        const filled = Math.round((current / this.total) * this.width);
+        const bar = '█'.repeat(filled) + '░'.repeat(this.width - filled);
+        const elapsed = ((Date.now() - this.startTime) / 1000).toFixed(1);
+        
+        process.stdout.write(`\r${label} [${bar}] ${percentage}% (${current}/${this.total}) ${elapsed}s`);
+        
+        if (current === this.total) {
+            console.log(''); // New line when complete
+        }
+    }
+
+    complete(label = 'Complete') {
+        const elapsed = ((Date.now() - this.startTime) / 1000).toFixed(1);
+        console.log(`\n✅ ${label} in ${elapsed}s`);
+    }
+}
+
+// Activity spinner for long operations
+class ActivitySpinner {
+    constructor(label = 'Processing') {
+        this.label = label;
+        this.spinner = ['⠋', '⠙', '⠹', '⠸', '⠼', '⠴', '⠦', '⠧', '⠇', '⠏'];
+        this.current = 0;
+        this.interval = null;
+    }
+
+    start() {
+        this.interval = setInterval(() => {
+            process.stdout.write(`\r${this.spinner[this.current]} ${this.label}`);
+            this.current = (this.current + 1) % this.spinner.length;
+        }, 100);
+    }
+
+    stop(message = 'Done') {
+        if (this.interval) {
+            clearInterval(this.interval);
+            process.stdout.write(`\r✅ ${message}\n`);
+        }
+    }
+}
 
 async function extractFields(pdfPath) {
-    console.log('🔍 Extracting fields from:', pdfPath);
+    console.log('🔍 Starting PDF field extraction...');
+    console.log(`📄 Target: ${path.basename(pdfPath)}`);
     
     // Validate input
     if (!fs.existsSync(pdfPath)) {
@@ -21,23 +76,33 @@ async function extractFields(pdfPath) {
         throw new Error('PDF file is empty');
     }
 
-    console.log(`📄 File size: ${(fileStats.size / 1024).toFixed(1)} KB`);
+    console.log(`📊 File size: ${(fileStats.size / 1024).toFixed(1)} KB`);
     
     // Load PDF with enhanced error handling
+    const spinner = new ActivitySpinner('Loading PDF');
+    spinner.start();
+    
     let pdfBytes;
     try {
         pdfBytes = fs.readFileSync(pdfPath);
+        spinner.stop('PDF loaded');
     } catch (error) {
+        spinner.stop('Failed to read PDF');
         throw new Error(`Failed to read PDF file: ${error.message}`);
     }
 
+    const loadSpinner = new ActivitySpinner('Parsing PDF structure');
+    loadSpinner.start();
+    
     let pdfDoc;
     try {
         pdfDoc = await PDFDocument.load(pdfBytes, {
             ignoreEncryption: true,
             updateMetadata: false
         });
+        loadSpinner.stop('PDF parsed');
     } catch (error) {
+        loadSpinner.stop('PDF parsing failed');
         throw new Error(`Failed to load PDF: ${error.message}. PDF may be corrupted or heavily encrypted.`);
     }
     
@@ -63,8 +128,12 @@ async function extractFields(pdfPath) {
         };
     }
     
+    // Initialize progress bar for field processing
+    const progressBar = new ProgressBar(fields.length);
+    console.log('\n🔧 Processing form fields...');
+    
     const allFields = [];
-    const MM_PER_PT = 0.352778; // Convert points to mm
+    const MM_PER_PT = fieldMetrics.MM_PER_PT; // Convert points to mm
     const warnings = [];
     
     // Extract each field with validation
@@ -110,7 +179,7 @@ async function extractFields(pdfPath) {
                     }
                 }
             } catch (e) {
-                console.warn(`   ⚠️  Could not get position for ${name}: ${e.message}`);
+                // Silent warning for position extraction
             }
             
             if (!positionValid) {
@@ -140,24 +209,23 @@ async function extractFields(pdfPath) {
                 y: parseFloat((y * MM_PER_PT).toFixed(2)),
                 width: parseFloat((width * MM_PER_PT).toFixed(2)),
                 height: parseFloat((height * MM_PER_PT).toFixed(2)),
-                fontSize: Math.max(7, parseFloat((height * MM_PER_PT * 0.7).toFixed(1))),
+                fontSize: parseFloat(fieldMetrics.estimateFontPtFromHeightMm(height * MM_PER_PT, fieldMetrics.DEFAULT_FONT_PT).toFixed(1)),
                 rect_pdf: rect,
                 positionValid: positionValid
             };
             
             allFields.push(fieldData);
             
-            // Log progress for first 10 fields or every 10th field
-            if (index < 10 || index % 10 === 0) {
-                const status = positionValid ? '✅' : '⚠️';
-                console.log(`   ${status} ${name}: ${type} at (${fieldData.x}, ${fieldData.y}) on page ${page}`);
-            }
+            // Update progress bar
+            progressBar.update(index + 1, `Processing field ${index + 1}`);
             
         } catch (error) {
-            console.warn(`   ❌ Error processing field ${index}: ${error.message}`);
             warnings.push(`Error processing field ${index}: ${error.message}`);
+            progressBar.update(index + 1, `Processing field ${index + 1}`);
         }
     });
+    
+    progressBar.complete('Field processing');
     
     // Final validation
     const validFields = allFields.filter(f => f.positionValid);
@@ -202,6 +270,9 @@ async function extractFields(pdfPath) {
         console.log(`🔧 Method: ${result.method}`);
         
         // Convert to keyed object format for compatibility
+        const saveSpinner = new ActivitySpinner('Saving results');
+        saveSpinner.start();
+        
         const positionsObject = {};
         result.fields.forEach(field => {
             positionsObject[field.name] = field;
@@ -209,21 +280,24 @@ async function extractFields(pdfPath) {
         
         // Save to file
         fs.writeFileSync(outputPath, JSON.stringify(positionsObject, null, 2));
-        console.log(`\n💾 Saved to: ${outputPath}`);
+        saveSpinner.stop('Results saved');
         
         // Also save array format
         const arrayOutputPath = outputPath.replace('.json', '_array.json');
         fs.writeFileSync(arrayOutputPath, JSON.stringify(result, null, 2));
+        
+        console.log(`\n💾 Saved to: ${outputPath}`);
         console.log(`💾 Array format: ${arrayOutputPath}`);
         
         // Show extracted fields
         if (result.fields.length > 0) {
-            console.log('\n📋 Extracted form fields:');
-            result.fields.slice(0, 10).forEach(field => {
-                console.log(`   - ${field.name} (${field.type}): ${field.x}, ${field.y}, ${field.width}x${field.height}mm`);
+            console.log('\n📋 Sample extracted fields:');
+            result.fields.slice(0, 5).forEach(field => {
+                const status = field.positionValid ? '✅' : '⚠️';
+                console.log(`   ${status} ${field.name} (${field.type}): ${field.x}, ${field.y}, ${field.width}x${field.height}mm`);
             });
-            if (result.fields.length > 10) {
-                console.log(`   ... and ${result.fields.length - 10} more fields`);
+            if (result.fields.length > 5) {
+                console.log(`   ... and ${result.fields.length - 5} more fields`);
             }
         }
         

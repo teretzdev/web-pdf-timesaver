@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace WebPdfTimeSaver\Mvp\FieldFillers;
 
 require_once __DIR__ . '/../field_position_loader.php';
+require_once __DIR__ . '/../font_manager.php';
 
 final class ChildrenFieldFiller implements FieldFillerInterface {
     private $positionLoader;
@@ -20,7 +21,9 @@ final class ChildrenFieldFiller implements FieldFillerInterface {
         // Has Children checkbox
         if (!empty($data['has_children']) && isset($positions['has_children'])) {
             $pos = $positions['has_children'];
-            $pdf->SetFont('Arial', '', $pos['fontSize'] ?? 9);
+            $fieldType = $pos['type'] ?? 'text';
+            $fontSettings = \WebPdfTimeSaver\Mvp\FontManager::getFontSettings($pos, 't_fl100_gc120', $fieldType);
+            \WebPdfTimeSaver\Mvp\FontManager::applyFont($pdf, $fontSettings);
             $pdf->SetXY($pos['x'], $pos['y']);
             $pdf->Cell($pos['width'], 5, 'X', 0, 0, 'C');
             $logger->debug('Has children checkbox filled', ['x' => $pos['x'], 'y' => $pos['y']]);
@@ -29,7 +32,9 @@ final class ChildrenFieldFiller implements FieldFillerInterface {
         // Children count - always place this field regardless of has_children value
         if (isset($positions['children_count'])) {
             $pos = $positions['children_count'];
-            $pdf->SetFont('Arial', '', $pos['fontSize'] ?? 9);
+            $fieldType = $pos['type'] ?? 'text';
+            $fontSettings = \WebPdfTimeSaver\Mvp\FontManager::getFontSettings($pos, 't_fl100_gc120', $fieldType);
+            \WebPdfTimeSaver\Mvp\FontManager::applyFont($pdf, $fontSettings);
             $pdf->SetXY($pos['x'], $pos['y']);
             $childrenCount = !empty($data['children_count']) ? $data['children_count'] : '0';
             $pdf->Cell($pos['width'], 5, $childrenCount, 0, 0, 'L');

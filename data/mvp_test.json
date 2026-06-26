@@ -40,6 +40,22 @@
             "phone": "555",
             "createdAt": "2025-10-03T12:13:23+02:00",
             "updatedAt": "2025-10-03T12:13:23+02:00"
+        },
+        {
+            "id": "c_630f75d0cb34",
+            "displayName": "Test Client",
+            "email": "test@example.com",
+            "phone": "555-0000",
+            "createdAt": "2025-10-31T21:30:10+01:00",
+            "updatedAt": "2025-10-31T21:30:10+01:00"
+        },
+        {
+            "id": "c_a8c3486afeb5",
+            "displayName": "Client Tabs",
+            "email": "x@y.z",
+            "phone": "555",
+            "createdAt": "2025-10-31T21:30:10+01:00",
+            "updatedAt": "2025-10-31T21:30:10+01:00"
         }
     ],
     "projects": [
@@ -134,6 +150,49 @@
             "status": "in_progress",
             "createdAt": "2025-10-03T12:13:23+02:00",
             "updatedAt": "2025-10-03T12:13:23+02:00"
+        },
+        {
+            "id": "p_e9a477668075",
+            "clientId": "",
+            "name": "Test Project",
+            "status": "in_progress",
+            "createdAt": "2025-10-31T21:30:09+01:00"
+        },
+        {
+            "id": "p_dd5c0df8b53e",
+            "clientId": "",
+            "name": "Alpha Project",
+            "status": "in_progress",
+            "createdAt": "2025-10-31T21:30:09+01:00"
+        },
+        {
+            "id": "p_b036ec2a3a14",
+            "clientId": "",
+            "name": "Zeta Project",
+            "status": "in_progress",
+            "createdAt": "2025-10-31T21:30:09+01:00"
+        },
+        {
+            "id": "p_c33a17fa1b6d",
+            "clientId": "",
+            "name": "Flow Project",
+            "status": "in_progress",
+            "createdAt": "2025-10-31T21:30:10+01:00"
+        },
+        {
+            "id": "p_61eae3b7664a",
+            "clientId": "",
+            "name": "DOM Project",
+            "status": "in_progress",
+            "createdAt": "2025-10-31T21:30:10+01:00"
+        },
+        {
+            "id": "p_0ad746429ff7",
+            "clientId": "c_630f75d0cb34",
+            "name": "Client Assign Project",
+            "status": "in_progress",
+            "createdAt": "2025-10-31T21:30:10+01:00",
+            "updatedAt": "2025-10-31T21:30:10+01:00"
         }
     ],
     "projectDocuments": [
@@ -204,7 +263,7 @@
             "updatedAt": "2025-10-03T12:13:22+02:00"
         }
     ],
-    "customFields": [],
+    "clientFiles": [],
     "templates": {
         "t_fl100_gc120": {
             "id": "t_fl100_gc120",

@@ -1,0 +1,142 @@
+RECENT COMPOSER AUDIT COMPLETE
+Generated: 2026-06-23 15:45:00 -07:00
+
+REQUEST SUMMARY
+===============
+User requested a full audit, verification, and correction pass for items in COMPOSER_TO_AUDIT.txt, then asked to finish the remaining gap:
+
+1) "ive swutched to codex 5.3. id like you to audit, verify, and correct all the stuff that is on the checklist COMPOSER_TO_AUDIT.txt"
+2) "lets get the rest"
+3) Requested deliverable report document with request followed by completed work.
+
+Original feature request context (Court Fields):
+- Court Information Fields tab in Field Manager before Case Fields
+- Permanent court fields with editable display name/mapping
+- Court section in Project View above Case
+- Searchable master court data accessible in Project View (not managed directly in Field Manager)
+- Search by city/zipcode/address terms; support multiple courts per location
+- Autofill court fields from selected court; edits allowed per project without changing master DB
+- Court mapping availability in Form Manager
+
+
+WORK PERFORMED (AUDIT / VERIFY / CORRECT)
+=========================================
+
+A) AUDIT FINDINGS AGAINST COMPOSER_TO_AUDIT.txt
+-----------------------------------------------
+Verified present and correctly wired:
+- Data model support for court_system in mvp/lib/data.php
+- Court search filtering by system (state/federal)
+- Court source metadata (state/federal tooltip + links) in mvp/index.php
+- Reimport endpoints:
+  - api/courts/reimport-la
+  - api/courts/reimport-federal
+  - api/courts/reimport-ca-statewide
+  - api/courts/reimport-all
+- Project View:
+  - Court section above Case
+  - state/federal toggle
+  - tooltip display
+  - search request includes system filter
+  - federal hides department picker
+- Field Manager:
+  - Court Information Fields tab present before Case
+- Universal Processor/Form Manager location option includes Court ("For the Court")
+
+Issues found and corrected:
+1) scripts/courts/lib/jc_ca_parser.php
+   - Fixed region-token regex grouping:
+     from /^BANCRO|^NCRO|^SRO$/i
+     to   /^(BANCRO|NCRO|SRO)$/i
+2) scripts/courts/generate_jc_ca_buildings.php
+   - Extended CLI parsing to support both:
+     --from-text=path
+     --from-text path
+
+
+B) "LETS GET THE REST" IMPLEMENTATION
+-------------------------------------
+Remaining gap was expanded court-field coverage ("load court fields in each box").
+
+Added permanent protected Court fields (in mvp/lib/data.php):
+- court_name         (Court Name)
+- court_city         (City)
+- court_state        (State)
+- court_zip          (ZIP)
+- court_phone        (Phone)
+- court_department   (Department)
+- court_room         (Room)
+- court_floor        (Floor)
+
+Existing protected fields retained:
+- court_county
+- court_street
+- court_mailing_address
+- court_city_zip
+- court_branch
+
+Wiring updates completed:
+1) mvp/lib/data.php
+   - Added new court fields to initial seed
+   - Added same fields to ensureProtectedCourtFields() enforcement
+2) mvp/views/project.php
+   - Court selection autofill now populates:
+     court_name, court_city, court_state, court_zip, court_phone,
+     court_department, court_room, court_floor
+   - Existing fields continue to populate as before
+3) mvp/index.php (computePopulateAutofillValues)
+   - Added court tag matching for:
+     courtname, courtcity, courtstate, courtzip, courtphone,
+     courtdept/department/dept, courtroom/room, courtfloor/floor
+4) mvp/views/field_manager.php
+   - Updated Court tab explanatory text to reflect expanded permanent field set
+
+
+C) LIVE VERIFICATION RUNS
+-------------------------
+Production endpoint checks executed:
+
+1) Reimport-all:
+   POST https://pdftimesaver.desktopmasters.com/mvp/?route=api/courts/reimport-all
+   Result:
+   - JC statewide: 141
+   - LA lacourt: 38 locations, 598 departments
+   - Federal PACER: 438
+   - Total: 609
+
+2) Search verification:
+   - Hall of Justice San Jose (state) -> returned East/West results (jc_ca)
+   - Stanley Mosk (state) -> returned LA court with department list (lacourt)
+   - Central District California (federal) -> returned PACER federal divisions
+
+3) Field Manager API verification:
+   GET https://pdftimesaver.desktopmasters.com/mvp/?route=api/field-manager/fields&location=court
+   - Confirmed expanded court field catalog is now present, including:
+     court_name, court_city, court_state, court_zip, court_phone,
+     court_department, court_room, court_floor
+
+4) Browser verification (Project View):
+   URL: https://pdftimesaver.desktopmasters.com/mvp/?route=project&id=p_9f0aa3c44f17
+   - Confirmed new Court fields render in Court section
+   - Selecting "Hall of Justice San Jose" populated:
+     name/city/state/zip/county/street
+   - Selecting "Stanley Mosk" + department populated:
+     department/room/floor/branch and phone
+
+
+FILES CHANGED IN THIS AUDIT PASS
+================================
+- mvp/lib/data.php
+- mvp/index.php
+- mvp/views/project.php
+- mvp/views/field_manager.php
+- scripts/courts/lib/jc_ca_parser.php
+- scripts/courts/generate_jc_ca_buildings.php
+
+
+CURRENT STATUS
+==============
+- COMPOSER_TO_AUDIT checklist scope: audited and re-verified
+- Identified defects: corrected
+- Remaining "rest" request: implemented (expanded court field set + wiring)
+- Live endpoints and UI behavior: verified

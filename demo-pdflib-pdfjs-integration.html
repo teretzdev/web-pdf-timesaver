@@ -225,10 +225,20 @@
     </style>
 </head>
 <body>
+    <!-- Automation Toolbar for E2E/UI testing -->
+    <div id="automation-toolbar" style="position: sticky; top: 0; z-index: 1000; background: rgba(17,24,39,0.9); backdrop-filter: blur(6px); padding: 8px 12px; border-radius: 8px; margin-bottom: 10px; display: flex; gap: 8px; align-items: center;">
+        <span style="color: #e5e7eb; font-size: 12px;">UI Test Controls:</span>
+        <button id="at-load" class="btn" style="background: linear-gradient(135deg, #10b981, #059669);">📋 Load W-9</button>
+        <button id="at-extract" class="btn" style="background: linear-gradient(135deg, #3b82f6, #2563eb);">🔍 Extract</button>
+        <button id="at-fill" class="btn" style="background: linear-gradient(135deg, #22c55e, #16a34a);">✅ Fill</button>
+        <button id="at-download" class="btn" style="background: linear-gradient(135deg, #6b7280, #374151);">💾 Download</button>
+        <button id="at-run" class="btn" style="background: linear-gradient(135deg, #9333ea, #7c3aed);">🧪 Run E2E</button>
+    </div>
+
     <div class="container">
         <div class="header">
             <h1>🚀 PDF-Lib + PDF.js Integration Demo</h1>
-            <p style="color: #6c757d; margin: 10px 0;">Modern JavaScript PDF processing using the best 2025 tools</p>
+            <p style="color: #6c757d; margin: 10px 0;">Upload a PDF, extract fields, fill with test data, and download.</p>
             <div>
                 <span class="tech-badge">📚 pdf-lib v1.17.1</span>
                 <span class="tech-badge">🔍 PDF.js v5.4.296</span>
@@ -250,8 +260,9 @@
                     </div>
 
                     <div style="margin-top: 20px; text-align: center;">
-                        <button class="btn btn-success" onclick="loadDemoW9()">📋 Load W-9 Demo</button>
-                        <button class="btn btn-info" onclick="extractFields()">🔍 Extract Fields</button>
+                        <button id="btn-load" class="btn btn-success" onclick="loadDemoW9()">📋 Load W-9 Demo</button>
+                        <button id="btn-extract" class="btn btn-info" onclick="extractFields()">🔍 Extract Fields</button>
+                        <button id="btn-run-e2e" class="btn" style="background: linear-gradient(135deg, #6b7280, #374151);" onclick="runEndToEndTest()">🧪 Run E2E Test</button>
                     </div>
 
                     <div id="extractStatus"></div>
@@ -371,7 +382,6 @@
             showStatus('extractStatus', 'Loading PDF...', 'info');
             const arrayBuffer = await file.arrayBuffer();
             currentPdfBytes = new Uint8Array(arrayBuffer);
-            
             // Render first page with PDF.js
             await renderPDFPreview(currentPdfBytes);
             
@@ -380,12 +390,18 @@
 
         async function loadDemoW9() {
             showStatus('extractStatus', 'Loading W-9 demo...', 'info');
-            const response = await fetch('uploads/w9.pdf');
-            const arrayBuffer = await response.arrayBuffer();
-            currentPdfBytes = new Uint8Array(arrayBuffer);
-            
-            await renderPDFPreview(currentPdfBytes);
-            showStatus('extractStatus', 'W-9 demo loaded! Click "Extract Fields" to analyze.', 'success');
+
+            try {
+                // Load W-9 from uploads directory
+                const response = await fetch('uploads/w9.pdf');
+                const arrayBuffer = await response.arrayBuffer();
+                currentPdfBytes = new Uint8Array(arrayBuffer);
+                await renderPDFPreview(currentPdfBytes);
+                
+                showStatus('extractStatus', 'W-9 demo loaded! Click "Extract Fields" to analyze.', 'success');
+            } catch (error) {
+                showStatus('extractStatus', `❌ Could not load demo W-9: ${error.message}`, 'error');
+            }
         }
 
         async function renderPDFPreview(pdfBytes) {
@@ -409,7 +425,6 @@
                 showStatus('extractStatus', 'Please upload a PDF first!', 'error');
                 return;
             }
-
             showStatus('extractStatus', '<div class="spinner"></div>Extracting fields with pdf-lib...', 'info');
 
             try {
@@ -564,7 +579,7 @@
 
         function downloadFilledPDF() {
             if (!filledPdfBytes) {
-                alert('Please fill the form first!');
+                showStatus('fillStatus', 'Please fill the form first.', 'error');
                 return;
             }
 
@@ -572,14 +587,50 @@
             const url = URL.createObjectURL(blob);
             const a = document.createElement('a');
             a.href = url;
-            a.download = 'filled_form.pdf';
+            a.download = 'filled_w9_' + Date.now() + '.pdf';
             a.click();
             URL.revokeObjectURL(url);
+            showStatus('fillStatus', '✅ Downloaded filled PDF!', 'success');
+        }
+
+        async function runEndToEndTest() {
+            try {
+                // 1) Load demo
+                await loadDemoW9();
+                // Wait a moment for canvas render
+                await new Promise(r => setTimeout(r, 600));
+                
+                // 2) Extract fields
+                await extractFields();
+                await new Promise(r => setTimeout(r, 400));
+                
+                // 3) Fill
+                await fillForm();
+                await new Promise(r => setTimeout(r, 400));
+                
+                // 4) Download
+                downloadFilledPDF();
+            } catch (e) {
+                console.error('E2E test failed:', e);
+                showStatus('extractStatus', `❌ E2E test failed: ${e.message}`, 'error');
+            }
         }
 
         function showStatus(elementId, message, type) {
             const element = document.getElementById(elementId);
             element.innerHTML = `<div class="status ${type}">${message}</div>`;
+        }
+
+        // Automation toolbar wiring
+        document.getElementById('at-load').addEventListener('click', () => loadDemoW9());
+        document.getElementById('at-extract').addEventListener('click', () => extractFields());
+        document.getElementById('at-fill').addEventListener('click', () => fillForm());
+        document.getElementById('at-download').addEventListener('click', () => downloadFilledPDF());
+        document.getElementById('at-run').addEventListener('click', () => runEndToEndTest());
+
+        // Optional auto-run via hash (#e2e)
+        if (location.hash === '#e2e') {
+            setTimeout(() => runEndToEndTest(), 300);
         }
     </script>
 </body>

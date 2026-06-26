@@ -1,0 +1,105 @@
+{
+  "templateId": "t_fl100_gc120",
+  "pdf": "fl100.pdf",
+  "positionsFile": "t_fl100_gc120_positions.json",
+  "generatedAt": "2025-11-07T15:39:56.269Z",
+  "summary": {
+    "fields": 5,
+    "avgScore": 0.952,
+    "fails": 0,
+    "warns": 0,
+    "pass": true
+  },
+  "results": [
+    {
+      "name": "name_field",
+      "page": 1,
+      "x": 17.6,
+      "y": 35.3,
+      "width": 35.3,
+      "height": 5.3,
+      "type": "text",
+      "confidence": 0.65,
+      "score": 0.974,
+      "components": {
+        "label": 0.9429333876194316,
+        "bounds": 1,
+        "overlap": 1,
+        "size": 1
+      },
+      "verdict": "pass"
+    },
+    {
+      "name": "phone_field",
+      "page": 1,
+      "x": 17.6,
+      "y": 49.4,
+      "width": 35.3,
+      "height": 5.3,
+      "type": "text",
+      "confidence": 0.65,
+      "score": 0.969,
+      "components": {
+        "label": 0.9300081077708382,
+        "bounds": 1,
+        "overlap": 1,
+        "size": 1
+      },
+      "verdict": "pass"
+    },
+    {
+      "name": "signature_field",
+      "page": 1,
+      "x": 17.6,
+      "y": 70.6,
+      "width": 70.6,
+      "height": 10.6,
+      "type": "signature",
+      "confidence": 0.65,
+      "score": 0.944,
+      "components": {
+        "label": 0.8755356260815922,
+        "bounds": 1,
+        "overlap": 1,
+        "size": 1
+      },
+      "verdict": "pass"
+    },
+    {
+      "name": "checkbox_1",
+      "page": 1,
+      "x": 17.6,
+      "y": 85,
+      "width": 5.3,
+      "height": 5.3,
+      "type": "checkbox",
+      "confidence": 0.7,
+      "score": 0.964,
+      "components": {
+        "label": 0.9198025802987778,
+        "bounds": 1,
+        "overlap": 1,
+        "size": 1
+      },
+      "verdict": "pass"
+    },
+    {
+      "name": "checkbox_2",
+      "page": 1,
+      "x": 35.3,
+      "y": 85,
+      "width": 5.3,
+      "height": 5.3,
+      "type": "checkbox",
+      "confidence": 0.7,
+      "score": 0.91,
+      "components": {
+        "label": 0.7991969720647312,
+        "bounds": 1,
+        "overlap": 1,
+        "size": 1
+      },
+      "verdict": "pass"
+    }
+  ]
+}

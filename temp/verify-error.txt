@@ -1,0 +1,35 @@
+Trying to parse invalid object: {"line":34,"column":16,"offset":21701})
+Invalid object ref: 1168 0 R
+Trying to parse invalid object: {"line":48,"column":16,"offset":26652})
+Invalid object ref: 3 0 R
+Trying to parse invalid object: {"line":60,"column":16,"offset":38351})
+Invalid object ref: 7 0 R
+Trying to parse invalid object: {"line":584,"column":16,"offset":129070})
+Invalid object ref: 267 0 R
+Trying to parse invalid object: {"line":614,"column":16,"offset":167029})
+Invalid object ref: 277 0 R
+Trying to parse invalid object: {"line":622,"column":16,"offset":167219})
+Invalid object ref: 278 0 R
+Trying to parse invalid object: {"line":640,"column":16,"offset":169479})
+Invalid object ref: 279 0 R
+Trying to parse invalid object: {"line":674,"column":16,"offset":173723})
+Invalid object ref: 280 0 R
+Trying to parse invalid object: {"line":726,"column":16,"offset":178991})
+Invalid object ref: 281 0 R
+Trying to parse invalid object: {"line":748,"column":16,"offset":181395})
+Invalid object ref: 282 0 R
+Trying to parse invalid object: {"line":760,"column":16,"offset":182583})
+Invalid object ref: 283 0 R
+Trying to parse invalid object: {"line":776,"column":16,"offset":184187})
+Invalid object ref: 284 0 R
+Trying to parse invalid object: {"line":792,"column":16,"offset":185327})
+Invalid object ref: 285 0 R
+Trying to parse invalid object: {"line":802,"column":16,"offset":186643})
+Invalid object ref: 286 0 R
+Trying to parse invalid object: {"line":812,"column":16,"offset":191700})
+Invalid object ref: 288 0 R
+Trying to parse invalid object: {"line":818,"column":16,"offset":191874})
+Invalid object ref: 289 0 R
+(node:15592) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+Removing XFA form data as pdf-lib does not support reading or writing XFA

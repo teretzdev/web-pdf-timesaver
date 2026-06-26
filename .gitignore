@@ -14,6 +14,16 @@
 
 # Build artifacts and generated output
 /output/
+/browser-flow-test-output.txt
+/browser_verification_show.png
+*.lnk
+
+# Cursor local screenshots
+/.cursor/screenshots/
+
+# Generated extraction artifacts
+/data/auto_*.json
+/data/temp_*.json
 
 # Node (monorepo subprojects)
 /mcp-field-editor/node_modules/
@@ -48,3 +58,4 @@ yarn-error.log*
 # Local env
 .env
 .env.*
+config/db.local.php

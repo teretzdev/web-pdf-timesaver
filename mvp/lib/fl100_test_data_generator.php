@@ -19,24 +19,24 @@ class FL100TestDataGenerator {
             'attorney_name' => 'John Michael Smith, Esq.',
             'attorney_firm' => 'Smith & Associates Family Law',
             'attorney_address' => '1234 Legal Plaza, Suite 500',
-            'attorney_city_state_zip' => 'Los Angeles, CA 90210',
-            'attorney_phone' => '(555) 123-4567',
+            'attorney_city_state_zip' => 'Sample',
+            'attorney_phone' => 'Sample',
             'attorney_email' => 'jsmith@smithlaw.com',
             'attorney_bar_number' => '123456',
             
             // Court Information - Complete
             'case_number' => 'FL-2024-001234',
-            'court_county' => 'Los Angeles',
-            'court_address' => '111 N Hill St, Los Angeles, CA 90012',
+            'court_county' => 'Sample',
+            'court_address' => 'Sample',
             'case_type' => 'Dissolution of Marriage',
             'filing_date' => date('m/d/Y'),
             
             // Parties Information - Complete
             'petitioner_name' => 'Sarah Elizabeth Johnson',
             'respondent_name' => 'Michael David Johnson',
-            'petitioner_address' => '123 Main Street, Los Angeles, CA 90210',
-            'petitioner_phone' => '(555) 987-6543',
-            'respondent_address' => '456 Oak Avenue, Los Angeles, CA 90211',
+            'petitioner_address' => 'Sample',
+            'petitioner_phone' => 'Sample',
+            'respondent_address' => 'Sample',
             
             // Marriage Information - Complete
             'marriage_date' => 'June 15, 2010',
@@ -159,8 +159,8 @@ class FL100TestDataGenerator {
                     'attorney_name' => 'John Michael Smith, Esq.',
                     'attorney_firm' => 'Smith & Associates Family Law',
                     'attorney_address' => '1234 Legal Plaza, Suite 500',
-                    'attorney_city_state_zip' => 'Los Angeles, CA 90210',
-                    'attorney_phone' => '(555) 123-4567',
+                    'attorney_city_state_zip' => 'Sample',
+                    'attorney_phone' => 'Sample',
                     'attorney_email' => 'jsmith@smithlaw.com',
                     'attorney_bar_number' => '123456'
                 ];
@@ -168,8 +168,8 @@ class FL100TestDataGenerator {
             case 'court':
                 return [
                     'case_number' => 'FL-2024-001234',
-                    'court_county' => 'Los Angeles',
-                    'court_address' => '111 N Hill St, Los Angeles, CA 90012',
+                    'court_county' => 'Sample',
+                    'court_address' => 'Sample',
                     'case_type' => 'Dissolution of Marriage',
                     'filing_date' => date('m/d/Y')
                 ];
@@ -178,9 +178,9 @@ class FL100TestDataGenerator {
                 return [
                     'petitioner_name' => 'Sarah Elizabeth Johnson',
                     'respondent_name' => 'Michael David Johnson',
-                    'petitioner_address' => '123 Main Street, Los Angeles, CA 90210',
-                    'petitioner_phone' => '(555) 987-6543',
-                    'respondent_address' => '456 Oak Avenue, Los Angeles, CA 90211'
+                    'petitioner_address' => 'Sample',
+                    'petitioner_phone' => 'Sample',
+                    'respondent_address' => 'Sample'
                 ];
                 
             case 'marriage':

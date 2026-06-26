@@ -2,12 +2,19 @@
 
 A web-based application that allows you to upload PDF files, fill in form fields, and download the completed document.
 
-## MVP (Clio Draft-inspired)
+## MVP (PDFTimeSaver)
 
-- Entry point: `mvp/index.php`
-- Data: JSON store at `data/mvp.json`
-- Templates: `mvp/templates/registry.php`
-- Generate & Download: from Project → Generate → Download
+- **Entry point**: `mvp/index.php`
+- **Access URL**: `http://localhost/Web-PDFTimeSaver/mvp/` (Port 80) or `http://localhost:8000/mvp/` (Port 8000)
+- **Data**: JSON store at `data/mvp.json`
+- **Templates**: `mvp/templates/registry.php`
+- **Generate & Download**: from Project → Generate → Download
+
+### Quick Access
+- **Dashboard**: `http://localhost/Web-PDFTimeSaver/mvp/?route=dashboard`
+- **Clients**: `http://localhost/Web-PDFTimeSaver/mvp/?route=clients`
+- **Projects**: `http://localhost/Web-PDFTimeSaver/mvp/?route=projects`
+- **Documents**: `http://localhost/Web-PDFTimeSaver/mvp/?route=documents`
 
 ## Tests
 
@@ -58,6 +65,13 @@ php -S localhost:8000
 ```
 
 Then open your browser and go to `http://localhost:8000`
+
+### Using XAMPP/Apache (Port 80)
+
+The application is configured to run on port 80 via XAMPP/Apache:
+- **URL**: `http://localhost/Web-PDFTimeSaver/mvp/`
+- Ensure Apache is running in XAMPP Control Panel
+- The project should be symlinked or copied to `C:\xampp\htdocs\Web-PDFTimeSaver`
 
 ### Using Apache/Nginx
 

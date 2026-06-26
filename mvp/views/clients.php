@@ -1,7 +1,10 @@
 <?php
 // Get filter parameters
-$status = $_GET['status'] ?? 'active';
-$search = $_GET['search'] ?? '';
+$status = strtolower(trim((string)($_GET['status'] ?? 'active')));
+if (!in_array($status, ['active', 'archived', 'all'], true)) {
+    $status = 'active';
+}
+$search = trim((string)($_GET['search'] ?? ''));
 $sort = $_GET['sort'] ?? 'name_asc';
 
 // Filter and sort clients
@@ -10,7 +13,11 @@ $filteredClients = $clients;
 // Apply status filter
 if ($status !== 'all') {
     $filteredClients = array_filter($filteredClients, function($client) use ($status) {
-        return ($client['status'] ?? 'active') === $status;
+        $clientStatus = strtolower(trim((string)($client['status'] ?? 'active')));
+        if ($clientStatus === '') {
+            $clientStatus = 'active';
+        }
+        return $clientStatus === $status;
     });
 }
 
@@ -41,8 +48,8 @@ usort($filteredClients, function($a, $b) use ($sort, $store) {
             $aStatus = $a['status'] ?? 'active';
             $bStatus = $b['status'] ?? 'active';
             return strcmp($aStatus, $bStatus);
-        case 'clio_contacts':
-            // Sort by email presence (clio contacts have emails)
+        case 'pdftimesaver_contacts':
+            // Sort by email presence (PDFTimeSaver contacts have emails)
             $aHasEmail = !empty($a['email']);
             $bHasEmail = !empty($b['email']);
             return $bHasEmail - $aHasEmail;
@@ -53,15 +60,31 @@ usort($filteredClients, function($a, $b) use ($sort, $store) {
 });
 
 // Count clients by status
-$activeCount = count(array_filter($clients, fn($c) => ($c['status'] ?? 'active') === 'active'));
-$archivedCount = count(array_filter($clients, fn($c) => ($c['status'] ?? 'active') === 'archived'));
+$activeCount = count(array_filter($clients, function ($c) {
+    $clientStatus = strtolower(trim((string)($c['status'] ?? 'active')));
+    if ($clientStatus === '') {
+        $clientStatus = 'active';
+    }
+    return $clientStatus === 'active';
+}));
+$archivedCount = count(array_filter($clients, function ($c) {
+    $clientStatus = strtolower(trim((string)($c['status'] ?? 'active')));
+    return $clientStatus === 'archived';
+}));
 ?>
+<style>
+    /* Stacking: keep row links above any stray fixed layers (e.g. overlays) */
+    .client-cell-identity {
+        position: relative;
+        z-index: 2;
+    }
+</style>
 
-<div class="clio-card">
+<div class="pdftimesaver-card">
     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
         <div style="display: flex; align-items: center; gap: 16px;">
             <div style="position: relative;">
-                <input type="text" id="client-search" placeholder="Search clients..." value="<?php echo htmlspecialchars($search); ?>" class="clio-input" style="width: 300px; padding-left: 36px;">
+                <input type="text" id="client-search" placeholder="Search clients..." value="<?php echo htmlspecialchars($search); ?>" class="pdftimesaver-input" style="width: 300px; padding-left: 36px;">
                 <span style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: #6c757d;">🔍</span>
             </div>
             
@@ -78,20 +101,45 @@ $archivedCount = count(array_filter($clients, fn($c) => ($c['status'] ?? 'active
         </div>
         
         <div class="button-group" style="display: flex; gap: 12px; align-items: center;">
-            <a href="?route=dashboard" class="clio-btn-secondary">
+            <a href="?route=dashboard" class="pdftimesaver-btn-secondary">
                 <span>←</span>
                 <span>Back to Dashboard</span>
             </a>
-            <button class="clio-btn" id="add-client-btn">
-                <span>+</span>
-                <span>Add Client</span>
-            </button>
         </div>
     </div>
+    <p style="margin: 0; color: #64748b; font-size: 13px;">Tip: Use the Actions column to archive or permanently delete a client.</p>
+</div>
+
+<div class="pdftimesaver-card wpts-form-shell" id="add-client-form-section" style="margin-top: 12px;">
+    <h3 class="wpts-form-title">Add New Client</h3>
+    <p class="wpts-form-help">Create a client directly here. The Add Client button scrolls to this form.</p>
+    <form method="post" action="?route=actions/create-client" class="wpts-form-grid">
+        <div class="wpts-form-grid wpts-form-grid-2">
+            <div class="wpts-form-group">
+                <label for="client-name" class="pdftimesaver-form-label">Display Name</label>
+                <input type="text" id="client-name" name="displayName" placeholder="Enter client name" class="pdftimesaver-input">
+            </div>
+            <div class="wpts-form-group">
+                <label for="client-company" class="pdftimesaver-form-label">Company Name</label>
+                <input type="text" id="client-company" name="company" placeholder="Enter company name" class="pdftimesaver-input">
+            </div>
+            <div class="wpts-form-group">
+                <label for="client-email" class="pdftimesaver-form-label">Email</label>
+                <input type="email" id="client-email" name="email" placeholder="Enter email address" class="pdftimesaver-input">
+            </div>
+            <div class="wpts-form-group">
+                <label for="client-phone" class="pdftimesaver-form-label">Phone</label>
+                <input type="tel" id="client-phone" name="phone" placeholder="Enter phone number" class="pdftimesaver-input">
+            </div>
+        </div>
+        <div class="wpts-form-actions">
+            <button type="submit" class="pdftimesaver-btn">Create Client</button>
+        </div>
+    </form>
 </div>
 
 <?php if (empty($filteredClients)): ?>
-    <div class="clio-card" style="text-align: center; padding: 60px 20px;">
+    <div class="pdftimesaver-card" style="text-align: center; padding: 60px 20px;">
         <div style="font-size: 48px; margin-bottom: 16px;">👥</div>
         <h3 style="margin: 0 0 8px 0; color: #2c3e50; font-size: 20px;">No clients found</h3>
         <p style="margin: 0 0 24px 0; color: #6c757d; font-size: 16px;">
@@ -104,13 +152,13 @@ $archivedCount = count(array_filter($clients, fn($c) => ($c['status'] ?? 'active
             <?php endif; ?>
         </p>
         <?php if ($search === '' && $status === 'active'): ?>
-            <button class="clio-btn" onclick="document.getElementById('add-client-btn').click()">Add your first client</button>
+            <button type="button" class="pdftimesaver-btn" data-scroll-add-client="1">Add your first client</button>
         <?php endif; ?>
     </div>
 <?php else: ?>
-    <div class="clio-card">
+    <div class="pdftimesaver-card">
         <div class="table-responsive">
-            <table class="clio-table">
+            <table class="pdftimesaver-table">
                 <thead>
                 <tr>
                     <th>Client</th>
@@ -132,22 +180,25 @@ $archivedCount = count(array_filter($clients, fn($c) => ($c['status'] ?? 'active
                     // Get last modified date
                     $lastModified = null;
                     if (!empty($clientProjects)) {
-                        $lastModified = max(array_column($clientProjects, 'updatedAt'));
-                        if (!$lastModified) {
-                            $lastModified = max(array_column($clientProjects, 'createdAt'));
+                        $updatedDates = array_values(array_filter(array_column($clientProjects, 'updatedAt')));
+                        $createdDates = array_values(array_filter(array_column($clientProjects, 'createdAt')));
+
+                        if (!empty($updatedDates)) {
+                            $lastModified = max($updatedDates);
+                        } elseif (!empty($createdDates)) {
+                            $lastModified = max($createdDates);
                         }
                     }
+                    $clientViewHref = '?route=client&id=' . urlencode((string)($client['id'] ?? ''));
                     ?>
                     <tr>
                         <td>
-                            <div style="display: flex; align-items: center; gap: 12px;">
-                                <div style="width: 40px; height: 40px; border-radius: 50%; background: #1976d2; color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 16px;">
-                                    <?php echo strtoupper(substr($client['displayName'] ?? 'C', 0, 1)); ?>
-                                </div>
-                                <div>
-                                    <div style="font-weight: 600; color: #2c3e50;"><?php echo htmlspecialchars($client['displayName'] ?? 'Unknown Client'); ?></div>
-                                </div>
-                            </div>
+                            <a class="client-cell-identity" href="<?php echo htmlspecialchars($clientViewHref); ?>" aria-label="View <?php echo htmlspecialchars((string)($client['displayName'] ?? 'Client')); ?>" style="display: flex; align-items: center; gap: 12px; text-decoration: none; color: inherit;">
+                                <span style="width: 40px; height: 40px; border-radius: 50%; background: #1976d2; color: white; display: flex; align-items: center; justify-content: center; font-weight: 600; font-size: 16px; flex-shrink: 0;">
+                                    <?php echo strtoupper(substr((string)($client['displayName'] ?? 'C'), 0, 1)); ?>
+                                </span>
+                                <span style="font-weight: 600; color: #2c3e50;"><?php echo htmlspecialchars($client['displayName'] ?? 'Unknown Client'); ?></span>
+                            </a>
                         </td>
                         <td><?php echo htmlspecialchars($client['email'] ?? ''); ?></td>
                         <td><?php echo htmlspecialchars($client['phone'] ?? ''); ?></td>
@@ -163,18 +214,24 @@ $archivedCount = count(array_filter($clients, fn($c) => ($c['status'] ?? 'active
                             <?php endif; ?>
                         </td>
                         <td>
-                            <span class="clio-status clio-status-<?php echo ($client['status'] ?? 'active') === 'active' ? 'active' : 'archived'; ?>">
+                            <span class="pdftimesaver-status pdftimesaver-status-<?php echo ($client['status'] ?? 'active') === 'active' ? 'active' : 'archived'; ?>">
                                 <?php echo ucfirst($client['status'] ?? 'active'); ?>
                             </span>
                         </td>
                         <td>
                             <div class="button-group" style="display: flex; gap: 8px;">
-                                <a href="?route=client&id=<?php echo htmlspecialchars($client['id']); ?>" class="clio-btn-secondary" style="padding: 6px 12px; font-size: 12px;">View</a>
+                                <a href="<?php echo htmlspecialchars($clientViewHref); ?>" class="pdftimesaver-btn-secondary pdftimesaver-btn-sm">View</a>
                                 <form method="post" action="?route=actions/update-client-status" style="display: inline;">
                                     <input type="hidden" name="clientId" value="<?php echo htmlspecialchars($client['id']); ?>">
                                     <input type="hidden" name="status" value="<?php echo ($client['status'] ?? 'active') === 'active' ? 'archived' : 'active'; ?>">
-                                    <button type="submit" class="clio-btn-secondary" style="padding: 6px 12px; font-size: 12px;">
+                                    <button type="submit" class="pdftimesaver-btn-secondary pdftimesaver-btn-sm">
                                         <?php echo ($client['status'] ?? 'active') === 'active' ? 'Archive' : 'Activate'; ?>
+                                    </button>
+                                </form>
+                                <form method="post" action="?route=actions/delete-client" style="display: inline;" onsubmit="return confirm('Delete this client? This cannot be undone.');">
+                                    <input type="hidden" name="clientId" value="<?php echo htmlspecialchars($client['id']); ?>">
+                                    <button type="submit" class="pdftimesaver-btn-secondary pdftimesaver-btn-sm" style="border-color: #fecaca; color: #b91c1c;">
+                                        Delete
                                     </button>
                                 </form>
                             </div>
@@ -187,45 +244,51 @@ $archivedCount = count(array_filter($clients, fn($c) => ($c['status'] ?? 'active
     </div>
 <?php endif; ?>
 
-<!-- Add Client Modal -->
-<div id="add-client-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-labelledby="add-client-modal-title" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; align-items: center; justify-content: center; z-index: 2000;">
-    <div style="background: #fff; border-radius: 8px; width: 500px; max-width: 90vw; max-height: 90vh; overflow-y: auto;">
-        <div style="display: flex; justify-content: space-between; align-items: center; padding: 20px 24px; border-bottom: 1px solid #e1e5e9;">
-            <h3 id="add-client-modal-title" style="margin: 0; color: #2c3e50; font-size: 18px; font-weight: 600;">Add New Client</h3>
-            <button aria-label="Close add client modal" onclick="closeAddClientModal()" style="background: none; border: none; font-size: 24px; color: #6c757d; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">&times;</button>
-        </div>
-        <form method="post" action="?route=actions/create-client" style="padding: 24px;">
-            <fieldset>
-                <legend class="clio-form-label" style="margin-bottom: 8px;">Client Details</legend>
-                <div class="clio-form-group">
-                    <label for="client-name" class="clio-form-label">Client Name *</label>
-                    <input aria-required="true" type="text" id="client-name" name="displayName" placeholder="Enter client name" required class="clio-input">
-                </div>
-                <div class="clio-form-group">
-                    <label for="client-email" class="clio-form-label">Email</label>
-                    <input type="email" id="client-email" name="email" placeholder="Enter email address" class="clio-input">
-                </div>
-                <div class="clio-form-group">
-                    <label for="client-phone" class="clio-form-label">Phone</label>
-                    <input type="tel" id="client-phone" name="phone" placeholder="Enter phone number" class="clio-input">
-                </div>
-            </fieldset>
-            <div class="button-group" style="display: flex; justify-content: flex-end; gap: 12px; padding-top: 20px; border-top: 1px solid #e1e5e9; margin-top: 20px;">
-                <button type="button" class="clio-btn-secondary" onclick="closeAddClientModal()">Cancel</button>
-                <button type="submit" class="clio-btn">Add Client</button>
-            </div>
-        </form>
-    </div>
-</div>
-
-
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Add client button
-    document.getElementById('add-client-btn').addEventListener('click', function() {
-        var modal = document.getElementById('add-client-modal');
-        modal.style.display = 'flex';
-        modal.setAttribute('aria-hidden', 'false');
+    // Validate display/company minimum before submit
+    var addClientForm = document.querySelector('#add-client-form-section form[action*="actions/create-client"]');
+    if (addClientForm) {
+        addClientForm.addEventListener('submit', function(event) {
+            var nameEl = document.getElementById('client-name');
+            var companyEl = document.getElementById('client-company');
+            var displayName = (nameEl && nameEl.value ? nameEl.value : '').trim();
+            var companyName = (companyEl && companyEl.value ? companyEl.value : '').trim();
+            if (!displayName && !companyName) {
+                event.preventDefault();
+                alert('Enter a display name or company name.');
+                return;
+            }
+            if (!displayName && companyName && nameEl) {
+                nameEl.value = companyName;
+            }
+            if (addClientForm.dataset.submitting === '1') {
+                event.preventDefault();
+                return;
+            }
+            addClientForm.dataset.submitting = '1';
+            var submitBtn = addClientForm.querySelector('button[type="submit"]');
+            if (submitBtn) {
+                submitBtn.disabled = true;
+                submitBtn.textContent = 'Adding...';
+            }
+        });
+    }
+
+    // Jump-to-add-client handlers for any CTA buttons.
+    document.querySelectorAll('[data-scroll-add-client]').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            var formSection = document.getElementById('add-client-form-section');
+            var nameEl = document.getElementById('client-name');
+            if (formSection) {
+                formSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            window.setTimeout(function() {
+                if (nameEl) {
+                    nameEl.focus();
+                }
+            }, 250);
+        });
     });
     
     // Search functionality with debounce
@@ -260,20 +323,6 @@ document.addEventListener('DOMContentLoaded', function() {
             currentUrl.searchParams.set('sort', sort);
             window.location.href = currentUrl.toString();
         });
-    }
-});
-
-function closeAddClientModal() {
-    var modal = document.getElementById('add-client-modal');
-    modal.style.display = 'none';
-    modal.setAttribute('aria-hidden', 'true');
-}
-
-// Close modal when clicking outside
-document.addEventListener('click', function(e) {
-    const modal = document.getElementById('add-client-modal');
-    if (e.target === modal) {
-        closeAddClientModal();
     }
 });
 </script>

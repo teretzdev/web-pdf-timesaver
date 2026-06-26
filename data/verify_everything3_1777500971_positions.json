@@ -1,0 +1,13 @@
+{
+    "FL_100_0_Page1_0_PartiesSignedVoluntaryPaternityDec_cb_0": {
+        "x": 25.08,
+        "height": 3.18,
+        "type": "checkbox",
+        "y": 246.79,
+        "canonicalName": "FL_100_0_Page1_0_PartiesSignedVoluntaryPaternityDec_cb_0",
+        "name": "FL-100[0].Page1[0].PartiesSignedVoluntaryPaternityDec_cb[0]",
+        "page": 1,
+        "width": 3.18,
+        "fontSize": 7
+    }
+}

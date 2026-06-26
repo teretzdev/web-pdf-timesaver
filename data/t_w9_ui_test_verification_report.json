@@ -1,0 +1,263 @@
+{
+    "templateId": "t_w9_ui_test",
+    "pdf": "w9.pdf",
+    "positionsFile": "t_w9_ui_test_positions.json",
+    "generatedAt": "2025-11-16T07:30:49.204Z",
+    "summary": {
+        "fields": 13,
+        "avgScore": 0.762,
+        "fails": 3,
+        "warns": 0,
+        "pass": false
+    },
+    "results": [
+        {
+            "name": "topmostSubform_0_Page1_0_f1_01_0",
+            "page": 1,
+            "x": 98.18,
+            "y": 234.86,
+            "width": 48.18,
+            "height": 5.2,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.55,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "fail",
+            "rawName": "topmostSubform[0].Page1[0].f1_01[0]",
+            "canonicalName": "topmostSubform_0_Page1_0_f1_01_0"
+        },
+        {
+            "name": "name",
+            "page": 1,
+            "x": 46.38,
+            "y": 165.98,
+            "width": 100,
+            "height": 11.33,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.872,
+            "components": {
+                "label": 0.7155603509408444,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "name"
+        },
+        {
+            "name": "address_number_street_and_apt_or_suite_no_see_instructions",
+            "page": 1,
+            "x": 99.91,
+            "y": 141.26,
+            "width": 100,
+            "height": 12,
+            "type": "address",
+            "confidence": 0.88,
+            "score": 0.802,
+            "components": {
+                "label": 0.5595916757295734,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "address_number_street_and_apt_or_suite_no_see_instructions"
+        },
+        {
+            "name": "signature_of",
+            "page": 1,
+            "x": 42.91,
+            "y": 104.71,
+            "width": 51.23,
+            "height": 7.24,
+            "type": "signature",
+            "confidence": 0.88,
+            "score": 0.865,
+            "components": {
+                "label": 0.8332395118105138,
+                "bounds": 1,
+                "overlap": 0.6,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "signature_of"
+        },
+        {
+            "name": "date",
+            "page": 1,
+            "x": 51.18,
+            "y": 102.79,
+            "width": 100,
+            "height": 11,
+            "type": "date",
+            "confidence": 0.88,
+            "score": 0.832,
+            "components": {
+                "label": 0.7594041941896005,
+                "bounds": 1,
+                "overlap": 0.6,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "date"
+        },
+        {
+            "name": "pek_rect_1_0",
+            "page": 1,
+            "x": 46.38,
+            "y": 220.47,
+            "width": 45.76,
+            "height": 5,
+            "type": "text",
+            "confidence": 0.88,
+            "score": 0.795,
+            "components": {
+                "label": 0.7770800062859228,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "pek_rect_1_0"
+        },
+        {
+            "name": "label_inferred_1_23",
+            "page": 1,
+            "x": 46.38,
+            "y": 218.62,
+            "width": 63.5,
+            "height": 5,
+            "type": "text",
+            "confidence": 0.9,
+            "score": 0.799,
+            "components": {
+                "label": 0.7863514249968557,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "label_inferred_1_23"
+        },
+        {
+            "name": "business_name",
+            "page": 1,
+            "x": 55.11,
+            "y": 240.53,
+            "width": 100,
+            "height": 10,
+            "type": "text",
+            "confidence": 0.95,
+            "score": 0.55,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "fail",
+            "canonicalName": "business_name"
+        },
+        {
+            "name": "exempt_payee",
+            "page": 1,
+            "x": 30.34,
+            "y": 215.07,
+            "width": 100,
+            "height": 10,
+            "type": "text",
+            "confidence": 0.85,
+            "score": 0.859,
+            "components": {
+                "label": 0.9192968366551005,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "exempt_payee"
+        },
+        {
+            "name": "checkbox_0",
+            "page": 1,
+            "x": 82.14,
+            "y": 135.07,
+            "width": 5,
+            "height": 5,
+            "type": "checkbox",
+            "confidence": 0.85,
+            "score": 0.821,
+            "components": {
+                "label": 0.6026583942195252,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "checkbox_0"
+        },
+        {
+            "name": "name_on_line_2_if_the_owner_of_the_disregarded_entity_is_a_foreign_person",
+            "page": 3,
+            "x": 54.84,
+            "y": 123.93,
+            "width": 100,
+            "height": 12,
+            "type": "text",
+            "confidence": 0.88,
+            "score": 0.55,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "fail",
+            "canonicalName": "name_on_line_2_if_the_owner_of_the_disregarded_entity_is_a_foreign_person"
+        },
+        {
+            "name": "name_as_shown_on_your_social_security_card_and_your_new_last_name",
+            "page": 3,
+            "x": 38.32,
+            "y": 109.52,
+            "width": 35.45,
+            "height": 6.12,
+            "type": "ssn",
+            "confidence": 0.88,
+            "score": 0.864,
+            "components": {
+                "label": 0.6988525286004721,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "name_as_shown_on_your_social_security_card_and_your_new_last_name"
+        },
+        {
+            "name": "attorneys_fees_or_gross_proceeds_paid_to_attorneys_and_corporations",
+            "page": 3,
+            "x": 71.56,
+            "y": 92.14,
+            "width": 100,
+            "height": 12,
+            "type": "text",
+            "confidence": 0.88,
+            "score": 0.75,
+            "components": {
+                "label": 0.443643112796414,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "attorneys_fees_or_gross_proceeds_paid_to_attorneys_and_corporations"
+        }
+    ]
+}

@@ -1,3 +1,4 @@
+const fieldMetrics = require('./field-metrics');
 /**
  * Coordinate Validation Utility
  * Normalizes and validates PDF field positions
@@ -5,9 +6,11 @@
 
 class CoordinateValidator {
     constructor() {
-        this.mmPerPoint = 0.352778; // Convert points to mm
-        this.defaultPageWidth = 595; // A4 width in points
-        this.defaultPageHeight = 842; // A4 height in points
+        this.mmPerPoint = fieldMetrics.MM_PER_PT; // Convert points to mm
+        // Use US Letter as default (most common in US legal forms like FL-100)
+        // A4: 595x842 points, US Letter: 612x792 points
+        this.defaultPageWidth = 612; // US Letter width in points (8.5 inches)
+        this.defaultPageHeight = 792; // US Letter height in points (11 inches)
     }
 
     /**
@@ -36,6 +39,22 @@ class CoordinateValidator {
             validFields,
             totalFields: fields.length
         };
+    }
+
+    /**
+     * Full normalization pipeline: coordinate system, units, snapping
+     * CRITICAL: Fields from pdf-lib-extractor are already in mm with top-left origin
+     * DO NOT modify coordinates - they are already correct!
+     */
+    normalizeFields(fields, pageSize = { widthPoints: this.defaultPageWidth, heightPoints: this.defaultPageHeight }) {
+        if (!Array.isArray(fields) || fields.length === 0) return [];
+
+        // CRITICAL FIX: Fields from pdf-lib-extractor are already correctly converted
+        // DO NOT modify coordinates - just ensure font size is set
+        return fields.map(f => ({ 
+            ...f, 
+            fontSize: f.fontSize || this.estimateFontSize(f) 
+        }));
     }
 
     /**
@@ -123,20 +142,105 @@ class CoordinateValidator {
 
     /**
      * Detect coordinate system and convert if needed
+     * CRITICAL: Fields from pdf-lib-extractor are already in mm with top-left origin
+     * Only convert if coordinates are clearly in PDF points (bottom-left origin)
      */
     detectAndConvertCoordinateSystem(fields, pageHeight) {
         // Check if coordinates look like PDF coordinate system (bottom-left origin)
-        const hasHighYValues = fields.some(f => f.y > pageHeight * 0.5);
+        // PDF points are typically > 200 (for US Letter height of 792 points, y values near top are 600-700)
+        // mm values are typically < 300 (for US Letter height of 279.4mm, y values are 0-279)
+        const pageHeightMm = pageHeight * this.mmPerPoint;
+        const hasHighYValues = fields.some(f => {
+            // If y is in points (large values), it needs conversion
+            // If y is already in mm (small values), it's already converted
+            return f.y > pageHeightMm * 0.8; // If y > 80% of page height in mm, likely needs conversion
+        });
         
         if (hasHighYValues) {
-            // Convert from PDF coordinate system (bottom-left) to top-left
-            return fields.map(field => ({
-                ...field,
-                y: pageHeight - field.y - field.height
-            }));
+            // Convert from PDF coordinate system (bottom-left origin, in points) to top-left (in mm)
+            return fields.map(field => {
+                // If field.y is in points, convert to mm first, then flip
+                const yInPoints = field.y > 100 ? field.y : field.y / this.mmPerPoint;
+                const heightInPoints = field.height > 100 ? field.height : field.height / this.mmPerPoint;
+                const yInMm = (pageHeight - yInPoints - heightInPoints) * this.mmPerPoint;
+                return {
+                    ...field,
+                    y: yInMm
+                };
+            });
         }
         
+        // Fields are already in correct coordinate system (top-left, mm)
         return fields;
+    }
+
+    /**
+     * Snap fields to nearby horizontal baselines and vertical columns to improve alignment
+     */
+    snapToGrid(fields) {
+        const Y_TOL_MM = 1.5; // snap within 1.5mm vertically
+        const X_TOL_MM = 1.5; // snap within 1.5mm horizontally
+
+        // Group by page for snapping
+        const byPage = new Map();
+        for (const f of fields) {
+            const key = f.page || 1;
+            if (!byPage.has(key)) byPage.set(key, []);
+            byPage.get(key).push(f);
+        }
+
+        const snapped = [];
+
+        for (const [page, list] of byPage.entries()) {
+            // Build candidate baselines from y positions
+            const baselines = this.clusterValues(list.map(f => f.y), Y_TOL_MM);
+            const columns = this.clusterValues(list.map(f => f.x), X_TOL_MM);
+
+            for (const f of list) {
+                const ySnap = this.closestClusterCenter(baselines, f.y, Y_TOL_MM);
+                const xSnap = this.closestClusterCenter(columns, f.x, X_TOL_MM);
+
+                snapped.push({
+                    ...f,
+                    y: typeof ySnap === 'number' ? Number(ySnap.toFixed(2)) : f.y,
+                    x: typeof xSnap === 'number' ? Number(xSnap.toFixed(2)) : f.x
+                });
+            }
+        }
+
+        return snapped;
+    }
+
+    /**
+     * Cluster scalar values within tolerance and return cluster centers
+     */
+    clusterValues(values, tol) {
+        const sorted = Array.from(new Set(values.map(v => Number(v.toFixed(2))))).sort((a, b) => a - b);
+        const clusters = [];
+        for (const v of sorted) {
+            const last = clusters[clusters.length - 1];
+            if (!last || Math.abs(v - last.center) > tol) {
+                clusters.push({ center: v, count: 1 });
+            } else {
+                // incremental average
+                last.center = (last.center * last.count + v) / (last.count + 1);
+                last.count += 1;
+            }
+        }
+        return clusters.map(c => c.center);
+    }
+
+    closestClusterCenter(centers, value, tol) {
+        let best = null;
+        let bestDist = Infinity;
+        for (const c of centers) {
+            const d = Math.abs(c - value);
+            if (d < bestDist) {
+                bestDist = d;
+                best = c;
+            }
+        }
+        return bestDist <= tol ? best : null;
     }
 
     /**
@@ -146,7 +250,7 @@ class CoordinateValidator {
         if (!field.height) return 10;
         
         // Convert height to font size (rough estimate)
-        const fontSize = Math.max(6, Math.min(16, field.height * 0.7));
+        const fontSize = fieldMetrics.estimateFontPtFromHeightMm(field.height, fieldMetrics.DEFAULT_FONT_PT);
         return Math.round(fontSize * 10) / 10; // Round to 1 decimal
     }
 

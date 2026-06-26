@@ -1,6 +1,6 @@
 # Comprehensive Test Suite
 
-This directory contains a comprehensive test suite for the Clio Draft application, covering all aspects of functionality, performance, and accessibility.
+This directory contains a comprehensive test suite for the PDFTimeSaver application, covering all aspects of functionality, performance, and accessibility.
 
 ## Test Suites
 

@@ -1,0 +1,230 @@
+{
+  "Airport Courthouse": {
+    "street": "11701 South La Cienega Boulevard",
+    "city": "Los Angeles",
+    "zip": "90045",
+    "phone": "310-725-3000"
+  },
+  "Alfred J. McCourtney Juvenile Justice Center Courthouse": {
+    "street": "1040 West Avenue J",
+    "city": "Lancaster",
+    "zip": "93534",
+    "phone": "661-483-5900"
+  },
+  "Alhambra Courthouse": {
+    "street": "150 West Commonwealth Avenue",
+    "city": "Alhambra",
+    "zip": "91801",
+    "phone": "626-293-2100"
+  },
+  "Bellflower Courthouse": {
+    "street": "10025 East Flower Street",
+    "city": "Bellflower",
+    "zip": "90706",
+    "phone": "562-345-3300"
+  },
+  "Beverly Hills Courthouse": {
+    "street": "9355 Burton Way",
+    "city": "Beverly Hills",
+    "zip": "90210",
+    "phone": "310-281-2400"
+  },
+  "Burbank Courthouse": {
+    "street": "300 East Olive Avenue",
+    "city": "Burbank",
+    "zip": "91502",
+    "phone": "818-260-8400"
+  },
+  "Catalina Courthouse": {
+    "street": "215 Sumner Avenue",
+    "city": "Avalon",
+    "zip": "90704",
+    "phone": "562-256-1561"
+  },
+  "Central Arraignment Courthouse": {
+    "street": "426 Bauchet Street",
+    "city": "Los Angeles",
+    "zip": "90012",
+    "phone": "213-617-5680"
+  },
+  "Chatsworth Courthouse": {
+    "street": "9425 Penfield Avenue",
+    "city": "Chatsworth",
+    "zip": "91311",
+    "phone": "818-407-2200"
+  },
+  "Clara Shortridge Foltz Criminal Justice Center": {
+    "street": "210 West Temple Street",
+    "city": "Los Angeles",
+    "zip": "90012",
+    "phone": "213-628-7700"
+  },
+  "Compton Courthouse": {
+    "street": "200 West Compton Boulevard",
+    "city": "Compton",
+    "zip": "90220",
+    "phone": "310-761-7900"
+  },
+  "Downey Courthouse": {
+    "street": "7500 South Painter Avenue",
+    "city": "Downey",
+    "zip": "90242",
+    "phone": "562-803-7000"
+  },
+  "East Los Angeles Courthouse": {
+    "street": "4848 East Civic Center Way",
+    "city": "East Los Angeles",
+    "zip": "90022",
+    "phone": "323-780-2000"
+  },
+  "Eastlake Juvenile Courthouse": {
+    "street": "1601 Eastlake Avenue",
+    "city": "Los Angeles",
+    "zip": "90033",
+    "phone": "323-227-4300"
+  },
+  "Edmund D. Edelman Children's Courthouse": {
+    "street": "201 Centre Plaza Drive",
+    "city": "Monterey Park",
+    "zip": "91754",
+    "phone": "323-307-8080"
+  },
+  "El Monte Courthouse": {
+    "street": "11234 East Valley Boulevard",
+    "city": "El Monte",
+    "zip": "91731",
+    "phone": "626-401-2200"
+  },
+  "Glendale Courthouse": {
+    "street": "600 East Broadway",
+    "city": "Glendale",
+    "zip": "91206",
+    "phone": "818-265-6400"
+  },
+  "Governor George Deukmejian Courthouse": {
+    "street": "275 Magnolia Avenue",
+    "city": "Long Beach",
+    "zip": "90802",
+    "phone": "562-256-1400"
+  },
+  "Hollywood Courthouse": {
+    "street": "5925 Hollywood Boulevard",
+    "city": "Los Angeles",
+    "zip": "90028",
+    "phone": "323-441-1800"
+  },
+  "Inglewood Courthouse": {
+    "street": "One Regent Street",
+    "city": "Inglewood",
+    "zip": "90301",
+    "phone": "310-419-1300"
+  },
+  "Inglewood Juvenile Courthouse": {
+    "street": "110 Regent Street",
+    "city": "Inglewood",
+    "zip": "90301",
+    "phone": "310-419-1200"
+  },
+  "Mental Health Courthouse": {
+    "street": "201 South Manhattan Place",
+    "city": "Los Angeles",
+    "zip": "90057",
+    "phone": "213-633-7000"
+  },
+  "Metropolitan Courthouse": {
+    "street": "1945 South Hill Street",
+    "city": "Los Angeles",
+    "zip": "90007",
+    "phone": "213-745-1865"
+  },
+  "Michael Antonovich Antelope Valley Courthouse": {
+    "street": "42011 4th Street West",
+    "city": "Lancaster",
+    "zip": "93534",
+    "phone": "661-723-6000"
+  },
+  "Norwalk Courthouse": {
+    "street": "12720 Norwalk Boulevard",
+    "city": "Norwalk",
+    "zip": "90650",
+    "phone": "562-807-6700"
+  },
+  "Pasadena Courthouse": {
+    "street": "300 East Walnut Street",
+    "city": "Pasadena",
+    "zip": "91101",
+    "phone": "626-356-5500"
+  },
+  "Pomona Courthouse South": {
+    "street": "400 Civic Center Plaza",
+    "city": "Pomona",
+    "zip": "91766",
+    "phone": "909-802-1100"
+  },
+  "San Fernando Courthouse": {
+    "street": "900 Third Street",
+    "city": "San Fernando",
+    "zip": "91340",
+    "phone": "818-898-4900"
+  },
+  "Santa Clarita Courthouse": {
+    "street": "23747 West Valencia Boulevard",
+    "city": "Santa Clarita",
+    "zip": "91355",
+    "phone": "661-253-7000"
+  },
+  "Santa Monica Courthouse": {
+    "street": "1725 Main Street",
+    "city": "Santa Monica",
+    "zip": "90401",
+    "phone": "310-260-3600"
+  },
+  "Spring Street Courthouse": {
+    "street": "312 North Spring Street",
+    "city": "Los Angeles",
+    "zip": "90012",
+    "phone": "213-633-3000"
+  },
+  "Stanley Mosk Courthouse": {
+    "street": "111 North Hill Street",
+    "city": "Los Angeles",
+    "zip": "90012",
+    "phone": "213-830-0803"
+  },
+  "Sylmar Juvenile Courthouse": {
+    "street": "16350 Filbert Street",
+    "city": "Sylmar",
+    "zip": "91342",
+    "phone": "818-364-2000"
+  },
+  "Torrance Courthouse": {
+    "street": "825 Maple Avenue",
+    "city": "Torrance",
+    "zip": "90503",
+    "phone": "310-374-3424"
+  },
+  "Van Nuys Courthouse East": {
+    "street": "6230 Sylmar Avenue",
+    "city": "Van Nuys",
+    "zip": "91401",
+    "phone": "818-901-4900"
+  },
+  "Van Nuys Courthouse West": {
+    "street": "14400 Erwin Street",
+    "city": "Van Nuys",
+    "zip": "91401",
+    "phone": "818-901-4800"
+  },
+  "West Covina Courthouse": {
+    "street": "1427 West Covina Parkway",
+    "city": "West Covina",
+    "zip": "91790",
+    "phone": "626-813-5500"
+  },
+  "Whittier Courthouse": {
+    "street": "7339 South Painter Avenue",
+    "city": "Whittier",
+    "zip": "90602",
+    "phone": "562-464-0500"
+  }
+}

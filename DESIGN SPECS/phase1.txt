@@ -1,0 +1,36 @@
+Jason, if you feel you have a better way of approaching anything below please discuss it with me.  I value your input.  Let me know if I missed anything.
+
+
+Fix the alignment problem.
+
+Move the upload form out of the Universal Processor Page and to its own “Form Management” page.
+
+ 
+
+Forms Manager Page (Phase 1)...
+
+Wizard style interface.
+Setup a table with data for custom fields (We will make an interface to modify those next/soon)..  does not need to be verbatim: Link ID | Display Name | Value | Location.  Where the location is one of the 3 below.
+For the Firm
+For the Client
+For the Case
+Localize Forms to..
+Note: do not do this yet. Just create a pane to house it when we do. It will be on the right above the field properties
+Do not automate the form grabbing system in this phase. We will manually upload them.
+Phase one will only use the global form section. Set it up in the database that way. Record the form name and check it against that real quick.
+User can upload forms and modify the fields. Field alignment is stored in the database specific to the Firm.
+Just the global template for the form at the moment.
+After uploading the form the user can then move fields with drag and drop
+on a panel on the right under the form location selector panel they will have options to...
+Default Value. If it is a checkmark literally show a checkbox with it checked or unchecked.
+Manually set the X and Y Coordinates.
+Set the field with. (Numeric Input box)
+Set the field height. (Numeric Input box)
+Set the field type. (Drop Down)
+Set the font size. (Numeric Input box)
+Assign Custom Fields (List all custom fields in dropdown. would be nice if we can figure out a way to make it clear which are Firm|Client|Case level fields) I am thinking two dropdowns.. one has the 3 locations and the auto-repopulates the second dropdown. Perhaps have them pre-populated and hide/show the one that applies when the first dropdown is selected)
+Add the ability to add our own fields and also if needed, tie it to a prefilled custom field.
+At the bottom a dropdown with values (Test Form|Actual Form) with Test form being the default (for now). Then an [Export] button to the right of it. Which will download a PDF file with sample values or how it will actually look.
+Note: For now do not bother with letting them modify the test values. We will circle back to that.
+At bottom put a [Finished] button which will just reset the form to wait for the next upload.
+ 

@@ -1,0 +1,28 @@
+{
+    "fieldMapping": [],
+    "fieldCategories": [],
+    "fieldTypes": [],
+    "validationRules": [],
+    "customLabels": [],
+    "customPlaceholders": [],
+    "fieldOrder": [],
+    "panelOrder": [],
+    "extractionSettings": {
+        "useAcroForm": true,
+        "useXfa": true,
+        "useAnnotations": false,
+        "useOcr": false
+    },
+    "fillingSettings": {
+        "strategy": "auto",
+        "backgroundConversionMode": "selectable_full",
+        "fontFamily": "Arial",
+        "fontSize": 9,
+        "fontStyle": "",
+        "textColor": [
+            0,
+            0,
+            0
+        ]
+    }
+}

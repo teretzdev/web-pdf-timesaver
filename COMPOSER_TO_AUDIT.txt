@@ -1,0 +1,140 @@
+COMPOSER 2.5 SESSION WORK LOG — Court Fields System
+====================================================
+Scope: California state + U.S. federal court layers for Project View, with
+data-source tooltips, imports, and live verification on
+pdftimesaver.desktopmasters.com/mvp/
+
+Date context: Session work under Composer 2.5 (Cursor agent).
+
+
+1. DATA LAYER (mvp/lib/data.php)
+--------------------------------
+- Added court_system column on court_locations (migration ensureCourtSystemColumn()).
+- normalizeCourtLocationRow() includes courtSystem.
+- searchCourts($query, $limit, $courtSystem) filters by state | federal.
+- Import/read paths persist and return courtSystem.
+
+
+2. API & MERGE LOGIC (mvp/index.php)
+------------------------------------
+- courtDirectorySourceMeta() — tooltip copy + source links for state vs federal.
+- courtsDirectoryPath(), loadCourtsDirectoryFile(), mergeCourtsDirectory() —
+  layered merge without wiping other sources.
+- handleCourtsSearch — ?system=state|federal, returns sourceMeta in JSON.
+- Reimport endpoints:
+  - POST api/courts/reimport-la          — lacourt only (source: lacourt)
+  - POST api/courts/reimport-federal     — PACER only (courtSystem: federal)
+  - POST api/courts/reimport-ca-statewide — JC buildings only (source: jc_ca)
+  - POST api/courts/reimport-all         — all three in sequence
+- selectedCourtSystem saved/loaded in project view config.
+- courtSourceMeta passed into Project View render.
+
+Bug fix: LA reimport foreach now uses &$row so courtSystem / source actually
+stick on lacourt rows.
+
+
+3. PROJECT VIEW UI (mvp/views/project.php)
+------------------------------------------
+- CA state courts / U.S. federal courts radio toggle.
+- Hidden input selectedCourtSystem.
+- Tooltips (i icons) on:
+  - Court section header
+  - Each court-type option
+  - Department/Room (federal shows PACER-only note)
+- Search wired to &system=.
+- Federal: no dept/room picker; table shows State instead of County.
+- Selecting a court updates system from loc.courtSystem.
+
+
+4. IMPORT PARSERS & SCRIPTS
+---------------------------
+scripts/courts/lib/pacer_parser.php       — Fetch/parse PACER CM/ECF JSON → federal
+scripts/courts/lib/jc_ca_parser.php       — Parse jc_ca_buildings.txt pipe rows
+scripts/courts/lib/jc_ca_extract.php      — Extract from Judicial Council PDF text
+scripts/courts/lib/lacourt_parser.php     — Tags courtSystem: state on LA rows
+scripts/courts/import_federal_from_pacer.php
+scripts/courts/import_ca_jc_buildings.php
+scripts/courts/import_la_from_lacourt.php — Merge by source=lacourt (not whole county)
+scripts/courts/generate_jc_ca_buildings.py  — Generate buildings file from PDF extract
+scripts/courts/generate_jc_ca_buildings.php — PHP wrapper (pdftotext or --from-text)
+
+Street parsing fix: addresses like "190 W. Hedding" (no St/Ave suffix) now parse
+in jc_ca_parser.php.
+
+
+5. JUDICIAL COUNCIL DATA (data/jc_ca_buildings.txt)
+---------------------------------------------------
+Source PDF:
+https://courts.ca.gov/system/files/solicitation-request-document/rfp-fs-sp-2019-03-jp-attachment-2-regional-building-list-addendum-1.pdf
+
+- 141 statewide superior court buildings (addresses only).
+- Los Angeles County excluded (lacourt provides dept/room).
+- Non-court noise filtered (parking, trailers, admin-only, etc.).
+
+Regenerate:
+  python scripts/courts/generate_jc_ca_buildings.py --from-text path/to/pdf_extract.txt
+
+
+6. PRODUCTION IMPORT & VERIFICATION
+-----------------------------------
+Reimport-all result (live server):
+
+  Layer              Count
+  ----------------   -----
+  JC statewide       141
+  LA lacourt         38 locations, 598 departments
+  Federal PACER      438
+  Total in DB        609
+
+Live API checks:
+- State / JC:   "Hall of Justice San Jose" → East & West (source: jc_ca)
+- State / LA:   "Stanley Mosk" → 102 departments (source: lacourt)
+- Federal:      "Central District California" → PACER divisions
+
+Project View (browser):
+- State/federal toggle + tooltips present
+- Federal search hides dept picker
+- "Gordon Schaber Sacramento" → JC Sacramento Superior Court
+- LA dept picker still works (Stanley Mosk)
+
+
+7. TOOLTIP COPY (AS IMPLEMENTED)
+--------------------------------
+State:
+  California trial courts. Los Angeles locations include department and room
+  numbers from the LA Superior Court public directory (lacourt.ca.gov). Other
+  counties use Judicial Council building addresses (courts.ca.gov facility lists)
+  — addresses only, not department/room.
+
+Federal:
+  U.S. federal district, bankruptcy, and appellate division offices. Addresses
+  from the official PACER CM/ECF Court Lookup (pacer.uscourts.gov). Division
+  office addresses only — not individual courtroom numbers.
+
+Sources linked in API sourceMeta:
+- LA Superior Court: https://www.lacourt.ca.gov/courtroom/UI/Courtrooms.aspx
+- Judicial Council of CA: https://courts.ca.gov/
+- PACER CM/ECF: https://pacer.uscourts.gov/file-case/court-cmecf-lookup/data.json
+
+
+8. RELATED FILES TOUCHED (SUMMARY)
+----------------------------------
+mvp/lib/data.php
+mvp/index.php
+mvp/views/project.php
+mvp/views/field_manager.php          (Court tab — prior in arc)
+scripts/courts/*                     (parsers + import CLIs + generators)
+data/jc_ca_buildings.txt             (new)
+data/courts_ca.json                  (merged snapshot on server)
+data/lacourt_addresses.json          (LA addresses — prior in arc)
+
+
+9. NOTES FOR AUDIT
+------------------
+- No dedicated repo checklist file was created for this work; tracked as inline
+  session todos (Court Fields system).
+- jc_ca_buildings_path() uses dirname(__DIR__, 3) from scripts/courts/lib.
+- courtsDirectoryPath() in index.php uses dirname(__DIR__) . '/data/courts_ca.json'
+  (project root data/).
+- Local dev machine: php not always on PATH; imports verified via live API POST.
+- lacourt direct fetch can 403 from some contexts; production reimport-la succeeded.

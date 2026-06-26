@@ -32,24 +32,22 @@ class W9TestDataGenerator
             'topmostSubform[0].Page1[0].f1_03[0]' => '',
             'topmostSubform[0].Page1[0].f1_04[0]' => '',
             
-            // Address
+            // Address block
             'topmostSubform[0].Page1[0].f1_05[0]' => '1234 Legal Plaza, Suite 500',
-            
-            // City, state, ZIP
-            'topmostSubform[0].Page1[0].f1_06[0]' => 'Los Angeles, CA 90001',
-            
-            // List account numbers (optional)
-            'topmostSubform[0].Page1[0].f1_07[0]' => '',
+            'topmostSubform[0].Page1[0].f1_06[0]' => 'Sample',
+            'topmostSubform[0].Page1[0].Address_ReadOrder[0].f1_07[0]' => 'Mail Stop 45',
+            'topmostSubform[0].Page1[0].Address_ReadOrder[0].f1_08[0]' => 'Sample',
+            'topmostSubform[0].Page1[0].f1_10[0]' => 'Attn: Accounts Payable',
             
             // Part I - Taxpayer Identification Number
-            // SSN
-            'topmostSubform[0].Page1[0].social[0].TextField2[0]' => '123',
-            'topmostSubform[0].Page1[0].social[0].TextField2[1]' => '45',
-            'topmostSubform[0].Page1[0].social[0].TextField2[2]' => '6789',
+            // SSN segments
+            'topmostSubform[0].Page1[0].f1_11[0]' => '123',
+            'topmostSubform[0].Page1[0].f1_12[0]' => '45',
+            'topmostSubform[0].Page1[0].f1_13[0]' => '6789',
             
-            // EIN
-            'topmostSubform[0].Page1[0].social[0].TextField2[3]' => '',
-            'topmostSubform[0].Page1[0].social[0].TextField2[4]' => '',
+            // EIN segments
+            'topmostSubform[0].Page1[0].f1_14[0]' => '12',
+            'topmostSubform[0].Page1[0].f1_15[0]' => '3456789',
             
             // Part II - Certification
             'topmostSubform[0].Page1[0].f1_08[0]' => 'John Michael Smith',

@@ -1,0 +1,264 @@
+{
+    "success": true,
+    "method": "ensemble-pdf-extract-kit-wrapper",
+    "fields": [
+        {
+            "name": "pek_rect_1_0",
+            "canonicalName": "pek_rect_1_0",
+            "type": "text",
+            "page": 1,
+            "x": 62.3,
+            "y": 72.28,
+            "width": 41.3808594,
+            "height": 5.27,
+            "fontSize": 10,
+            "confidence": 0.88,
+            "method": "ensemble",
+            "methodSource": "pdf-extract-kit-wrapper",
+            "methodsAgreed": 12,
+            "sources": [
+                "pdf-extract-kit-wrapper"
+            ],
+            "aliases": [
+                "pek_rect_1_0",
+                "pek_rect_2_9",
+                "pek_rect_2_10",
+                "pek_rect_3_11",
+                "pek_label_1_1",
+                "pek_label_1_2",
+                "pek_label_1_3",
+                "pek_label_1_4",
+                "pek_label_1_5",
+                "pek_label_1_6",
+                "pek_label_1_7",
+                "pek_label_1_8"
+            ],
+            "agreementRatio": 12
+        },
+        {
+            "name": "label_inferred_1_0",
+            "canonicalName": "label_inferred_1_0",
+            "type": "text",
+            "page": 1,
+            "x": 93.07,
+            "y": 85.97,
+            "width": 63.5,
+            "height": 5,
+            "fontSize": 10,
+            "confidence": 0.86,
+            "method": "ensemble",
+            "methodSource": "ffdnet-detector",
+            "methodsAgreed": 8,
+            "sources": [
+                "ffdnet-detector"
+            ],
+            "aliases": [
+                "label_inferred_1_0",
+                "label_inferred_1_1",
+                "label_inferred_1_2",
+                "label_inferred_1_3",
+                "label_inferred_1_4",
+                "label_inferred_1_5",
+                "label_inferred_1_6",
+                "label_inferred_1_7"
+            ],
+            "agreementRatio": 8
+        },
+        {
+            "name": "checkbox_0",
+            "canonicalName": "checkbox_0",
+            "type": "checkbox",
+            "page": 1,
+            "x": 62.3,
+            "y": 110.25,
+            "width": 5,
+            "height": 5,
+            "fontSize": 3.4,
+            "confidence": 0.85,
+            "method": "ensemble",
+            "methodSource": "ocr-field-detection",
+            "methodsAgreed": 8,
+            "sources": [
+                "ocr-field-detection"
+            ],
+            "aliases": [
+                "checkbox_0",
+                "checkbox_1",
+                "checkbox_2",
+                "checkbox_3",
+                "checkbox_4",
+                "checkbox_5",
+                "checkbox_6",
+                "checkbox_7"
+            ],
+            "agreementRatio": 8
+        }
+    ],
+    "pageCount": 3,
+    "warnings": [],
+    "errors": [],
+    "attempts": [
+        {
+            "method": "qpdf-decrypt-pdf-lib",
+            "success": false,
+            "fields": 0,
+            "error": "All password attempts failed"
+        },
+        {
+            "method": "pdfjs-annotation-extractor",
+            "success": false,
+            "fields": 0,
+            "error": "No annotations found in PDF"
+        },
+        {
+            "method": "enhanced-widget-extractor",
+            "success": false,
+            "fields": 0,
+            "error": null
+        },
+        {
+            "method": "pymupdf-extractor",
+            "success": false,
+            "fields": 0,
+            "error": null
+        },
+        {
+            "method": "pdfbox-extractor",
+            "success": false,
+            "fields": 0,
+            "error": "Failed to compile Java extraction class"
+        },
+        {
+            "method": "pdfplumber-extractor",
+            "success": false,
+            "fields": 0,
+            "error": null
+        },
+        {
+            "method": "hybrid-visual-detector",
+            "success": false,
+            "fields": 0,
+            "error": null
+        },
+        {
+            "method": "pdf-extract-kit-wrapper",
+            "success": true,
+            "fields": 12,
+            "error": null
+        },
+        {
+            "method": "ffdnet-detector",
+            "success": true,
+            "fields": 8,
+            "error": null
+        },
+        {
+            "method": "pdf-lib-direct",
+            "success": false,
+            "fields": 0,
+            "error": "No form fields found in PDF"
+        },
+        {
+            "method": "pdf-binary-parser",
+            "success": false,
+            "fields": 0,
+            "error": "No AcroForm fields found in PDF binary structure"
+        },
+        {
+            "method": "template-field-matcher",
+            "success": false,
+            "fields": 0,
+            "error": "No matching template found"
+        },
+        {
+            "method": "ocr-field-detection",
+            "success": true,
+            "fields": 8,
+            "error": null
+        },
+        {
+            "method": "pdfjs-text-extraction",
+            "success": true,
+            "fields": 1,
+            "error": null
+        }
+    ],
+    "extractedAt": "2025-11-17T00:52:03.362Z",
+    "source": "FL-100_decrypted.pdf",
+    "methodsUsed": [
+        "pdf-extract-kit-wrapper",
+        "ffdnet-detector",
+        "ocr-field-detection"
+    ],
+    "fieldsPerMethod": {
+        "pdf-extract-kit-wrapper": 12,
+        "ffdnet-detector": 8,
+        "ocr-field-detection": 8
+    },
+    "fieldTelemetry": [
+        {
+            "canonical": "pek_rect_1_0",
+            "normalized": "pek_rect_1_0",
+            "sources": [
+                "pdf-extract-kit-wrapper"
+            ],
+            "aliases": [
+                "pek_rect_1_0",
+                "pek_rect_2_9",
+                "pek_rect_2_10",
+                "pek_rect_3_11",
+                "pek_label_1_1",
+                "pek_label_1_2",
+                "pek_label_1_3",
+                "pek_label_1_4",
+                "pek_label_1_5",
+                "pek_label_1_6",
+                "pek_label_1_7",
+                "pek_label_1_8"
+            ],
+            "agreement": 12,
+            "confidence": 0.88,
+            "methodLead": "pdf-extract-kit-wrapper"
+        },
+        {
+            "canonical": "label_inferred_1_0",
+            "normalized": "label_inferred_1_0",
+            "sources": [
+                "ffdnet-detector"
+            ],
+            "aliases": [
+                "label_inferred_1_0",
+                "label_inferred_1_1",
+                "label_inferred_1_2",
+                "label_inferred_1_3",
+                "label_inferred_1_4",
+                "label_inferred_1_5",
+                "label_inferred_1_6",
+                "label_inferred_1_7"
+            ],
+            "agreement": 8,
+            "confidence": 0.86,
+            "methodLead": "ffdnet-detector"
+        },
+        {
+            "canonical": "checkbox_0",
+            "normalized": "checkbox_0",
+            "sources": [
+                "ocr-field-detection"
+            ],
+            "aliases": [
+                "checkbox_0",
+                "checkbox_1",
+                "checkbox_2",
+                "checkbox_3",
+                "checkbox_4",
+                "checkbox_5",
+                "checkbox_6",
+                "checkbox_7"
+            ],
+            "agreement": 8,
+            "confidence": 0.85,
+            "methodLead": "ocr-field-detection"
+        }
+    ]
+}

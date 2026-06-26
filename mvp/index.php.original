@@ -1,0 +1,1579 @@
+<?php
+// Minimal MVP router (non-breaking; lives under /mvp)
+
+declare(strict_types=1);
+
+// Force disable all caching for development
+if (function_exists('opcache_reset')) {
+    opcache_reset();
+}
+
+// Disable opcache for this request
+if (function_exists('opcache_get_status')) {
+    ini_set('opcache.enable', 0);
+}
+
+// Set comprehensive no-cache headers
+header('Cache-Control: no-store, no-cache, must-revalidate, max-age=0');
+header('Pragma: no-cache');
+header('Expires: 0');
+header('Last-Modified: ' . gmdate('D, d M Y H:i:s') . ' GMT');
+header('Cache-Control: post-check=0, pre-check=0', false);
+header('ETag: "' . md5((string)time()) . '"');
+
+// Clear opcache if available
+if (function_exists('opcache_reset')) { 
+    @opcache_reset(); 
+}
+
+require_once __DIR__ . '/lib/data.php';
+require_once __DIR__ . '/templates/registry.php';
+require_once __DIR__ . '/lib/fill_service.php';
+require_once __DIR__ . '/lib/pdf_field_service.php';
+require_once __DIR__ . '/lib/logger.php';
+require_once __DIR__ . '/lib/file_manager.php';
+require_once __DIR__ . '/lib/custom_field_manager.php';
+
+use WebPdfTimeSaver\Mvp\DataStore;
+use WebPdfTimeSaver\Mvp\TemplateRegistry;
+use WebPdfTimeSaver\Mvp\FillService;
+use WebPdfTimeSaver\Mvp\PdfFieldService;
+use WebPdfTimeSaver\Mvp\FileManager;
+use WebPdfTimeSaver\Mvp\CustomFieldManager;
+
+// Initialize logger FIRST so it can be passed to all services
+$logger = new \WebPdfTimeSaver\Mvp\Logger();
+$store = new DataStore(__DIR__ . '/../data/mvp.json', $logger);
+// Templates are now loaded dynamically per document
+$templates = [];
+$fill = new FillService(__DIR__ . '/../output', $logger);
+$pdfFieldService = new PdfFieldService();
+$fileManager = new FileManager($store, __DIR__ . '/../uploads', $logger);
+$customFieldManager = new CustomFieldManager($store, $logger);
+// Toggle verbose debug logging with env MVP_DEBUG_LOG=1
+$isDebug = getenv('MVP_DEBUG_LOG') === '1';
+
+// Input validation and sanitization helpers
+function sanitizeString(string $input, int $maxLength = 255): string {
+    $sanitized = strip_tags(trim($input));
+    return mb_substr($sanitized, 0, $maxLength);
+}
+
+function sanitizeId(string $input): string {
+    // IDs should only contain alphanumeric, underscore, and hyphen
+    return preg_replace('/[^a-zA-Z0-9_-]/', '', $input);
+}
+
+function validateEmail(string $email): string {
+    $email = filter_var(trim($email), FILTER_SANITIZE_EMAIL);
+    return filter_var($email, FILTER_VALIDATE_EMAIL) ? $email : '';
+}
+
+function validatePhone(string $phone): string {
+    // Remove all non-numeric characters except + and spaces
+    return preg_replace('/[^0-9+\s()-]/', '', $phone);
+}
+
+function validateDate(string $date): string {
+    // Basic date validation
+    $timestamp = strtotime($date);
+    return $timestamp !== false ? date('Y-m-d', $timestamp) : '';
+}
+
+function validateRoute(string $route): string {
+    // Routes should only contain lowercase letters, numbers, hyphens, and slashes
+    $sanitized = preg_replace('/[^a-z0-9\/-]/', '', strtolower($route));
+    return mb_substr($sanitized, 0, 100);
+}
+
+function handleUniversalProcess(): void {
+    header('Content-Type: application/json');
+    
+    $response = ['success' => false, 'message' => '', 'data' => []];
+    
+    try {
+        if (!isset($_FILES['pdf_file']) || $_FILES['pdf_file']['error'] !== UPLOAD_ERR_OK) {
+            throw new Exception('File upload failed');
+        }
+        
+        require_once __DIR__ . '/lib/pdf_field_extractor.php';
+        
+        $uploadedFile = $_FILES['pdf_file'];
+        $templateId = sanitizeId($_POST['template_id'] ?? 'auto_' . time());
+        $tmpPath = $uploadedFile['tmp_name'];
+        $permanentPath = __DIR__ . '/../uploads/' . $templateId . '.pdf';
+        
+        // Save uploaded PDF
+        if (!move_uploaded_file($tmpPath, $permanentPath)) {
+            throw new Exception('Failed to save PDF');
+        }
+        
+        $response['data']['pdf_saved'] = $permanentPath;
+        $response['data']['template_id'] = $templateId;
+        
+        // STEP 1: Try to detect if PDF has fillable fields
+        $parser = new \Smalot\PdfParser\Parser();
+        $hasFields = false;
+        $fieldCount = 0;
+        
+        try {
+            $pdf = $parser->parseFile($permanentPath);
+            $pages = $pdf->getPages();
+            
+            foreach ($pages as $page) {
+                $annotations = $page->get('Annots');
+                if ($annotations) {
+                    $annotArray = $annotations->getContent();
+                    if (is_array($annotArray)) {
+                        foreach ($annotArray as $annot) {
+                            if (is_object($annot) && $annot->get('T')) {
+                                $fieldCount++;
+                                $hasFields = true;
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (Exception $e) {
+            $response['data']['parser_error'] = $e->getMessage();
+        }
+        
+        $response['data']['has_fillable_fields'] = $hasFields;
+        $response['data']['field_count'] = $fieldCount;
+        
+        // STEP 2: Extract field positions
+        $extractor = new \WebPdfTimeSaver\Mvp\PdfFieldExtractor();
+        $extractResult = $extractor->extractAndGenerateBackgrounds(
+            $permanentPath,
+            $templateId,
+            __DIR__ . '/../uploads'
+        );
+        
+        $fields = $extractResult['fields'];
+        $backgrounds = $extractResult['backgrounds'];
+        
+        // STEP 3: Analyze results
+        if (!empty($fields)) {
+            // SUCCESS: Auto-detected fields with positions
+            $response['success'] = true;
+            $response['message'] = "Auto-detected {$fieldCount} fillable fields!";
+            $response['data']['method'] = 'autofill';
+            $response['data']['fields'] = $fields;
+            $response['data']['backgrounds'] = $backgrounds;
+            $response['data']['position_file'] = $extractResult['positionFile'];
+            
+            // Analyze field types
+            $typeCount = [];
+            foreach ($fields as $field) {
+                $type = $field['type'] ?? 'unknown';
+                $typeCount[$type] = ($typeCount[$type] ?? 0) + 1;
+            }
+            $response['data']['field_types'] = $typeCount;
+            
+        } elseif ($backgrounds > 0) {
+            // PARTIAL: No fields but backgrounds generated
+            $response['success'] = true;
+            $response['message'] = "PDF is encrypted/blank. Generated {$backgrounds} background images for manual positioning.";
+            $response['data']['method'] = 'manual_overlay';
+            $response['data']['backgrounds'] = $backgrounds;
+            
+        } else {
+            throw new Exception('Could not extract fields or generate backgrounds from PDF');
+        }
+        
+    } catch (Exception $e) {
+        $response['message'] = $e->getMessage();
+    }
+    
+    echo json_encode($response, JSON_PRETTY_PRINT);
+    exit;
+}
+
+$route = validateRoute($_GET['route'] ?? 'dashboard');
+
+// Handle API routes
+if (strpos($route, 'api/') === 0) {
+    $apiRoute = substr($route, 4); // Remove 'api/' prefix
+    
+    switch ($apiRoute) {
+        case 'positions/update':
+            handlePositionUpdate();
+            break;
+        default:
+            http_response_code(404);
+            echo json_encode(['error' => 'API endpoint not found']);
+            exit;
+    }
+}
+
+function render(string $view, array $vars = []): void {
+	global $store, $templates, $fill, $pdfFieldService, $logger, $fileManager, $customFieldManager;
+	$vars['store'] = $store;
+	$vars['templates'] = $templates;
+	$vars['fill'] = $fill;
+	$vars['pdfFieldService'] = $pdfFieldService;
+	$vars['logger'] = $logger;
+	$vars['fileManager'] = $fileManager;
+	$vars['customFieldManager'] = $customFieldManager;
+	extract($vars);
+	include __DIR__ . '/views/layout_header.php';
+	include __DIR__ . "/views/{$view}.php";
+	include __DIR__ . '/views/layout_footer.php';
+}
+
+function handlePositionUpdate(): void {
+    header('Content-Type: application/json');
+    
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405);
+        echo json_encode(['error' => 'Method not allowed']);
+        return;
+    }
+    
+    $input = file_get_contents('php://input');
+    $positions = json_decode($input, true);
+    
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Invalid JSON']);
+        return;
+    }
+    
+    if (!is_array($positions)) {
+        http_response_code(400);
+        echo json_encode(['error' => 'Positions must be an array']);
+        return;
+    }
+    
+    try {
+        $positionsFile = __DIR__ . '/../data/t_fl100_gc120_positions.json';
+        
+        // Backup current positions
+        if (file_exists($positionsFile)) {
+            $backupFile = $positionsFile . '.backup.' . date('Y-m-d_H-i-s');
+            copy($positionsFile, $backupFile);
+        }
+        
+        // Save new positions
+        $result = file_put_contents($positionsFile, json_encode($positions, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        
+        if ($result === false) {
+            throw new Exception('Failed to write positions file');
+        }
+        
+        // Log the update
+        $logger = new \WebPdfTimeSaver\Mvp\Logger();
+        $logger->info('Position update', [
+            'fieldCount' => count($positions),
+            'timestamp' => date('Y-m-d H:i:s')
+        ]);
+        
+        echo json_encode([
+            'success' => true,
+            'message' => 'Positions updated successfully',
+            'fieldCount' => count($positions),
+            'timestamp' => date('Y-m-d H:i:s')
+        ]);
+        
+    } catch (Exception $e) {
+        http_response_code(500);
+        echo json_encode(['error' => $e->getMessage()]);
+    }
+}
+
+// Seed demo data for easy navigation when empty
+try {
+    $needsSeed = count($store->getProjects()) === 0;
+} catch (\Throwable $e) { $needsSeed = false; }
+if ($needsSeed) {
+    // Create a demo client and project with one document
+    $client = method_exists($store, 'createClient') ? $store->createClient('John Doe', 'john@example.com', '(555) 123-4567') : null;
+    $proj = $store->createProject('BHBA EVENT (JOHN DOE)');
+    $tplId = array_key_first($templates);
+    if ($tplId) { $doc = $store->addProjectDocument($proj['id'], (string)$tplId); }
+}
+
+switch ($route) {
+case 'dashboard':
+	$projects = $store->getProjects();
+	$clients = method_exists($store, 'getClients') ? $store->getClients() : [];
+	$recentDocuments = [];
+	foreach ($projects as $project) {
+		$docs = $store->getProjectDocuments($project['id']);
+		foreach ($docs as $doc) {
+			$doc['project'] = $project;
+			$recentDocuments[] = $doc;
+		}
+	}
+	usort($recentDocuments, function($a, $b) {
+		return strtotime($b['createdAt'] ?? '') <=> strtotime($a['createdAt'] ?? '');
+	});
+	$recentDocuments = array_slice($recentDocuments, 0, 5);
+	render('dashboard', [ 'projects' => $projects, 'clients' => $clients, 'recentDocuments' => $recentDocuments, 'templates' => $templates ]);
+	break;
+
+case 'projects':
+    $projects = $store->getProjects();
+    $q = isset($_GET['q']) ? trim((string)$_GET['q']) : '';
+    $status = isset($_GET['status']) ? (string)$_GET['status'] : '';
+    $sort = isset($_GET['sort']) ? (string)$_GET['sort'] : 'updated_desc';
+
+    if ($q !== '') {
+        $projects = array_values(array_filter($projects, function($p) use ($q) {
+            return stripos($p['name'] ?? '', $q) !== false;
+        }));
+    }
+    if ($status !== '') {
+        $projects = array_values(array_filter($projects, function($p) use ($status) {
+            return ($p['status'] ?? '') === $status;
+        }));
+    }
+    usort($projects, function($a, $b) use ($sort) {
+        $an = strtolower($a['name'] ?? '');
+        $bn = strtolower($b['name'] ?? '');
+        $au = strtotime($a['updatedAt'] ?? $a['createdAt'] ?? 'now');
+        $bu = strtotime($b['updatedAt'] ?? $b['createdAt'] ?? 'now');
+        switch ($sort) {
+            case 'name_asc': return $an <=> $bn;
+            case 'name_desc': return $bn <=> $an;
+            case 'updated_asc': return $au <=> $bu;
+            case 'updated_desc': default: return $bu <=> $au;
+        }
+    });
+
+    render('projects', [ 'projects' => $projects, 'filters' => [ 'q' => $q, 'status' => $status, 'sort' => $sort ] ]);
+    break;
+
+	case 'clients':
+		$clients = method_exists($store, 'getClients') ? $store->getClients() : [];
+		render('clients', [ 'clients' => $clients ]);
+		break;
+
+
+	case 'client':
+		$cid = sanitizeId((string)($_GET['id'] ?? ''));
+		$client = method_exists($store, 'getClient') ? $store->getClient($cid) : null;
+		if (!$client) { header('Location: ?route=clients'); exit; }
+		$projects = method_exists($store, 'getProjectsByClient') ? $store->getProjectsByClient($cid) : [];
+		render('client', [ 'client' => $client, 'projects' => $projects, 'templates' => $templates ]);
+		break;
+
+	case 'project':
+		$id = sanitizeId((string)($_GET['id'] ?? ''));
+		$project = $store->getProject($id);
+		if (!$project) {
+			header('HTTP/1.1 404 Not Found');
+			echo 'Project not found';
+			exit;
+		}
+		$docs = $store->getProjectDocuments($id);
+		usort($docs, function($a, $b) { return strtotime($b['createdAt'] ?? '') <=> strtotime($a['createdAt'] ?? ''); });
+		$allClients = method_exists($store, 'getClients') ? $store->getClients() : [];
+		render('project', [ 'project' => $project, 'documents' => $docs, 'templates' => $templates, 'clients' => $allClients ]);
+		break;
+
+	case 'actions/update-project-status':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { 
+			http_response_code(405);
+			echo json_encode(['error' => 'Method not allowed']);
+			exit;
+		}
+		$id = (string)($_POST['id'] ?? '');
+		$status = (string)($_POST['status'] ?? 'in_progress');
+		
+		// Validate status
+		$validStatuses = ['in_progress', 'review', 'completed'];
+		if (!in_array($status, $validStatuses)) {
+			http_response_code(400);
+			echo json_encode(['error' => 'Invalid status']);
+			exit;
+		}
+		
+		$ref = new \ReflectionClass($store);
+		$prop = $ref->getProperty('db');
+		$prop->setAccessible(true);
+		$db = $prop->getValue($store);
+		$updated = false;
+		foreach ($db['projects'] as &$p) {
+			if ($p['id'] === $id) {
+				$p['status'] = $status;
+				$p['updatedAt'] = date(DATE_ATOM);
+				$updated = true;
+				break;
+			}
+		}
+		
+		if ($updated) {
+			@file_put_contents(__DIR__ . '/../data/mvp.json', json_encode($db, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
+			header('Content-Type: application/json');
+			echo json_encode(['success' => true, 'status' => $status]);
+		} else {
+			http_response_code(404);
+			echo json_encode(['error' => 'Project not found']);
+		}
+		exit;
+
+	case 'populate':
+        $logFile = __DIR__ . '/../logs/pdf_debug.log';
+        $pdId = sanitizeId((string)($_GET['pd'] ?? ''));
+        if ($isDebug) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Accessing populate form for PD ID: ' . $pdId . PHP_EOL, FILE_APPEND);
+        }
+		
+		$projDoc = $store->getProjectDocumentById($pdId);
+        if (!$projDoc) {
+            if ($isDebug) {
+                file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Project document not found' . PHP_EOL, FILE_APPEND);
+            }
+			header('HTTP/1.1 404 Not Found');
+			echo 'Document not found';
+			exit;
+		}
+		
+        // Load template dynamically from PDF field extraction
+        $template = TemplateRegistry::getTemplate($projDoc['templateId']);
+        if ($isDebug) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Template ID: ' . ($projDoc['templateId'] ?? 'NONE') . PHP_EOL, FILE_APPEND);
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Template loaded dynamically: ' . ($template ? 'YES' : 'NO') . PHP_EOL, FILE_APPEND);
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Template fields count: ' . count($template['fields'] ?? []) . PHP_EOL, FILE_APPEND);
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Template panels count: ' . count($template['panels'] ?? []) . PHP_EOL, FILE_APPEND);
+        }
+		
+        $values = $store->getFieldValues($pdId);
+        
+        if ($isDebug) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' POPULATE: Rendering populate form with values: ' . json_encode($values) . PHP_EOL, FILE_APPEND);
+        }
+        // Render populate form
+        render('populate', [ 'projectDocument' => $projDoc, 'template' => $template, 'values' => $values ]);
+		break;
+
+	case 'drafting':
+		$pdId = sanitizeId((string)($_GET['pd'] ?? ''));
+		$projDoc = $store->getProjectDocumentById($pdId);
+		if (!$projDoc) {
+			header('HTTP/1.1 404 Not Found');
+			echo 'Document not found';
+			exit;
+		}
+		
+		// Load template dynamically
+		$template = TemplateRegistry::getTemplate($projDoc['templateId']);
+		$values = $store->getFieldValues($pdId);
+		
+		// Load all project documents with their templates for the document list
+		$projectDocuments = $store->getProjectDocuments($projDoc['projectId']);
+		$projectDocumentsWithTemplates = [];
+		foreach ($projectDocuments as $doc) {
+			$docTemplate = TemplateRegistry::getTemplate($doc['templateId']);
+			$projectDocumentsWithTemplates[] = [
+				'doc' => $doc,
+				'template' => $docTemplate
+			];
+		}
+		
+		render('drafting', [ 
+			'projectDocument' => $projDoc, 
+			'template' => $template, 
+			'values' => $values,
+			'projectDocumentsWithTemplates' => $projectDocumentsWithTemplates
+		]);
+		break;
+
+	case 'populate_test':
+		$pdId = sanitizeId((string)($_GET['pd'] ?? ''));
+		$projDoc = $store->getProjectDocumentById($pdId);
+		if (!$projDoc) {
+			header('HTTP/1.1 404 Not Found');
+			echo 'Document not found';
+			exit;
+		}
+		$template = $templates[$projDoc['templateId']] ?? null;
+		error_log("Template lookup for " . $projDoc['templateId'] . ": " . ($template ? 'FOUND' : 'NOT_FOUND'));
+		$values = $store->getFieldValues($pdId);
+		$project = $store->getProject($projDoc['projectId']);
+		$client = null;
+		if ($project && !empty($project['clientId']) && method_exists($store, 'getClient')) {
+			$client = $store->getClient($project['clientId']);
+		}
+		render('populate_test', [ 'projectDocument' => $projDoc, 'template' => $template, 'fieldValues' => $values, 'project' => $project, 'client' => $client, 'templates' => $templates ]);
+		break;
+
+	case 'actions/create-project':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ?route=projects'); exit; }
+		$name = sanitizeString((string)($_POST['name'] ?? 'Untitled Project'), 200);
+		$clientId = sanitizeId((string)($_POST['clientId'] ?? ''));
+		$project = $clientId !== '' && method_exists($store, 'createProjectForClient') ? $store->createProjectForClient($clientId, $name) : $store->createProject($name);
+		header('Location: ?route=project&id=' . urlencode($project['id']));
+		exit;
+
+	case 'actions/add-document':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ?route=projects'); exit; }
+		$projectId = sanitizeId((string)($_POST['projectId'] ?? ''));
+		$templateId = sanitizeId((string)($_POST['templateId'] ?? ''));
+		$store->addProjectDocument($projectId, $templateId);
+		header('Location: ?route=project&id=' . urlencode($projectId));
+		exit;
+
+	case 'actions/create-client':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ?route=clients'); exit; }
+		$displayName = sanitizeString((string)($_POST['displayName'] ?? ''), 200);
+		$email = validateEmail((string)($_POST['email'] ?? ''));
+		$phone = validatePhone((string)($_POST['phone'] ?? ''));
+		if ($displayName !== '' && method_exists($store, 'createClient')) { $store->createClient($displayName, $email, $phone); }
+		header('Location: ?route=clients');
+		exit;
+
+	case 'actions/update-client-status':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ?route=clients'); exit; }
+		$clientId = (string)($_POST['clientId'] ?? '');
+		$status = (string)($_POST['status'] ?? 'active');
+		if ($clientId !== '') {
+			$ref = new \ReflectionClass($store);
+			$prop = $ref->getProperty('db');
+			$prop->setAccessible(true);
+			$db = $prop->getValue($store);
+			foreach ($db['clients'] as &$c) {
+				if ($c['id'] === $clientId) {
+					$c['status'] = $status;
+					$c['updatedAt'] = date(DATE_ATOM);
+					break;
+				}
+			}
+			file_put_contents(__DIR__ . '/../data/mvp.json', json_encode($db, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
+		}
+		header('Location: ?route=clients');
+		exit;
+
+	case 'actions/delete-client':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ?route=clients'); exit; }
+		$clientId = (string)($_POST['clientId'] ?? '');
+		if ($clientId !== '') {
+			$ref = new \ReflectionClass($store);
+			$prop = $ref->getProperty('db');
+			$prop->setAccessible(true);
+			$db = $prop->getValue($store);
+			
+			// Remove client
+			$db['clients'] = array_values(array_filter($db['clients'], fn($c) => $c['id'] !== $clientId));
+			
+			// Remove projects for this client
+			$db['projects'] = array_values(array_filter($db['projects'], fn($p) => $p['clientId'] !== $clientId));
+			
+			// Remove project documents for deleted projects
+			$deletedProjectIds = array_column(array_filter($db['projects'], fn($p) => $p['clientId'] === $clientId), 'id');
+			$db['projectDocuments'] = array_values(array_filter($db['projectDocuments'], fn($pd) => !in_array($pd['projectId'], $deletedProjectIds)));
+			
+			file_put_contents(__DIR__ . '/../data/mvp.json', json_encode($db, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
+		}
+		header('Location: ?route=clients');
+		exit;
+
+	case 'actions/update-project-name':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ?route=projects'); exit; }
+		$projectId = (string)($_POST['id'] ?? '');
+		$newName = trim((string)($_POST['name'] ?? ''));
+		if ($projectId !== '' && $newName !== '') { $store->updateProjectName($projectId, $newName); }
+		header('Location: ?route=project&id=' . urlencode($projectId));
+		exit;
+
+	case 'actions/assign-client':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ?route=projects'); exit; }
+		$projectId = (string)($_POST['projectId'] ?? '');
+		$clientId = (string)($_POST['clientId'] ?? '');
+		if ($projectId !== '' && $clientId !== '' && method_exists($store, 'assignClientToProject')) { $store->assignClientToProject($projectId, $clientId); }
+		header('Location: ?route=project&id=' . urlencode($projectId));
+		exit;
+
+	case 'actions/save-fields':
+        $logFile = __DIR__ . '/../logs/pdf_debug.log';
+        if ($isDebug) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Request method: ' . $_SERVER['REQUEST_METHOD'] . PHP_EOL, FILE_APPEND);
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: POST data: ' . json_encode($_POST) . PHP_EOL, FILE_APPEND);
+        }
+		
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { 
+            if ($isDebug) {
+                file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Not POST request, redirecting' . PHP_EOL, FILE_APPEND);
+            }
+			header('Location: ?route=projects'); 
+			exit; 
+		}
+		
+		$pdId = sanitizeId((string)($_POST['projectDocumentId'] ?? ''));
+        if ($isDebug) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: PD ID: ' . $pdId . PHP_EOL, FILE_APPEND);
+        }
+		
+		$data = $_POST;
+		unset($data['projectDocumentId']);
+        if ($isDebug) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Data to save: ' . json_encode($data) . PHP_EOL, FILE_APPEND);
+        }
+		
+		$store->saveFieldValues($pdId, $data);
+        if ($isDebug) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Values saved successfully' . PHP_EOL, FILE_APPEND);
+        }
+		
+		header('Location: ?route=populate&pd=' . urlencode($pdId) . '&saved=1');
+		exit;
+
+	case 'actions/generate':
+		$pdId = sanitizeId((string)($_GET['pd'] ?? ''));
+		$projDoc = $store->getProjectDocumentById($pdId);
+		if (!$projDoc) { header('Location: ?route=dashboard'); exit; }
+		$template = TemplateRegistry::getTemplate($projDoc['templateId']);
+		$values = $store->getFieldValues($pdId);
+		
+		// Debug: Log what we're working with
+		$logFile = __DIR__ . '/../logs/pdf_debug.log';
+        if ($isDebug) {
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' GENERATE DEBUG: PD ID: ' . $pdId . PHP_EOL, FILE_APPEND);
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' GENERATE DEBUG: Template: ' . json_encode($template) . PHP_EOL, FILE_APPEND);
+            file_put_contents($logFile, date('Y-m-d H:i:s') . ' GENERATE DEBUG: Values: ' . json_encode($values) . PHP_EOL, FILE_APPEND);
+        }
+		
+        try {
+            $result = $fill->generateSimplePdf($template ?? [], $values, ['pdId' => $pdId]);
+            $logger->info('actions/generate success: ' . json_encode($result), ['pdId' => $pdId]);
+		} catch (\Throwable $e) {
+            error_log('PDF generation failed for pd=' . $pdId . ' : ' . $e->getMessage());
+            $logger->error('PDF generation failed for pd=' . $pdId . ' : ' . $e->getMessage(), ['pdId' => $pdId]);
+			header('Location: ?route=project&id=' . urlencode($projDoc['projectId']));
+			exit;
+		}
+		// persist path and status
+		$projDoc['status'] = 'ready_to_sign';
+		$projDoc['outputPath'] = $result['filename']; // Store relative path only
+		// naive update
+		$docs = $store->getProjectDocuments($projDoc['projectId']);
+		// replace in DB
+		$ref = new \ReflectionClass($store);
+		$prop = $ref->getProperty('db');
+		$prop->setAccessible(true);
+		$db = $prop->getValue($store);
+		foreach ($db['projectDocuments'] as &$d) if ($d['id'] === $pdId) { $d = $projDoc; break; }
+		foreach ($db['projects'] as &$p) if ($p['id'] === $projDoc['projectId']) { $p['updatedAt'] = date(DATE_ATOM); break; }
+		file_put_contents(__DIR__ . '/../data/mvp.json', json_encode($db, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
+		header('Location: ?route=drafting&pd=' . urlencode($pdId));
+		exit;
+
+	case 'preview':
+		$pdId = (string)($_GET['pd'] ?? '');
+		$projDoc = $store->getProjectDocumentById($pdId);
+		if (!$projDoc) {
+			header('HTTP/1.1 404 Not Found');
+			echo 'Document not found';
+			exit;
+		}
+		$template = TemplateRegistry::getTemplate($projDoc['templateId']);
+		$values = $store->getFieldValues($pdId);
+		render('preview', [ 'projectDocument' => $projDoc, 'template' => $template, 'values' => $values ]);
+		break;
+
+	case 'pdf-preview':
+		$pdId = (string)($_GET['pd'] ?? '');
+		$projDoc = $store->getProjectDocumentById($pdId);
+		if (!$projDoc) {
+			header('HTTP/1.1 404 Not Found');
+			echo 'Document not found';
+			exit;
+		}
+		$template = TemplateRegistry::getTemplate($projDoc['templateId']);
+		$values = $store->getFieldValues($pdId);
+		
+		// Get PDF form fields (for now using sample data)
+		$pdfFields = $pdfFieldService->getSamplePdfFields();
+		
+		render('pdf-preview', [ 
+			'projectDocument' => $projDoc, 
+			'template' => $template, 
+			'values' => $values,
+			'pdfFields' => $pdfFields
+		]);
+		break;
+
+	case 'actions/download':
+		$pdId = (string)($_GET['pd'] ?? '');
+		$projDoc = $store->getProjectDocumentById($pdId);
+		$filename = $projDoc['outputPath'] ?? '';
+		
+		// Debug: Log download attempt
+		error_log("Download Debug - PD ID: " . $pdId);
+		error_log("Filename: " . $filename);
+		error_log("Project Document: " . json_encode($projDoc));
+		
+		if (!$filename) { 
+			error_log("No filename found for document");
+			header('Location: ?route=documents'); 
+			exit; 
+		}
+		
+		// Security: Build path within output directory
+		$outputDir = realpath(__DIR__ . '/../output');
+		$path = $outputDir . DIRECTORY_SEPARATOR . basename($filename);
+		
+		error_log("Output Dir: " . $outputDir);
+		error_log("Full Path: " . $path);
+		error_log("File exists: " . (file_exists($path) ? 'YES' : 'NO'));
+		
+		if (!file_exists($path)) { 
+			error_log("File does not exist at path: " . $path);
+			header('Location: ?route=documents'); 
+			exit; 
+		}
+		
+		header('Content-Type: application/pdf');
+		header('Content-Disposition: attachment; filename="' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $filename) . '"');
+		readfile($path);
+		exit;
+
+	case 'actions/download-signed':
+		$pdId = (string)($_GET['pd'] ?? '');
+		$projDoc = $store->getProjectDocumentById($pdId);
+		$filename = $projDoc['signedPath'] ?? '';
+		
+		if (!$filename) { 
+			header('Location: ?route=documents'); 
+			exit; 
+		}
+		
+		// Security: Build path within output directory
+		$outputDir = realpath(__DIR__ . '/../output');
+		$path = $outputDir . DIRECTORY_SEPARATOR . basename($filename);
+		
+		if (!file_exists($path)) { 
+			header('Location: ?route=documents'); 
+			exit; 
+		}
+		
+		header('Content-Type: application/pdf');
+		header('Content-Disposition: attachment; filename="' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $filename) . '"');
+		readfile($path);
+		exit;
+
+	case 'actions/update-doc-status':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ?route=projects'); exit; }
+		$pdId = (string)($_POST['id'] ?? '');
+		$status = (string)($_POST['status'] ?? 'in_progress');
+		$ref = new \ReflectionClass($store);
+		$prop = $ref->getProperty('db');
+		$prop->setAccessible(true);
+		$db = $prop->getValue($store);
+		$projectId = '';
+		foreach ($db['projectDocuments'] as &$d) if ($d['id'] === $pdId) { $d['status'] = $status; $projectId = $d['projectId']; break; }
+		foreach ($db['projects'] as &$p) if ($p['id'] === $projectId) { $p['updatedAt'] = date(DATE_ATOM); break; }
+		file_put_contents(__DIR__ . '/../data/mvp.json', json_encode($db, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
+		header('Location: ?route=project&id=' . urlencode($projectId));
+		exit;
+
+	case 'actions/remove-document':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ?route=projects'); exit; }
+		$pdId = (string)($_POST['id'] ?? '');
+		$doc = $store->getProjectDocumentById($pdId);
+		$projectId = $doc['projectId'] ?? '';
+		if ($pdId !== '') { $store->deleteProjectDocument($pdId); }
+		header('Location: ?route=project&id=' . urlencode($projectId));
+		exit;
+
+	case 'actions/duplicate-project':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ?route=projects'); exit; }
+		$projectId = (string)($_POST['id'] ?? '');
+		$copy = $store->duplicateProjectDeep($projectId);
+		$redirectId = $copy['id'] ?? '';
+		header('Location: ?route=project&id=' . urlencode($redirectId !== '' ? $redirectId : $projectId));
+		exit;
+
+	case 'actions/upload-client-file':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+			http_response_code(405);
+			echo json_encode(['error' => 'Method not allowed']);
+			exit;
+		}
+		header('Content-Type: application/json');
+		
+		if (!isset($_FILES['file']) || $_FILES['file']['error'] !== UPLOAD_ERR_OK) {
+			http_response_code(400);
+			echo json_encode(['error' => 'No file uploaded']);
+			exit;
+		}
+		
+		$clientId = sanitizeId((string)($_POST['clientId'] ?? ''));
+		$projectId = sanitizeId((string)($_POST['projectId'] ?? ''));
+		
+		$uploadedFile = $fileManager->uploadClientFile($clientId, $projectId ?: null, $_FILES['file']);
+		
+		if ($uploadedFile) {
+			echo json_encode(['success' => true, 'file' => $uploadedFile]);
+		} else {
+			http_response_code(500);
+			echo json_encode(['error' => 'Failed to upload file']);
+		}
+		exit;
+
+	case 'actions/delete-client-file':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+			http_response_code(405);
+			echo json_encode(['error' => 'Method not allowed']);
+			exit;
+		}
+		header('Content-Type: application/json');
+		
+		$fileId = sanitizeId((string)($_POST['fileId'] ?? ''));
+		
+		if ($fileManager->deleteClientFile($fileId)) {
+			echo json_encode(['success' => true]);
+		} else {
+			http_response_code(404);
+			echo json_encode(['error' => 'File not found']);
+		}
+		exit;
+
+	case 'actions/list-client-files':
+		header('Content-Type: application/json');
+		
+		$clientId = sanitizeId((string)($_GET['clientId'] ?? ''));
+		$projectId = sanitizeId((string)($_GET['projectId'] ?? ''));
+		
+		$files = $fileManager->getClientFiles($clientId, $projectId ?: null);
+		
+		echo json_encode(['success' => true, 'files' => $files]);
+		exit;
+
+	case 'actions/add-custom-field':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+			http_response_code(405);
+			echo json_encode(['error' => 'Method not allowed']);
+			exit;
+		}
+		header('Content-Type: application/json');
+		
+		$templateId = sanitizeId((string)($_POST['templateId'] ?? ''));
+		$label = sanitizeString((string)($_POST['label'] ?? ''));
+		$type = sanitizeString((string)($_POST['type'] ?? 'text'));
+		$x = (int)($_POST['x'] ?? 100);
+		$y = (int)($_POST['y'] ?? 100);
+		$width = (int)($_POST['width'] ?? 200);
+		$height = (int)($_POST['height'] ?? 25);
+		
+		if (empty($templateId) || empty($label)) {
+			http_response_code(400);
+			echo json_encode(['error' => 'Template ID and label are required']);
+			exit;
+		}
+		
+		$fieldConfig = [
+			'label' => $label,
+			'type' => $type,
+			'x' => $x,
+			'y' => $y,
+			'width' => $width,
+			'height' => $height
+		];
+		
+		$field = $customFieldManager->addCustomField($templateId, $fieldConfig);
+		
+		if ($field) {
+			echo json_encode(['success' => true, 'field' => $field]);
+		} else {
+			http_response_code(500);
+			echo json_encode(['error' => 'Failed to add custom field']);
+		}
+		exit;
+
+	case 'actions/remove-custom-field':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+			http_response_code(405);
+			echo json_encode(['error' => 'Method not allowed']);
+			exit;
+		}
+		header('Content-Type: application/json');
+		
+		$templateId = sanitizeId((string)($_POST['templateId'] ?? ''));
+		$fieldKey = sanitizeString((string)($_POST['fieldKey'] ?? ''));
+		
+		if (empty($templateId) || empty($fieldKey)) {
+			http_response_code(400);
+			echo json_encode(['error' => 'Template ID and field key are required']);
+			exit;
+		}
+		
+		if ($customFieldManager->removeCustomField($templateId, $fieldKey)) {
+			echo json_encode(['success' => true]);
+		} else {
+			http_response_code(404);
+			echo json_encode(['error' => 'Field not found']);
+		}
+		exit;
+
+	case 'actions/update-field-position':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+			http_response_code(405);
+			echo json_encode(['error' => 'Method not allowed']);
+			exit;
+		}
+		header('Content-Type: application/json');
+		
+		$templateId = sanitizeId((string)($_POST['templateId'] ?? ''));
+		$fieldKey = sanitizeString((string)($_POST['fieldKey'] ?? ''));
+		$x = (int)($_POST['x'] ?? 0);
+		$y = (int)($_POST['y'] ?? 0);
+		$width = (int)($_POST['width'] ?? 200);
+		$height = (int)($_POST['height'] ?? 25);
+		
+		if (empty($templateId) || empty($fieldKey)) {
+			http_response_code(400);
+			echo json_encode(['error' => 'Template ID and field key are required']);
+			exit;
+		}
+		
+		if ($customFieldManager->updateFieldPosition($templateId, $fieldKey, $x, $y, $width, $height)) {
+			echo json_encode(['success' => true]);
+		} else {
+			http_response_code(404);
+			echo json_encode(['error' => 'Field not found']);
+		}
+		exit;
+
+	case 'actions/get-project-documents':
+		header('Content-Type: application/json');
+		
+		$projectId = sanitizeId((string)($_GET['projectId'] ?? ''));
+		if (empty($projectId)) {
+			http_response_code(400);
+			echo json_encode(['error' => 'Project ID required']);
+			exit;
+		}
+		
+		try {
+			$documents = $store->getProjectDocuments($projectId);
+			$documentsWithTemplates = [];
+			
+			foreach ($documents as $doc) {
+				$template = TemplateRegistry::getTemplate($doc['templateId']);
+				$documentsWithTemplates[] = [
+					'id' => $doc['id'],
+					'templateId' => $doc['templateId'],
+					'templateName' => ($template['code'] ?? '') . ' ' . ($template['name'] ?? ''),
+					'status' => $doc['status'] ?? 'in_progress',
+					'createdAt' => $doc['createdAt'] ?? '',
+					'outputPath' => $doc['outputPath'] ?? null
+				];
+			}
+			
+			echo json_encode(['success' => true, 'documents' => $documentsWithTemplates]);
+		} catch (Exception $e) {
+			http_response_code(500);
+			echo json_encode(['error' => $e->getMessage()]);
+		}
+		exit;
+
+        case 'actions/rescan-fields':
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                http_response_code(405);
+                echo json_encode(['error' => 'Method not allowed']);
+                exit;
+            }
+            header('Content-Type: application/json');
+            
+            $projectDocumentId = sanitizeId((string)($_POST['projectDocumentId'] ?? ''));
+            if (empty($projectDocumentId)) {
+                http_response_code(400);
+                echo json_encode(['error' => 'Project Document ID required']);
+                exit;
+            }
+            
+            try {
+                $projectDocument = $store->getProjectDocumentById($projectDocumentId);
+                if (!$projectDocument) {
+                    http_response_code(404);
+                    echo json_encode(['error' => 'Project document not found']);
+                    exit;
+                }
+                
+                $template = TemplateRegistry::getTemplate($projectDocument['templateId']);
+                if (!$template) {
+                    http_response_code(404);
+                    echo json_encode(['error' => 'Template not found']);
+                    exit;
+                }
+                
+                // Get the PDF file path
+                $pdfPath = $template['pdfPath'] ?? '';
+                if (empty($pdfPath) || !file_exists($pdfPath)) {
+                    http_response_code(404);
+                    echo json_encode(['error' => 'PDF file not found']);
+                    exit;
+                }
+                
+                // Use the PDF field extractor to get field positions
+                require_once __DIR__ . '/lib/pdf_field_extractor.php';
+                $extractor = new \WebPdfTimeSaver\Mvp\PdfFieldExtractor();
+                $fields = $extractor->extractFieldPositions($pdfPath);
+                
+                if (empty($fields)) {
+                    echo json_encode(['error' => 'No fields found in PDF']);
+                    exit;
+                }
+                
+                // Generate/update the positions file
+                $dataDir = __DIR__ . '/../data';
+                $positionFile = $dataDir . '/' . $projectDocument['templateId'] . '_positions.json';
+                
+                // Ensure data directory exists
+                if (!is_dir($dataDir)) {
+                    mkdir($dataDir, 0755, true);
+                }
+                
+                // Save positions to file
+                $json = json_encode($fields, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+                file_put_contents($positionFile, $json);
+                
+                // Note: We don't add new field values here because:
+                // 1. The positions file contains the actual PDF field names (complex)
+                // 2. The stored field values use simplified names (simple)
+                // 3. These are two different naming systems that need to be kept separate
+                // 4. The positions file is used for positioning, the stored values for form data
+                
+                $fieldsAdded = 0; // No new field values added
+                
+                echo json_encode([
+                    'success' => true,
+                    'fieldsCount' => count($fields),
+                    'fieldsAdded' => $fieldsAdded,
+                    'positionFile' => $positionFile,
+                    'message' => "Found " . count($fields) . " fields with positions, added " . $fieldsAdded . " new fields"
+                ]);
+                
+            } catch (Exception $e) {
+                http_response_code(500);
+                echo json_encode(['error' => $e->getMessage()]);
+            }
+            exit;
+
+        case 'actions/update-document-status':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+			http_response_code(405);
+			echo json_encode(['error' => 'Method not allowed']);
+			exit;
+		}
+		header('Content-Type: application/json');
+		
+		$documentId = sanitizeId((string)($_POST['documentId'] ?? ''));
+		$status = sanitizeString((string)($_POST['status'] ?? ''));
+		
+		if (empty($documentId) || empty($status)) {
+			http_response_code(400);
+			echo json_encode(['error' => 'Document ID and status required']);
+			exit;
+		}
+		
+		$validStatuses = ['in_progress', 'review', 'completed', 'ready_to_sign'];
+		if (!in_array($status, $validStatuses)) {
+			http_response_code(400);
+			echo json_encode(['error' => 'Invalid status']);
+			exit;
+		}
+		
+		try {
+			// Update document status using reflection
+			$ref = new \ReflectionClass($store);
+			$prop = $ref->getProperty('db');
+			$prop->setAccessible(true);
+			$db = $prop->getValue($store);
+			
+			$updated = false;
+			foreach ($db['projectDocuments'] as &$doc) {
+				if ($doc['id'] === $documentId) {
+					$doc['status'] = $status;
+					$doc['updatedAt'] = date(DATE_ATOM);
+					$updated = true;
+					break;
+				}
+			}
+			
+			if ($updated) {
+				file_put_contents(__DIR__ . '/../data/mvp.json', json_encode($db, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
+				echo json_encode(['success' => true]);
+			} else {
+				http_response_code(404);
+				echo json_encode(['error' => 'Document not found']);
+			}
+		} catch (Exception $e) {
+			http_response_code(500);
+			echo json_encode(['error' => $e->getMessage()]);
+		}
+		exit;
+
+	case 'actions/sign':
+		$pdId = (string)($_GET['pd'] ?? '');
+		$projDoc = $store->getProjectDocumentById($pdId);
+		if (!$projDoc) { header('Location: ?route=documents'); exit; }
+		$filename = $projDoc['outputPath'] ?? '';
+		if (!$filename) { header('Location: ?route=documents'); exit; }
+		
+		// Build full path
+		$outputDir = realpath(__DIR__ . '/../output');
+		$path = $outputDir . DIRECTORY_SEPARATOR . basename($filename);
+		
+		if (!file_exists($path)) { header('Location: ?route=documents'); exit; }
+		try {
+			$result = $fill->signDocument($path, ['pdId' => $pdId]);
+		} catch (\Throwable $e) {
+			$logger->error('PDF signing failed for pd=' . $pdId . ' path=' . $path . ' : ' . $e->getMessage());
+			header('Location: ?route=documents');
+			exit;
+		}
+		$ref = new \ReflectionClass($store);
+		$prop = $ref->getProperty('db');
+		$prop->setAccessible(true);
+		$db = $prop->getValue($store);
+		foreach ($db['projectDocuments'] as &$d) if ($d['id'] === $pdId) { $d['status'] = 'signed'; $d['signedPath'] = $result['filename']; }
+		foreach ($db['projects'] as &$p) if ($p['id'] === $projDoc['projectId']) { $p['updatedAt'] = date(DATE_ATOM); }
+		file_put_contents(__DIR__ . '/../data/mvp.json', json_encode($db, JSON_PRETTY_PRINT|JSON_UNESCAPED_SLASHES));
+		header('Location: ?route=documents');
+		exit;
+
+
+	case 'documents':
+		// Get all documents across all projects
+		$allDocuments = [];
+		$projects = $store->getProjects();
+		foreach ($projects as $project) {
+			$docs = $store->getProjectDocuments($project['id']);
+			foreach ($docs as $doc) {
+				$doc['project'] = $project;
+				$doc['client'] = null;
+				if (!empty($project['clientId']) && method_exists($store, 'getClient')) {
+					$doc['client'] = $store->getClient($project['clientId']);
+				}
+				$allDocuments[] = $doc;
+			}
+		}
+		// Sort by creation date (newest first)
+		usort($allDocuments, function($a, $b) {
+			return strtotime($b['createdAt'] ?? '') <=> strtotime($a['createdAt'] ?? '');
+		});
+		render('documents', [ 'documents' => $allDocuments, 'templates' => $templates ]);
+		break;
+
+	case 'templates':
+		$allTemplates = TemplateRegistry::getAllTemplates();
+		render('templates', [ 'templates' => $allTemplates ]);
+		break;
+
+	case 'template-edit':
+		$templateId = (string)($_GET['id'] ?? '');
+		$template = TemplateRegistry::getTemplate($templateId);
+		if (!$template) {
+			header('Location: ?route=templates');
+			exit;
+		}
+		render('template-edit', [ 'template' => $template, 'templateId' => $templateId ]);
+		break;
+
+	case 'activities':
+		render('activities');
+		break;
+
+	case 'bills':
+		render('bills');
+		break;
+
+	case 'reports':
+		render('reports');
+		break;
+
+	case 'settings':
+		render('settings');
+		break;
+
+	case 'font-settings':
+		render('font-settings');
+		break;
+
+	case 'support':
+		render('support');
+		break;
+
+	case 'actions/list-pdfs':
+		// List available PDFs for universal selection
+		header('Content-Type: application/json');
+		$uploadsDir = __DIR__ . '/../uploads';
+		$pdfs = [];
+		
+		if (is_dir($uploadsDir)) {
+			$files = glob($uploadsDir . '/*.pdf');
+			foreach ($files as $file) {
+				$pdfs[] = [
+					'name' => basename($file),
+					'path' => $file,
+					'size' => filesize($file),
+					'modified' => filemtime($file)
+				];
+			}
+		}
+		
+		echo json_encode(['pdfs' => $pdfs]);
+		exit;
+	
+	case 'test-regenerate-fl100':
+		// Workaround test route: Auto-regenerate FL-100 positions
+		require_once __DIR__ . '/lib/pdf_field_extractor.php';
+		
+		$templateId = 't_fl100_gc120';
+		$pdfFile = __DIR__ . '/../uploads/fl100.pdf';
+		
+		if (!file_exists($pdfFile)) {
+			die('Error: FL-100 PDF not found at: ' . $pdfFile);
+		}
+		
+		// Delete old positions
+		$oldPositionsFile = __DIR__ . '/../data/' . $templateId . '_positions.json';
+		if (file_exists($oldPositionsFile)) {
+			unlink($oldPositionsFile);
+		}
+		
+		// Copy PDF
+		$targetFile = __DIR__ . '/../uploads/' . $templateId . '.pdf';
+		copy($pdfFile, $targetFile);
+		
+		// Extract
+		$extractor = new \WebPdfTimeSaver\Mvp\PdfFieldExtractor();
+		$result = $extractor->extractAndGenerateBackgrounds($targetFile, $templateId, __DIR__ . '/../uploads');
+		
+		$fields = $result['fields'] ?? [];
+		$backgrounds = $result['backgrounds'] ?? [];
+		$positionFile = $result['positionFile'] ?? null;
+		
+		// Show results
+		$success = 'Successfully extracted ' . count($fields) . ' fields and generated ' . count($backgrounds) . ' background images.';
+		if ($positionFile) {
+			$success .= ' Position file: ' . basename($positionFile);
+		}
+		header('Location: ?route=extract-fields&success=' . urlencode($success));
+		exit;
+	
+	case 'test-w9-extract':
+		// Test route: Extract W-9 fields and generate background
+		require_once __DIR__ . '/lib/pdf_field_extractor.php';
+		
+		$templateId = 't_w9';
+		$pdfFile = __DIR__ . '/../uploads/w9.pdf';
+		
+		if (!file_exists($pdfFile)) {
+			die('Error: W-9 PDF not found at: ' . $pdfFile);
+		}
+		
+		// Delete old positions
+		$oldPositionsFile = __DIR__ . '/../data/' . $templateId . '_positions.json';
+		if (file_exists($oldPositionsFile)) {
+			unlink($oldPositionsFile);
+		}
+		
+		// Copy PDF
+		$targetFile = __DIR__ . '/../uploads/' . $templateId . '.pdf';
+		copy($pdfFile, $targetFile);
+		
+		// Extract
+		$extractor = new \WebPdfTimeSaver\Mvp\PdfFieldExtractor();
+		$result = $extractor->extractAndGenerateBackgrounds($targetFile, $templateId, __DIR__ . '/../uploads');
+		
+		$fields = $result['fields'] ?? [];
+		$backgrounds = $result['backgrounds'] ?? [];
+		$positionFile = $result['positionFile'] ?? null;
+		
+		// Show results
+		$success = 'Successfully extracted ' . count($fields) . ' fields and generated ' . count($backgrounds) . ' background images.';
+		if ($positionFile) {
+			$success .= ' Position file: ' . basename($positionFile);
+		}
+		header('Location: ?route=extract-fields&success=' . urlencode($success));
+		exit;
+	
+	case 'test-w9-fill':
+		// Test route: Fill W-9 with test data
+		require_once __DIR__ . '/lib/pdf_form_filler.php';
+		
+		$templateId = 't_w9';
+		$templateFile = __DIR__ . '/../uploads/' . $templateId . '.pdf';
+		
+		if (!file_exists($templateFile)) {
+			die('Error: W-9 template not found. Run test-w9-extract first.');
+		}
+		
+		// Test data for W-9 using actual field names from positions file
+		$testData = [
+			'topmostSubform[0].Page1[0].f1_01[0]' => 'John Test Smith',
+			'topmostSubform[0].Page1[0].f1_02[0]' => 'Test Business LLC',
+			'topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_03[0]' => '123',
+			'topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_04[0]' => 'Test Business Name',
+			'topmostSubform[0].Page1[0].f1_05[0]' => '45',
+			'topmostSubform[0].Page1[0].f1_06[0]' => '6789',
+			'topmostSubform[0].Page1[0].Address_ReadOrder[0].f1_07[0]' => '123 Test Street',
+			'topmostSubform[0].Page1[0].Address_ReadOrder[0].f1_08[0]' => 'Suite 100',
+			'topmostSubform[0].Page1[0].f1_09[0]' => 'Test City, CA 12345',
+			'topmostSubform[0].Page1[0].f1_10[0]' => 'Test Requester Name',
+			'topmostSubform[0].Page1[0].f1_11[0]' => '12',
+			'topmostSubform[0].Page1[0].f1_12[0]' => '34',
+			'topmostSubform[0].Page1[0].f1_13[0]' => '5678',
+			'topmostSubform[0].Page1[0].f1_14[0]' => '12',
+			'topmostSubform[0].Page1[0].f1_15[0]' => '3456789'
+		];
+		
+		// Create template array as expected by fillPdfFormWithPositions
+		$template = [
+			'id' => $templateId,
+			'pageCount' => 1
+		];
+		
+		try {
+			$filler = new \WebPdfTimeSaver\Mvp\PdfFormFiller();
+			$result = $filler->fillPdfFormWithPositions($template, $testData, $templateId);
+		} catch (\Throwable $e) {
+			die('Error generating W-9 PDF: ' . $e->getMessage() . ' in ' . $e->getFile() . ':' . $e->getLine());
+		}
+		
+		if ($result && isset($result['path']) && file_exists($result['path'])) {
+			// Output PDF directly instead of redirecting
+			header('Content-Type: application/pdf');
+			header('Content-Disposition: inline; filename="w9_filled_test.pdf"');
+			header('Content-Length: ' . filesize($result['path']));
+			readfile($result['path']);
+			exit;
+		} else {
+			$error = $result['error'] ?? 'Unknown error';
+			if (isset($result['path']) && !file_exists($result['path'])) {
+				$error .= ' (File not found: ' . $result['path'] . ')';
+			}
+			die('Error: Failed to fill W-9 form. ' . $error);
+		}
+	
+	case 'extract-fields':
+		render('extract_fields');
+		break;
+
+	case 'test-autofill':
+		render('test_autofill');
+		break;
+
+	case 'universal-processor':
+		render('universal_processor');
+		break;
+	
+	case 'pdf-lib-demo':
+		render('pdf_lib_demo');
+		break;
+	
+	case 'actions/universal-process':
+		handleUniversalProcess();
+		break;
+
+	case 'actions/extract-pdf-fields':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ?route=extract-fields'); exit; }
+		
+		require_once __DIR__ . '/lib/pdf_field_extractor.php';
+		
+		$error = null;
+		$success = null;
+		$fields = [];
+		$positionFile = null;
+		
+		try {
+			$templateId = sanitizeId((string)($_POST['template_id'] ?? ''));
+			if (empty($templateId)) {
+				throw new \Exception('Please provide a valid template ID');
+			}
+			
+			// Universal solution: Handle both uploaded file OR selected existing PDF
+			$permanentFile = null;
+			
+			// Option 1: Selected existing PDF
+			if (!empty($_POST['selected_pdf_path'])) {
+				$selectedPath = $_POST['selected_pdf_path'];
+				// Security: ensure path is within uploads directory
+				$uploadsDir = realpath(__DIR__ . '/../uploads');
+				$selectedPath = realpath($selectedPath);
+				
+				if ($selectedPath && strpos($selectedPath, $uploadsDir) === 0 && file_exists($selectedPath)) {
+					$permanentFile = __DIR__ . '/../uploads/' . $templateId . '.pdf';
+					// Copy selected file to template location
+					if (!copy($selectedPath, $permanentFile)) {
+						throw new \Exception('Failed to copy selected PDF file');
+					}
+				} else {
+					throw new \Exception('Invalid PDF file selected');
+				}
+			}
+			// Option 2: Uploaded new file
+			elseif (isset($_FILES['pdf_file']) && $_FILES['pdf_file']['error'] === UPLOAD_ERR_OK) {
+				$uploadedFile = $_FILES['pdf_file'];
+				$permanentFile = __DIR__ . '/../uploads/' . $templateId . '.pdf';
+				
+				if (!move_uploaded_file($uploadedFile['tmp_name'], $permanentFile)) {
+					throw new \Exception('Failed to upload file');
+				}
+			} else {
+				throw new \Exception('Please either select an existing PDF or upload a new one');
+			}
+			
+			// Delete old positions file for this template (fresh start)
+			$oldPositionsFile = __DIR__ . '/../data/' . $templateId . '_positions.json';
+			if (file_exists($oldPositionsFile)) {
+				unlink($oldPositionsFile);
+			}
+			
+			// Use hybrid approach: extract fields AND generate background images
+			$extractor = new \WebPdfTimeSaver\Mvp\PdfFieldExtractor();
+			$result = $extractor->extractAndGenerateBackgrounds(
+				$permanentFile, 
+				$templateId, 
+				__DIR__ . '/../uploads'  // Save backgrounds in uploads/
+			);
+			
+			$fields = $result['fields'];
+			$backgrounds = $result['backgrounds'];
+			$positionFile = $result['positionFile'];
+			
+			if (empty($fields)) {
+				// Even if no fields extracted, backgrounds might still be generated
+				if (!empty($backgrounds)) {
+					$success = 'Generated ' . count($backgrounds) . ' background images. ' .
+					          'Field extraction failed (PDF may be encrypted), but you can still use manual positioning.';
+				} else {
+					throw new \Exception('Failed to extract fields or generate backgrounds. PDF may be corrupted or incompatible.');
+				}
+			} else {
+				$successMsg = 'Successfully extracted ' . count($fields) . ' fields';
+				if (!empty($backgrounds)) {
+					$successMsg .= ' and generated ' . count($backgrounds) . ' background images';
+				}
+				$successMsg .= '!';
+				$success = $successMsg;
+			}
+			
+		} catch (\Exception $e) {
+			$error = $e->getMessage();
+		}
+		
+		render('extract_fields', [
+			'error' => $error,
+			'success' => $success,
+			'fields' => $fields,
+			'positionFile' => $positionFile,
+			'backgrounds' => $backgrounds ?? []
+		]);
+		exit;
+
+	case 'actions/test-autofill':
+		if ($_SERVER['REQUEST_METHOD'] !== 'POST') { header('Location: ?route=test-autofill'); exit; }
+		
+		require_once __DIR__ . '/lib/pdf_field_extractor.php';
+		require_once __DIR__ . '/lib/pdf_form_filler.php';
+		
+		$error = null;
+		$success = null;
+		$extractionResult = null;
+		$generatedPdf = null;
+		
+		try {
+			$pdfFile = __DIR__ . '/../uploads/fl100.pdf';
+			$templateId = 't_fl100_gc120';
+			
+			if (!file_exists($pdfFile)) {
+				throw new \Exception('FL-100 PDF not found at: ' . $pdfFile);
+			}
+			
+			$logger->info('Test autofill: Starting extraction', ['file' => $pdfFile]);
+			
+			// Step 1: Extract fields and generate backgrounds
+			$extractor = new \WebPdfTimeSaver\Mvp\PdfFieldExtractor();
+			$extractionResult = $extractor->extractAndGenerateBackgrounds(
+				$pdfFile,
+				$templateId,
+				__DIR__ . '/../uploads'
+			);
+			
+			$logger->info('Test autofill: Extraction complete', [
+				'fields' => count($extractionResult['fields']),
+				'backgrounds' => count($extractionResult['backgrounds'])
+			]);
+			
+			// Step 2: Create test data
+			require_once __DIR__ . '/lib/fl100_test_data_generator.php';
+			$testData = \WebPdfTimeSaver\Mvp\FL100TestDataGenerator::generateCompleteTestData();
+			
+			// Step 3: Load the template
+			$template = $templates[$templateId] ?? null;
+			if (!$template) {
+				throw new \Exception('Template not found: ' . $templateId);
+			}
+			
+			// Step 4: Generate PDF using positioned fields
+			$filler = new \WebPdfTimeSaver\Mvp\PdfFormFiller(__DIR__ . '/../output', __DIR__ . '/../uploads', $logger);
+			$filler->setContext(['test' => true, 'method' => 'hybrid-autofill']);
+			
+			// Use the new method with extracted positions
+			$generatedPdf = $filler->fillPdfFormWithPositions($template, $testData, $templateId);
+			
+			$logger->info('Test autofill: PDF generated', $generatedPdf);
+			
+			$success = 'Successfully generated test PDF using auto-detected field positions!';
+			
+		} catch (\Exception $e) {
+			$error = $e->getMessage();
+			$logger->error('Test autofill failed: ' . $e->getMessage());
+		}
+		
+		render('test_autofill', [
+			'error' => $error,
+			'success' => $success,
+			'extractionResult' => $extractionResult,
+			'generatedPdf' => $generatedPdf
+		]);
+		exit;
+
+	case 'actions/download-test-pdf':
+		$filename = $_GET['file'] ?? '';
+		if (!$filename) {
+			header('Location: ?route=test-autofill');
+			exit;
+		}
+		
+		$outputDir = realpath(__DIR__ . '/../output');
+		$path = $outputDir . DIRECTORY_SEPARATOR . basename($filename);
+		
+		if (!file_exists($path)) {
+			header('Location: ?route=test-autofill');
+			exit;
+		}
+		
+		header('Content-Type: application/pdf');
+		header('Content-Disposition: attachment; filename="' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $filename) . '"');
+		readfile($path);
+		exit;
+
+	case 'verification':
+		render('automated_verification');
+		break;
+	
+	case 'automated-verify':
+		require_once __DIR__ . '/lib/automated_verification_pipeline.php';
+		require_once __DIR__ . '/lib/fl100_test_data_generator.php';
+		
+		$templateId = sanitizeId((string)($_GET['template_id'] ?? 't_fl100_gc120'));
+		
+		$pipeline = new \WebPdfTimeSaver\Mvp\AutomatedVerificationPipeline();
+		$results = $pipeline->verify($templateId);
+		
+		header('Content-Type: application/json');
+		echo json_encode($results, JSON_PRETTY_PRINT);
+		exit;
+
+	default:
+		header('Location: ?route=dashboard');
+		exit;
+}
+
+

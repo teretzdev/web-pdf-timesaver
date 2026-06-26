@@ -1,0 +1,111 @@
+DB Development Log
+Project: Web-PDFTimeSaver
+Purpose: Track all database-related development work and migration steps.
+
+Date: 2026-05-04
+Session: Phase 1 DB Adoption (Form Management)
+
+[12:10] Implemented MySQL-first phase-1 storage in `mvp/lib/data.php`.
+- Added PDO connection bootstrap in `DataStore` with safe JSON fallback.
+- Added default DB connection values:
+  - Host: MySQL
+  - Port: 3308
+  - Database: LawDocumentManager.com
+  - User: ldm
+  - Password: (loaded from code default / env override)
+- Added env overrides: DB_ENABLED, DB_HOST, DB_PORT, DB_NAME, DB_USER, DB_PASSWORD.
+- Added automatic table provisioning (`CREATE TABLE IF NOT EXISTS`) for:
+  - form_templates
+  - firm_field_alignments
+  - form_custom_fields
+- Updated phase-1 methods to read/write MySQL when connected:
+  - upsertGlobalFormTemplate()
+  - saveFirmFieldAlignment()
+  - getFormCustomFields()
+
+[12:11] Updated configuration defaults in `config/app.php`.
+- Added `storage.db` config block with explicit MySQL defaults.
+- Set default DB port to 3308.
+
+[12:14] Removed direct JSON writes from router and centralized persistence via `DataStore`.
+- File updated: `mvp/index.php`
+- Replaced reflection + raw `mvp.json` writes with method calls:
+  - actions/update-project-status -> updateProjectStatus()
+  - actions/update-client-status -> updateClientStatus()
+  - actions/delete-client -> deleteClientDeep()
+  - PDF generation status/path persistence -> updateProjectDocument()
+  - actions/update-doc-status -> updateProjectDocument()
+  - actions/update-document-status -> updateProjectDocument()
+  - actions/sign -> updateProjectDocument() for signed state/path
+- Verified no remaining `ReflectionClass($store)` or direct `mvp.json` writes in `mvp/index.php`.
+
+[12:15] Extended `DataStore` API for centralized updates.
+- Added methods:
+  - updateProjectStatus(string $projectId, string $status): bool
+  - updateClientStatus(string $clientId, string $status): bool
+  - deleteClientDeep(string $clientId): void
+  - updateProjectDocument(string $projectDocumentId, array $updates): bool
+- Behavior:
+  - Updates `updatedAt`.
+  - Touches parent project when project-document updates occur.
+  - Persists via existing save() pipeline.
+
+Open follow-up items
+- Migrate remaining app domains (clients/projects/documents/field values) from JSON data model to full MySQL persistence layer.
+- Add DB-backed integration tests for phase-1 routes and actions.
+- Add explicit DB migration scripts/versioning for schema evolution.
+
+[Checklist] Added `DESIGN SPECS/phase1-checklist.txt` — copy of phase1 scope split into STILL TO VERIFY vs COMPLETED (checkbox style). Not a DB schema change; tracking artifact for Phase 1 verification.
+
+[Checklist] Marked alignment bug complete — updated `DESIGN SPECS/phase1-checklist.txt`: moved “Fix the alignment problem” from STILL TO VERIFY to COMPLETED per stakeholder confirmation.
+
+[2026-05-04] Phase 1 checklist closure — code + checklist updates
+- `mvp/index.php`
+  - Added `resolveCurrentFirmId()` (env `FIRM_ID`, else `default_firm`); `handlePositionUpdate` passes this firm id into `saveFirmFieldAlignment` (optional JSON `firm_id` override).
+  - After successful universal upload + `upsertGlobalFormTemplate`, response includes `phase1_mysql_connected`, `registry_verified`, `registered_form_name` when methods exist.
+  - `handleUniversalDiagnostics`: reports `pdo_mysql` extension and `phase1_mysql.connected` + `firm_id` when `$store` available.
+  - New API route `api/form-management/upsert-custom-field` → `handleFormManagementUpsertCustomField()` (JSON body: link_id, display_name, location, optional value).
+  - Form Management render passes `currentFirmId` for client alignment scope.
+- `mvp/lib/data.php`
+  - `isMysqlPhaseOneConnected()`, `getGlobalFormTemplate()`, `upsertFormCustomFieldRow()` for registry read and catalog persistence.
+- `mvp/views/universal_processor.php`
+  - Positions save JSON includes `firm_id: currentFirmIdForAlign`.
+  - Add custom field calls API and refreshes catalog from server; `initialCustomFieldCatalog` clone for Finished reset.
+  - Finished clears PDF + template_id inputs and restores catalog snapshot.
+- `config/app.php` — documented `storage.firm_id` default (env `FIRM_ID`).
+- `DESIGN SPECS/phase1-checklist.txt` — all former STILL TO VERIFY items marked completed; section left empty for future regressions.
+
+[DB smoke] Local connection attempt (Shadow workstation)
+- Added `scripts/db-smoke.mjs` (uses `mysql2`) and `mysql2` devDependency in `package.json`.
+- Ran `node scripts/db-smoke.mjs` against defaults: `127.0.0.1:3308` and `localhost:3308`, database `LawDocumentManager.com`, user `ldm`.
+- Result: **ECONNREFUSED** — nothing listening on local port 3308 (SSH tunnel / local MariaDB not running from this machine). Expected until tunnel or DB is reachable.
+
+[DB host fix] Invalid default hostname `MySQL`
+- `mvp/lib/data.php`: if `DB_HOST` is unset, default host is `127.0.0.1`; literal `MySQL` (design-doc label) maps to `127.0.0.1`.
+- `config/app.php`: same logic for `storage.db.host`.
+- Rationale: PDO cannot resolve host name `MySQL`; production PHP was falling back to JSON. After deploy, set real `DB_HOST` if DB is not on loopback (e.g. private IP or `host.docker.internal`).
+
+[DB port / tunnel] plink reverse forward uses **3306** on the server
+- User tunnel: `plink -N -i "...ppk" jjames@desktopmasters.com -P 2211 -R 0.0.0.0:3306:127.0.0.1:3306`
+- Meaning: SSH **server** listens on **3306**; traffic is forwarded to **127.0.0.1:3306 on the machine running plink** (developer PC). MySQL must run locally on 3306 on that PC while the tunnel is up.
+- App default `DB_PORT` updated from **3308** to **3306** in `mvp/lib/data.php`, `config/app.php`, `scripts/db-smoke.mjs`.
+- Added `scripts/db-reverse-tunnel.cmd` using `DESIGN SPECS\plink.exe` + `jjames at DesktopMasters.com.ed25519.ppk`.
+
+[XAMPP / 2026-05-04] MySQL smoke after user started XAMPP
+- `ldm` + default password: access denied (expected until user `ldm` is created in local MySQL).
+- `root` + no password: **connects**; app DB `LawDocumentManager.com` did not exist locally → `ER_BAD_DB_ERROR`.
+- `DB_USER=root` + `DB_NAME=mysql`: **full success** — `SELECT 1`, `form_*` tables empty (Phase 1 tables not created until PHP `DataStore` runs or manual migration).
+- `scripts/db-smoke.mjs` updated: optional empty `DB_PASSWORD`, `root` uses no password when `DB_PASSWORD` not set; hint on unknown database.
+
+[DB host / spec] Domain = MySQL host
+- Per `DESIGN SPECS/db_connection.txt`, **LawDocumentManager.com** is the default **DB host** (not 127.0.0.1) when `DB_HOST` is unset. Legacy label `MySQL` maps to that host.
+- Local XAMPP: set **`DB_HOST=127.0.0.1`** explicitly.
+- Updated: `mvp/lib/data.php`, `config/app.php`, `scripts/db-smoke.mjs` (try order includes remote host first), `DESIGN SPECS/db_connection.txt` (clarified host vs schema).
+
+[db-smoke] Fixed `DEFAULT_REMOTE_DB_HOST` used before definition in `scripts/db-smoke.mjs`.
+- Clean-env run: `LawDocumentManager.com:3306` → **ECONNREFUSED** to resolved IP (MySQL not exposed on public 3306 from dev PC — expected). Fallback `ldm`@localhost → access denied until XAMPP user exists.
+
+[DB / tunnel] Local forward to desktopmasters.com
+- Documented: SSH **desktopmasters.com:2211**, key `jjames at DesktopMasters.com.ed25519.key`, **local port 3307** → server **127.0.0.1:3306**.
+- App env through tunnel: **`DB_HOST=127.0.0.1`**, **`DB_PORT=3307`**, **`DB_NAME=LawDocumentManager.com`** (SSH host is NOT the PDO host).
+- Added `scripts/db-tunnel-local-forward.cmd`; updated `DESIGN SPECS/db_connection.txt`; noted reverse script is alternate path only.

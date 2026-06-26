@@ -1,0 +1,424 @@
+{
+    "templateId": "test_fl105",
+    "pdf": "fl105.pdf",
+    "positionsFile": "test_fl105_positions.json",
+    "generatedAt": "2025-11-18T22:49:35.516Z",
+    "summary": {
+        "fields": 21,
+        "avgScore": 0.799,
+        "fails": 1,
+        "warns": 3,
+        "pass": false
+    },
+    "results": [
+        {
+            "name": "FL_105_0_pageSet_0_Page1_0_P1Footer_0_Button1_0",
+            "page": 1,
+            "x": 40.95,
+            "y": 219.01,
+            "width": 29.39,
+            "height": 5,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.55,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "fail",
+            "rawName": "FL-105[0].#pageSet[0].Page1[0].P1Footer[0].Button1[0]",
+            "canonicalName": "FL_105_0_pageSet_0_Page1_0_P1Footer_0_Button1_0"
+        },
+        {
+            "name": "FL_105_0_Page1_0_P1Caption_0_AttyInfo_0_BarNo_ft_0",
+            "page": 1,
+            "x": 54.97,
+            "y": 236.14,
+            "width": 83.31,
+            "height": 5,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.753,
+            "components": {
+                "label": 0.6847613310792291,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "rawName": "FL-105[0].Page1[0].P1Caption[0].AttyInfo[0].BarNo_ft[0]",
+            "canonicalName": "FL_105_0_Page1_0_P1Caption_0_AttyInfo_0_BarNo_ft_0"
+        },
+        {
+            "name": "FL_105_0_Page1_0_List1_0_Li1_0_Party_0_PartyRepCB_0",
+            "page": 1,
+            "x": 63.27,
+            "y": 226.23,
+            "width": 18.74,
+            "height": 5,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.753,
+            "components": {
+                "label": 0.5846945656762599,
+                "bounds": 1,
+                "overlap": 0.6,
+                "size": 1
+            },
+            "verdict": "pass",
+            "rawName": "FL-105[0].Page1[0].List1[0].Li1[0].Party[0].PartyRepCB[0]",
+            "canonicalName": "FL_105_0_Page1_0_List1_0_Li1_0_Party_0_PartyRepCB_0"
+        },
+        {
+            "name": "FL_105_0_Page1_0_List2_0_Li1_0_Table_0_Row1_0_TextField7_0",
+            "page": 1,
+            "x": 95.06,
+            "y": 226.23,
+            "width": 42.43,
+            "height": 5.29,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.64,
+            "components": {
+                "label": 0.3343650466984345,
+                "bounds": 1,
+                "overlap": 0.6,
+                "size": 1
+            },
+            "verdict": "warn",
+            "rawName": "FL-105[0].Page1[0].List2[0].Li1[0].Table[0].Row1[0].TextField7[0]",
+            "canonicalName": "FL_105_0_Page1_0_List2_0_Li1_0_Table_0_Row1_0_TextField7_0"
+        },
+        {
+            "name": "FL_105_0_Page1_0_List3_0_Li1_0_Table3a_0_Row1a_0_Confidential1a3_0_ConfidentialCB_0",
+            "page": 1,
+            "x": 40.95,
+            "y": 232.41,
+            "width": 18.28,
+            "height": 5.96,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.79,
+            "components": {
+                "label": 0.7656516795497303,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "rawName": "FL-105[0].Page1[0].List3[0].Li1[0].Table3a[0].Row1a[0].Confidential1a3[0].ConfidentialCB[0]",
+            "canonicalName": "FL_105_0_Page1_0_List3_0_Li1_0_Table3a_0_Row1a_0_Confidential1a3_0_ConfidentialCB_0"
+        },
+        {
+            "name": "attorney_or_party_without_attorney",
+            "page": 1,
+            "x": 51.16,
+            "y": 168,
+            "width": 67.37,
+            "height": 8.71,
+            "type": "text",
+            "confidence": 0.88,
+            "score": 0.789,
+            "components": {
+                "label": 0.6634000298132343,
+                "bounds": 1,
+                "overlap": 0.6,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "attorney_or_party_without_attorney"
+        },
+        {
+            "name": "name",
+            "page": 1,
+            "x": 73.77,
+            "y": 168,
+            "width": 100,
+            "height": 11.11,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.717,
+            "components": {
+                "label": 0.5047565994653423,
+                "bounds": 1,
+                "overlap": 0.6,
+                "size": 1
+            },
+            "verdict": "warn",
+            "canonicalName": "name"
+        },
+        {
+            "name": "address",
+            "page": 1,
+            "x": 36.41,
+            "y": 184.2,
+            "width": 60.85,
+            "height": 7.25,
+            "type": "address",
+            "confidence": 0.99,
+            "score": 0.943,
+            "components": {
+                "label": 0.8738040729355729,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "address"
+        },
+        {
+            "name": "petitioner",
+            "page": 1,
+            "x": 40.95,
+            "y": 149.31,
+            "width": 100,
+            "height": 11,
+            "type": "text",
+            "confidence": 0.88,
+            "score": 0.853,
+            "components": {
+                "label": 0.8066653199133957,
+                "bounds": 1,
+                "overlap": 0.6,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "petitioner"
+        },
+        {
+            "name": "case_number",
+            "page": 1,
+            "x": 44.98,
+            "y": 149.31,
+            "width": 100,
+            "height": 11,
+            "type": "text",
+            "confidence": 0.88,
+            "score": 0.845,
+            "components": {
+                "label": 0.7881427837680169,
+                "bounds": 1,
+                "overlap": 0.6,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "case_number"
+        },
+        {
+            "name": "date_of_birth",
+            "page": 1,
+            "x": 44.98,
+            "y": 130.63,
+            "width": 51.59,
+            "height": 7.59,
+            "type": "date",
+            "confidence": 0.88,
+            "score": 0.802,
+            "components": {
+                "label": 0.794170865137672,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "date_of_birth"
+        },
+        {
+            "name": "address_is_confidential_under_family_code_section_3429_check_the_box_and_provide_only_the_state_of_residence",
+            "page": 1,
+            "x": 51.16,
+            "y": 134.32,
+            "width": 100,
+            "height": 11,
+            "type": "address",
+            "confidence": 0.88,
+            "score": 0.84,
+            "components": {
+                "label": 0.878338221980207,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "address_is_confidential_under_family_code_section_3429_check_the_box_and_provide_only_the_state_of_residence"
+        },
+        {
+            "name": "dates_of_residence",
+            "page": 1,
+            "x": 63.27,
+            "y": 110.28,
+            "width": 100,
+            "height": 12,
+            "type": "date",
+            "confidence": 0.88,
+            "score": 0.894,
+            "components": {
+                "label": 0.763575075563896,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "dates_of_residence"
+        },
+        {
+            "name": "pek_rect_1_0",
+            "page": 1,
+            "x": 36.41,
+            "y": 234.35,
+            "width": 55.33,
+            "height": 5.54,
+            "type": "text",
+            "confidence": 0.88,
+            "score": 0.805,
+            "components": {
+                "label": 0.8003843365252612,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "pek_rect_1_0"
+        },
+        {
+            "name": "label_inferred_1_71",
+            "page": 1,
+            "x": 36.41,
+            "y": 226.23,
+            "width": 63.5,
+            "height": 5,
+            "type": "text",
+            "confidence": 0.89,
+            "score": 0.776,
+            "components": {
+                "label": 0.7356381528755225,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "label_inferred_1_71"
+        },
+        {
+            "name": "checkbox_0",
+            "page": 1,
+            "x": 54.97,
+            "y": 130.63,
+            "width": 5,
+            "height": 5,
+            "type": "checkbox",
+            "confidence": 0.85,
+            "score": 0.82,
+            "components": {
+                "label": 0.8336455438887157,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "checkbox_0"
+        },
+        {
+            "name": "FL_105_0_Page2_0_Item4subformset_0_List4_0_Li1_0_Table4abc_0_Row4a_0_PGCell4a_0_FamilyCB_0",
+            "page": 2,
+            "x": 95.78,
+            "y": 233.91,
+            "width": 18.28,
+            "height": 5.96,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.688,
+            "components": {
+                "label": 0.43977463288113516,
+                "bounds": 1,
+                "overlap": 0.6,
+                "size": 1
+            },
+            "verdict": "warn",
+            "rawName": "FL-105[0].Page2[0].Item4subformset[0].List4[0].Li1[0].Table4abc[0].Row4a[0].PGCell4a[0].FamilyCB[0]",
+            "canonicalName": "FL_105_0_Page2_0_Item4subformset_0_List4_0_Li1_0_Table4abc_0_Row4a_0_PGCell4a_0_FamilyCB_0"
+        },
+        {
+            "name": "FL_105_0_Page2_0_Item4subformset_0_List4_0_Li1_0_Table4de_0_Row4d_0_PGCell4d_0_JuvCB_0",
+            "page": 2,
+            "x": 58.94,
+            "y": 231.55,
+            "width": 43.62,
+            "height": 5.3,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.817,
+            "components": {
+                "label": 0.727678643754866,
+                "bounds": 1,
+                "overlap": 0.6,
+                "size": 1
+            },
+            "verdict": "pass",
+            "rawName": "FL-105[0].Page2[0].Item4subformset[0].List4[0].Li1[0].Table4de[0].Row4d[0].PGCell4d[0].JuvCB[0]",
+            "canonicalName": "FL_105_0_Page2_0_Item4subformset_0_List4_0_Li1_0_Table4de_0_Row4d_0_PGCell4d_0_JuvCB_0"
+        },
+        {
+            "name": "FL_105_0_Page2_0_Item5subformset_0_List5_0_Li1_0_DVROCB_0_DVRO_CB_0",
+            "page": 2,
+            "x": 19.42,
+            "y": 231.55,
+            "width": 5,
+            "height": 5,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.929,
+            "components": {
+                "label": 0.8422206027411472,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "pass",
+            "rawName": "FL-105[0].Page2[0].Item5subformset[0].List5[0].Li1[0].DVROCB[0].DVRO_CB[0]",
+            "canonicalName": "FL_105_0_Page2_0_Item5subformset_0_List5_0_Li1_0_DVROCB_0_DVRO_CB_0"
+        },
+        {
+            "name": "FL_105_0_Page2_0_Item5subformset_0_List5_0_Li1_0_Table5_0_Row5b_0_ROCell5b_0_FamRO_CB5b_0",
+            "page": 2,
+            "x": 24.6,
+            "y": 229.26,
+            "width": 5,
+            "height": 5,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.908,
+            "components": {
+                "label": 0.7949927540148941,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "pass",
+            "rawName": "FL-105[0].Page2[0].Item5subformset[0].List5[0].Li1[0].Table5[0].Row5b[0].ROCell5b[0].FamRO_CB5b[0]",
+            "canonicalName": "FL_105_0_Page2_0_Item5subformset_0_List5_0_Li1_0_Table5_0_Row5b_0_ROCell5b_0_FamRO_CB5b_0"
+        },
+        {
+            "name": "FL_105_0_Page2_0_PoPDec_0_SigDate_0",
+            "page": 2,
+            "x": 17.74,
+            "y": 203.92,
+            "width": 67.92,
+            "height": 5,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.871,
+            "components": {
+                "label": 0.7123522996845253,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "pass",
+            "rawName": "FL-105[0].Page2[0].PoPDec[0].SigDate[0]",
+            "canonicalName": "FL_105_0_Page2_0_PoPDec_0_SigDate_0"
+        }
+    ]
+}

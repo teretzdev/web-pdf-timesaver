@@ -1,4 +1,4 @@
-# Production Deployment Guide for pdftimesaver.dektopmasters.com
+# Production Deployment Guide for pdftimesaver.desktopmasters.com
 
 ## Current Issue: 500 Internal Server Error
 
@@ -45,7 +45,7 @@ sudo tail -f /var/log/php-fpm.log
 ### 4. Verify File Permissions
 ```bash
 # Navigate to your web directory
-cd /var/www/pdftimesaver.dektopmasters.com/public_html
+cd /var/www/pdftimesaver.desktopmasters.com/public_html
 # OR wherever your files are located
 
 # Set correct ownership (replace www-data with your web server user)
@@ -88,21 +88,21 @@ Edit the provided `nginx/production-pdftimesaver.conf` file and update:
 
 1. **Document root** (line 18-20):
    ```nginx
-   root /var/www/pdftimesaver.dektopmasters.com/public_html;
+   root /var/www/pdftimesaver.desktopmasters.com/public_html;
    ```
    Replace with your actual path.
 
 2. **SSL certificate paths** (lines 27-28):
    ```nginx
-   ssl_certificate /etc/ssl/certs/pdftimesaver.dektopmasters.com.crt;
-   ssl_certificate_key /etc/ssl/private/pdftimesaver.dektopmasters.com.key;
+ssl_certificate /etc/ssl/certs/pdftimesaver.desktopmasters.com.crt;
+ssl_certificate_key /etc/ssl/private/pdftimesaver.desktopmasters.com.key;
    ```
    Replace with your actual SSL certificate paths.
    
    If using Let's Encrypt:
    ```nginx
-   ssl_certificate /etc/letsencrypt/live/pdftimesaver.dektopmasters.com/fullchain.pem;
-   ssl_certificate_key /etc/letsencrypt/live/pdftimesaver.dektopmasters.com/privkey.pem;
+ssl_certificate /etc/letsencrypt/live/pdftimesaver.desktopmasters.com/fullchain.pem;
+ssl_certificate_key /etc/letsencrypt/live/pdftimesaver.desktopmasters.com/privkey.pem;
    ```
 
 3. **PHP-FPM socket** (multiple locations in the file):
@@ -120,10 +120,10 @@ Edit the provided `nginx/production-pdftimesaver.conf` file and update:
 
 ```bash
 # Copy the configuration file to Nginx
-sudo cp nginx/production-pdftimesaver.conf /etc/nginx/sites-available/pdftimesaver.dektopmasters.com
+sudo cp nginx/production-pdftimesaver.conf /etc/nginx/sites-available/pdftimesaver.desktopmasters.com
 
 # Create symbolic link to enable the site
-sudo ln -s /etc/nginx/sites-available/pdftimesaver.dektopmasters.com /etc/nginx/sites-enabled/
+sudo ln -s /etc/nginx/sites-available/pdftimesaver.desktopmasters.com /etc/nginx/sites-enabled/
 
 # Remove default site if needed
 sudo rm /etc/nginx/sites-enabled/default
@@ -209,7 +209,7 @@ sudo systemctl restart php8.2-fpm
 
 ```bash
 # Navigate to your project root
-cd /var/www/pdftimesaver.dektopmasters.com/public_html
+cd /var/www/pdftimesaver.desktopmasters.com/public_html
 
 # Create necessary directories if they don't exist
 mkdir -p data logs uploads output tmp
@@ -227,8 +227,8 @@ curl -sS https://getcomposer.org/installer | php
 sudo mv composer.phar /usr/local/bin/composer
 
 # Install project dependencies
-cd /var/www/pdftimesaver.dektopmasters.com/public_html
-composer install --no-dev --optimize-autoloader
+cd /var/www/pdftimesaver.desktopmasters.com/public_html
+composer install
 ```
 
 ### Step 7: Test the Application
@@ -236,13 +236,13 @@ composer install --no-dev --optimize-autoloader
 ```bash
 # Test a simple PHP file
 echo "<?php phpinfo(); ?>" > test.php
-curl https://pdftimesaver.dektopmasters.com/test.php
+curl https://pdftimesaver.desktopmasters.com/test.php
 
 # Remove test file
 rm test.php
 
 # Check the main application
-curl -I https://pdftimesaver.dektopmasters.com
+curl -I https://pdftimesaver.desktopmasters.com
 ```
 
 ## Common Issues and Solutions
@@ -283,14 +283,14 @@ namei -l /var/www/pdftimesaver.dektopmasters.com/public_html/index.php
 **Solution**:
 ```bash
 # Reset ownership
-sudo chown -R www-data:www-data /var/www/pdftimesaver.dektopmasters.com/public_html
+sudo chown -R www-data:www-data /var/www/pdftimesaver.desktopmasters.com/public_html
 
 # Reset permissions
-sudo find /var/www/pdftimesaver.dektopmasters.com/public_html -type d -exec chmod 755 {} \;
-sudo find /var/www/pdftimesaver.dektopmasters.com/public_html -type f -exec chmod 644 {} \;
+sudo find /var/www/pdftimesaver.desktopmasters.com/public_html -type d -exec chmod 755 {} \;
+sudo find /var/www/pdftimesaver.desktopmasters.com/public_html -type f -exec chmod 644 {} \;
 
 # Special writable directories
-sudo chmod 775 /var/www/pdftimesaver.dektopmasters.com/public_html/{data,logs,uploads,output}
+sudo chmod 775 /var/www/pdftimesaver.desktopmasters.com/public_html/{data,logs,uploads,output}
 ```
 
 ### Issue: PHP extensions missing
@@ -315,7 +315,7 @@ sudo systemctl restart php8.2-fpm
 sudo apt-get install certbot python3-certbot-nginx
 
 # Get SSL certificate
-sudo certbot --nginx -d pdftimesaver.dektopmasters.com
+sudo certbot --nginx -d pdftimesaver.desktopmasters.com
 
 # Test auto-renewal
 sudo certbot renew --dry-run
@@ -325,8 +325,8 @@ sudo certbot renew --dry-run
 
 After deployment, verify these work:
 
-- [ ] Homepage loads: `https://pdftimesaver.dektopmasters.com`
-- [ ] MVP dashboard loads: `https://pdftimesaver.dektopmasters.com/mvp/?route=dashboard`
+- [ ] Homepage loads: `https://pdftimesaver.desktopmasters.com`
+- [ ] MVP dashboard loads: `https://pdftimesaver.desktopmasters.com/mvp/?route=dashboard`
 - [ ] No errors in Nginx logs: `sudo tail -f /var/log/nginx/pdftimesaver-error.log`
 - [ ] No errors in PHP logs: `sudo tail -f /var/log/php8.2-fpm.log`
 - [ ] SSL certificate is valid (no browser warnings)
@@ -408,7 +408,7 @@ If you're still getting 500 errors after following this guide:
 If issues persist, provide:
 - Output of: `sudo tail -100 /var/log/nginx/error.log`
 - Output of: `php -v`
-- Output of: `sudo nginx -T | grep -A 20 "server_name pdftimesaver"`
+- Output of: `sudo nginx -T | grep -A 20 "server_name pdftimesaver.desktopmasters.com"`
 - Screenshot of browser error (if visible)
 
 

@@ -182,7 +182,7 @@ class UIComponentsTest extends PHPUnit\Framework\TestCase
         $this->assertStringContainsString('Number of projects', $clientsOutput);
         $this->assertStringContainsString('Last modified', $clientsOutput);
         $this->assertStringContainsString('Project status', $clientsOutput);
-        $this->assertStringContainsString('Clio contacts', $clientsOutput);
+        $this->assertStringContainsString('PDFTimeSaver contacts', $clientsOutput);
         
         // Test add client button
         $this->assertStringContainsString('Add new client', $clientsOutput);

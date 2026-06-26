@@ -6,12 +6,16 @@
  * Environment-specific settings can be overridden via environment variables.
  */
 
+require_once __DIR__ . '/db_env.php';
+wpts_apply_db_local_overrides();
+
 return [
     // Application Settings
     'app' => [
         'name' => 'Web-PDFTimeSaver',
         'version' => '1.0.0',
         'debug' => getenv('APP_DEBUG') === '1' || getenv('APP_DEBUG') === 'true',
+        // Lab HTML routes (mvp/index.php): enable with APP_DEBUG, MVP_DEV_ROUTES=1, or APP_ENV=local|dev|development
         'env' => getenv('APP_ENV') ?: 'production',
     ],
 
@@ -29,6 +33,24 @@ return [
     // Database/Storage Settings
     'storage' => [
         'datafile' => dirname(__DIR__) . '/data/mvp.json',
+        'db' => [
+            'enabled' => getenv('DB_ENABLED') === false ? true : (getenv('DB_ENABLED') === '1' || getenv('DB_ENABLED') === 'true'),
+            'driver' => getenv('DB_DRIVER') ?: 'mysql',
+            'host' => (static function (): string {
+                $default = 'LawDocumentManager.com';
+                $h = trim((string)(getenv('DB_HOST') ?: ''));
+                if ($h === '') {
+                    return $default;
+                }
+                return strcasecmp($h, 'MySQL') === 0 ? $default : $h;
+            })(),
+            'port' => (int)(getenv('DB_PORT') ?: 3306),
+            'database' => getenv('DB_NAME') ?: 'LawDocumentManager.com',
+            'username' => getenv('DB_USER') ?: 'ldm',
+            'password' => getenv('DB_PASSWORD') ?: '3294459786827563',
+        ],
+        /** Phase 1 alignment scope; override with env FIRM_ID */
+        'firm_id' => getenv('FIRM_ID') ?: 'default_firm',
     ],
 
     // File Upload Settings
@@ -76,10 +98,22 @@ return [
     // Feature Flags
     'features' => [
         'pdf_signing' => true,
-        'custom_fields' => true,
+        'custom_fields' => false,
         'multi_page_forms' => true,
         'field_validation' => true,
         'auto_save' => false,
+    ],
+
+    // PDF Signing Settings (digital signing via mPDF)
+    'signing' => [
+        'enabled' => getenv('PDF_SIGNING_ENABLED') === '1' || getenv('PDF_SIGNING_ENABLED') === 'true',
+        'cert_p12_path' => getenv('PDF_SIGNING_CERT_P12') ?: dirname(__DIR__) . '/certs/test.p12',
+        'cert_password' => getenv('PDF_SIGNING_CERT_PASSWORD') ?: '',
+        'info' => [
+            'reason' => getenv('PDF_SIGNING_REASON') ?: 'Document approved',
+            'location' => getenv('PDF_SIGNING_LOCATION') ?: 'Web-PDFTimeSaver',
+            'contact' => getenv('PDF_SIGNING_CONTACT') ?: 'support@example.com',
+        ],
     ],
 
     // Template Settings

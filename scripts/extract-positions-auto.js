@@ -9,11 +9,12 @@ const fs = require('fs');
 const path = require('path');
 const { PDFDocument, PDFTextField, PDFCheckBox, PDFRadioGroup, PDFDropdown } = require('pdf-lib');
 const { spawn } = require('child_process');
+const fieldMetrics = require('./utils/field-metrics');
 
 class AutoPositionExtractor {
     constructor() {
         this.qpdfPath = this.findQpdfBinary();
-        this.mmPerPoint = 0.352778; // Convert points to mm
+        this.mmPerPoint = fieldMetrics.MM_PER_PT; // Convert points to mm
         this.tempDir = path.join(__dirname, '../temp');
         this.ensureTempDir();
     }
@@ -270,7 +271,7 @@ class AutoPositionExtractor {
                 y: parseFloat((y * this.mmPerPoint).toFixed(2)),
                 width: parseFloat((width * this.mmPerPoint).toFixed(2)),
                 height: parseFloat((height * this.mmPerPoint).toFixed(2)),
-                fontSize: Math.max(7, parseFloat((height * this.mmPerPoint * 0.7).toFixed(1))),
+                fontSize: parseFloat(fieldMetrics.estimateFontPtFromHeightMm(height * this.mmPerPoint, fieldMetrics.DEFAULT_FONT_PT).toFixed(1)),
                 rect_pdf: rect
             };
 

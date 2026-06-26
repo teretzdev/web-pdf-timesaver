@@ -6,6 +6,11 @@
 
 declare(strict_types=1);
 
+define('PROJECT_ROOT', dirname(__DIR__));
+define('UPLOADS_DIR', PROJECT_ROOT . DIRECTORY_SEPARATOR . 'uploads');
+define('AUTO_EXTRACTOR_FILE', PROJECT_ROOT . DIRECTORY_SEPARATOR . 'mvp' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'auto_position_extractor.php');
+define('PDF_FIELD_EXTRACTOR_FILE', PROJECT_ROOT . DIRECTORY_SEPARATOR . 'mvp' . DIRECTORY_SEPARATOR . 'lib' . DIRECTORY_SEPARATOR . 'pdf_field_extractor.php');
+
 header('Content-Type: application/json');
 header('Access-Control-Allow-Origin: *');
 header('Access-Control-Allow-Methods: POST');
@@ -35,8 +40,13 @@ try {
         throw new \Exception('Template ID is required');
     }
     
-    $templateId = trim($_POST['template_id']);
+    $templateId = preg_replace('/[^a-zA-Z0-9_-]/', '', trim((string)$_POST['template_id']));
+    if ($templateId === '') {
+        throw new \Exception('Template ID contains no valid characters');
+    }
     $uploadedFile = $_FILES['pdf'];
+    $backgroundModeRaw = strtolower(trim((string)($_POST['background_conversion_mode'] ?? 'raster')));
+    $backgroundConversionMode = $backgroundModeRaw === 'selectable_full' ? 'selectable_full' : 'raster';
     
     // Validate file type
     $fileInfo = pathinfo($uploadedFile['name']);
@@ -45,14 +55,15 @@ try {
     }
     
     // Create uploads directory if it doesn't exist
-    $uploadsDir = __DIR__ . '/uploads';
-    if (!file_exists($uploadsDir)) {
-        mkdir($uploadsDir, 0755, true);
+    if (!is_dir(UPLOADS_DIR)) {
+        if (!mkdir(UPLOADS_DIR, 0755, true) && !is_dir(UPLOADS_DIR)) {
+            throw new \Exception('Failed to create uploads directory');
+        }
     }
     
     // Generate unique filename
     $filename = $templateId . '_' . time() . '.pdf';
-    $filePath = $uploadsDir . '/' . $filename;
+    $filePath = UPLOADS_DIR . DIRECTORY_SEPARATOR . $filename;
     
     // Move uploaded file
     if (!move_uploaded_file($uploadedFile['tmp_name'], $filePath)) {
@@ -60,7 +71,10 @@ try {
     }
     
     // Call universal extractor
-    require_once __DIR__ . '/mvp/lib/auto_position_extractor.php';
+    if (!file_exists(AUTO_EXTRACTOR_FILE)) {
+        throw new \Exception('Auto extractor bridge not found');
+    }
+    require_once AUTO_EXTRACTOR_FILE;
     
     $extractor = new \WebPdfTimeSaver\Mvp\AutoPositionExtractor();
     
@@ -69,10 +83,50 @@ try {
     }
     
     $result = $extractor->extractPositions($filePath, $templateId);
+    $backgroundConversion = [
+        'requestedMode' => $backgroundConversionMode,
+        'selectedStrategy' => 'raster_background_png',
+        'selectedPdfPath' => null,
+        'attempts' => []
+    ];
+    if (file_exists(PDF_FIELD_EXTRACTOR_FILE)) {
+        require_once PDF_FIELD_EXTRACTOR_FILE;
+        try {
+            $pdfExtractor = new \WebPdfTimeSaver\Mvp\PdfFieldExtractor();
+            $backgroundConversion = $pdfExtractor->prepareBackgroundConversionArtifacts(
+                $filePath,
+                $templateId,
+                UPLOADS_DIR,
+                $backgroundConversionMode
+            );
+        } catch (\Throwable $e) {
+            $backgroundConversion['attempts'][] = [
+                'strategy' => 'background_conversion_metadata',
+                'success' => false,
+                'reason' => $e->getMessage(),
+                'path' => null,
+            ];
+        }
+    }
     
-    // Clean up uploaded file
+    // Ensure result has the expected structure for browser
+    if (!isset($result['success'])) {
+        $result['success'] = !empty($result['fields']);
+    }
+    
+    // If we have fields but success is false, set it to true
+    if (!empty($result['fields']) && !$result['success']) {
+        $result['success'] = true;
+    }
+    $result['backgroundConversionMode'] = $backgroundConversionMode;
+    $result['backgroundConversion'] = $backgroundConversion;
+    
+    // Clean up uploaded file AFTER extraction completes
+    // Don't delete immediately - Node.js might still be processing
     if (file_exists($filePath)) {
-        unlink($filePath);
+        // Use a small delay to ensure Node.js has finished with the file
+        sleep(1);
+        @unlink($filePath);
     }
     
     // Return results

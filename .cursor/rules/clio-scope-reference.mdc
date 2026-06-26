@@ -1,0 +1,54 @@
+---
+description: Use the Clio reference audit to decide what a page needs before adding UI
+alwaysApply: true
+---
+
+# Clio is the scope source of truth — check it before adding UI
+
+Before adding ANY new control, card, button, panel, or "helper" UI to a page,
+consult the Clio reference first. Clio (draft.clio.com) is the product we are
+matching. If Clio does not have it on that page, default to NOT adding it.
+Do not invent workflow chrome, status pills, "go to X" CTAs, rescan/debug
+buttons, or duplicate navigation. Less is correct.
+
+## Where to look (in this repo)
+
+- Screenshots: `DESIGN SPECS/clio-screenshots/` (00–21). Key pages:
+  - `08-panels-populate.png` → the fill-out / populate experience
+  - `06-project-edit.png`, `09-panels-edit.png` → edit / overlay + sign
+  - `05-project-overview.png`, `01-clients-active.png`, `02-clients-projects.png`
+  - `17-form-libraries.png`, `20-sort-menu.png`, `21-select-court.png`
+  - See `DESIGN SPECS/clio-screenshots/README.md` for the full index.
+- Written audit: `DESIGN SPECS/DRAFT_CLIO_UI_DEEP_DIVE.md`
+- Gap analysis: `DESIGN SPECS/DRAFT_CLIO_VS_PDFTIMESAVER_COMPARISON.md`
+
+## Process for any UI change
+
+1. Identify which page/flow you are touching.
+2. Open the matching Clio screenshot(s) + the relevant deep-dive section.
+3. Only add elements that exist in (or are clearly implied by) the Clio reference,
+   or that the user explicitly requested in this conversation.
+4. If something seems needed but isn't in Clio and wasn't requested, ASK before
+   adding it — don't add speculatively.
+
+## Known scope facts (don't re-add)
+
+- Populate = panel/field fill only. No drafting CTA, no "Project Forms (Ordered)"
+  table, no Populate/Drafting/Download workflow pills, no "Rescan PDF Fields".
+- Download/export lives in the action bar, not as a separate workflow step card.
+
+## Clio's actual panel split (verified 2026-06-19 against real logged-in panels)
+
+- **Populate (`08`)** = pure data entry. One centered single-column card, logical
+  fields grouped by section (Attorney / Client / Court / Other). Each input has a
+  `×N` badge = how many PDF spots that one value fills (dedup). In Clio there are NO
+  font controls, NO color, NO bold/underline/strikeout, NO custom-field placement,
+  NO PDF preview, NO export controls on this page. Actions: Back to select documents,
+  Go to drafting.
+- **Drafting / Edit (`09`)** = the visual layer. `Insert → Add custom field`, live PDF
+  overlay with stamped values, `Documents (N)` list to switch forms, status dropdown
+  (In progress / Review / Completed), `Sign`, `Download`.
+- Mental model: **Populate = data, Drafting/Edit = visual + custom fields + sign +
+  download.** Our build intentionally diverges (font/color/custom-input/export on
+  populate) per explicit user request — keep that, but don't add MORE visual chrome
+  to populate without asking.

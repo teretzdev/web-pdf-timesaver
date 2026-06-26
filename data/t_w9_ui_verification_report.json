@@ -1,0 +1,1533 @@
+{
+    "templateId": "t_w9_ui",
+    "pdf": "w9.pdf",
+    "positionsFile": "t_w9_ui_positions.json",
+    "generatedAt": "2025-10-30T21:23:35.100Z",
+    "summary": {
+        "fields": 79,
+        "avgScore": 0.758,
+        "fails": 0,
+        "warns": 30,
+        "pass": true
+    },
+    "results": [
+        {
+            "name": "name_field",
+            "page": 1,
+            "x": 17.6,
+            "y": 35.94,
+            "width": 84.38,
+            "height": 5.18,
+            "type": "text",
+            "confidence": 0.65,
+            "score": 0.744,
+            "components": {
+                "label": 0.6636424004964008,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "canonicalName": "name_field"
+        },
+        {
+            "name": "phone_field",
+            "page": 1,
+            "x": 17.6,
+            "y": 49.38,
+            "width": 84.38,
+            "height": 5.18,
+            "type": "text",
+            "confidence": 0.65,
+            "score": 0.761,
+            "components": {
+                "label": 0.7030234113459465,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "phone_field"
+        },
+        {
+            "name": "topmostSubform_0_Page1_0_Boxes3a_b_ReadOrder_0_c1_1_0",
+            "page": 1,
+            "x": 25.75,
+            "y": 63.4,
+            "width": 5,
+            "height": 5,
+            "type": "checkbox",
+            "confidence": 0.95,
+            "score": 0.891,
+            "components": {
+                "label": 0.7580619588265145,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "pass",
+            "rawName": "topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[0]",
+            "canonicalName": "topmostSubform_0_Page1_0_Boxes3a_b_ReadOrder_0_c1_1_0"
+        },
+        {
+            "name": "topmostSubform_0_Page1_0_Boxes3a_b_ReadOrder_0_c1_1_1",
+            "page": 1,
+            "x": 64.01,
+            "y": 63.4,
+            "width": 5,
+            "height": 5,
+            "type": "checkbox",
+            "confidence": 0.95,
+            "score": 0.731,
+            "components": {
+                "label": 0.636062079580324,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "rawName": "topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[1]",
+            "canonicalName": "topmostSubform_0_Page1_0_Boxes3a_b_ReadOrder_0_c1_1_1"
+        },
+        {
+            "name": "topmostSubform_0_Page1_0_Boxes3a_b_ReadOrder_0_c1_1_2",
+            "page": 1,
+            "x": 88.9,
+            "y": 63.4,
+            "width": 5,
+            "height": 5,
+            "type": "checkbox",
+            "confidence": 0.95,
+            "score": 0.626,
+            "components": {
+                "label": 0.40237179878831864,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "rawName": "topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[2]",
+            "canonicalName": "topmostSubform_0_Page1_0_Boxes3a_b_ReadOrder_0_c1_1_2"
+        },
+        {
+            "name": "you_must_provide_updated_information_to_any_person_to_whom_you",
+            "page": 1,
+            "x": 41.69,
+            "y": 70.67,
+            "width": 27.16,
+            "height": 5,
+            "type": "date",
+            "confidence": 0.7,
+            "score": 0.809,
+            "components": {
+                "label": 0.8078034837550976,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "you_must_provide_updated_information_to_any_person_to_whom_you"
+        },
+        {
+            "name": "topmostSubform_0_Page1_0_Boxes3a_b_ReadOrder_0_c1_1_4",
+            "page": 1,
+            "x": 48.9,
+            "y": 63.4,
+            "width": 5,
+            "height": 5,
+            "type": "checkbox",
+            "confidence": 0.95,
+            "score": 0.794,
+            "components": {
+                "label": 0.7763986865013539,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "rawName": "topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[4]",
+            "canonicalName": "topmostSubform_0_Page1_0_Boxes3a_b_ReadOrder_0_c1_1_4"
+        },
+        {
+            "name": "topmostSubform_0_Page1_0_Boxes3a_b_ReadOrder_0_f1_03_0",
+            "page": 1,
+            "x": 51.48,
+            "y": 68.14,
+            "width": 10.16,
+            "height": 5,
+            "type": "text",
+            "confidence": 0.95,
+            "score": 0.778,
+            "components": {
+                "label": 0.7394426696287917,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "rawName": "topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_03[0]",
+            "canonicalName": "topmostSubform_0_Page1_0_Boxes3a_b_ReadOrder_0_f1_03_0"
+        },
+        {
+            "name": "topmostSubform_0_Page1_0_Boxes3a_b_ReadOrder_0_c1_1_6",
+            "page": 1,
+            "x": 25.75,
+            "y": 80.04,
+            "width": 5,
+            "height": 5,
+            "type": "checkbox",
+            "confidence": 0.95,
+            "score": 0.752,
+            "components": {
+                "label": 0.5829244578174938,
+                "bounds": 1,
+                "overlap": 0.6,
+                "size": 1
+            },
+            "verdict": "pass",
+            "rawName": "topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[6]",
+            "canonicalName": "topmostSubform_0_Page1_0_Boxes3a_b_ReadOrder_0_c1_1_6"
+        },
+        {
+            "name": "topmostSubform_0_Page1_0_Boxes3a_b_ReadOrder_0_f1_04_0",
+            "page": 1,
+            "x": 56.67,
+            "y": 80.04,
+            "width": 35.34482782,
+            "height": 5,
+            "type": "text",
+            "confidence": 0.95,
+            "score": 0.709,
+            "components": {
+                "label": 0.5868718246841982,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "rawName": "topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_04[0]",
+            "canonicalName": "topmostSubform_0_Page1_0_Boxes3a_b_ReadOrder_0_f1_04_0"
+        },
+        {
+            "name": "topmostSubform_0_Page1_0_Boxes3a_b_ReadOrder_0_c1_2_0",
+            "page": 1,
+            "x": 54.17,
+            "y": 92.3,
+            "width": 5,
+            "height": 5,
+            "type": "checkbox",
+            "confidence": 0.95,
+            "score": 0.738,
+            "components": {
+                "label": 0.6500012885860725,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "rawName": "topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_2[0]",
+            "canonicalName": "topmostSubform_0_Page1_0_Boxes3a_b_ReadOrder_0_c1_2_0"
+        },
+        {
+            "name": "topmostSubform_0_Page1_0_f1_05_0",
+            "page": 1,
+            "x": 67.46,
+            "y": 68.14,
+            "width": 11.43,
+            "height": 5,
+            "type": "text",
+            "confidence": 0.95,
+            "score": 0.713,
+            "components": {
+                "label": 0.595409054791537,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "rawName": "topmostSubform[0].Page1[0].f1_05[0]",
+            "canonicalName": "topmostSubform_0_Page1_0_f1_05_0"
+        },
+        {
+            "name": "topmostSubform_0_Page1_0_f1_06_0",
+            "page": 1,
+            "x": 61.74,
+            "y": 80.04,
+            "width": 26.6,
+            "height": 5,
+            "type": "text",
+            "confidence": 0.95,
+            "score": 0.692,
+            "components": {
+                "label": 0.549988399020239,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "rawName": "topmostSubform[0].Page1[0].f1_06[0]",
+            "canonicalName": "topmostSubform_0_Page1_0_f1_06_0"
+        },
+        {
+            "name": "topmostSubform_0_Page1_0_Address_ReadOrder_0_f1_07_0",
+            "page": 1,
+            "x": 20.67,
+            "y": 35.94,
+            "width": 40.99985916,
+            "height": 5,
+            "type": "text",
+            "confidence": 0.95,
+            "score": 0.753,
+            "components": {
+                "label": 0.6843925648062337,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "rawName": "topmostSubform[0].Page1[0].Address_ReadOrder[0].f1_07[0]",
+            "canonicalName": "topmostSubform_0_Page1_0_Address_ReadOrder_0_f1_07_0"
+        },
+        {
+            "name": "topmostSubform_0_Page1_0_Address_ReadOrder_0_f1_08_0",
+            "page": 1,
+            "x": 20.67,
+            "y": 39.05,
+            "width": 40.99985916,
+            "height": 5,
+            "type": "text",
+            "confidence": 0.95,
+            "score": 0.786,
+            "components": {
+                "label": 0.7569661811173835,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "rawName": "topmostSubform[0].Page1[0].Address_ReadOrder[0].f1_08[0]",
+            "canonicalName": "topmostSubform_0_Page1_0_Address_ReadOrder_0_f1_08_0"
+        },
+        {
+            "name": "topmostSubform_0_Page1_0_f1_09_0",
+            "page": 1,
+            "x": 48.9,
+            "y": 35.94,
+            "width": 65.69,
+            "height": 13.41,
+            "type": "text",
+            "confidence": 0.95,
+            "score": 0.762,
+            "components": {
+                "label": 0.703882404339439,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "rawName": "topmostSubform[0].Page1[0].f1_09[0]",
+            "canonicalName": "topmostSubform_0_Page1_0_f1_09_0"
+        },
+        {
+            "name": "topmostSubform_0_Page1_0_f1_10_0",
+            "page": 1,
+            "x": 20.67,
+            "y": 41.36,
+            "width": 64.39256834,
+            "height": 5,
+            "type": "text",
+            "confidence": 0.95,
+            "score": 0.786,
+            "components": {
+                "label": 0.7579527395863606,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "rawName": "topmostSubform[0].Page1[0].f1_10[0]",
+            "canonicalName": "topmostSubform_0_Page1_0_f1_10_0"
+        },
+        {
+            "name": "topmostSubform_0_Page1_0_f1_11_0",
+            "page": 1,
+            "x": 51.48,
+            "y": 45.98,
+            "width": 15.24,
+            "height": 8.47,
+            "type": "text",
+            "confidence": 0.95,
+            "score": 0.783,
+            "components": {
+                "label": 0.7515979737816267,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "rawName": "topmostSubform[0].Page1[0].f1_11[0]",
+            "canonicalName": "topmostSubform_0_Page1_0_f1_11_0"
+        },
+        {
+            "name": "topmostSubform_0_Page1_0_f1_12_0",
+            "page": 1,
+            "x": 58.98,
+            "y": 45.98,
+            "width": 10.16,
+            "height": 8.47,
+            "type": "text",
+            "confidence": 0.95,
+            "score": 0.752,
+            "components": {
+                "label": 0.6823571964989792,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "rawName": "topmostSubform[0].Page1[0].f1_12[0]",
+            "canonicalName": "topmostSubform_0_Page1_0_f1_12_0"
+        },
+        {
+            "name": "topmostSubform_0_Page1_0_f1_13_0",
+            "page": 1,
+            "x": 64.01,
+            "y": 45.98,
+            "width": 20.32,
+            "height": 8.47,
+            "type": "text",
+            "confidence": 0.95,
+            "score": 0.731,
+            "components": {
+                "label": 0.6355694807970795,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "rawName": "topmostSubform[0].Page1[0].f1_13[0]",
+            "canonicalName": "topmostSubform_0_Page1_0_f1_13_0"
+        },
+        {
+            "name": "your_ssn_or_ein",
+            "page": 1,
+            "x": 54.17,
+            "y": 52.16,
+            "width": 22.72,
+            "height": 6.88,
+            "type": "ssn",
+            "confidence": 0.7,
+            "score": 0.774,
+            "components": {
+                "label": 0.731132846983875,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "your_ssn_or_ein"
+        },
+        {
+            "name": "what_name_and",
+            "page": 1,
+            "x": 56.67,
+            "y": 52.16,
+            "width": 35.42,
+            "height": 6.88,
+            "type": "text",
+            "confidence": 0.7,
+            "score": 0.763,
+            "components": {
+                "label": 0.7076140701194507,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "what_name_and"
+        },
+        {
+            "name": "name_of_entityindividual_an_entry_is_required_for_a_sole_proprietor_or_disregarded_entity_enter_the_owners_name_on_line_1_and_enter_the_businessdisregarded",
+            "page": 1,
+            "x": 76.91,
+            "y": 35.94,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "text",
+            "confidence": 0.7,
+            "score": 0.818,
+            "components": {
+                "label": 0.829445632728513,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "name_of_entityindividual_an_entry_is_required_for_a_sole_proprietor_or_disregarded_entity_enter_the_owners_name_on_line_1_and_enter_the_businessdisregarded"
+        },
+        {
+            "name": "entitys_name_on_line_2",
+            "page": 1,
+            "x": 70.82,
+            "y": 39.05,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "text",
+            "confidence": 0.7,
+            "score": 0.82,
+            "components": {
+                "label": 0.8334523872334463,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "entitys_name_on_line_2"
+        },
+        {
+            "name": "business_namedisregarded_entity_name_if_different_from_above",
+            "page": 1,
+            "x": 41.69,
+            "y": 49.38,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "text",
+            "confidence": 0.7,
+            "score": 0.816,
+            "components": {
+                "label": 0.825273381777695,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "business_namedisregarded_entity_name_if_different_from_above"
+        },
+        {
+            "name": "check_the_appropriate_box_for_federal_tax_classification_of_the_entityindividual_whose_name_is_entered_on_line_1_check",
+            "page": 1,
+            "x": 61.74,
+            "y": 57.66,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "text",
+            "confidence": 0.7,
+            "score": 0.738,
+            "components": {
+                "label": 0.6519940282591851,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "canonicalName": "check_the_appropriate_box_for_federal_tax_classification_of_the_entityindividual_whose_name_is_entered_on_line_1_check"
+        },
+        {
+            "name": "address_number_street_and_apt_or_suite_no_see_instructions",
+            "page": 1,
+            "x": 41.69,
+            "y": 35.94,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "address",
+            "confidence": 0.7,
+            "score": 0.789,
+            "components": {
+                "label": 0.765148758293294,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "address_number_street_and_apt_or_suite_no_see_instructions"
+        },
+        {
+            "name": "requesters_name_and_address_optional",
+            "page": 1,
+            "x": 70.82,
+            "y": 35.94,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "address",
+            "confidence": 0.7,
+            "score": 0.832,
+            "components": {
+                "label": 0.8608040970192303,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "requesters_name_and_address_optional"
+        },
+        {
+            "name": "enter_your_tin_in_the_appropriate_box_the_tin_provided_must_match_the_name_given_on_line_1_to_avoid",
+            "page": 1,
+            "x": 56.67,
+            "y": 45.98,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "text",
+            "confidence": 0.7,
+            "score": 0.762,
+            "components": {
+                "label": 0.7037652644204728,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "enter_your_tin_in_the_appropriate_box_the_tin_provided_must_match_the_name_given_on_line_1_to_avoid"
+        },
+        {
+            "name": "entities_it_is_your_employer_identification_number_ein_if_you_do_not_have_a_number_see",
+            "page": 1,
+            "x": 48.9,
+            "y": 49.38,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "number",
+            "confidence": 0.7,
+            "score": 0.789,
+            "components": {
+                "label": 0.7645922807874905,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "entities_it_is_your_employer_identification_number_ein_if_you_do_not_have_a_number_see"
+        },
+        {
+            "name": "if_the_account_is_in_more_than_one_name_see_the_instructions_for_line_1_see_also",
+            "page": 1,
+            "x": 48.9,
+            "y": 52.16,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "text",
+            "confidence": 0.7,
+            "score": 0.796,
+            "components": {
+                "label": 0.7806377273632044,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "if_the_account_is_in_more_than_one_name_see_the_instructions_for_line_1_see_also"
+        },
+        {
+            "name": "social_security_number",
+            "page": 1,
+            "x": 67.46,
+            "y": 45.98,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "ssn",
+            "confidence": 0.7,
+            "score": 0.717,
+            "components": {
+                "label": 0.6033767771420486,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "canonicalName": "social_security_number"
+        },
+        {
+            "name": "signature_of",
+            "page": 1,
+            "x": 58.98,
+            "y": 73.23,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "signature",
+            "confidence": 0.7,
+            "score": 0.74,
+            "components": {
+                "label": 0.6552711417310422,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "canonicalName": "signature_of"
+        },
+        {
+            "name": "date",
+            "page": 1,
+            "x": 56.67,
+            "y": 73.23,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "date",
+            "confidence": 0.7,
+            "score": 0.749,
+            "components": {
+                "label": 0.674934570625684,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "canonicalName": "date"
+        },
+        {
+            "name": "atin_or_employer_identification_number_ein_to_report_on_an",
+            "page": 1,
+            "x": 38.54,
+            "y": 32,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "number",
+            "confidence": 0.7,
+            "score": 0.798,
+            "components": {
+                "label": 0.7849563533977955,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "atin_or_employer_identification_number_ein_to_report_on_an"
+        },
+        {
+            "name": "2_the_treaty_article_addressing_the_income",
+            "page": 1,
+            "x": 65.87776372,
+            "y": 99.73,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "address",
+            "confidence": 0.7,
+            "score": 0.742,
+            "components": {
+                "label": 0.5595856600314318,
+                "bounds": 1,
+                "overlap": 0.6,
+                "size": 1
+            },
+            "verdict": "warn",
+            "canonicalName": "2_the_treaty_article_addressing_the_income"
+        },
+        {
+            "name": "the_name_or_tin_changes_for_the_account_for_example_if_the_grantor_of_a",
+            "page": 1,
+            "x": 41.69,
+            "y": 89.86,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "text",
+            "confidence": 0.7,
+            "score": 0.778,
+            "components": {
+                "label": 0.7391923681025155,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "the_name_or_tin_changes_for_the_account_for_example_if_the_grantor_of_a"
+        },
+        {
+            "name": "the_name_should_match_the_name_on_your_tax_return",
+            "page": 1,
+            "x": 38.54,
+            "y": 57.66,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "text",
+            "confidence": 0.7,
+            "score": 0.831,
+            "components": {
+                "label": 0.8568735243194344,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "the_name_should_match_the_name_on_your_tax_return"
+        },
+        {
+            "name": "circle_the_name_of_the_person_or_entity_whose_number_you_entered_in",
+            "page": 1,
+            "x": 41.69,
+            "y": 60.14,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "number",
+            "confidence": 0.7,
+            "score": 0.827,
+            "components": {
+                "label": 0.8491971516277428,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "circle_the_name_of_the_person_or_entity_whose_number_you_entered_in"
+        },
+        {
+            "name": "generally_enter_the_name_shown_on_your_tax_return_if_you",
+            "page": 1,
+            "x": 41.69,
+            "y": 65.63,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "text",
+            "confidence": 0.7,
+            "score": 0.82,
+            "components": {
+                "label": 0.8336463635597879,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "generally_enter_the_name_shown_on_your_tax_return_if_you"
+        },
+        {
+            "name": "name_as_shown_on_your_social_security_card_and_your_new_last_name",
+            "page": 1,
+            "x": 41.69,
+            "y": 68.14,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "ssn",
+            "confidence": 0.7,
+            "score": 0.815,
+            "components": {
+                "label": 0.8218956021177248,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "name_as_shown_on_your_social_security_card_and_your_new_last_name"
+        },
+        {
+            "name": "the_name_you_entered_on_the_form_1040_you_filed_with_your_application",
+            "page": 1,
+            "x": 41.69,
+            "y": 73.23,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "text",
+            "confidence": 0.7,
+            "score": 0.801,
+            "components": {
+                "label": 0.7917140006990531,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "the_name_you_entered_on_the_form_1040_you_filed_with_your_application"
+        },
+        {
+            "name": "enter_the_entitys_name_as_shown_on_the_entitys_tax",
+            "page": 1,
+            "x": 41.69,
+            "y": 80.04,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "text",
+            "confidence": 0.7,
+            "score": 0.752,
+            "components": {
+                "label": 0.6820492653905008,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "enter_the_entitys_name_as_shown_on_the_entitys_tax"
+        },
+        {
+            "name": "return_on_line_1_and_any_business_trade_or_dba_name_on_line_2",
+            "page": 1,
+            "x": 38.54,
+            "y": 80.04,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "text",
+            "confidence": 0.7,
+            "score": 0.759,
+            "components": {
+                "label": 0.6975067495546415,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "return_on_line_1_and_any_business_trade_or_dba_name_on_line_2"
+        },
+        {
+            "name": "documents_on_line_1_this_name_should_match_the_name_shown_on_the",
+            "page": 1,
+            "x": 41.69,
+            "y": 82.64,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "text",
+            "confidence": 0.7,
+            "score": 0.76,
+            "components": {
+                "label": 0.6989662926435986,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "documents_on_line_1_this_name_should_match_the_name_shown_on_the"
+        },
+        {
+            "name": "name_on_line_1_the_name_of_the_owner_entered_on_line_1_should_never",
+            "page": 1,
+            "x": 41.69,
+            "y": 92.3,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "text",
+            "confidence": 0.7,
+            "score": 0.782,
+            "components": {
+                "label": 0.7495187289861428,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "name_on_line_1_the_name_of_the_owner_entered_on_line_1_should_never"
+        },
+        {
+            "name": "if_you_have_a_business_name_trade_name_dba_name_or_disregarded",
+            "page": 1,
+            "x": 76.91,
+            "y": 54.77,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "text",
+            "confidence": 0.7,
+            "score": 0.677,
+            "components": {
+                "label": 0.5148729687783944,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "canonicalName": "if_you_have_a_business_name_trade_name_dba_name_or_disregarded"
+        },
+        {
+            "name": "classification_of_the_person_whose_name_is_entered_on_line_1_check_only",
+            "page": 1,
+            "x": 76.91,
+            "y": 70.67,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "text",
+            "confidence": 0.7,
+            "score": 0.671,
+            "components": {
+                "label": 0.5029866726560627,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "canonicalName": "classification_of_the_person_whose_name_is_entered_on_line_1_check_only"
+        },
+        {
+            "name": "attorneys_fees_or_gross_proceeds_paid_to_attorneys_and_corporations",
+            "page": 1,
+            "x": 76.91,
+            "y": 84.73,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "text",
+            "confidence": 0.7,
+            "score": 0.646,
+            "components": {
+                "label": 0.44632696426832363,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "canonicalName": "attorneys_fees_or_gross_proceeds_paid_to_attorneys_and_corporations"
+        },
+        {
+            "name": "enter_your_address_number_street_and_apartment_or_suite_number",
+            "page": 1,
+            "x": 76.91,
+            "y": 94.8,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "address",
+            "confidence": 0.7,
+            "score": 0.654,
+            "components": {
+                "label": 0.46337928001384426,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "canonicalName": "enter_your_address_number_street_and_apartment_or_suite_number"
+        },
+        {
+            "name": "file_enter_new_at_the_top_if_a_new_address_is_provided_there_is_still_a",
+            "page": 1,
+            "x": 76.91,
+            "y": 35.94,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "address",
+            "confidence": 0.7,
+            "score": 0.818,
+            "components": {
+                "label": 0.829445632728513,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "file_enter_new_at_the_top_if_a_new_address_is_provided_there_is_still_a"
+        },
+        {
+            "name": "chance_the_old_address_will_be_used_until_the_payor_changes_your",
+            "page": 1,
+            "x": 73.56,
+            "y": 39.05,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "address",
+            "confidence": 0.7,
+            "score": 0.815,
+            "components": {
+                "label": 0.8231136244146293,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "chance_the_old_address_will_be_used_until_the_payor_changes_your"
+        },
+        {
+            "name": "address_in_their_records",
+            "page": 1,
+            "x": 56.67,
+            "y": 39.05,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "address",
+            "confidence": 0.7,
+            "score": 0.764,
+            "components": {
+                "label": 0.7079355418589757,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "address_in_their_records"
+        },
+        {
+            "name": "if_you_are_a_sole_proprietor_and_you_have_an_ein_you_may_enter_either",
+            "page": 1,
+            "x": 76.91,
+            "y": 52.16,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "text",
+            "confidence": 0.7,
+            "score": 0.678,
+            "components": {
+                "label": 0.516834968399419,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "canonicalName": "if_you_are_a_sole_proprietor_and_you_have_an_ein_you_may_enter_either"
+        },
+        {
+            "name": "separate_from_its_owner_enter_the_owners_ssn_or_ein_if_the_owner_has",
+            "page": 1,
+            "x": 76.91,
+            "y": 54.77,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "ssn",
+            "confidence": 0.7,
+            "score": 0.677,
+            "components": {
+                "label": 0.5148729687783944,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "canonicalName": "separate_from_its_owner_enter_the_owners_ssn_or_ein_if_the_owner_has"
+        },
+        {
+            "name": "entitys_ein",
+            "page": 1,
+            "x": 51.48,
+            "y": 57.66,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "text",
+            "confidence": 0.7,
+            "score": 0.78,
+            "components": {
+                "label": 0.7455293697516883,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "entitys_ein"
+        },
+        {
+            "name": "what_name_and_number_to_give_the_requester",
+            "page": 1,
+            "x": 70.82,
+            "y": 57.66,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "number",
+            "confidence": 0.7,
+            "score": 0.701,
+            "components": {
+                "label": 0.5679605273167727,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "canonicalName": "what_name_and_number_to_give_the_requester"
+        },
+        {
+            "name": "further_clarification_of_name",
+            "page": 1,
+            "x": 56.67,
+            "y": 60.14,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "text",
+            "confidence": 0.7,
+            "score": 0.764,
+            "components": {
+                "label": 0.7084078619943597,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "further_clarification_of_name"
+        },
+        {
+            "name": "to_apply_for_an_ssn_get_form_ss5_application",
+            "page": 1,
+            "x": 67.46,
+            "y": 63.4,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "ssn",
+            "confidence": 0.7,
+            "score": 0.717,
+            "components": {
+                "label": 0.6037755904138725,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "canonicalName": "to_apply_for_an_ssn_get_form_ss5_application"
+        },
+        {
+            "name": "for_a_social_security",
+            "page": 1,
+            "x": 76.91,
+            "y": 63.4,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "ssn",
+            "confidence": 0.7,
+            "score": 0.677,
+            "components": {
+                "label": 0.5151248892209249,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "canonicalName": "for_a_social_security"
+        },
+        {
+            "name": "identification_number_to_apply_for_an_ein_you_can",
+            "page": 1,
+            "x": 67.46,
+            "y": 68.14,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "number",
+            "confidence": 0.7,
+            "score": 0.713,
+            "components": {
+                "label": 0.595409054791537,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "canonicalName": "identification_number_to_apply_for_an_ein_you_can"
+        },
+        {
+            "name": "signature_requirements",
+            "page": 1,
+            "x": 61.74,
+            "y": 52.16,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "signature",
+            "confidence": 0.7,
+            "score": 0.742,
+            "components": {
+                "label": 0.659874047371947,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "canonicalName": "signature_requirements"
+        },
+        {
+            "name": "give_name_and_ssn_of",
+            "page": 1,
+            "x": 41.69,
+            "y": 57.66,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "ssn",
+            "confidence": 0.7,
+            "score": 0.819,
+            "components": {
+                "label": 0.8311549451844382,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "give_name_and_ssn_of"
+        },
+        {
+            "name": "give_name_and_ein_of",
+            "page": 1,
+            "x": 76.91,
+            "y": 23.53,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "text",
+            "confidence": 0.7,
+            "score": 0.949,
+            "components": {
+                "label": 0.8863573354061898,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "give_name_and_ein_of"
+        },
+        {
+            "name": "agriculture_in_the_name_of_a_public",
+            "page": 1,
+            "x": 61.74,
+            "y": 65.63,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "text",
+            "confidence": 0.7,
+            "score": 0.739,
+            "components": {
+                "label": 0.6534254780269462,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "canonicalName": "agriculture_in_the_name_of_a_public"
+        },
+        {
+            "name": "or_dba_name_if_any_on_line_2_you_may_use_either_your_ssn_or_ein_if",
+            "page": 1,
+            "x": 76.91,
+            "y": 39.05,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "ssn",
+            "confidence": 0.7,
+            "score": 0.808,
+            "components": {
+                "label": 0.8064763577570344,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "or_dba_name_if_any_on_line_2_you_may_use_either_your_ssn_or_ein_if"
+        },
+        {
+            "name": "you_have_one_but_the_irs_encourages_you_to_use_your_ssn",
+            "page": 1,
+            "x": 73.56,
+            "y": 41.36,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "ssn",
+            "confidence": 0.7,
+            "score": 0.807,
+            "components": {
+                "label": 0.8034852450777634,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "you_have_one_but_the_irs_encourages_you_to_use_your_ssn"
+        },
+        {
+            "name": "if_no_name_is_circled_when_more_than_one_name_is_listed",
+            "page": 1,
+            "x": 73.56,
+            "y": 52.16,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "text",
+            "confidence": 0.7,
+            "score": 0.692,
+            "components": {
+                "label": 0.5484387081687796,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "canonicalName": "if_no_name_is_circled_when_more_than_one_name_is_listed"
+        },
+        {
+            "name": "such_as_your_name_ssn_or_other_identifying_information_without_your",
+            "page": 1,
+            "x": 76.91,
+            "y": 57.66,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "ssn",
+            "confidence": 0.7,
+            "score": 0.675,
+            "components": {
+                "label": 0.5112557514632845,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "canonicalName": "such_as_your_name_ssn_or_other_identifying_information_without_your"
+        },
+        {
+            "name": "protect_your_ssn",
+            "page": 1,
+            "x": 54.17,
+            "y": 63.4,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "ssn",
+            "confidence": 0.7,
+            "score": 0.772,
+            "components": {
+                "label": 0.727740089789575,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "protect_your_ssn"
+        },
+        {
+            "name": "notice_from_the_irs_respond_right_away_to_the_name_and_phone_number",
+            "page": 1,
+            "x": 76.91,
+            "y": 70.67,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "phone",
+            "confidence": 0.7,
+            "score": 0.671,
+            "components": {
+                "label": 0.5029866726560627,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "canonicalName": "notice_from_the_irs_respond_right_away_to_the_name_and_phone_number"
+        },
+        {
+            "name": "phishing_is_the_creation_and_use_of_email_and",
+            "page": 1,
+            "x": 86.8,
+            "y": 45.98,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "email",
+            "confidence": 0.7,
+            "score": 0.635,
+            "components": {
+                "label": 0.4220682709113164,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "canonicalName": "phishing_is_the_creation_and_use_of_email_and"
+        },
+        {
+            "name": "mimic_legitimate_business_emails_and",
+            "page": 1,
+            "x": 76.91,
+            "y": 49.38,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "email",
+            "confidence": 0.7,
+            "score": 0.674,
+            "components": {
+                "label": 0.5099211329944845,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "warn",
+            "canonicalName": "mimic_legitimate_business_emails_and"
+        },
+        {
+            "name": "if_you_receive_an_unsolicited_email_claiming_to_be_from_the_irs",
+            "page": 1,
+            "x": 38.54,
+            "y": 76.45,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "email",
+            "confidence": 0.7,
+            "score": 0.799,
+            "components": {
+                "label": 0.7875122931949713,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "if_you_receive_an_unsolicited_email_claiming_to_be_from_the_irs"
+        },
+        {
+            "name": "of_the_irs_name_logo_or_other_irs_property_to_the_treasury_inspector",
+            "page": 1,
+            "x": 41.69,
+            "y": 82.64,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "text",
+            "confidence": 0.7,
+            "score": 0.76,
+            "components": {
+                "label": 0.6989662926435986,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "of_the_irs_name_logo_or_other_irs_property_to_the_treasury_inspector"
+        },
+        {
+            "name": "forward_suspicious_emails_to_the_federal_trade_commission_at",
+            "page": 1,
+            "x": 38.54,
+            "y": 89.86,
+            "width": 35.28,
+            "height": 5.29,
+            "type": "email",
+            "confidence": 0.7,
+            "score": 0.787,
+            "components": {
+                "label": 0.7608594658786192,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "forward_suspicious_emails_to_the_federal_trade_commission_at"
+        },
+        {
+            "name": "signature_field",
+            "page": 1,
+            "x": 17.6,
+            "y": 70.67,
+            "width": 70.6,
+            "height": 10.6,
+            "type": "signature",
+            "confidence": 0.65,
+            "score": 0.753,
+            "components": {
+                "label": 0.6846025287513141,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "signature_field"
+        },
+        {
+            "name": "checkbox_1",
+            "page": 1,
+            "x": 17.6,
+            "y": 84.73,
+            "width": 5.3,
+            "height": 5.3,
+            "type": "checkbox",
+            "confidence": 0.7,
+            "score": 0.82,
+            "components": {
+                "label": 0.6007927721690126,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "checkbox_1"
+        },
+        {
+            "name": "checkbox_2",
+            "page": 1,
+            "x": 35.3,
+            "y": 84.73,
+            "width": 5.3,
+            "height": 5.3,
+            "type": "checkbox",
+            "confidence": 0.7,
+            "score": 0.781,
+            "components": {
+                "label": 0.7459243985855895,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "checkbox_2"
+        }
+    ]
+}

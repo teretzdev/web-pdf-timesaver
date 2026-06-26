@@ -1,0 +1,218 @@
+{
+  "runId": "live-verify-2026-06-16T00-54-01-703Z",
+  "startedAt": "2026-06-16T00:54:01.705Z",
+  "baseUrl": "https://pdftimesaver.desktopmasters.com/mvp",
+  "artifacts": {
+    "artifactDir": "C:\\Users\\Shadow\\Web-PDFTimeSaver\\tmp\\live-verify-2026-06-16T00-54-01-703Z",
+    "shotDir": "C:\\Users\\Shadow\\Web-PDFTimeSaver\\tmp\\live-verify-2026-06-16T00-54-01-703Z\\screenshots",
+    "downloadDir": "C:\\Users\\Shadow\\Web-PDFTimeSaver\\tmp\\live-verify-2026-06-16T00-54-01-703Z\\downloads"
+  },
+  "groups": {
+    "A": {
+      "name": "Projects page controls and navigation",
+      "checks": [
+        {
+          "item": "Search works (control present)",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=projects",
+          "details": "Found input placeholder \"Search for project\"."
+        },
+        {
+          "item": "Search works (returns matching project)",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=projects&q=LiveSignoff_20260611_1623",
+          "details": "Searched for \"LiveSignoff_20260611_1623\"."
+        },
+        {
+          "item": "Browse lists projects",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=projects&browse=1",
+          "details": "Browse listing showed 9 project links."
+        },
+        {
+          "item": "New Project flow opens project view",
+          "pass": false,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=projects&new=1",
+          "details": "New Project button routed into project view."
+        },
+        {
+          "item": "Selecting project opens project view",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=project&id=p_9f0aa3c44f17",
+          "details": "Clicked project \"Test E2E Verification Project\"."
+        }
+      ]
+    },
+    "B": {
+      "name": "Project View behavior",
+      "checks": [
+        {
+          "item": "Sections visible (Project Name, Client, Case, Form Set)",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=project&id=p_e33ed95825e0",
+          "details": "Verified section labels in rendered page text."
+        },
+        {
+          "item": "Client select/change/edit path works (controls present)",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=project&id=p_e33ed95825e0",
+          "details": "Found Change/Edit/Add Client/Search controls."
+        },
+        {
+          "item": "Client Edit path opens client view",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=client&id=c_ee68dcb903cd",
+          "details": "Clicked Edit in Client section."
+        },
+        {
+          "item": "Case number and dynamic fields editable and saveable",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=project&id=p_e33ed95825e0&success=Project+setup+saved.",
+          "details": "Saved case \"LIVE-VERIFY-258502\" and dynamic field \"dyn-LIVE-VERIFY-258502\"."
+        },
+        {
+          "item": "Form Set search/browse + selection applies list",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=project&id=p_e33ed95825e0&success=Project+setup+saved.",
+          "details": "Form set picker opened; browse rows visible: 2."
+        },
+        {
+          "item": "Additional forms add + order controls + view/remove icons",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=project&id=p_e33ed95825e0&success=Project+setup+saved.",
+          "details": "Add/Browse controls present; icon set present; additional form rows shown: 5."
+        },
+        {
+          "item": "Save Project Setup works",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=project&id=p_e33ed95825e0&success=Project+setup+saved.",
+          "details": "Submit returned to project view URL."
+        },
+        {
+          "item": "Next gating strict (enabled when requirements met)",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=project&id=p_e33ed95825e0",
+          "details": "Next href: ?route=populate&pd=pd_a73c9590894e"
+        },
+        {
+          "item": "Next gating strict (disabled when requirements missing)",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=project&id=p_334c40ffaede",
+          "details": "Strict project \"LiveStrict_NoFormSet_20260611_1529\" state: {\"href\":\"#\",\"ariaDisabled\":\"true\",\"disabledHint\":true}"
+        }
+      ]
+    },
+    "C": {
+      "name": "Fill Out Forms behavior",
+      "checks": [
+        {
+          "item": "Header/title above form",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=populate&pd=pd_a73c9590894e",
+          "details": "Found \"Populate Form\" and \"Document:\" labels."
+        },
+        {
+          "item": "Next/Back form navigation + top form dropdown select",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=populate&pd=pd_a73c9590894e",
+          "details": "{\"nextForm\":true,\"backToMatter\":true,\"formDropdown\":true}"
+        },
+        {
+          "item": "Optional all-forms mode available",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=populate&pd=pd_a73c9590894e",
+          "details": "Display options: Single Form, All Forms End-to-End"
+        },
+        {
+          "item": "Manual text size +/-",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=populate&pd=pd_a73c9590894e",
+          "details": "Font size before=14, after dec+inc=14."
+        },
+        {
+          "item": "Auto-shrink on overflow + warning + grow-back after clear",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=populate&pd=pd_a73c9590894e",
+          "details": "Overflow={\"font\":8,\"overflowClass\":true,\"hidden\":8,\"length\":700}; after clear={\"font\":14,\"overflowClass\":false,\"hidden\":14,\"length\":0}"
+        },
+        {
+          "item": "Temporary custom fields add/move/resize/persist",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=populate&pd=pd_a73c9590894e",
+          "details": "{\"added\":true,\"moved\":true,\"resized\":true,\"persisted\":true}"
+        },
+        {
+          "item": "Autosave typing + blur",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=populate&pd=pd_a73c9590894e",
+          "details": "Autosave status=\"Saved\", value=\"autosave-1781571271992\"."
+        }
+      ]
+    },
+    "D": {
+      "name": "Export behavior",
+      "checks": [
+        {
+          "item": "Scope dropdown + format dropdown + single Export button present",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=populate&pd=pd_a73c9590894e",
+          "details": "Checked #export-scope-select, #export-format-select, #export-action-btn."
+        },
+        {
+          "item": "Default scope this-form until last form",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=populate&pd=pd_a73c9590894e",
+          "details": "Initial export scope value: this"
+        },
+        {
+          "item": "Default scope switches to all-forms on last form",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=populate&pd=pd_2ee737ffa1d7",
+          "details": "Last-form export scope value: all"
+        },
+        {
+          "item": "This Form export current-only",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=populate&pd=pd_2ee737ffa1d7",
+          "details": "Downloaded file: FL-100_12731DE81E.pdf"
+        },
+        {
+          "item": "All Forms ZIP contains expected PDFs",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=populate&pd=pd_2ee737ffa1d7",
+          "details": "ZIP file: project_p_e33ed95825e0.zip, pdfEntries=2, zipListError=none"
+        },
+        {
+          "item": "All Forms merged export generated (order expected by project list)",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=populate&pd=pd_2ee737ffa1d7",
+          "details": "Merged file: project_p_e33ed95825e0_merged.pdf"
+        }
+      ]
+    },
+    "E": {
+      "name": "End-to-end transition and preservation",
+      "checks": [
+        {
+          "item": "Project View Next -> Populate -> Save -> back preserves progress",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=project&id=p_e33ed95825e0 -> https://pdftimesaver.desktopmasters.com/mvp/?route=populate&pd=pd_a73c9590894e",
+          "details": "Saved value=\"roundtrip-1781571282386\", reloaded value=\"roundtrip-1781571282386\"."
+        }
+      ]
+    }
+  },
+  "context": {
+    "firstProjectOnList": {
+      "href": "?route=project&id=p_9f0aa3c44f17",
+      "text": "Test E2E Verification Project"
+    },
+    "projectUrl": "https://pdftimesaver.desktopmasters.com/mvp/?route=project&id=p_e33ed95825e0",
+    "populateHref": "?route=populate&pd=pd_a73c9590894e",
+    "zipEntries": [
+      "AUTO_1776804232138.pdf",
+      "FL-100_12731DE81E.pdf"
+    ]
+  },
+  "finishedAt": "2026-06-16T00:54:54.191Z"
+}

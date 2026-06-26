@@ -1,3 +1,6 @@
+<style>
+    .dashboard-matter-link-wrap { position: relative; z-index: 2; display: inline-block; }
+</style>
 <div style="margin-bottom: 20px;">
     <h2 style="margin: 0 0 20px 0; color: #333; font-size: 20px;">Dashboard</h2>
     <div style="display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap;">
@@ -25,16 +28,20 @@
                     <?php foreach ($recentDocuments as $doc): ?>
                         <?php
                         $template = $templates[$doc['templateId']] ?? null;
-                        $templateName = $template ? ($template['code'] . ' — ' . $template['name']) : $doc['templateId'];
+                        $templateName = $template
+                            ? formatTemplateDisplayLabel($template, (string)($doc['templateId'] ?? ''))
+                            : (string)($doc['templateId'] ?? '');
                         ?>
                         <tr style="border-bottom: 1px solid #eee;">
                             <td style="padding: 8px 0;">
                                 <?php echo htmlspecialchars($templateName); ?>
                             </td>
                             <td style="padding: 8px 0;">
-                                <a href="?route=project&id=<?php echo htmlspecialchars($doc['project']['id']); ?>">
-                                    <?php echo htmlspecialchars($doc['project']['name']); ?>
-                                </a>
+                                <span class="dashboard-matter-link-wrap">
+                                    <a href="?route=project&id=<?php echo htmlspecialchars($doc['project']['id']); ?>">
+                                        <?php echo htmlspecialchars($doc['project']['name']); ?>
+                                    </a>
+                                </span>
                             </td>
                             <td style="padding: 8px 0;">
                                 <?php if (!empty($doc['signedPath'])): ?>

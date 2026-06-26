@@ -1,0 +1,4273 @@
+{
+    "templateId": "fl100_gc120",
+    "pdf": "t_fl100_gc120.pdf",
+    "positionsFile": "fl100_gc120_positions.json",
+    "generatedAt": "2025-11-19T03:55:55.347Z",
+    "summary": {
+        "fields": 216,
+        "avgScore": 0.663,
+        "fails": 86,
+        "warns": 16,
+        "pass": false
+    },
+    "results": [
+        {
+            "name": "FL_100_0_Page1_0_PartiesSignedVoluntaryPaternityDec_cb_0",
+            "page": 1,
+            "x": 25.08,
+            "y": 246.79,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.924,
+            "components": {
+                "label": 0.9423952183637896,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].PartiesSignedVoluntaryPaternityDec_cb[0]",
+            "canonicalName": "FL_100_0_Page1_0_PartiesSignedVoluntaryPaternityDec_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_Amended_cb_0",
+            "page": 1,
+            "x": 114.02,
+            "y": 80.27,
+            "width": 3.53,
+            "height": 3.53,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.738,
+            "components": {
+                "label": 0.5291779746753053,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "warn",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].FormTitle[0].Amended_cb[0]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_Amended_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_DissolutionOf_cb_0",
+            "page": 1,
+            "x": 16.72,
+            "y": 85.11,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.915,
+            "components": {
+                "label": 0.9211593308238267,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].FormTitle[0].DissolutionOf_cb[0]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_DissolutionOf_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_Marriage_cb_0",
+            "page": 1,
+            "x": 66.05,
+            "y": 85.08,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.752,
+            "components": {
+                "label": 0.561065930381099,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].FormTitle[0].Marriage_cb[0]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_Marriage_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_DomesticPartnership_cb_0",
+            "page": 1,
+            "x": 100.01,
+            "y": 85.18,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.717,
+            "components": {
+                "label": 0.4822733054511308,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "warn",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].FormTitle[0].DomesticPartnership_cb[0]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_DomesticPartnership_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_NullityOf_cb_0",
+            "page": 1,
+            "x": 16.72,
+            "y": 93.74,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.878,
+            "components": {
+                "label": 0.8407191856736489,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].FormTitle[0].NullityOf_cb[0]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_NullityOf_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_Marriage_cb_1",
+            "page": 1,
+            "x": 66.05,
+            "y": 93.79,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.726,
+            "components": {
+                "label": 0.5022427489611819,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "warn",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].FormTitle[0].Marriage_cb[1]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_Marriage_cb_1"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_DomesticPartnership_cb_1",
+            "page": 1,
+            "x": 100.01,
+            "y": 93.79,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.712,
+            "components": {
+                "label": 0.47187629825357863,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "warn",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].FormTitle[0].DomesticPartnership_cb[1]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_DomesticPartnership_cb_1"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_LegalSeparationOf_cb_0",
+            "page": 1,
+            "x": 16.72,
+            "y": 89.36,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.897,
+            "components": {
+                "label": 0.8817337887908178,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].FormTitle[0].LegalSeparationOf_cb[0]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_LegalSeparationOf_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_Marriage_cb_2",
+            "page": 1,
+            "x": 66.05,
+            "y": 89.3,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.733,
+            "components": {
+                "label": 0.5170164571097603,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "warn",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].FormTitle[0].Marriage_cb[2]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_Marriage_cb_2"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_DomesticPartnership_cb_2",
+            "page": 1,
+            "x": 100.01,
+            "y": 89.3,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.716,
+            "components": {
+                "label": 0.478898116293329,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "warn",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].FormTitle[0].DomesticPartnership_cb[2]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_FormTitle_0_DomesticPartnership_cb_2"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_AttyFor_ft_0",
+            "page": 1,
+            "x": 38.14,
+            "y": 45.09,
+            "width": 101.04,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.878,
+            "components": {
+                "label": 0.8390259125281689,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].AttyInfo[0].AttyFor_ft[0]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_AttyFor_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_Email_ft_0",
+            "page": 1,
+            "x": 32.15,
+            "y": 41.07,
+            "width": 107.03,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.881,
+            "components": {
+                "label": 0.846570190588457,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].AttyInfo[0].Email_ft[0]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_Email_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_Fax_ft_0",
+            "page": 1,
+            "x": 93.87,
+            "y": 36.78,
+            "width": 45.31,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.867,
+            "components": {
+                "label": 0.8146881035262362,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].AttyInfo[0].Fax_ft[0]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_Fax_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_Phone_ft_0",
+            "page": 1,
+            "x": 31.44,
+            "y": 36.78,
+            "width": 45.24,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.87,
+            "components": {
+                "label": 0.8211714048980651,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].AttyInfo[0].Phone_ft[0]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_Phone_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_AttyZip_ft_0",
+            "page": 1,
+            "x": 115.36,
+            "y": 32.75,
+            "width": 23.82,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.812,
+            "components": {
+                "label": 0.6925414710509606,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].AttyInfo[0].AttyZip_ft[0]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_AttyZip_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_AttyState_ft_0",
+            "page": 1,
+            "x": 93.41,
+            "y": 32.75,
+            "width": 10.38,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.883,
+            "components": {
+                "label": 0.8508371903975,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].AttyInfo[0].AttyState_ft[0]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_AttyState_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_AttyCity_ft_0",
+            "page": 1,
+            "x": 19.09,
+            "y": 32.75,
+            "width": 65.9,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.925,
+            "components": {
+                "label": 0.9439199207554477,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].AttyInfo[0].AttyCity_ft[0]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_AttyCity_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_AttyStreet_ft_0",
+            "page": 1,
+            "x": 33.2,
+            "y": 28.71,
+            "width": 105.98,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.866,
+            "components": {
+                "label": 0.8126178244661622,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].AttyInfo[0].AttyStreet_ft[0]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_AttyStreet_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_AttyFirm_ft_0",
+            "page": 1,
+            "x": 25.79,
+            "y": 24.77,
+            "width": 113.39,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.897,
+            "components": {
+                "label": 0.8819529559896979,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].AttyInfo[0].AttyFirm_ft[0]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_AttyFirm_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_AttyName_ft_0",
+            "page": 1,
+            "x": 20.5,
+            "y": 20.65,
+            "width": 118.56,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.877,
+            "components": {
+                "label": 0.8371556769976406,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].AttyInfo[0].AttyName_ft[0]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_AttyName_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_BarNo_ft_0",
+            "page": 1,
+            "x": 108.88,
+            "y": 16.64,
+            "width": 30.04,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.817,
+            "components": {
+                "label": 0.7040498059527838,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].AttyInfo[0].BarNo_ft[0]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_AttyInfo_0_BarNo_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_CourtInfo_0_CrtCounty_ft_0",
+            "page": 1,
+            "x": 81.28,
+            "y": 50.62,
+            "width": 56.84,
+            "height": 3.53,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.737,
+            "components": {
+                "label": 0.5268778776480114,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "warn",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].CourtInfo[0].CrtCounty_ft[0]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_CourtInfo_0_CrtCounty_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_CourtInfo_0_Branch_ft_0",
+            "page": 1,
+            "x": 39.32,
+            "y": 65.02,
+            "width": 98.79,
+            "height": 3.53,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.867,
+            "components": {
+                "label": 0.8162673267681506,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].CourtInfo[0].Branch_ft[0]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_CourtInfo_0_Branch_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_CourtInfo_0_CityZip_ft_0",
+            "page": 1,
+            "x": 39.35,
+            "y": 61.42,
+            "width": 98.76,
+            "height": 3.53,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.881,
+            "components": {
+                "label": 0.8464894403764271,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].CourtInfo[0].CityZip_ft[0]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_CourtInfo_0_CityZip_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_CourtInfo_0_Street_ft_0",
+            "page": 1,
+            "x": 39.36,
+            "y": 54.22,
+            "width": 98.76,
+            "height": 3.53,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.905,
+            "components": {
+                "label": 0.8997405111460084,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].CourtInfo[0].Street_ft[0]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_CourtInfo_0_Street_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_CourtInfo_0_MailingAdd_ft_0",
+            "page": 1,
+            "x": 39.28,
+            "y": 57.82,
+            "width": 98.83,
+            "height": 3.53,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.894,
+            "components": {
+                "label": 0.8753222947697066,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].CourtInfo[0].MailingAdd_ft[0]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_CourtInfo_0_MailingAdd_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_TitlePartyName_0_Party2_ft_0",
+            "page": 1,
+            "x": 35.16,
+            "y": 74.59,
+            "width": 103.63,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.89,
+            "components": {
+                "label": 0.8672631903397512,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].TitlePartyName[0].Party2_ft[0]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_TitlePartyName_0_Party2_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_TitlePartyName_0_Party1_ft_0",
+            "page": 1,
+            "x": 35.16,
+            "y": 71.07,
+            "width": 103.63,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.896,
+            "components": {
+                "label": 0.8808198134261715,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].TitlePartyName[0].Party1_ft[0]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_TitlePartyName_0_Party1_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CaptionP1_sf_0_CaseNumber_0_CaseNumber_ft_0",
+            "page": 1,
+            "x": 141.97,
+            "y": 84.52,
+            "width": 53.23,
+            "height": 4.09,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.942,
+            "components": {
+                "label": 0.9824296408999886,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].CaptionP1_sf[0].CaseNumber[0].CaseNumber_ft[0]",
+            "canonicalName": "FL_100_0_Page1_0_CaptionP1_sf_0_CaseNumber_0_CaseNumber_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CheckBox61_1",
+            "page": 1,
+            "x": 25.08,
+            "y": 104.07,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page1[0].CheckBox61[1]",
+            "canonicalName": "FL_100_0_Page1_0_CheckBox61_1"
+        },
+        {
+            "name": "FL_100_0_Page1_0_CheckBox61_0",
+            "page": 1,
+            "x": 25.08,
+            "y": 110.64,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.765,
+            "components": {
+                "label": 0.5896747332633646,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].CheckBox61[0]",
+            "canonicalName": "FL_100_0_Page1_0_CheckBox61_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_DPNOTEstablishedinCA_cb_0",
+            "page": 1,
+            "x": 25.08,
+            "y": 115.17,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.778,
+            "components": {
+                "label": 0.6179802395240754,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].DPNOTEstablishedinCA_cb[0]",
+            "canonicalName": "FL_100_0_Page1_0_DPNOTEstablishedinCA_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_RespondentMeetsResidencyReqs_cb_0",
+            "page": 1,
+            "x": 48.54,
+            "y": 126.08,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.84,
+            "components": {
+                "label": 0.7558355329472332,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].RespondentMeetsResidencyReqs_cb[0]",
+            "canonicalName": "FL_100_0_Page1_0_RespondentMeetsResidencyReqs_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_PetitionerMeetsResidencyReqs_cb_0",
+            "page": 1,
+            "x": 25.08,
+            "y": 126.08,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.802,
+            "components": {
+                "label": 0.6713659339672264,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].PetitionerMeetsResidencyReqs_cb[0]",
+            "canonicalName": "FL_100_0_Page1_0_PetitionerMeetsResidencyReqs_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_DateOfMarriage_dt_0",
+            "page": 1,
+            "x": 75.52,
+            "y": 164.49,
+            "width": 33.04,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.762,
+            "components": {
+                "label": 0.5824727474178024,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].DateOfMarriage_dt[0]",
+            "canonicalName": "FL_100_0_Page1_0_DateOfMarriage_dt_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_DateOfSeparation_dt_0",
+            "page": 1,
+            "x": 157.67,
+            "y": 164.49,
+            "width": 44.24,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.768,
+            "components": {
+                "label": 0.5946651620007681,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].DateOfSeparation_dt[0]",
+            "canonicalName": "FL_100_0_Page1_0_DateOfSeparation_dt_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_MonthsSeparated_tf_0",
+            "page": 1,
+            "x": 120.71,
+            "y": 168.91,
+            "width": 12.25,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.931,
+            "components": {
+                "label": 0.9570857712364078,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].MonthsSeparated_tf[0]",
+            "canonicalName": "FL_100_0_Page1_0_MonthsSeparated_tf_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_DatePartnersSeparated_dt_0",
+            "page": 1,
+            "x": 157.16,
+            "y": 177.51,
+            "width": 45.83,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.772,
+            "components": {
+                "label": 0.6039954968269536,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].DatePartnersSeparated_dt[0]",
+            "canonicalName": "FL_100_0_Page1_0_DatePartnersSeparated_dt_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_DateTimeField1_0",
+            "page": 1,
+            "x": 37.43,
+            "y": 177.51,
+            "width": 71.65,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.859,
+            "components": {
+                "label": 0.7972377699916797,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].DateTimeField1[0]",
+            "canonicalName": "FL_100_0_Page1_0_DateTimeField1_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_ThereAreNoMinorChildren_cb_0",
+            "page": 1,
+            "x": 25.08,
+            "y": 193.23,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.806,
+            "components": {
+                "label": 0.6789932258098665,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].ThereAreNoMinorChildren_cb[0]",
+            "canonicalName": "FL_100_0_Page1_0_ThereAreNoMinorChildren_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_MinorChildren_sf_0_MinorChildrenList_cb_0",
+            "page": 1,
+            "x": 25.08,
+            "y": 197.5,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.796,
+            "components": {
+                "label": 0.6577606141733064,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].MinorChildren_sf[0].MinorChildrenList_cb[0]",
+            "canonicalName": "FL_100_0_Page1_0_MinorChildren_sf_0_MinorChildrenList_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_MinorChildren_sf_0_Child1Name_tf_0",
+            "page": 1,
+            "x": 32.11,
+            "y": 205.52,
+            "width": 76.24,
+            "height": 4.26,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.856,
+            "components": {
+                "label": 0.7906899543023677,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].MinorChildren_sf[0].Child1Name_tf[0]",
+            "canonicalName": "FL_100_0_Page1_0_MinorChildren_sf_0_Child1Name_tf_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_MinorChildren_sf_0_Child4Name_tf_0",
+            "page": 1,
+            "x": 32.11,
+            "y": 220.62,
+            "width": 76.24,
+            "height": 4.26,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.76,
+            "components": {
+                "label": 0.7122106320197026,
+                "bounds": 1,
+                "overlap": 0.6,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].MinorChildren_sf[0].Child4Name_tf[0]",
+            "canonicalName": "FL_100_0_Page1_0_MinorChildren_sf_0_Child4Name_tf_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_MinorChildren_sf_0_Child3Name_tf_0",
+            "page": 1,
+            "x": 32.11,
+            "y": 215.41,
+            "width": 76.24,
+            "height": 4.26,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.717,
+            "components": {
+                "label": 0.7159837400544311,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 0.5
+            },
+            "verdict": "warn",
+            "rawName": "FL-100[0].Page1[0].MinorChildren_sf[0].Child3Name_tf[0]",
+            "canonicalName": "FL_100_0_Page1_0_MinorChildren_sf_0_Child3Name_tf_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_MinorChildren_sf_0_Child2Name_tf_0",
+            "page": 1,
+            "x": 32.11,
+            "y": 210.47,
+            "width": 76.24,
+            "height": 4.26,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.734,
+            "components": {
+                "label": 0.7533202040322373,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 0.5
+            },
+            "verdict": "warn",
+            "rawName": "FL-100[0].Page1[0].MinorChildren_sf[0].Child2Name_tf[0]",
+            "canonicalName": "FL_100_0_Page1_0_MinorChildren_sf_0_Child2Name_tf_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_MinorChildren_sf_0_Child1Age_tf_0",
+            "page": 1,
+            "x": 143.07,
+            "y": 205.52,
+            "width": 17.78,
+            "height": 4.26,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.853,
+            "components": {
+                "label": 0.7835010992845427,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].MinorChildren_sf[0].Child1Age_tf[0]",
+            "canonicalName": "FL_100_0_Page1_0_MinorChildren_sf_0_Child1Age_tf_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_MinorChildren_sf_0_Child4Age_tf_0",
+            "page": 1,
+            "x": 143.07,
+            "y": 220.62,
+            "width": 17.78,
+            "height": 4.26,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.832,
+            "components": {
+                "label": 0.7374199804480004,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].MinorChildren_sf[0].Child4Age_tf[0]",
+            "canonicalName": "FL_100_0_Page1_0_MinorChildren_sf_0_Child4Age_tf_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_MinorChildren_sf_0_Child3Age_tf_0",
+            "page": 1,
+            "x": 143.07,
+            "y": 215.41,
+            "width": 17.78,
+            "height": 4.26,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.843,
+            "components": {
+                "label": 0.7618176735048898,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].MinorChildren_sf[0].Child3Age_tf[0]",
+            "canonicalName": "FL_100_0_Page1_0_MinorChildren_sf_0_Child3Age_tf_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_MinorChildren_sf_0_Child2Age_tf_0",
+            "page": 1,
+            "x": 143.07,
+            "y": 210.47,
+            "width": 17.78,
+            "height": 4.26,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.85,
+            "components": {
+                "label": 0.777237534067998,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].MinorChildren_sf[0].Child2Age_tf[0]",
+            "canonicalName": "FL_100_0_Page1_0_MinorChildren_sf_0_Child2Age_tf_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_MinorChildren_sf_0_Child1Birthdate_dt_0",
+            "page": 1,
+            "x": 111.84,
+            "y": 205.52,
+            "width": 29.54,
+            "height": 4.26,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.832,
+            "components": {
+                "label": 0.7368784560332826,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].MinorChildren_sf[0].Child1Birthdate_dt[0]",
+            "canonicalName": "FL_100_0_Page1_0_MinorChildren_sf_0_Child1Birthdate_dt_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_MinorChildren_sf_0_Child4Birthdate_dt_0",
+            "page": 1,
+            "x": 111.99,
+            "y": 220.62,
+            "width": 29.11,
+            "height": 4.26,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.8,
+            "components": {
+                "label": 0.665940883414646,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].MinorChildren_sf[0].Child4Birthdate_dt[0]",
+            "canonicalName": "FL_100_0_Page1_0_MinorChildren_sf_0_Child4Birthdate_dt_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_MinorChildren_sf_0_Child3Date_dt_0",
+            "page": 1,
+            "x": 111.99,
+            "y": 215.41,
+            "width": 29.11,
+            "height": 4.26,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.815,
+            "components": {
+                "label": 0.6992394854562056,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].MinorChildren_sf[0].Child3Date_dt[0]",
+            "canonicalName": "FL_100_0_Page1_0_MinorChildren_sf_0_Child3Date_dt_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_MinorChildren_sf_0_Child2Birthdate_dt_0",
+            "page": 1,
+            "x": 111.99,
+            "y": 210.47,
+            "width": 29.11,
+            "height": 4.26,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.826,
+            "components": {
+                "label": 0.7251417976561063,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].MinorChildren_sf[0].Child2Birthdate_dt[0]",
+            "canonicalName": "FL_100_0_Page1_0_MinorChildren_sf_0_Child2Birthdate_dt_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_MinorChildren_sf_0_UnbornChild_cb_0",
+            "page": 1,
+            "x": 121.11,
+            "y": 226.38,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page1[0].MinorChildren_sf[0].UnbornChild_cb[0]",
+            "canonicalName": "FL_100_0_Page1_0_MinorChildren_sf_0_UnbornChild_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_MinorChildren_sf_0_Attachment4b_0",
+            "page": 1,
+            "x": 38.62,
+            "y": 226.37,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.824,
+            "components": {
+                "label": 0.721074436011194,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].MinorChildren_sf[0].Attachment4b[0]",
+            "canonicalName": "FL_100_0_Page1_0_MinorChildren_sf_0_Attachment4b_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_DPNOTEstablishedinCA_cb_1",
+            "page": 1,
+            "x": 25.08,
+            "y": 137.97,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.821,
+            "components": {
+                "label": 0.7128860639451047,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].DPNOTEstablishedinCA_cb[1]",
+            "canonicalName": "FL_100_0_Page1_0_DPNOTEstablishedinCA_cb_1"
+        },
+        {
+            "name": "FL_100_0_Page1_0_SameSexMarriedInCA_cb_0",
+            "page": 1,
+            "x": 25.08,
+            "y": 145.93,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.797,
+            "components": {
+                "label": 0.659491036950321,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].SameSexMarriedInCA_cb[0]",
+            "canonicalName": "FL_100_0_Page1_0_SameSexMarriedInCA_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_RespondentsResidence_tf_0",
+            "page": 1,
+            "x": 158.29,
+            "y": 154.23,
+            "width": 44.66,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.741,
+            "components": {
+                "label": 0.5352928812272802,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "warn",
+            "rawName": "FL-100[0].Page1[0].RespondentsResidence_tf[0]",
+            "canonicalName": "FL_100_0_Page1_0_RespondentsResidence_tf_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_PetitionersResidence_tf_0",
+            "page": 1,
+            "x": 70.12,
+            "y": 154.23,
+            "width": 44.56,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.771,
+            "components": {
+                "label": 0.6015780240176287,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].PetitionersResidence_tf[0]",
+            "canonicalName": "FL_100_0_Page1_0_PetitionersResidence_tf_0"
+        },
+        {
+            "name": "FL_100_0_Page1_0_MonthsSeparated_tf_1",
+            "page": 1,
+            "x": 145.6,
+            "y": 168.91,
+            "width": 10.1,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.826,
+            "components": {
+                "label": 0.7252781513871728,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].MonthsSeparated_tf[1]",
+            "canonicalName": "FL_100_0_Page1_0_MonthsSeparated_tf_1"
+        },
+        {
+            "name": "FL_100_0_Page1_0_MonthsSeparated_tf_2",
+            "page": 1,
+            "x": 179.01,
+            "y": 181.4,
+            "width": 10.1,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.685,
+            "components": {
+                "label": 0.4100285677120118,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "warn",
+            "rawName": "FL-100[0].Page1[0].MonthsSeparated_tf[2]",
+            "canonicalName": "FL_100_0_Page1_0_MonthsSeparated_tf_2"
+        },
+        {
+            "name": "FL_100_0_Page1_0_MonthsSeparated_tf_3",
+            "page": 1,
+            "x": 158.28,
+            "y": 181.4,
+            "width": 10.16,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.773,
+            "components": {
+                "label": 0.6058315119437294,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page1[0].MonthsSeparated_tf[3]",
+            "canonicalName": "FL_100_0_Page1_0_MonthsSeparated_tf_3"
+        },
+        {
+            "name": "FL_100_0_Page1_0_Button1_0",
+            "page": 1,
+            "x": 77.59,
+            "y": 242.26,
+            "width": 10.06,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.726,
+            "components": {
+                "label": 0.5033315733940741,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "warn",
+            "rawName": "FL-100[0].Page1[0].Button1[0]",
+            "canonicalName": "FL_100_0_Page1_0_Button1_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_Nullity_cb_0",
+            "page": 2,
+            "x": 25.08,
+            "y": 53.12,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.851,
+            "components": {
+                "label": 0.7790474152742936,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].Nullity_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_Nullity_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_BasedOnIncest_cb_0",
+            "page": 2,
+            "x": 40.88,
+            "y": 58.05,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.778,
+            "components": {
+                "label": 0.6184495626751029,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].BasedOnIncest_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_BasedOnIncest_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_BasedOnBigamy_cb_0",
+            "page": 2,
+            "x": 74.89,
+            "y": 58.05,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.791,
+            "components": {
+                "label": 0.6466000289786478,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].BasedOnBigamy_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_BasedOnBigamy_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_NoSeparateProperty_cb_0",
+            "page": 2,
+            "x": 25.09,
+            "y": 63.49,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.75,
+            "components": {
+                "label": 0.555052621021151,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].NoSeparateProperty_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_NoSeparateProperty_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_BasedonAge_cb_0",
+            "page": 2,
+            "x": 40.88,
+            "y": 68.6,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.801,
+            "components": {
+                "label": 0.6679513041875996,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].BasedonAge_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_BasedonAge_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_PriorExistingMarriageOrDP_cb_0",
+            "page": 2,
+            "x": 40.88,
+            "y": 77.09,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.828,
+            "components": {
+                "label": 0.7290985228405064,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].PriorExistingMarriageOrDP_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_PriorExistingMarriageOrDP_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_BasedOnUnsoundMind_cb_0",
+            "page": 2,
+            "x": 40.88,
+            "y": 81.9,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.816,
+            "components": {
+                "label": 0.7018388950401939,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].BasedOnUnsoundMind_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_BasedOnUnsoundMind_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_BasedonFraud_cb_0",
+            "page": 2,
+            "x": 135.4,
+            "y": 68.6,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page2[0].BasedonFraud_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_BasedonFraud_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_BasedOnForce_cb_0",
+            "page": 2,
+            "x": 135.43,
+            "y": 75.25,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.839,
+            "components": {
+                "label": 0.7522617287594412,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].BasedOnForce_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_BasedOnForce_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_BasedonPhysicalIncapacity_cb_0",
+            "page": 2,
+            "x": 135.4,
+            "y": 81.9,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.816,
+            "components": {
+                "label": 0.7027089923884358,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].BasedonPhysicalIncapacity_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_BasedonPhysicalIncapacity_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_SepTypeDef_cb_0",
+            "page": 2,
+            "x": 61.41,
+            "y": 43.23,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.739,
+            "components": {
+                "label": 0.5302475950941963,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "warn",
+            "rawName": "FL-100[0].Page2[0].SepTypeDef_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_SepTypeDef_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_SepTypeDef_cb_1",
+            "page": 2,
+            "x": 25.08,
+            "y": 43.1,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.883,
+            "components": {
+                "label": 0.8507022953846446,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].SepTypeDef_cb[1]",
+            "canonicalName": "FL_100_0_Page2_0_SepTypeDef_cb_1"
+        },
+        {
+            "name": "FL_100_0_Page2_0_SepBasis_cb_0",
+            "page": 2,
+            "x": 40.88,
+            "y": 47.78,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.815,
+            "components": {
+                "label": 0.7005590417817082,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].SepBasis_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_SepBasis_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_SepBasis_cb_1",
+            "page": 2,
+            "x": 108.17,
+            "y": 47.78,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page2[0].SepBasis_cb[1]",
+            "canonicalName": "FL_100_0_Page2_0_SepBasis_cb_1"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ToPetitioner_cb_0",
+            "page": 2,
+            "x": 120.56,
+            "y": 97.33,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.918,
+            "components": {
+                "label": 0.9299088403073094,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].ToPetitioner_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_ToPetitioner_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_EndJurixReRespondent_cb_0",
+            "page": 2,
+            "x": 143.43,
+            "y": 97.67,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.91,
+            "components": {
+                "label": 0.9104407053062411,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].EndJurixReRespondent_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_EndJurixReRespondent_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ToBothJointly_cb_0",
+            "page": 2,
+            "x": 161.9,
+            "y": 97.33,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.836,
+            "components": {
+                "label": 0.7457534228096199,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].ToBothJointly_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_ToBothJointly_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ToOther_cb_0",
+            "page": 2,
+            "x": 175.86,
+            "y": 97.33,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.777,
+            "components": {
+                "label": 0.6151895009127074,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].ToOther_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_ToOther_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ToPetitioner_cb_1",
+            "page": 2,
+            "x": 120.56,
+            "y": 103.32,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.898,
+            "components": {
+                "label": 0.8853234026935408,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].ToPetitioner_cb[1]",
+            "canonicalName": "FL_100_0_Page2_0_ToPetitioner_cb_1"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ToRespondent_cb_1",
+            "page": 2,
+            "x": 142.99,
+            "y": 103.32,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.894,
+            "components": {
+                "label": 0.8761061529125896,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].ToRespondent_cb[1]",
+            "canonicalName": "FL_100_0_Page2_0_ToRespondent_cb_1"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ToBothJointly_cb_1",
+            "page": 2,
+            "x": 161.9,
+            "y": 103.32,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.829,
+            "components": {
+                "label": 0.7300383854772212,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].ToBothJointly_cb[1]",
+            "canonicalName": "FL_100_0_Page2_0_ToBothJointly_cb_1"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ToOther_cb_1",
+            "page": 2,
+            "x": 175.86,
+            "y": 103.32,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.772,
+            "components": {
+                "label": 0.6046304620857434,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].ToOther_cb[1]",
+            "canonicalName": "FL_100_0_Page2_0_ToOther_cb_1"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ForPetitioner_cb_0",
+            "page": 2,
+            "x": 120.56,
+            "y": 108.57,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.878,
+            "components": {
+                "label": 0.8398769854319909,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].ForPetitioner_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_ForPetitioner_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ForOther_cb_0",
+            "page": 2,
+            "x": 175.86,
+            "y": 108.57,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.765,
+            "components": {
+                "label": 0.5891402558839673,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].ForOther_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_ForOther_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ForRespondent_cb_0",
+            "page": 2,
+            "x": 142.99,
+            "y": 108.57,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.875,
+            "components": {
+                "label": 0.8331517360873129,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].ForRespondent_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_ForRespondent_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_FormFL_311_cb_0",
+            "page": 2,
+            "x": 54.27,
+            "y": 114.82,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.769,
+            "components": {
+                "label": 0.5974059813842817,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].FormFL-311_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_FormFL_311_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_FormFL_312_cb_0",
+            "page": 2,
+            "x": 91.31,
+            "y": 114.82,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.637,
+            "components": {
+                "label": 0.303621985235846,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "warn",
+            "rawName": "FL-100[0].Page2[0].FormFL-312_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_FormFL_312_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_FormFL_341C_cb_0",
+            "page": 2,
+            "x": 131.89,
+            "y": 114.82,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page2[0].FormFL-341C_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_FormFL_341C_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_FormFL_341D_cb_0",
+            "page": 2,
+            "x": 54.27,
+            "y": 120.43,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.778,
+            "components": {
+                "label": 0.6183065861538987,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].FormFL-341D_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_FormFL_341D_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_FormFL_341E_0",
+            "page": 2,
+            "x": 91.31,
+            "y": 120.43,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.641,
+            "components": {
+                "label": 0.31394985214890125,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "warn",
+            "rawName": "FL-100[0].Page2[0].FormFL-341E[0]",
+            "canonicalName": "FL_100_0_Page2_0_FormFL_341E_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_Attachment6e1_0",
+            "page": 2,
+            "x": 131.9,
+            "y": 120.43,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page2[0].Attachment6e1[0]",
+            "canonicalName": "FL_100_0_Page2_0_Attachment6e1_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ChildSupport_ft_0",
+            "page": 2,
+            "x": 31.4,
+            "y": 152.39,
+            "width": 171.4,
+            "height": 10.8,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.86,
+            "components": {
+                "label": 0.7992926153661349,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].ChildSupport_ft[0]",
+            "canonicalName": "FL_100_0_Page2_0_ChildSupport_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_OtherChildSupport_cb_0",
+            "page": 2,
+            "x": 25.1,
+            "y": 152.39,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.866,
+            "components": {
+                "label": 0.8131030610338014,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].OtherChildSupport_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_OtherChildSupport_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_EndJurixRePetitioner_cb_0",
+            "page": 2,
+            "x": 113.86,
+            "y": 178,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.938,
+            "components": {
+                "label": 0.974029840733772,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].EndJurixRePetitioner_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_EndJurixRePetitioner_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_EndJurixReSupport_0",
+            "page": 2,
+            "x": 25.1,
+            "y": 178,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page2[0].EndJurixReSupport[0]",
+            "canonicalName": "FL_100_0_Page2_0_EndJurixReSupport_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_PaySupporttoPetitioner_cb_0",
+            "page": 2,
+            "x": 105.45,
+            "y": 173.26,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.802,
+            "components": {
+                "label": 0.6706403301805113,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].PaySupporttoPetitioner_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_PaySupporttoPetitioner_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_PaySupportoRespondent_cb_0",
+            "page": 2,
+            "x": 135.48,
+            "y": 173.26,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.782,
+            "components": {
+                "label": 0.7598098026258454,
+                "bounds": 1,
+                "overlap": 0.6,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].PaySupportoRespondent_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_PaySupportoRespondent_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_PaySupport_cb_0",
+            "page": 2,
+            "x": 25.1,
+            "y": 173.26,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.44,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 0.6,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page2[0].PaySupport_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_PaySupport_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_PartiesSignedVoluntaryPaternityDec_cb_0",
+            "page": 2,
+            "x": 25.1,
+            "y": 183.39,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page2[0].PartiesSignedVoluntaryPaternityDec_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_PartiesSignedVoluntaryPaternityDec_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ReserveJurixSupportResp_cb_0",
+            "page": 2,
+            "x": 158.27,
+            "y": 183.49,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.917,
+            "components": {
+                "label": 0.9272984727975083,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].ReserveJurixSupportResp_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_ReserveJurixSupportResp_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ReserveJurixSupportPet_cb_0",
+            "page": 2,
+            "x": 128.76,
+            "y": 183.49,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.913,
+            "components": {
+                "label": 0.9185384979892152,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].ReserveJurixSupportPet_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_ReserveJurixSupportPet_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_OtherSupport_ft_0",
+            "page": 2,
+            "x": 31.18,
+            "y": 189.1,
+            "width": 171.21,
+            "height": 17.22,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.52,
+            "components": {
+                "label": 0.17888779983521852,
+                "bounds": 1,
+                "overlap": 0.6,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page2[0].OtherSupport_ft[0]",
+            "canonicalName": "FL_100_0_Page2_0_OtherSupport_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_Other_cb_0",
+            "page": 2,
+            "x": 25.1,
+            "y": 189.16,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page2[0].Other_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_Other_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_Button1_0",
+            "page": 2,
+            "x": 180.88,
+            "y": 219.13,
+            "width": 22.11,
+            "height": 3.22,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page2[0].ConfirmSeparateProperty_sf[0].Button1[0]",
+            "canonicalName": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_Button1_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_WhereSPListed_cb_0",
+            "page": 2,
+            "x": 174.38,
+            "y": 218.97,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page2[0].ConfirmSeparateProperty_sf[0].WhereSPListed_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_WhereSPListed_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_ConfirmSeparateProperty_cb_0",
+            "page": 2,
+            "x": 25.1,
+            "y": 218.9,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page2[0].ConfirmSeparateProperty_sf[0].ConfirmSeparateProperty_cb[0]",
+            "canonicalName": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_ConfirmSeparateProperty_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_WhereSPListed_cb_1",
+            "page": 2,
+            "x": 112.41,
+            "y": 218.9,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page2[0].ConfirmSeparateProperty_sf[0].WhereSPListed_cb[1]",
+            "canonicalName": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_WhereSPListed_cb_1"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_WhereSPListed_cb_2",
+            "page": 2,
+            "x": 34.23,
+            "y": 224.65,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page2[0].ConfirmSeparateProperty_sf[0].WhereSPListed_cb[2]",
+            "canonicalName": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_WhereSPListed_cb_2"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_SeparatePropertyList1_tf_0",
+            "page": 2,
+            "x": 32.51,
+            "y": 228.75,
+            "width": 140.6,
+            "height": 4.25,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page2[0].ConfirmSeparateProperty_sf[0].SeparatePropertyList1_tf[0]",
+            "canonicalName": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_SeparatePropertyList1_tf_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_SeparatePropertyList3_tf_0",
+            "page": 2,
+            "x": 32.51,
+            "y": 238.63,
+            "width": 140.6,
+            "height": 4.25,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page2[0].ConfirmSeparateProperty_sf[0].SeparatePropertyList3_tf[0]",
+            "canonicalName": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_SeparatePropertyList3_tf_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_SeparatePropertyList2_tf_0",
+            "page": 2,
+            "x": 32.51,
+            "y": 233.69,
+            "width": 140.6,
+            "height": 4.25,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page2[0].ConfirmSeparateProperty_sf[0].SeparatePropertyList2_tf[0]",
+            "canonicalName": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_SeparatePropertyList2_tf_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_ConfirmPropertyList1To_tf_0",
+            "page": 2,
+            "x": 175.25,
+            "y": 228.75,
+            "width": 27.17,
+            "height": 4.25,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page2[0].ConfirmSeparateProperty_sf[0].ConfirmPropertyList1To_tf[0]",
+            "canonicalName": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_ConfirmPropertyList1To_tf_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_ConfirmPropertyList3To_tf_0",
+            "page": 2,
+            "x": 175.25,
+            "y": 238.63,
+            "width": 27.17,
+            "height": 4.25,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page2[0].ConfirmSeparateProperty_sf[0].ConfirmPropertyList3To_tf[0]",
+            "canonicalName": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_ConfirmPropertyList3To_tf_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_SeparatePropertyList4_tf_0",
+            "page": 2,
+            "x": 32.51,
+            "y": 243.61,
+            "width": 140.6,
+            "height": 4.25,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page2[0].ConfirmSeparateProperty_sf[0].SeparatePropertyList4_tf[0]",
+            "canonicalName": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_SeparatePropertyList4_tf_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_ConfirmPropertyList4To_tf_0",
+            "page": 2,
+            "x": 175.25,
+            "y": 243.61,
+            "width": 27.17,
+            "height": 4.25,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page2[0].ConfirmSeparateProperty_sf[0].ConfirmPropertyList4To_tf[0]",
+            "canonicalName": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_ConfirmPropertyList4To_tf_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_SeparatePropertyList4_tf_1",
+            "page": 2,
+            "x": 32.51,
+            "y": 248.53,
+            "width": 140.6,
+            "height": 4.25,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page2[0].ConfirmSeparateProperty_sf[0].SeparatePropertyList4_tf[1]",
+            "canonicalName": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_SeparatePropertyList4_tf_1"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_ConfirmPropertyList4To_tf_1",
+            "page": 2,
+            "x": 175.25,
+            "y": 248.53,
+            "width": 27.17,
+            "height": 4.25,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page2[0].ConfirmSeparateProperty_sf[0].ConfirmPropertyList4To_tf[1]",
+            "canonicalName": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_ConfirmPropertyList4To_tf_1"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_ConfirmPropertyList2To_tf_0",
+            "page": 2,
+            "x": 175.25,
+            "y": 233.69,
+            "width": 27.17,
+            "height": 4.25,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page2[0].ConfirmSeparateProperty_sf[0].ConfirmPropertyList2To_tf[0]",
+            "canonicalName": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_ConfirmPropertyList2To_tf_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_Button1_1",
+            "page": 2,
+            "x": 157.77,
+            "y": 219.22,
+            "width": 10.06,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page2[0].ConfirmSeparateProperty_sf[0].Button1[1]",
+            "canonicalName": "FL_100_0_Page2_0_ConfirmSeparateProperty_sf_0_Button1_1"
+        },
+        {
+            "name": "FL_100_0_Page2_0_CaseNumber_0_CaseNumber_ft_0",
+            "page": 2,
+            "x": 140.76,
+            "y": 20.75,
+            "width": 60.96,
+            "height": 4.09,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.854,
+            "components": {
+                "label": 0.7859417050323243,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].CaseNumber[0].CaseNumber_ft[0]",
+            "canonicalName": "FL_100_0_Page2_0_CaseNumber_0_CaseNumber_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_Parties_0_Party2_ft_0",
+            "page": 2,
+            "x": 35.4,
+            "y": 21.83,
+            "width": 103.63,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.875,
+            "components": {
+                "label": 0.8322704897728352,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].Parties[0].Party2_ft[0]",
+            "canonicalName": "FL_100_0_Page2_0_Parties_0_Party2_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page2_0_Parties_0_Party1_ft_0",
+            "page": 2,
+            "x": 35.4,
+            "y": 18.31,
+            "width": 103.63,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.837,
+            "components": {
+                "label": 0.7479512026057891,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page2[0].Parties[0].Party1_ft[0]",
+            "canonicalName": "FL_100_0_Page2_0_Parties_0_Party1_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page3_0_CaseNumber_0_CaseNumber_ft_0",
+            "page": 3,
+            "x": 140.76,
+            "y": 21.07,
+            "width": 60.96,
+            "height": 4.09,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.854,
+            "components": {
+                "label": 0.7859868089180171,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page3[0].CaseNumber[0].CaseNumber_ft[0]",
+            "canonicalName": "FL_100_0_Page3_0_CaseNumber_0_CaseNumber_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page3_0_Parties_0_Party2_ft_0",
+            "page": 3,
+            "x": 35.23,
+            "y": 22.27,
+            "width": 103.63,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.875,
+            "components": {
+                "label": 0.8322480230176212,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page3[0].Parties[0].Party2_ft[0]",
+            "canonicalName": "FL_100_0_Page3_0_Parties_0_Party2_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page3_0_Parties_0_Party1_ft_0",
+            "page": 3,
+            "x": 35.23,
+            "y": 18.75,
+            "width": 103.63,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.837,
+            "components": {
+                "label": 0.7479371768780294,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page3[0].Parties[0].Party1_ft[0]",
+            "canonicalName": "FL_100_0_Page3_0_Parties_0_Party1_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page3_0_SigDate_0",
+            "page": 3,
+            "x": 22.55,
+            "y": 166.77,
+            "width": 55.91,
+            "height": 3.61,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.866,
+            "components": {
+                "label": 0.8135724965453739,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page3[0].SigDate[0]",
+            "canonicalName": "FL_100_0_Page3_0_SigDate_0"
+        },
+        {
+            "name": "FL_100_0_Page3_0_PrintPetitionerName_tf_0",
+            "page": 3,
+            "x": 22.52,
+            "y": 170.64,
+            "width": 68.69,
+            "height": 5.12,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.958,
+            "components": {
+                "label": 0.9063190869354983,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page3[0].PrintPetitionerName_tf[0]",
+            "canonicalName": "FL_100_0_Page3_0_PrintPetitionerName_tf_0"
+        },
+        {
+            "name": "FL_100_0_Page3_0_NoCommOrQuasiCommProperty_cb_0",
+            "page": 3,
+            "x": 25.1,
+            "y": 36.4,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.884,
+            "components": {
+                "label": 0.8528370047273757,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page3[0].NoCommOrQuasiCommProperty_cb[0]",
+            "canonicalName": "FL_100_0_Page3_0_NoCommOrQuasiCommProperty_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page3_0_CommQuasiProperty_sf_0_WhereCPListed_cb_0",
+            "page": 3,
+            "x": 110.24,
+            "y": 46.1,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page3[0].CommQuasiProperty_sf[0].WhereCPListed_cb[0]",
+            "canonicalName": "FL_100_0_Page3_0_CommQuasiProperty_sf_0_WhereCPListed_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page3_0_CommQuasiProperty_sf_0_WhereCPListed_cb_1",
+            "page": 3,
+            "x": 34.39,
+            "y": 46.1,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page3[0].CommQuasiProperty_sf[0].WhereCPListed_cb[1]",
+            "canonicalName": "FL_100_0_Page3_0_CommQuasiProperty_sf_0_WhereCPListed_cb_1"
+        },
+        {
+            "name": "FL_100_0_Page3_0_CommQuasiProperty_sf_0_PropertyListed_cb_0",
+            "page": 3,
+            "x": 25.1,
+            "y": 41.5,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.866,
+            "components": {
+                "label": 0.813846013998257,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page3[0].CommQuasiProperty_sf[0].PropertyListed_cb[0]",
+            "canonicalName": "FL_100_0_Page3_0_CommQuasiProperty_sf_0_PropertyListed_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page3_0_CommQuasiProperty_sf_0_ListProperty_ft_0",
+            "page": 3,
+            "x": 41.13,
+            "y": 51.24,
+            "width": 159.73,
+            "height": 38.83,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page3[0].CommQuasiProperty_sf[0].ListProperty_ft[0]",
+            "canonicalName": "FL_100_0_Page3_0_CommQuasiProperty_sf_0_ListProperty_ft_0"
+        },
+        {
+            "name": "FL_100_0_Page3_0_CommQuasiProperty_sf_0_WhereCPListed_cb_2",
+            "page": 3,
+            "x": 34.39,
+            "y": 51.37,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page3[0].CommQuasiProperty_sf[0].WhereCPListed_cb[2]",
+            "canonicalName": "FL_100_0_Page3_0_CommQuasiProperty_sf_0_WhereCPListed_cb_2"
+        },
+        {
+            "name": "FL_100_0_Page3_0_CommQuasiProperty_sf_0_Button1_0",
+            "page": 3,
+            "x": 83.21,
+            "y": 46.44,
+            "width": 10.06,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page3[0].CommQuasiProperty_sf[0].Button1[0]",
+            "canonicalName": "FL_100_0_Page3_0_CommQuasiProperty_sf_0_Button1_0"
+        },
+        {
+            "name": "FL_100_0_Page3_0_CommQuasiProperty_sf_0_Button1_1",
+            "page": 3,
+            "x": 120.6,
+            "y": 46.03,
+            "width": 23.53,
+            "height": 3.41,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page3[0].CommQuasiProperty_sf[0].Button1[1]",
+            "canonicalName": "FL_100_0_Page3_0_CommQuasiProperty_sf_0_Button1_1"
+        },
+        {
+            "name": "FL_100_0_Page3_0_FeesAndCost_cb_0",
+            "page": 3,
+            "x": 25.1,
+            "y": 100.8,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.791,
+            "components": {
+                "label": 0.6475465661893457,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page3[0].FeesAndCost_cb[0]",
+            "canonicalName": "FL_100_0_Page3_0_FeesAndCost_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page3_0_AttyFeePay_cb_0",
+            "page": 3,
+            "x": 117.94,
+            "y": 100.8,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.827,
+            "components": {
+                "label": 0.7255855616040802,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page3[0].AttyFeePay_cb[0]",
+            "canonicalName": "FL_100_0_Page3_0_AttyFeePay_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page3_0_AttyFeePay_cb_1",
+            "page": 3,
+            "x": 90.78,
+            "y": 100.8,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.802,
+            "components": {
+                "label": 0.6706580633034488,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page3[0].AttyFeePay_cb[1]",
+            "canonicalName": "FL_100_0_Page3_0_AttyFeePay_cb_1"
+        },
+        {
+            "name": "FL_100_0_Page3_0_RestoreFormerName_cb_0",
+            "page": 3,
+            "x": 25.1,
+            "y": 106.16,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.801,
+            "components": {
+                "label": 0.6682461976444831,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page3[0].RestoreFormerName_cb[0]",
+            "canonicalName": "FL_100_0_Page3_0_RestoreFormerName_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page3_0_SpecifyFormerName_tf_0",
+            "page": 3,
+            "x": 101.81,
+            "y": 106.16,
+            "width": 100.31,
+            "height": 3.18,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.928,
+            "components": {
+                "label": 0.9518440792210873,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page3[0].SpecifyFormerName_tf[0]",
+            "canonicalName": "FL_100_0_Page3_0_SpecifyFormerName_tf_0"
+        },
+        {
+            "name": "FL_100_0_Page3_0_SpecifyOtherRequests_tf_0",
+            "page": 3,
+            "x": 32.18,
+            "y": 111.14,
+            "width": 171.02,
+            "height": 26.33,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.852,
+            "components": {
+                "label": 0.7812519473043432,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page3[0].SpecifyOtherRequests_tf[0]",
+            "canonicalName": "FL_100_0_Page3_0_SpecifyOtherRequests_tf_0"
+        },
+        {
+            "name": "FL_100_0_Page3_0_ContinuedOnAttachment_cb_0",
+            "page": 3,
+            "x": 33.86,
+            "y": 139.92,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page3[0].ContinuedOnAttachment_cb[0]",
+            "canonicalName": "FL_100_0_Page3_0_ContinuedOnAttachment_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page3_0_OtherRequests_cb_0",
+            "page": 3,
+            "x": 25.1,
+            "y": 111.15,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.834,
+            "components": {
+                "label": 0.7425303649643517,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page3[0].OtherRequests_cb[0]",
+            "canonicalName": "FL_100_0_Page3_0_OtherRequests_cb_0"
+        },
+        {
+            "name": "FL_100_0_Page3_0_SigDate_1",
+            "page": 3,
+            "x": 22.75,
+            "y": 181.57,
+            "width": 55.71,
+            "height": 3.61,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.882,
+            "components": {
+                "label": 0.8499457196386806,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page3[0].SigDate[1]",
+            "canonicalName": "FL_100_0_Page3_0_SigDate_1"
+        },
+        {
+            "name": "FL_100_0_Page3_0_PrintPetitionerAttorneyName_tf_0",
+            "page": 3,
+            "x": 22.73,
+            "y": 185.65,
+            "width": 68.69,
+            "height": 4.69,
+            "type": "text",
+            "confidence": 0.99,
+            "score": 0.907,
+            "components": {
+                "label": 0.9040674396548614,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page3[0].PrintPetitionerAttorneyName_tf[0]",
+            "canonicalName": "FL_100_0_Page3_0_PrintPetitionerAttorneyName_tf_0"
+        },
+        {
+            "name": "FL_100_0_Page3_0_area_0_Print_0",
+            "page": 3,
+            "x": 91.28,
+            "y": 270.98,
+            "width": 28.58,
+            "height": 6,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.55,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page3[0].#area[0].Print[0]",
+            "canonicalName": "FL_100_0_Page3_0_area_0_Print_0"
+        },
+        {
+            "name": "FL_100_0_Page3_0_area_0_Save_0",
+            "page": 3,
+            "x": 121.81,
+            "y": 270.98,
+            "width": 28.61,
+            "height": 6,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.55,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page3[0].#area[0].Save[0]",
+            "canonicalName": "FL_100_0_Page3_0_area_0_Save_0"
+        },
+        {
+            "name": "FL_100_0_Page3_0_area_0_Reset_0",
+            "page": 3,
+            "x": 174.61,
+            "y": 270.98,
+            "width": 28.57,
+            "height": 6,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.55,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page3[0].#area[0].Reset[0]",
+            "canonicalName": "FL_100_0_Page3_0_area_0_Reset_0"
+        },
+        {
+            "name": "FL_100_0_Page3_0_area_0_Warning_0",
+            "page": 3,
+            "x": 12.72,
+            "y": 268.8,
+            "width": 74.54,
+            "height": 8.18,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.55,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "fail",
+            "rawName": "FL-100[0].Page3[0].#area[0].Warning[0]",
+            "canonicalName": "FL_100_0_Page3_0_area_0_Warning_0"
+        },
+        {
+            "name": "FL_100_0_Page3_0_Button1_0",
+            "page": 3,
+            "x": 131.82,
+            "y": 200.03,
+            "width": 28.34,
+            "height": 3.62,
+            "type": "checkbox",
+            "confidence": 0.99,
+            "score": 0.827,
+            "components": {
+                "label": 0.726273233047127,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "rawName": "FL-100[0].Page3[0].Button1[0]",
+            "canonicalName": "FL_100_0_Page3_0_Button1_0"
+        },
+        {
+            "name": "name",
+            "page": 1,
+            "x": 23.68,
+            "y": 302.25,
+            "width": 100,
+            "height": 11,
+            "type": "text",
+            "confidence": 0.82,
+            "score": 0.55,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "fail",
+            "canonicalName": "name"
+        },
+        {
+            "name": "petitioner",
+            "page": 1,
+            "x": 38.69,
+            "y": 352.87,
+            "width": 100,
+            "height": 11,
+            "type": "text",
+            "confidence": 0.82,
+            "score": 0.49,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 0.6,
+                "size": 1
+            },
+            "verdict": "fail",
+            "canonicalName": "petitioner"
+        },
+        {
+            "name": "respondent",
+            "page": 1,
+            "x": 38.69,
+            "y": 356.4,
+            "width": 90.84,
+            "height": 11,
+            "type": "text",
+            "confidence": 0.82,
+            "score": 0.49,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 0.6,
+                "size": 1
+            },
+            "verdict": "fail",
+            "canonicalName": "respondent"
+        },
+        {
+            "name": "case_number",
+            "page": 1,
+            "x": 161.61,
+            "y": 362.06,
+            "width": 100,
+            "height": 11,
+            "type": "text",
+            "confidence": 0.82,
+            "score": 0.55,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "fail",
+            "canonicalName": "case_number"
+        },
+        {
+            "name": "date",
+            "page": 3,
+            "x": 23.82,
+            "y": 448.67,
+            "width": 60.44,
+            "height": 11,
+            "type": "date",
+            "confidence": 0.82,
+            "score": 0.25,
+            "components": {
+                "label": 0,
+                "bounds": 0,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "fail",
+            "canonicalName": "date"
+        },
+        {
+            "name": "label_inferred_1_68",
+            "page": 1,
+            "x": 138.57,
+            "y": 190.41,
+            "width": 55.86,
+            "height": 4.59,
+            "type": "text",
+            "confidence": 0.78,
+            "score": 0.787,
+            "components": {
+                "label": 0.7702763070074439,
+                "bounds": 1,
+                "overlap": 0.6,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "canonicalName": "label_inferred_1_68"
+        },
+        {
+            "name": "label_inferred_1_69",
+            "page": 1,
+            "x": 139.17,
+            "y": 186.15,
+            "width": 55.51,
+            "height": 4.59,
+            "type": "text",
+            "confidence": 0.78,
+            "score": 0.791,
+            "components": {
+                "label": 0.778906836203602,
+                "bounds": 1,
+                "overlap": 0.6,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "canonicalName": "label_inferred_1_69"
+        },
+        {
+            "name": "label_inferred_1_80",
+            "page": 1,
+            "x": 41.81,
+            "y": 209.98,
+            "width": 67.03,
+            "height": 4.59,
+            "type": "text",
+            "confidence": 0.78,
+            "score": 0.798,
+            "components": {
+                "label": 0.8949008645882729,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "canonicalName": "label_inferred_1_80"
+        },
+        {
+            "name": "label_inferred_1_83",
+            "page": 1,
+            "x": 41.79,
+            "y": 217.17,
+            "width": 67.03,
+            "height": 4.59,
+            "type": "text",
+            "confidence": 0.78,
+            "score": 0.777,
+            "components": {
+                "label": 0.8485923711023196,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "canonicalName": "label_inferred_1_83"
+        },
+        {
+            "name": "label_inferred_1_81",
+            "page": 1,
+            "x": 41.79,
+            "y": 213.58,
+            "width": 67.03,
+            "height": 4.59,
+            "type": "text",
+            "confidence": 0.78,
+            "score": 0.788,
+            "components": {
+                "label": 0.8742127861690046,
+                "bounds": 1,
+                "overlap": 0.3,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "canonicalName": "label_inferred_1_81"
+        },
+        {
+            "name": "label_inferred_1_84",
+            "page": 1,
+            "x": 37.64,
+            "y": 200.58,
+            "width": 67.03,
+            "height": 4.59,
+            "type": "text",
+            "confidence": 0.78,
+            "score": 0.88,
+            "components": {
+                "label": 0.8443172776045533,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "canonicalName": "label_inferred_1_84"
+        },
+        {
+            "name": "label_inferred_1_107",
+            "page": 1,
+            "x": 205.96,
+            "y": 16.84,
+            "width": 40.57,
+            "height": 4.59,
+            "type": "text",
+            "confidence": 0.78,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "label_inferred_1_107"
+        },
+        {
+            "name": "label_inferred_2_190",
+            "page": 2,
+            "x": 153.02,
+            "y": 201.53,
+            "width": 51.36,
+            "height": 4.59,
+            "type": "text",
+            "confidence": 0.78,
+            "score": 0.8,
+            "components": {
+                "label": 0.800576793851802,
+                "bounds": 1,
+                "overlap": 0.6,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "canonicalName": "label_inferred_2_190"
+        },
+        {
+            "name": "label_inferred_2_196",
+            "page": 2,
+            "x": 115.53,
+            "y": 173.12,
+            "width": 62.55,
+            "height": 4.59,
+            "type": "text",
+            "confidence": 0.78,
+            "score": 0.829,
+            "components": {
+                "label": 0.8642213918824726,
+                "bounds": 1,
+                "overlap": 0.6,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "canonicalName": "label_inferred_2_196"
+        },
+        {
+            "name": "label_inferred_2_197",
+            "page": 2,
+            "x": 115.64,
+            "y": 167.5,
+            "width": 62.66,
+            "height": 4.59,
+            "type": "text",
+            "confidence": 0.78,
+            "score": 0.871,
+            "components": {
+                "label": 0.8240534126575146,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "canonicalName": "label_inferred_2_197"
+        },
+        {
+            "name": "label_inferred_2_207",
+            "page": 2,
+            "x": 23.07,
+            "y": 123.92,
+            "width": 67.03,
+            "height": 4.59,
+            "type": "text",
+            "confidence": 0.78,
+            "score": 0.797,
+            "components": {
+                "label": 0.6603655899015848,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "canonicalName": "label_inferred_2_207"
+        },
+        {
+            "name": "label_inferred_2_210",
+            "page": 2,
+            "x": 23.28,
+            "y": 92.7,
+            "width": 67.03,
+            "height": 4.59,
+            "type": "text",
+            "confidence": 0.78,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "label_inferred_2_210"
+        },
+        {
+            "name": "label_inferred_2_211",
+            "page": 2,
+            "x": 23.27,
+            "y": 87.17,
+            "width": 67.03,
+            "height": 4.59,
+            "type": "text",
+            "confidence": 0.78,
+            "score": 0.759,
+            "components": {
+                "label": 0.5764298682182467,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "pass",
+            "canonicalName": "label_inferred_2_211"
+        },
+        {
+            "name": "label_inferred_2_218",
+            "page": 2,
+            "x": 37.88,
+            "y": 253.33,
+            "width": 67.03,
+            "height": 4.59,
+            "type": "text",
+            "confidence": 0.78,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "label_inferred_2_218"
+        },
+        {
+            "name": "label_inferred_2_223",
+            "page": 2,
+            "x": 22.98,
+            "y": 167.59,
+            "width": 67.03,
+            "height": 4.59,
+            "type": "text",
+            "confidence": 0.78,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "label_inferred_2_223"
+        },
+        {
+            "name": "label_inferred_2_222",
+            "page": 2,
+            "x": 23.06,
+            "y": 173.12,
+            "width": 67.03,
+            "height": 4.59,
+            "type": "text",
+            "confidence": 0.78,
+            "score": 0.44,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 0.6,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "label_inferred_2_222"
+        },
+        {
+            "name": "pek_rect_3_101",
+            "page": 3,
+            "x": 91.5,
+            "y": 2.64,
+            "width": 28.14,
+            "height": 5.56,
+            "type": "text",
+            "confidence": 0.8,
+            "score": 0.715,
+            "components": {
+                "label": 0.36641079461759685,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "warn",
+            "canonicalName": "pek_rect_3_101"
+        },
+        {
+            "name": "pek_rect_3_105",
+            "page": 3,
+            "x": 122.03,
+            "y": 2.64,
+            "width": 28.17,
+            "height": 5.56,
+            "type": "text",
+            "confidence": 0.8,
+            "score": 0.797,
+            "components": {
+                "label": 0.5498412053780214,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "pek_rect_3_105"
+        },
+        {
+            "name": "pek_rect_3_109",
+            "page": 3,
+            "x": 174.83,
+            "y": 2.64,
+            "width": 28.13,
+            "height": 5.56,
+            "type": "text",
+            "confidence": 0.8,
+            "score": 0.81,
+            "components": {
+                "label": 0.5778006678918598,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 1
+            },
+            "verdict": "pass",
+            "canonicalName": "pek_rect_3_109"
+        },
+        {
+            "name": "label_inferred_3_257",
+            "page": 3,
+            "x": 37.7,
+            "y": 252.9,
+            "width": 67.03,
+            "height": 4.59,
+            "type": "text",
+            "confidence": 0.78,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "label_inferred_3_257"
+        },
+        {
+            "name": "checkbox_40",
+            "page": 1,
+            "x": 12.7,
+            "y": 382,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_40"
+        },
+        {
+            "name": "checkbox_42",
+            "page": 1,
+            "x": 17.95,
+            "y": 386.56,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_42"
+        },
+        {
+            "name": "checkbox_45",
+            "page": 1,
+            "x": 17.95,
+            "y": 391.42,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_45"
+        },
+        {
+            "name": "checkbox_50",
+            "page": 1,
+            "x": 12.7,
+            "y": 402.98,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.2,
+            "components": {
+                "label": 0,
+                "bounds": 0,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_50"
+        },
+        {
+            "name": "checkbox_57",
+            "page": 1,
+            "x": 17.95,
+            "y": 407.99,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.2,
+            "components": {
+                "label": 0,
+                "bounds": 0,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_57"
+        },
+        {
+            "name": "checkbox_62",
+            "page": 1,
+            "x": 17.95,
+            "y": 419.42,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.2,
+            "components": {
+                "label": 0,
+                "bounds": 0,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_62"
+        },
+        {
+            "name": "checkbox_64",
+            "page": 1,
+            "x": 17.95,
+            "y": 427.84,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.2,
+            "components": {
+                "label": 0,
+                "bounds": 0,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_64"
+        },
+        {
+            "name": "checkbox_76",
+            "page": 1,
+            "x": 12.7,
+            "y": 442.08,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.2,
+            "components": {
+                "label": 0,
+                "bounds": 0,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_76"
+        },
+        {
+            "name": "checkbox_82",
+            "page": 1,
+            "x": 17.95,
+            "y": 446.4,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.2,
+            "components": {
+                "label": 0,
+                "bounds": 0,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_82"
+        },
+        {
+            "name": "checkbox_90",
+            "page": 1,
+            "x": 17.95,
+            "y": 455.01,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.2,
+            "components": {
+                "label": 0,
+                "bounds": 0,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_90"
+        },
+        {
+            "name": "checkbox_103",
+            "page": 1,
+            "x": 12.7,
+            "y": 469.52,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.2,
+            "components": {
+                "label": 0,
+                "bounds": 0,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_103"
+        },
+        {
+            "name": "checkbox_114",
+            "page": 1,
+            "x": 17.95,
+            "y": 512.51,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.2,
+            "components": {
+                "label": 0,
+                "bounds": 0,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_114"
+        },
+        {
+            "name": "checkbox_118",
+            "page": 1,
+            "x": 17.95,
+            "y": 520.39,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.2,
+            "components": {
+                "label": 0,
+                "bounds": 0,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_118"
+        },
+        {
+            "name": "checkbox_124",
+            "page": 1,
+            "x": 17.95,
+            "y": 528.92,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.2,
+            "components": {
+                "label": 0,
+                "bounds": 0,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_124"
+        },
+        {
+            "name": "checkbox_7",
+            "page": 2,
+            "x": 12.7,
+            "y": 319.55,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_7"
+        },
+        {
+            "name": "checkbox_20",
+            "page": 2,
+            "x": 17.95,
+            "y": 335.03,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_20"
+        },
+        {
+            "name": "checkbox_27",
+            "page": 2,
+            "x": 17.95,
+            "y": 345.39,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_27"
+        },
+        {
+            "name": "checkbox_44",
+            "page": 2,
+            "x": 12.7,
+            "y": 372.02,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_44"
+        },
+        {
+            "name": "checkbox_53",
+            "page": 2,
+            "x": 17.94,
+            "y": 379.45,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_53"
+        },
+        {
+            "name": "checkbox_56",
+            "page": 2,
+            "x": 17.94,
+            "y": 385.01,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_56"
+        },
+        {
+            "name": "checkbox_60",
+            "page": 2,
+            "x": 17.94,
+            "y": 390.52,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_60"
+        },
+        {
+            "name": "checkbox_69",
+            "page": 2,
+            "x": 12.7,
+            "y": 407.82,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.2,
+            "components": {
+                "label": 0,
+                "bounds": 0,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_69"
+        },
+        {
+            "name": "checkbox_72",
+            "page": 2,
+            "x": 17.95,
+            "y": 412.07,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.2,
+            "components": {
+                "label": 0,
+                "bounds": 0,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_72"
+        },
+        {
+            "name": "checkbox_75",
+            "page": 2,
+            "x": 17.95,
+            "y": 424.08,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.2,
+            "components": {
+                "label": 0,
+                "bounds": 0,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_75"
+        },
+        {
+            "name": "checkbox_80",
+            "page": 2,
+            "x": 17.95,
+            "y": 428.47,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.2,
+            "components": {
+                "label": 0,
+                "bounds": 0,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_80"
+        },
+        {
+            "name": "checkbox_84",
+            "page": 2,
+            "x": 17.95,
+            "y": 434.4,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.2,
+            "components": {
+                "label": 0,
+                "bounds": 0,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_84"
+        },
+        {
+            "name": "checkbox_92",
+            "page": 2,
+            "x": 18.26,
+            "y": 455.19,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.2,
+            "components": {
+                "label": 0,
+                "bounds": 0,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_92"
+        },
+        {
+            "name": "checkbox_97",
+            "page": 2,
+            "x": 18.26,
+            "y": 459.9,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.2,
+            "components": {
+                "label": 0,
+                "bounds": 0,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_97"
+        },
+        {
+            "name": "checkbox_108",
+            "page": 2,
+            "x": 18.24,
+            "y": 470.97,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.2,
+            "components": {
+                "label": 0,
+                "bounds": 0,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_108"
+        },
+        {
+            "name": "checkbox_110",
+            "page": 2,
+            "x": 12.7,
+            "y": 490.59,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.2,
+            "components": {
+                "label": 0,
+                "bounds": 0,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_110"
+        },
+        {
+            "name": "checkbox_113",
+            "page": 2,
+            "x": 18.24,
+            "y": 495.37,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.2,
+            "components": {
+                "label": 0,
+                "bounds": 0,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_113"
+        },
+        {
+            "name": "checkbox_116",
+            "page": 2,
+            "x": 18.24,
+            "y": 500.81,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.2,
+            "components": {
+                "label": 0,
+                "bounds": 0,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_116"
+        },
+        {
+            "name": "checkbox_8",
+            "page": 3,
+            "x": 18.24,
+            "y": 318.3,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_8"
+        },
+        {
+            "name": "checkbox_13",
+            "page": 3,
+            "x": 116.98,
+            "y": 328.01,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_13"
+        },
+        {
+            "name": "checkbox_29",
+            "page": 3,
+            "x": 18.83,
+            "y": 388.06,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.85,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_29"
+        },
+        {
+            "name": "checkbox_33",
+            "page": 3,
+            "x": 18.24,
+            "y": 393.05,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.8,
+            "score": 0.5,
+            "components": {
+                "label": 0,
+                "bounds": 1,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_33"
+        },
+        {
+            "name": "checkbox_52",
+            "page": 3,
+            "x": 131.23,
+            "y": 482.17,
+            "width": 3.18,
+            "height": 3.18,
+            "type": "checkbox",
+            "confidence": 0.85,
+            "score": 0.2,
+            "components": {
+                "label": 0,
+                "bounds": 0,
+                "overlap": 1,
+                "size": 0.5
+            },
+            "verdict": "fail",
+            "canonicalName": "checkbox_52"
+        }
+    ]
+}

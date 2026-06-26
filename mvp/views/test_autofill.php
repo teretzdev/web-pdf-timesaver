@@ -1,4 +1,4 @@
-<div class="clio-card">
+<div class="pdftimesaver-card">
     <h2 style="margin: 0 0 20px 0; color: #2c3e50; font-size: 24px; font-weight: 700;">
         Test Auto-Fill with Extracted Positions
     </h2>
@@ -9,19 +9,19 @@
 </div>
 
 <?php if (isset($error)): ?>
-    <div class="clio-card" style="background: #f8d7da; color: #721c24; margin-bottom: 16px;">
+    <div class="pdftimesaver-card" style="background: #f8d7da; color: #721c24; margin-bottom: 16px;">
         ❌ <?php echo htmlspecialchars($error); ?>
     </div>
 <?php endif; ?>
 
 <?php if (isset($success)): ?>
-    <div class="clio-card" style="background: #d4edda; color: #155724; margin-bottom: 16px;">
+    <div class="pdftimesaver-card" style="background: #d4edda; color: #155724; margin-bottom: 16px;">
         ✅ <?php echo htmlspecialchars($success); ?>
     </div>
 <?php endif; ?>
 
 <?php if (isset($extractionResult)): ?>
-    <div class="clio-card">
+    <div class="pdftimesaver-card">
         <h3 style="margin: 0 0 16px 0; color: #2c3e50; font-size: 18px;">Step 1: Field Extraction</h3>
         
         <?php if (!empty($extractionResult['fields'])): ?>
@@ -34,7 +34,7 @@
                     View Extracted Fields
                 </summary>
                 <div style="margin-top: 12px; max-height: 300px; overflow-y: auto;">
-                    <table class="clio-table">
+                    <table class="pdftimesaver-table">
                         <thead>
                             <tr>
                                 <th>Field Name</th>
@@ -76,7 +76,7 @@
 <?php endif; ?>
 
 <?php if (isset($generatedPdf)): ?>
-    <div class="clio-card">
+    <div class="pdftimesaver-card">
         <h3 style="margin: 0 0 16px 0; color: #2c3e50; font-size: 18px;">Step 2: PDF Generation</h3>
         
         <div style="padding: 16px; background: #d4edda; border-left: 4px solid #28a745; margin-bottom: 16px;">
@@ -90,10 +90,10 @@
         
         <div class="button-group" style="display: flex; gap: 12px;">
             <a href="?route=actions/download-test-pdf&file=<?php echo urlencode($generatedPdf['filename']); ?>" 
-               class="clio-btn" target="_blank">
+               class="pdftimesaver-btn" target="_blank">
                 📄 Download Test PDF
             </a>
-            <a href="?route=test-autofill" class="clio-btn-secondary">
+            <a href="?route=test-autofill" class="pdftimesaver-btn-secondary">
                 🔄 Generate Another
             </a>
         </div>
@@ -101,7 +101,7 @@
 <?php endif; ?>
 
 <?php if (!isset($extractionResult) && !isset($generatedPdf)): ?>
-    <div class="clio-card">
+    <div class="pdftimesaver-card">
         <h3 style="margin: 0 0 16px 0; color: #2c3e50; font-size: 18px;">Ready to Test</h3>
         
         <div style="padding: 16px; background: #e7f3ff; border-left: 4px solid #007bff; margin-bottom: 20px;">
@@ -116,10 +116,10 @@
         
         <form method="post" action="?route=actions/test-autofill">
             <div class="button-group" style="display: flex; gap: 12px;">
-                <button type="submit" class="clio-btn">
+                <button type="submit" class="pdftimesaver-btn">
                     🚀 Run Auto-Fill Test
                 </button>
-                <a href="?route=dashboard" class="clio-btn-secondary">
+                <a href="?route=dashboard" class="pdftimesaver-btn-secondary">
                     Cancel
                 </a>
             </div>
@@ -127,7 +127,7 @@
     </div>
 <?php endif; ?>
 
-<div class="clio-card">
+<div class="pdftimesaver-card">
     <h3 style="margin: 0 0 12px 0; color: #2c3e50; font-size: 16px;">How This Works</h3>
     <div style="color: #6c757d; line-height: 1.8;">
         <strong>Hybrid Approach:</strong>

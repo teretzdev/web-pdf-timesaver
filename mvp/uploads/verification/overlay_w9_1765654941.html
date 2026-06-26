@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Position Verification Overlay</title>
+    <style>
+        body { margin: 0; padding: 20px; background: #f0f0f0; font-family: Arial, sans-serif; }
+        .container { max-width: 1800px; margin: 0 auto; }
+        .page-wrapper { position: relative; display: inline-block; background: white; box-shadow: 0 4px 20px rgba(0,0,0,0.2); }
+        .pdf-image { display: block; }
+        .overlay { position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
+        .expected-box { position: absolute; border: 2px solid #28a745; background: rgba(40, 167, 69, 0.1); }
+        .expected-label { position: absolute; top: -20px; left: 0; background: #28a745; color: white; padding: 2px 6px; font-size: 10px; font-weight: bold; }
+        .legend { margin: 20px 0; padding: 15px; background: white; border-radius: 8px; }
+        .legend-item { display: inline-block; margin-right: 20px; }
+        .legend-box { display: inline-block; width: 20px; height: 20px; border: 2px solid; margin-right: 5px; vertical-align: middle; }
+        .stats { margin: 20px 0; padding: 15px; background: white; border-radius: 8px; }
+        .stat-item { margin: 5px 0; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Position Verification Overlay</h1>
+        <div class="stats">
+            <div class="stat-item"><strong>PDF:</strong> w9.pdf</div>
+            <div class="stat-item"><strong>Fields Expected:</strong> 23</div>
+            <div class="stat-item"><strong>Fields with Values:</strong> 15</div>
+        </div>
+        <div class="legend">
+            <div class="legend-item">
+                <span class="legend-box" style="border-color: #28a745; background: rgba(40, 167, 69, 0.1);"></span>
+                Expected Position
+            </div>
+        </div>
+        <div class="page-wrapper">
+            <img src="/uploads/verification/verification_w9.png" class="pdf-image" id="pdf-img">
+            <div class="overlay" id="overlay"></div>
+        </div>
+    </div>
+    <script>
+        const MM_TO_PX = 7.87;
+        const expectedPositions = {"topmostSubform[0].Page1[0].f1_01[0]":{"name":"topmostSubform[0].Page1[0].f1_01[0]","type":"text","page":1,"x":20.67,"y":41.63,"width":182.53,"height":4.94,"fontSize":7,"rect_pdf":[58.6,659.967,517.4,14],"positionValid":true},"topmostSubform[0].Page1[0].f1_02[0]":{"name":"topmostSubform[0].Page1[0].f1_02[0]","type":"text","page":1,"x":20.67,"y":50.09,"width":182.53,"height":4.94,"fontSize":7,"rect_pdf":[58.6,635.966,517.4,14.000999999999976],"positionValid":true},"topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[0]":{"name":"topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[0]","type":"checkbox","page":1,"x":25.75,"y":63.59,"width":2.82,"height":2.82,"fontSize":7,"rect_pdf":[73,603.719,8,8],"positionValid":true},"topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[1]":{"name":"topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[1]","type":"checkbox","page":1,"x":63.5,"y":63.59,"width":2.82,"height":2.82,"fontSize":7,"rect_pdf":[180,603.719,8,8],"positionValid":true},"topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[2]":{"name":"topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[2]","type":"checkbox","page":1,"x":88.9,"y":63.59,"width":2.82,"height":2.82,"fontSize":7,"rect_pdf":[252,603.719,8,8],"positionValid":true},"topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[3]":{"name":"topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[3]","type":"checkbox","page":1,"x":114.3,"y":63.59,"width":2.82,"height":2.82,"fontSize":7,"rect_pdf":[324,603.719,8,8],"positionValid":true},"topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[4]":{"name":"topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[4]","type":"checkbox","page":1,"x":137.16,"y":63.59,"width":2.82,"height":2.82,"fontSize":7,"rect_pdf":[388.8,603.719,8,8],"positionValid":true},"topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[5]":{"name":"topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[5]","type":"checkbox","page":1,"x":25.75,"y":68.26,"width":2.82,"height":2.82,"fontSize":7,"rect_pdf":[72.999,590.47,8,8],"positionValid":true},"topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_03[0]":{"name":"topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_03[0]","type":"text","page":1,"x":147.32,"y":67.73,"width":10.16,"height":3.88,"fontSize":7,"rect_pdf":[417.6,588.97,28.799999999999955,10.999000000000024],"positionValid":true},"topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[6]":{"name":"topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[6]","type":"checkbox","page":1,"x":25.75,"y":81.14,"width":2.82,"height":2.82,"fontSize":7,"rect_pdf":[72.999,553.97,8,8],"positionValid":true},"topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_04[0]":{"name":"topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].f1_04[0]","type":"text","page":1,"x":57.29,"y":80.43,"width":100.19,"height":4.23,"fontSize":7,"rect_pdf":[162.4,551.97,284,11.999000000000024],"positionValid":true},"topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_2[0]":{"name":"topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_2[0]","type":"checkbox","page":1,"x":155.43,"y":92.78,"width":2.82,"height":2.82,"fontSize":7,"rect_pdf":[440.6,520.971,8,8],"positionValid":true},"topmostSubform[0].Page1[0].f1_05[0]":{"name":"topmostSubform[0].Page1[0].f1_05[0]","type":"text","page":1,"x":191.77,"y":67.73,"width":11.43,"height":4.23,"fontSize":7,"rect_pdf":[543.6,587.97,32.39999999999998,11.999000000000024],"positionValid":true},"topmostSubform[0].Page1[0].f1_06[0]":{"name":"topmostSubform[0].Page1[0].f1_06[0]","type":"text","page":1,"x":176.6,"y":80.43,"width":26.6,"height":4.23,"fontSize":7,"rect_pdf":[500.6,551.97,75.39999999999998,11.999000000000024],"positionValid":true},"topmostSubform[0].Page1[0].Address_ReadOrder[0].f1_07[0]":{"name":"topmostSubform[0].Page1[0].Address_ReadOrder[0].f1_07[0]","type":"text","page":1,"x":20.67,"y":100.89,"width":116.22,"height":4.94,"fontSize":7,"rect_pdf":[58.6,491.966,329.45,14.000999999999976],"positionValid":true},"topmostSubform[0].Page1[0].Address_ReadOrder[0].f1_08[0]":{"name":"topmostSubform[0].Page1[0].Address_ReadOrder[0].f1_08[0]","type":"text","page":1,"x":20.67,"y":109.36,"width":116.22,"height":4.94,"fontSize":7,"rect_pdf":[58.6,467.968,329.45,14.000999999999976],"positionValid":true},"topmostSubform[0].Page1[0].f1_09[0]":{"name":"topmostSubform[0].Page1[0].f1_09[0]","type":"text","page":1,"x":137.51,"y":100.89,"width":65.69,"height":13.41,"fontSize":9.4,"rect_pdf":[389.8,467.968,186.2,37.99899999999997],"positionValid":true},"topmostSubform[0].Page1[0].f1_10[0]":{"name":"topmostSubform[0].Page1[0].f1_10[0]","type":"text","page":1,"x":20.67,"y":117.83,"width":182.53,"height":4.94,"fontSize":7,"rect_pdf":[58.6,443.967,517.4,14.001000000000033],"positionValid":true},"topmostSubform[0].Page1[0].f1_11[0]":{"name":"topmostSubform[0].Page1[0].f1_11[0]","type":"text","page":1,"x":147.32,"y":131.23,"width":15.24,"height":8.47,"fontSize":7,"rect_pdf":[417.6,395.968,43.19999999999999,24.000999999999976],"positionValid":true},"topmostSubform[0].Page1[0].f1_12[0]":{"name":"topmostSubform[0].Page1[0].f1_12[0]","type":"text","page":1,"x":167.64,"y":131.23,"width":10.16,"height":8.47,"fontSize":7,"rect_pdf":[475.2,395.968,28.80000000000001,24.000999999999976],"positionValid":true},"topmostSubform[0].Page1[0].f1_13[0]":{"name":"topmostSubform[0].Page1[0].f1_13[0]","type":"text","page":1,"x":182.88,"y":131.23,"width":20.32,"height":8.47,"fontSize":7,"rect_pdf":[518.4,395.968,57.60000000000002,24.000999999999976],"positionValid":true},"topmostSubform[0].Page1[0].f1_14[0]":{"name":"topmostSubform[0].Page1[0].f1_14[0]","type":"text","page":1,"x":147.32,"y":148.17,"width":10.16,"height":8.47,"fontSize":7,"rect_pdf":[417.6,347.966,28.799999999999955,24.000999999999976],"positionValid":true},"topmostSubform[0].Page1[0].f1_15[0]":{"name":"topmostSubform[0].Page1[0].f1_15[0]","type":"text","page":1,"x":162.56,"y":148.17,"width":35.56,"height":8.47,"fontSize":7,"rect_pdf":[460.8,347.966,100.80000000000001,24.000999999999976],"positionValid":true}};
+        const fieldValues = {"topmostSubform[0].Page1[0].f1_01[0]":"John Michael Smith","topmostSubform[0].Page1[0].f1_02[0]":"Smith & Associates LLC","topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[0]":"Yes","topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[1]":"","topmostSubform[0].Page1[0].Boxes3a-b_ReadOrder[0].c1_1[2]":"","topmostSubform[0].Page1[0].c1_1[3]":"","topmostSubform[0].Page1[0].c1_1[4]":"","topmostSubform[0].Page1[0].c1_1[5]":"","topmostSubform[0].Page1[0].c1_1[6]":"","topmostSubform[0].Page1[0].f1_03[0]":"","topmostSubform[0].Page1[0].f1_04[0]":"","topmostSubform[0].Page1[0].f1_05[0]":"1234 Legal Plaza, Suite 500","topmostSubform[0].Page1[0].f1_06[0]":"Los Angeles, CA 90001","topmostSubform[0].Page1[0].Address_ReadOrder[0].f1_07[0]":"Mail Stop 45","topmostSubform[0].Page1[0].Address_ReadOrder[0].f1_08[0]":"Los Angeles, CA 90001","topmostSubform[0].Page1[0].f1_10[0]":"Attn: Accounts Payable","topmostSubform[0].Page1[0].f1_11[0]":"123","topmostSubform[0].Page1[0].f1_12[0]":"45","topmostSubform[0].Page1[0].f1_13[0]":"6789","topmostSubform[0].Page1[0].f1_14[0]":"12","topmostSubform[0].Page1[0].f1_15[0]":"3456789","topmostSubform[0].Page1[0].f1_08[0]":"John Michael Smith","topmostSubform[0].Page1[0].f1_09[0]":"12\/13\/2025"};
+        const img = document.getElementById("pdf-img");
+        
+        img.onload = function() {
+            const overlay = document.getElementById("overlay");
+            const imgWidth = img.offsetWidth;
+            const imgHeight = img.offsetHeight;
+            
+            // Scale factor: image might be scaled differently
+            const scaleX = imgWidth / (215.9 * MM_TO_PX);
+            const scaleY = imgHeight / (279.4 * MM_TO_PX);
+            
+            for (const [fieldName, pos] of Object.entries(expectedPositions)) {
+                const x = (pos.x || 0) * MM_TO_PX * scaleX;
+                const y = (pos.y || 0) * MM_TO_PX * scaleY;
+                const width = (pos.width || 100) * MM_TO_PX * scaleX;
+                const height = (pos.height || 10) * MM_TO_PX * scaleY;
+                
+                const box = document.createElement("div");
+                box.className = "expected-box";
+                box.style.left = x + "px";
+                box.style.top = y + "px";
+                box.style.width = width + "px";
+                box.style.height = height + "px";
+                
+                const label = document.createElement("div");
+                label.className = "expected-label";
+                label.textContent = fieldName;
+                box.appendChild(label);
+                
+                overlay.appendChild(box);
+            }
+        };
+    </script>
+</body>
+</html>

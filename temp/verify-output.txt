@@ -1,0 +1,111 @@
+🔍 Verifying field positions...
+
+📄 Loaded 17 extracted positions
+
+🔓 PDF is encrypted, attempting decryption...
+
+   🔑 Trying password: "(empty)"
+   ✅ Decryption successful
+
+📋 Found 158 actual form fields in PDF
+
+✅ Extracted 158 actual positions from PDF
+
+📊 COMPARISON RESULTS:
+
+================================================================================
+
+📈 SUMMARY:
+   ✅ Matches (within 2mm): 0
+   ❌ Position Mismatches: 8
+   ⚠️  Missing in Extracted: 150
+   ⚠️  Missing in Actual PDF: 9
+   📊 Accuracy: 0.0%
+================================================================================
+
+❌ MISMATCHES (showing first 20 of 167):
+
+❌ FL-100[0].Page1[0].PartiesSignedVoluntaryPaternityDec_cb[0]:
+   ACTUAL:   x=25.08mm, y=246.79mm
+   EXTRACTED: x=78.03mm, y=228.06mm
+   DIFF:     x=52.95mm, y=18.73mm (EXCEEDS 2mm tolerance)
+
+❌ FL-100[0].Page1[0].CaptionP1_sf[0].FormTitle[0].Amended_cb[0]:
+   ACTUAL:   x=114.02mm, y=80.27mm
+   EXTRACTED: x=61.91mm, y=238.69mm
+   DIFF:     x=52.11mm, y=158.42mm (EXCEEDS 2mm tolerance)
+
+❌ FL-100[0].Page1[0].CaptionP1_sf[0].FormTitle[0].DissolutionOf_cb[0]:
+   ACTUAL:   x=16.72mm, y=85.11mm
+   EXTRACTED: NOT FOUND
+
+❌ FL-100[0].Page1[0].CaptionP1_sf[0].FormTitle[0].Marriage_cb[0]:
+   ACTUAL:   x=66.05mm, y=85.08mm
+   EXTRACTED: NOT FOUND
+
+❌ FL-100[0].Page1[0].CaptionP1_sf[0].FormTitle[0].DomesticPartnership_cb[0]:
+   ACTUAL:   x=100.01mm, y=85.18mm
+   EXTRACTED: NOT FOUND
+
+❌ FL-100[0].Page1[0].CaptionP1_sf[0].FormTitle[0].NullityOf_cb[0]:
+   ACTUAL:   x=16.72mm, y=93.74mm
+   EXTRACTED: NOT FOUND
+
+❌ FL-100[0].Page1[0].CaptionP1_sf[0].FormTitle[0].Marriage_cb[1]:
+   ACTUAL:   x=66.05mm, y=93.79mm
+   EXTRACTED: NOT FOUND
+
+❌ FL-100[0].Page1[0].CaptionP1_sf[0].FormTitle[0].DomesticPartnership_cb[1]:
+   ACTUAL:   x=100.01mm, y=93.79mm
+   EXTRACTED: NOT FOUND
+
+❌ FL-100[0].Page1[0].CaptionP1_sf[0].FormTitle[0].LegalSeparationOf_cb[0]:
+   ACTUAL:   x=16.72mm, y=89.36mm
+   EXTRACTED: NOT FOUND
+
+❌ FL-100[0].Page1[0].CaptionP1_sf[0].FormTitle[0].Marriage_cb[2]:
+   ACTUAL:   x=66.05mm, y=89.3mm
+   EXTRACTED: NOT FOUND
+
+❌ FL-100[0].Page1[0].CaptionP1_sf[0].FormTitle[0].DomesticPartnership_cb[2]:
+   ACTUAL:   x=100.01mm, y=89.3mm
+   EXTRACTED: NOT FOUND
+
+❌ FL-100[0].Page1[0].CaptionP1_sf[0].AttyInfo[0].AttyFor_ft[0]:
+   ACTUAL:   x=38.14mm, y=45.09mm
+   EXTRACTED: NOT FOUND
+
+❌ FL-100[0].Page1[0].CaptionP1_sf[0].AttyInfo[0].Email_ft[0]:
+   ACTUAL:   x=32.15mm, y=41.07mm
+   EXTRACTED: NOT FOUND
+
+❌ FL-100[0].Page1[0].CaptionP1_sf[0].AttyInfo[0].Fax_ft[0]:
+   ACTUAL:   x=93.87mm, y=36.78mm
+   EXTRACTED: NOT FOUND
+
+❌ FL-100[0].Page1[0].CaptionP1_sf[0].AttyInfo[0].Phone_ft[0]:
+   ACTUAL:   x=31.44mm, y=36.78mm
+   EXTRACTED: NOT FOUND
+
+❌ FL-100[0].Page1[0].CaptionP1_sf[0].AttyInfo[0].AttyZip_ft[0]:
+   ACTUAL:   x=115.36mm, y=32.75mm
+   EXTRACTED: NOT FOUND
+
+❌ FL-100[0].Page1[0].CaptionP1_sf[0].AttyInfo[0].AttyState_ft[0]:
+   ACTUAL:   x=93.41mm, y=32.75mm
+   EXTRACTED: NOT FOUND
+
+❌ FL-100[0].Page1[0].CaptionP1_sf[0].AttyInfo[0].AttyCity_ft[0]:
+   ACTUAL:   x=19.09mm, y=32.75mm
+   EXTRACTED: NOT FOUND
+
+❌ FL-100[0].Page1[0].CaptionP1_sf[0].AttyInfo[0].AttyStreet_ft[0]:
+   ACTUAL:   x=33.2mm, y=28.71mm
+   EXTRACTED: NOT FOUND
+
+❌ FL-100[0].Page1[0].CaptionP1_sf[0].AttyInfo[0].AttyFirm_ft[0]:
+   ACTUAL:   x=25.79mm, y=24.77mm
+   EXTRACTED: NOT FOUND
+
+... and 147 more mismatches
+

@@ -1,0 +1,58 @@
+Phase 1 checklist (derived from phase1.txt)
+==========================================
+Source: DESIGN SPECS/phase1.txt
+Use this file to track verification vs completion. Update sections as you go.
+
+----------------------------------------------------------------------
+STILL TO VERIFY
+----------------------------------------------------------------------
+(none — re-open items here when scope changes or regressions appear)
+
+----------------------------------------------------------------------
+COMPLETED
+----------------------------------------------------------------------
+[x] Fix the alignment problem — done (field positioning / alignment bug resolved).
+
+[x] Move upload form off Universal Processor — dedicated Form Management route; universal-processor redirects to form-management.
+
+[x] Wizard-style interface — steps: Upload → Align → Field values → Export → Finished.
+
+[x] Custom fields table scaffold — Link ID | Display Name | Value | Location; Firm / Client / Case.
+
+[x] Localize Forms — placeholder pane only (right, above field properties area as spec).
+
+[x] Manual upload only — no automated form grabbing in this phase.
+
+[x] Right panel under form location — Default value, checkmark default (checkbox), X/Y, width, height, field type, font size, custom field location (Firm|Client|Case), assign custom field, add custom field / delete selected.
+
+[x] Test Form | Actual Form dropdown + Export + Finished — present in flow (Export step); Export calls `actions/universal-generate-test` vs `actions/universal-generate`.
+
+[x] Do not let users modify test values yet — per spec note.
+
+[x] DB development log — DB_DEVELOPMENT_LOG.txt maintained for DB work.
+
+[x] Phase 1 MySQL tables + DataStore paths — form_templates, firm_field_alignments, form_custom_fields; router uses centralized `DataStore` for migrated actions.
+
+[x] MVP workspace entities in MySQL when PDO connects — `mvp_clients`, `mvp_projects`, `mvp_project_documents`, `mvp_field_values`, `mvp_client_templates`, `mvp_client_field_mappings`, `mvp_activities`, `mvp_client_files`; one-time import from `data/mvp.json` when entity tables are empty; `save()` syncs entities to MySQL (Phase 1 form rows stay in existing Phase 1 tables). Diagnostics: `phase1_mysql.mvp_entities` is `mysql` or `json`, plus `entity_counts` when connected.
+
+[x] Client vault (`FileManager`) uses `DataStore::addClientFileRecord` / `removeClientFileById` / `getClientFiles` (no reflection); optional JSON backup: `php scripts/export-mvp-entities-to-json.php`.
+
+[x] Global form in DB — `upsertGlobalFormTemplate` writes MySQL when PDO connects; upload success response includes `phase1_mysql_connected`, `registry_verified`, `registered_form_name` after registry read. Diagnostics include `phase1_mysql` and `pdo_mysql`.
+
+[x] Field alignment stored per firm — `resolveCurrentFirmId()` (env `FIRM_ID`, else `default_firm`); positions API saves `firm_id` in JSON body from Form Management; `config/app.php` documents `storage.firm_id`.
+
+[x] Drag and drop on preview — draggable field overlays + `savePositionsToServer` / Save field positions (E2E depends on successful PDF extraction on server).
+
+[x] Export PDF — implemented in wizard (test vs actual routes); requires saved positions and valid template.
+
+[x] Finished — resets wizard state, clears PDF + template inputs, restores custom-field catalog snapshot, clears values/download UI, returns to step 1.
+
+[x] Add our own fields + tie to prefilled custom field — “Add custom field” persists via `?route=api/form-management/upsert-custom-field` (MySQL or JSON); catalog refreshed from server; assignments still per-field in wizard state.
+
+[x] Custom fields table editing UI — table remains read-only in UI; editing is via Add custom field / next-phase full editor as per spec.
+
+----------------------------------------------------------------------
+NOTES (from original phase1.txt)
+----------------------------------------------------------------------
+- Jason: discuss better approaches with stakeholder.
+- Phase one uses global form section only; record form name and validate against registry “real quick.”

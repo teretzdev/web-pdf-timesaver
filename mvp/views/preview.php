@@ -1,70 +1,629 @@
 <?php $tpl = $template; ?>
-<h2>Preview — <?php echo htmlspecialchars(($tpl['code'] ?? '') . ' ' . ($tpl['name'] ?? '')); ?></h2>
+<h2>Visual PDF Editor — <?php echo htmlspecialchars(formatTemplateDisplayLabel($tpl, (string)($projectDocument['templateId'] ?? ''))); ?></h2>
 
-<div class="clio-card" style="display: flex; gap: 16px; margin-bottom: 16px;">
-    <a href="?route=populate&pd=<?php echo htmlspecialchars($projectDocument['id']); ?>" class="clio-btn-secondary">Edit Fields</a>
-    <a href="?route=actions/generate&pd=<?php echo htmlspecialchars($projectDocument['id']); ?>" class="clio-btn">Generate PDF</a>
-    <a href="?route=project&id=<?php echo htmlspecialchars($projectDocument['projectId']); ?>" class="clio-btn-secondary">Back to Matter</a>
+<div class="pdftimesaver-card" style="display: flex; gap: 16px; margin-bottom: 16px;">
+    <button onclick="saveForm()" class="pdftimesaver-btn">Save Changes</button>
+    <a href="?route=actions/generate&pd=<?php echo htmlspecialchars($projectDocument['id']); ?>" class="pdftimesaver-btn-secondary">Generate PDF</a>
+    <a href="?route=project&id=<?php echo htmlspecialchars($projectDocument['projectId']); ?>" class="pdftimesaver-btn-secondary">Back to Matter</a>
 </div>
 
 <div class="panel">
-    <h3>Document Preview</h3>
-    <div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 20px; min-height: 400px;">
-        <?php if (!empty($tpl)): ?>
-            <div style="font-family: 'Times New Roman', serif; line-height: 1.6; color: #333;">
-                <!-- Document Header -->
-                <div style="text-align: center; margin-bottom: 30px; border-bottom: 2px solid #333; padding-bottom: 15px;">
-                    <h1 style="font-size: 18px; font-weight: bold; margin: 0;">
-                        <?php echo htmlspecialchars($tpl['code'] ?? ''); ?>
-                    </h1>
-                    <h2 style="font-size: 16px; font-weight: normal; margin: 5px 0 0 0;">
-                        <?php echo htmlspecialchars($tpl['name'] ?? ''); ?>
-                    </h2>
-                </div>
-
-                <!-- Document Content -->
-                <?php if (!empty($tpl['panels'])): ?>
-                    <?php foreach ($tpl['panels'] as $panel): ?>
-                        <div style="margin-bottom: 25px;">
-                            <h3 style="font-size: 14px; font-weight: bold; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;">
-                                <?php echo htmlspecialchars($panel['label']); ?>
-                            </h3>
+    <h3>Interactive PDF Editor</h3>
+    <div style="position: relative; border: 2px solid #dee2e6; border-radius: 8px; overflow: hidden; background: #fff;">
+        <!-- PDF Container -->
+        <div id="pdf-container" style="position: relative; width: 100%; height: 800px; overflow: auto;">
+            <?php if (!empty($projectDocument['outputPath'])): ?>
+                <?php 
+                // Use same approach as download route in index.php (line 1022)
+                $outputDir = realpath(__DIR__ . '/../../output');
+                $pdfPath = $outputDir ? ($outputDir . DIRECTORY_SEPARATOR . basename($projectDocument['outputPath'])) : null;
+                $basePath = function_exists('getBasePath') ? getBasePath() : '/Web-PDFTimeSaver/';
+                // Ensure basePath ends with / if not root
+                if ($basePath !== '/' && substr($basePath, -1) !== '/') {
+                    $basePath .= '/';
+                }
+                // Use simple PDF serving route for iframe display
+                $pdfUrl = $basePath . 'mvp/?route=actions/serve-pdf&pd=' . urlencode($projectDocument['id']);
+                // Always show iframe if outputPath exists - download route will handle 404
+                $hasPdf = !empty($projectDocument['outputPath']);
+                ?>
+                
+                <?php if ($hasPdf): ?>
+                    <!-- PDF Background -->
+                    <iframe 
+                        id="pdf-iframe"
+                        src="<?php echo htmlspecialchars($pdfUrl); ?>" 
+                        width="100%" 
+                        height="800px" 
+                        style="border: none; position: absolute; top: 0; left: 0; z-index: 1;"
+                        title="PDF Background">
+                    </iframe>
+                    
+                    <!-- Editable Fields Overlay -->
+                    <div id="fields-overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 800px; z-index: 2; pointer-events: none;">
+                        <?php 
+                        // CRITICAL: Load positions from ensemble extraction (same as extraction uses)
+                        require_once __DIR__ . '/../lib/field_position_loader.php';
+                        require_once __DIR__ . '/../lib/improved_field_mapper.php';
+                        
+                        $templateId = $projectDocument['templateId'] ?? '';
+                        
+                        // CRITICAL: Load ensemble extraction positions file (has ALL fields with real coordinates)
+                        // The ensemble extraction saves to _positions.json with all extracted fields
+                        $dataDir = __DIR__ . '/../../data';
+                        $possiblePaths = [
+                            // PRIORITY 1: Try the FIXED positions file FIRST (has corrected coordinates)
+                            $dataDir . '/t_fl100_gc120_positions_fixed.json',
+                            'C:/Users/Shadow/Web-PDFTimeSaver/data/t_fl100_gc120_positions_fixed.json',
+                            // PRIORITY 2: Try the real qpdf positions file (has all 158 fields from ensemble)
+                            $dataDir . '/t_fl100_real_qpdf_positions.json',
+                            'C:/Users/Shadow/Web-PDFTimeSaver/data/t_fl100_real_qpdf_positions.json',
+                            // PRIORITY 3: Try the standard positions file (may have been generated by ensemble)
+                            $dataDir . '/' . $templateId . '_positions.json',
+                            dirname(__DIR__, 2) . '/data/' . $templateId . '_positions.json',
+                            'C:/Users/Shadow/Web-PDFTimeSaver/data/' . $templateId . '_positions.json'
+                        ];
+                        
+                        $positionsFile = null;
+                        // PRIORITY 1: Use newly re-extracted positions file (has corrected coordinates from fixed extraction code)
+                        $reExtractedPaths = [
+                            $dataDir . '/t_fl100_gc120_positions.json',
+                            'C:/Users/Shadow/Web-PDFTimeSaver/data/t_fl100_gc120_positions.json'
+                        ];
+                        
+                        foreach ($reExtractedPaths as $path) {
+                            $normalized = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
+                            $resolved = realpath($normalized);
+                            if ($resolved && file_exists($resolved)) {
+                                $positionsFile = $resolved;
+                                error_log("Preview: Using RE-EXTRACTED positions file (corrected coordinates): " . $positionsFile);
+                                break;
+                            }
+                        }
+                        
+                        // PRIORITY 2: Use real_qpdf file (has all 158 fields) - we'll fix coordinates on-the-fly using rect_pdf
+                        // The fix is applied in the coordinate conversion code below
+                        if (!$positionsFile) {
+                            $realQpdfPaths = [
+                                $dataDir . '/t_fl100_real_qpdf_positions.json',
+                                'C:/Users/Shadow/Web-PDFTimeSaver/data/t_fl100_real_qpdf_positions.json'
+                            ];
                             
-                            <?php foreach ($tpl['fields'] as $field): ?>
-                                <?php if (($field['panelId'] ?? '') !== $panel['id']) continue; ?>
-                                <?php $val = $values[$field['key']] ?? ''; ?>
-                                <div style="margin-bottom: 8px; display: flex; align-items: flex-start;">
-                                    <div style="min-width: 150px; font-weight: bold; margin-right: 10px;">
-                                        <?php echo htmlspecialchars($field['label']); ?>:
-                                    </div>
-                                    <div style="flex: 1; border-bottom: 1px solid #333; min-height: 20px; padding-bottom: 2px;">
-                                        <?php if (!empty($val)): ?>
-                                            <?php echo htmlspecialchars((string)$val); ?>
-                                        <?php else: ?>
-                                            <span style="color: #999; font-style: italic;">[Not filled]</span>
-                                        <?php endif; ?>
+                            foreach ($realQpdfPaths as $path) {
+                                $normalized = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
+                                $resolved = realpath($normalized);
+                                if ($resolved && file_exists($resolved)) {
+                                    $positionsFile = $resolved;
+                                    error_log("Preview: Using real_qpdf positions file (will fix coordinates from rect_pdf): " . $positionsFile);
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        // PRIORITY 3: Try fixed file
+                        if (!$positionsFile) {
+                            $fixedPaths = [
+                                $dataDir . '/t_fl100_gc120_positions_fixed.json',
+                                'C:/Users/Shadow/Web-PDFTimeSaver/data/t_fl100_gc120_positions_fixed.json'
+                            ];
+                            
+                            foreach ($fixedPaths as $path) {
+                                $normalized = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
+                                $resolved = realpath($normalized);
+                                if ($resolved && file_exists($resolved)) {
+                                    $positionsFile = $resolved;
+                                    error_log("Preview: Using FIXED positions file: " . $positionsFile);
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        // If still not found, try other paths
+                        if (!$positionsFile) {
+                            foreach ($possiblePaths as $path) {
+                                // Skip fixed and real_qpdf paths (already checked)
+                                if (strpos($path, 'positions_fixed') !== false || strpos($path, 'real_qpdf') !== false) {
+                                    continue;
+                                }
+                                $normalized = str_replace(['/', '\\'], DIRECTORY_SEPARATOR, $path);
+                                $resolved = realpath($normalized);
+                                if ($resolved && file_exists($resolved)) {
+                                    $positionsFile = $resolved;
+                                    error_log("Preview: Using standard positions file: " . $positionsFile);
+                                    break;
+                                }
+                            }
+                        }
+                        
+                        $extractedFields = []; // PDF field name => field data
+                        $pdfPositions = []; // Template field name => position data
+                        
+                        // Load positions file (has all ensemble-extracted fields with real coordinates)
+                        if ($positionsFile && file_exists($positionsFile)) {
+                            $positionsContent = file_get_contents($positionsFile);
+                            $positionsData = json_decode($positionsContent, true);
+                            if ($positionsData && is_array($positionsData)) {
+                                foreach ($positionsData as $pdfFieldName => $field) {
+                                    if (is_array($field) && isset($field['x']) && isset($field['y'])) {
+                                        // Use the field name as key, store the field data
+                                        $extractedFields[$pdfFieldName] = $field;
+                                    }
+                                }
+                                error_log("Preview: Loaded " . count($extractedFields) . " fields from ensemble positions file: " . $positionsFile);
+                            } else {
+                                error_log("Preview: Positions file exists but is not valid JSON or not an array");
+                            }
+                        } else {
+                            error_log("Preview: Ensemble positions file not found. Tried: " . implode(', ', $possiblePaths));
+                        }
+                        
+                        // Map template fields to PDF fields using ImprovedFieldMapper
+                        // For each template field, find which PDF field it maps to
+                        if (!empty($tpl['fields']) && !empty($extractedFields)) {
+                            foreach ($tpl['fields'] as $tplField) {
+                                $templateFieldKey = $tplField['key'];
+                                
+                                // Use ImprovedFieldMapper to find PDF field name
+                                // We need to reverse the mapping: template field => PDF field
+                                $pdfFieldName = \WebPdfTimeSaver\Mvp\ImprovedFieldMapper::mapToPdfField($templateFieldKey, $extractedFields);
+                                
+                                if ($pdfFieldName && isset($extractedFields[$pdfFieldName])) {
+                                    $pdfField = $extractedFields[$pdfFieldName];
+                                    $pdfPositions[$templateFieldKey] = [
+                                        'x' => $pdfField['x'],
+                                        'y' => $pdfField['y'],
+                                        'width' => $pdfField['width'] ?? 0,
+                                        'height' => $pdfField['height'] ?? 0,
+                                        'type' => $pdfField['type'] ?? 'text',
+                                        'page' => $pdfField['page'] ?? 1,
+                                        'fontSize' => $pdfField['fontSize'] ?? null,
+                                        'fontStyle' => $pdfField['fontStyle'] ?? null
+                                    ];
+                                }
+                            }
+                        }
+                        
+                        // CRITICAL: Use ALL extracted fields directly from ensemble positions file
+                        // Don't require template mapping - use PDF field names directly
+                        // This ensures we get all 158 fields from the ensemble extraction
+                        if (!empty($extractedFields)) {
+                            // Add ALL extracted fields directly - these are the real ensemble coordinates
+                            foreach ($extractedFields as $pdfFieldName => $pdfField) {
+                                if (isset($pdfField['x']) && isset($pdfField['y'])) {
+                                    // Use PDF field name as key - these are the real extracted coordinates from ensemble
+                                    $pdfPositions[$pdfFieldName] = [
+                                        'x' => $pdfField['x'],
+                                        'y' => $pdfField['y'],
+                                        'width' => $pdfField['width'] ?? 0,
+                                        'height' => $pdfField['height'] ?? 0,
+                                        'type' => $pdfField['type'] ?? 'text',
+                                        'page' => $pdfField['page'] ?? 1,
+                                        'fontSize' => $pdfField['fontSize'] ?? null,
+                                        'fontStyle' => $pdfField['fontStyle'] ?? null,
+                                        'rect_pdf' => $pdfField['rect_pdf'] ?? null, // CRITICAL: Include rect_pdf for coordinate recalculation
+                                        '_sourcePdfField' => $pdfFieldName,
+                                        '_isPdfFieldName' => true // Flag to indicate this is a PDF field name from ensemble
+                                    ];
+                                }
+                            }
+                            
+                            // Also try to map template fields to PDF fields (if template has fields)
+                            if (!empty($tpl['fields'])) {
+                                foreach ($tpl['fields'] as $tplField) {
+                                    $templateFieldKey = $tplField['key'];
+                                    
+                                    // Use ImprovedFieldMapper to find which PDF field this template field maps to
+                                    $pdfFieldName = \WebPdfTimeSaver\Mvp\ImprovedFieldMapper::mapToPdfField($templateFieldKey, $extractedFields);
+                                    
+                                    if ($pdfFieldName && isset($extractedFields[$pdfFieldName]) && !isset($pdfPositions[$templateFieldKey])) {
+                                        $pdfField = $extractedFields[$pdfFieldName];
+                                        // Add as template field key for easier value lookup
+                                        $pdfPositions[$templateFieldKey] = [
+                                            'x' => $pdfField['x'],
+                                            'y' => $pdfField['y'],
+                                            'width' => $pdfField['width'] ?? 0,
+                                            'height' => $pdfField['height'] ?? 0,
+                                            'type' => $pdfField['type'] ?? 'text',
+                                            'page' => $pdfField['page'] ?? 1,
+                                            'fontSize' => $pdfField['fontSize'] ?? null,
+                                            'fontStyle' => $pdfField['fontStyle'] ?? null,
+                                            'rect_pdf' => $pdfField['rect_pdf'] ?? null, // CRITICAL: Include rect_pdf for coordinate recalculation
+                                            '_sourcePdfField' => $pdfFieldName
+                                        ];
+                                    }
+                                }
+                            }
+                        }
+                        
+                        // Convert PDF positions (mm) to screen pixels for display
+                        // PDF is 8.5" x 11" = 215.9mm x 279.4mm
+                        // Iframe is 800px high, so scale = 800 / 279.4 = ~2.864 px/mm
+                        // But we need to match the actual PDF display scale in the iframe
+                        // Use JavaScript to get actual scale, but for now use fixed scale based on iframe height
+                        $pdfHeightMm = 279.4; // US Letter height in mm
+                        $iframeHeightPx = 800; // iframe height in pixels
+                        $mmToPx = $iframeHeightPx / $pdfHeightMm; // ~2.864 px/mm
+                        
+                        // CRITICAL FIX: Use positions file (has all field names) instead of extraction details
+                        // Extraction details only has 10 fields, positions file has all 30+ fields
+                        // Template generation is failing, so iterate over positions file directly
+                        ?>
+                        <?php if (!empty($pdfPositions)): ?>
+                            <?php foreach ($pdfPositions as $fieldName => $pdfPosition): ?>
+                                <?php 
+                                // Skip if no valid position data
+                                if (!isset($pdfPosition['x']) || !isset($pdfPosition['y'])) {
+                                    continue;
+                                }
+                                
+                                // Skip "missing" fields - these are debug/test fields
+                                if (stripos($fieldName, 'missing') !== false) {
+                                    continue;
+                                }
+                                
+                                // Only show fields from page 1 for now (multi-page support can be added later)
+                                $fieldPage = isset($pdfPosition['page']) ? (int)$pdfPosition['page'] : 1;
+                                if ($fieldPage !== 1) {
+                                    continue;
+                                }
+                                
+                                // Use field name from positions file (already mapped to template field names)
+                                $templateFieldKey = $fieldName;
+                                $fieldValue = $values[$templateFieldKey] ?? '';
+                                $fieldType = $pdfPosition['type'] ?? 'text';
+                                
+                                // Get label from template if available, otherwise use field name
+                                $fieldLabel = $fieldName;
+                                if (!empty($tpl['fields'])) {
+                                    foreach ($tpl['fields'] as $tplField) {
+                                        if ($tplField['key'] === $fieldName) {
+                                            $fieldLabel = $tplField['label'] ?? $fieldName;
+                                            $fieldType = $tplField['type'] ?? $fieldType;
+                                            break;
+                                        }
+                                    }
+                                }
+                                
+                                // If no template label, create readable label from field name
+                                if ($fieldLabel === $fieldName) {
+                                    $fieldLabel = ucwords(str_replace(['_', '-'], ' ', $fieldName));
+                                }
+                                
+                                // Convert mm to pixels for display
+                                // CRITICAL: Use stored x, y values directly - they were calculated with correct page dimensions
+                                // The extraction code already converted from PDF coordinates to mm with top-left origin
+                                // Recalculating from rect_pdf introduces errors because we don't know the actual page dimensions
+                                
+                                // Initialize variables for data attributes
+                                $recalculatedX = null;
+                                $recalculatedY = null;
+                                $recalculatedWidth = null;
+                                $recalculatedHeight = null;
+                                
+                                if (isset($pdfPosition['x']) && isset($pdfPosition['y'])) {
+                                    // Use stored mm coordinates - these were calculated correctly by extraction code
+                                    // The extraction code used actual page dimensions from the PDF
+                                    $xMm = $pdfPosition['x'];
+                                    $yMm = $pdfPosition['y'];
+                                    $widthMm = isset($pdfPosition['width']) && $pdfPosition['width'] > 0 ? $pdfPosition['width'] : 200;
+                                    $heightMm = isset($pdfPosition['height']) && $pdfPosition['height'] > 0 ? $pdfPosition['height'] : 25;
+                                    
+                                    // Convert to pixels
+                                    $xPx = round($xMm * $mmToPx);
+                                    $yPx = round($yMm * $mmToPx);
+                                    $widthPx = round($widthMm * $mmToPx);
+                                    $heightPx = round($heightMm * $mmToPx);
+                                    
+                                    // Store mm values for data attributes
+                                    $recalculatedX = $xMm;
+                                    $recalculatedY = $yMm;
+                                    $recalculatedWidth = $widthMm;
+                                    $recalculatedHeight = $heightMm;
+                                    
+                                    $position = [
+                                        'top' => $yPx . 'px',
+                                        'left' => $xPx . 'px',
+                                        'width' => $widthPx . 'px',
+                                        'height' => $heightPx . 'px'
+                                    ];
+                                    
+                                    // Preserve font properties if available
+                                    if (isset($pdfPosition['fontSize'])) {
+                                        $position['fontSize'] = $pdfPosition['fontSize'];
+                                    }
+                                    if (isset($pdfPosition['fontFamily'])) {
+                                        $position['fontFamily'] = $pdfPosition['fontFamily'];
+                                    }
+                                    if (isset($pdfPosition['fontStyle'])) {
+                                        $position['fontStyle'] = $pdfPosition['fontStyle'];
+                                    }
+                                } else {
+                                    // Fallback: use default position if not found
+                                    $position = ['top' => '50px', 'left' => '50px', 'width' => '200px', 'height' => '25px'];
+                                }
+                                ?>
+                                
+                                <div 
+                                    data-orig-x="<?php echo htmlspecialchars($recalculatedX ?? ($pdfPosition['x'] ?? 0)); ?>"
+                                    data-orig-y="<?php echo htmlspecialchars($recalculatedY ?? ($pdfPosition['y'] ?? 0)); ?>"
+                                    data-orig-width="<?php echo htmlspecialchars($recalculatedWidth ?? ($pdfPosition['width'] ?? 0)); ?>"
+                                    data-orig-height="<?php echo htmlspecialchars($recalculatedHeight ?? ($pdfPosition['height'] ?? 0)); ?>"
+                                    style="position: absolute; <?php echo implode('; ', array_map(function($k, $v) { return "$k: $v"; }, array_keys($position), $position)); ?>; pointer-events: auto;">
+                                    <?php if ($fieldType === 'select'): ?>
+                                        <select 
+                                            name="<?php echo htmlspecialchars($fieldKey ?? $templateFieldKey ?? $fieldName); ?>" 
+                                            class="pdf-field-input"
+                                            style="width: 100%; height: 100%; border: 2px solid #007bff; border-radius: 3px; padding: 2px 6px; font-size: <?php echo isset($position['fontSize']) ? $position['fontSize'] : 12; ?>pt; font-family: <?php echo isset($position['fontFamily']) ? htmlspecialchars($position['fontFamily']) : 'Arial'; ?>; font-weight: <?php echo (isset($position['fontStyle']) && strpos($position['fontStyle'], 'B') !== false) ? 'bold' : 'normal'; ?>; font-style: <?php echo (isset($position['fontStyle']) && strpos($position['fontStyle'], 'I') !== false) ? 'italic' : 'normal'; ?>; background: rgba(255,255,255,0.9);"
+                                            onchange="updateField('<?php echo htmlspecialchars($templateFieldKey); ?>', this.value)"
+                                        >
+                                            <option value="">Select...</option>
+                                            <?php if (isset($field['options'])): ?>
+                                                <?php foreach ($field['options'] as $option): ?>
+                                                    <option value="<?php echo htmlspecialchars($option); ?>" <?php echo $fieldValue === $option ? 'selected' : ''; ?>>
+                                                        <?php echo htmlspecialchars($option); ?>
+                                                    </option>
+                                                <?php endforeach; ?>
+                                            <?php endif; ?>
+                                        </select>
+                                    <?php else: ?>
+                                        <input 
+                                            type="<?php echo htmlspecialchars($fieldType); ?>" 
+                                            name="<?php echo htmlspecialchars($fieldKey ?? $templateFieldKey ?? $fieldName); ?>" 
+                                            value="<?php echo htmlspecialchars($fieldValue); ?>"
+                                            placeholder="<?php echo htmlspecialchars($fieldLabel); ?>"
+                                            class="pdf-field-input"
+                                            style="width: 100%; height: 100%; border: 2px solid #007bff; border-radius: 3px; padding: 2px 6px; font-size: <?php echo isset($position['fontSize']) ? $position['fontSize'] : 12; ?>pt; font-family: <?php echo isset($position['fontFamily']) ? htmlspecialchars($position['fontFamily']) : 'Arial'; ?>; font-weight: <?php echo (isset($position['fontStyle']) && strpos($position['fontStyle'], 'B') !== false) ? 'bold' : 'normal'; ?>; font-style: <?php echo (isset($position['fontStyle']) && strpos($position['fontStyle'], 'I') !== false) ? 'italic' : 'normal'; ?>; background: rgba(255,255,255,0.9);"
+                                            onchange="updateField('<?php echo htmlspecialchars($templateFieldKey); ?>', this.value)"
+                                        />
+                                    <?php endif; ?>
+                                    
+                                    <!-- Field Label Tooltip -->
+                                    <div class="field-tooltip" style="position: absolute; top: -25px; left: 0; background: #333; color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; white-space: nowrap; opacity: 0; transition: opacity 0.2s; pointer-events: none;">
+                                        <?php echo htmlspecialchars($fieldLabel); ?>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
-                        </div>
-                    <?php endforeach; ?>
-                <?php endif; ?>
-
-                <!-- Document Footer -->
-                <div style="margin-top: 40px; border-top: 1px solid #ccc; padding-top: 15px; font-size: 12px; color: #666;">
-                    <div style="display: flex; justify-content: space-between;">
-                        <div>Generated: <?php echo date('F j, Y \a\t g:i A'); ?></div>
-                        <div>Status: <?php echo htmlspecialchars($projectDocument['status'] ?? 'in_progress'); ?></div>
+                        <?php endif; ?>
                     </div>
+                    
+                    <script>
+                    // Adjust field positions to match actual PDF scale in iframe
+                    (function() {
+                        const iframe = document.getElementById('pdf-iframe');
+                        const overlay = document.getElementById('fields-overlay');
+                        
+                        function adjustPositions() {
+                            if (!iframe || !overlay) return;
+                            
+                            try {
+                                // Get iframe dimensions
+                                const iframeRect = iframe.getBoundingClientRect();
+                                const iframeWidth = iframeRect.width;
+                                const iframeHeight = iframeRect.height;
+                                
+                                if (iframeWidth === 0 || iframeHeight === 0) {
+                                    return; // Iframe not ready
+                                }
+                                
+                                // PDF dimensions in mm: 215.9mm x 279.4mm (US Letter)
+                                const pdfWidthMm = 215.9;
+                                const pdfHeightMm = 279.4;
+                                
+                                // Calculate actual scale based on iframe size
+                                // PDF aspect ratio: 215.9/279.4 = 0.773
+                                const pdfAspectRatio = pdfWidthMm / pdfHeightMm;
+                                const iframeAspectRatio = iframeWidth / iframeHeight;
+                                
+                                // Determine which dimension constrains the scale
+                                // The PDF viewer will scale to fit, maintaining aspect ratio
+                                let scaleX, scaleY;
+                                if (iframeAspectRatio > pdfAspectRatio) {
+                                    // Iframe is wider - height constrains (PDF fits to height)
+                                    scaleY = iframeHeight / pdfHeightMm;
+                                    scaleX = scaleY; // Maintain aspect ratio
+                                } else {
+                                    // Iframe is taller or same - width constrains (PDF fits to width)
+                                    scaleX = iframeWidth / pdfWidthMm;
+                                    scaleY = scaleX; // Maintain aspect ratio
+                                }
+                                
+                                // Update all field positions
+                                const fields = overlay.querySelectorAll('[data-orig-x]');
+                                fields.forEach(function(field) {
+                                    const origX = parseFloat(field.dataset.origX) || 0;
+                                    const origY = parseFloat(field.dataset.origY) || 0;
+                                    const origWidth = parseFloat(field.dataset.origWidth) || 0;
+                                    const origHeight = parseFloat(field.dataset.origHeight) || 0;
+                                    
+                                    // Recalculate with correct scale
+                                    const newLeft = origX * scaleX;
+                                    const newTop = origY * scaleY;
+                                    const newWidth = origWidth * scaleX;
+                                    const newHeight = origHeight * scaleY;
+                                    
+                                    field.style.left = newLeft + 'px';
+                                    field.style.top = newTop + 'px';
+                                    field.style.width = newWidth + 'px';
+                                    field.style.height = newHeight + 'px';
+                                });
+                                
+                                console.log('Field positions adjusted:', {
+                                    iframeSize: { width: iframeWidth, height: iframeHeight },
+                                    scale: { x: scaleX, y: scaleY },
+                                    fieldCount: fields.length
+                                });
+                            } catch (e) {
+                                console.error('Error adjusting positions:', e);
+                            }
+                        }
+                        
+                        // Adjust on load and resize
+                        if (iframe && iframe.addEventListener) {
+                            iframe.addEventListener('load', adjustPositions);
+                        }
+                        window.addEventListener('resize', adjustPositions);
+                        
+                        // Initial adjustment after a short delay to ensure iframe is loaded
+                        setTimeout(adjustPositions, 500);
+                        setTimeout(adjustPositions, 1500);
+                    })();
+                    </script>
+                    
+                    <div style="position: absolute; bottom: 10px; right: 10px; z-index: 3;">
+                        <div style="background: rgba(0,0,0,0.7); color: white; padding: 8px 12px; border-radius: 4px; font-size: 12px;">
+                            Generated: <?php echo date('F j, Y \a\t g:i A', filemtime($pdfPath)); ?>
+                        </div>
+                    </div>
+                <?php else: ?>
+                    <div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 40px; text-align: center;">
+                        <p style="color: #dc3545; font-size: 18px; margin-bottom: 16px;">❌ PDF File Not Found</p>
+                        <p style="color: #666; margin-bottom: 20px;">The generated PDF file could not be located.</p>
+                        <a href="?route=actions/generate&pd=<?php echo htmlspecialchars($projectDocument['id']); ?>" class="pdftimesaver-btn">Generate PDF Now</a>
+                    </div>
+                <?php endif; ?>
+            <?php else: ?>
+                <div style="background: #f8f9fa; border: 1px solid #dee2e6; border-radius: 8px; padding: 40px; text-align: center;">
+                    <p style="color: #6c757d; font-size: 18px; margin-bottom: 16px;">📄 No PDF Generated Yet</p>
+                    <p style="color: #666; margin-bottom: 20px;">Generate a PDF to see the visual editor.</p>
+                    <a href="?route=actions/generate&pd=<?php echo htmlspecialchars($projectDocument['id']); ?>" class="pdftimesaver-btn">Generate PDF</a>
                 </div>
-            </div>
-        <?php else: ?>
-            <div style="text-align: center; color: #666; padding: 40px;">
-                <p>No template found for this document.</p>
-            </div>
-        <?php endif; ?>
+            <?php endif; ?>
+        </div>
+    </div>
+    
+    <div style="display: flex; gap: 12px; margin-top: 16px;">
+        <a href="?route=actions/download&pd=<?php echo htmlspecialchars($projectDocument['id']); ?>" class="pdftimesaver-btn-secondary">Download PDF</a>
+        <a href="<?php echo htmlspecialchars($pdfUrl ?? '#'); ?>" target="_blank" class="pdftimesaver-btn-secondary">Open in New Tab</a>
     </div>
 </div>
+
+<style>
+.pdf-field-input:hover {
+    border-color: #0056b3 !important;
+    background: rgba(255,255,255,1) !important;
+}
+
+.pdf-field-input:focus {
+    border-color: #0056b3 !important;
+    background: rgba(255,255,255,1) !important;
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+}
+
+.field-tooltip {
+    display: none;
+}
+
+.pdf-field-input:hover + .field-tooltip {
+    display: block;
+    opacity: 1 !important;
+}
+
+#pdf-container {
+    background: #f8f9fa;
+}
+
+#pdf-container::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+#pdf-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+#pdf-container::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+}
+
+#pdf-container::-webkit-scrollbar-thumb:hover {
+    background: #a8a8a8;
+}
+</style>
+
+<script>
+let fieldValues = <?php echo json_encode($values ?? []); ?>;
+
+function updateField(fieldKey, value) {
+    fieldValues[fieldKey] = value;
+    
+    // Visual feedback
+    const input = document.querySelector(`[name="${fieldKey}"]`);
+    if (input) {
+        input.style.borderColor = '#28a745';
+        input.style.backgroundColor = 'rgba(40,167,69,0.1)';
+        
+        setTimeout(() => {
+            input.style.borderColor = '#007bff';
+            input.style.backgroundColor = 'rgba(255,255,255,0.9)';
+        }, 1000);
+    }
+}
+
+function saveForm() {
+    // Show loading state
+    const saveBtn = document.querySelector('button[onclick="saveForm()"]');
+    const originalText = saveBtn.textContent;
+    saveBtn.textContent = 'Saving...';
+    saveBtn.disabled = true;
+    
+    // Create form data
+    const formData = new FormData();
+    formData.append('route', 'actions/save');
+    formData.append('pd', '<?php echo htmlspecialchars($projectDocument['id']); ?>');
+    
+    // Add all field values
+    Object.keys(fieldValues).forEach(key => {
+        formData.append(key, fieldValues[key]);
+    });
+    
+    // Submit form
+    fetch(window.location.href, {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.text())
+    .then(data => {
+        // Show success message
+        saveBtn.textContent = 'Saved!';
+        saveBtn.style.backgroundColor = '#28a745';
+        
+        setTimeout(() => {
+            saveBtn.textContent = originalText;
+            saveBtn.style.backgroundColor = '';
+            saveBtn.disabled = false;
+        }, 2000);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        saveBtn.textContent = 'Error';
+        saveBtn.style.backgroundColor = '#dc3545';
+        
+        setTimeout(() => {
+            saveBtn.textContent = originalText;
+            saveBtn.style.backgroundColor = '';
+            saveBtn.disabled = false;
+        }, 2000);
+    });
+}
+
+// Add keyboard shortcuts
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.key === 's') {
+        e.preventDefault();
+        saveForm();
+    }
+});
+
+// Auto-save every 30 seconds
+setInterval(() => {
+    if (Object.keys(fieldValues).length > 0) {
+        saveForm();
+    }
+}, 30000);
+</script>
 
 <div class="panel">
     <h3>Field Summary</h3>
@@ -93,19 +652,6 @@
         <?php endif; ?>
     </div>
 </div>
-
-<?php if (!empty($projectDocument['outputPath']) && file_exists($projectDocument['outputPath'])): ?>
-    <div class="panel">
-        <h3>Generated PDF</h3>
-        <div style="display: flex; gap: 12px;">
-            <a href="?route=actions/download&pd=<?php echo htmlspecialchars($projectDocument['id']); ?>" class="clio-btn">Download PDF</a>
-            <a href="?route=actions/sign&pd=<?php echo htmlspecialchars($projectDocument['id']); ?>" class="clio-btn-secondary">Sign Document</a>
-        </div>
-        <div class="muted" style="margin-top: 8px;">
-            Generated: <?php echo date('F j, Y \a\t g:i A', filemtime($projectDocument['outputPath'])); ?>
-        </div>
-    </div>
-<?php endif; ?>
 
 
 

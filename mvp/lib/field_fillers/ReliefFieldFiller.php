@@ -4,6 +4,7 @@ declare(strict_types=1);
 namespace WebPdfTimeSaver\Mvp\FieldFillers;
 
 require_once __DIR__ . '/../field_position_loader.php';
+require_once __DIR__ . '/../font_manager.php';
 
 final class ReliefFieldFiller implements FieldFillerInterface {
     private $positionLoader;
@@ -20,7 +21,9 @@ final class ReliefFieldFiller implements FieldFillerInterface {
         // Dissolution Type checkbox
         if (!empty($data['dissolution_type']) && isset($positions['dissolution_type'])) {
             $pos = $positions['dissolution_type'];
-            $pdf->SetFont('Arial', '', $pos['fontSize'] ?? 9);
+            $fieldType = $pos['type'] ?? 'text';
+            $fontSettings = \WebPdfTimeSaver\Mvp\FontManager::getFontSettings($pos, 't_fl100_gc120', $fieldType);
+            \WebPdfTimeSaver\Mvp\FontManager::applyFont($pdf, $fontSettings);
             $pdf->SetXY($pos['x'], $pos['y']);
             $pdf->Cell($pos['width'], 5, 'X', 0, 0, 'C');
             $logger->debug('Dissolution type checkbox filled', ['x' => $pos['x'], 'y' => $pos['y']]);
@@ -29,7 +32,9 @@ final class ReliefFieldFiller implements FieldFillerInterface {
         // Property Division checkbox
         if (!empty($data['property_division']) && isset($positions['property_division'])) {
             $pos = $positions['property_division'];
-            $pdf->SetFont('Arial', '', $pos['fontSize'] ?? 9);
+            $fieldType = $pos['type'] ?? 'text';
+            $fontSettings = \WebPdfTimeSaver\Mvp\FontManager::getFontSettings($pos, 't_fl100_gc120', $fieldType);
+            \WebPdfTimeSaver\Mvp\FontManager::applyFont($pdf, $fontSettings);
             $pdf->SetXY($pos['x'], $pos['y']);
             $pdf->Cell($pos['width'], 5, 'X', 0, 0, 'C');
             $logger->debug('Property division checkbox filled', ['x' => $pos['x'], 'y' => $pos['y']]);
@@ -38,7 +43,9 @@ final class ReliefFieldFiller implements FieldFillerInterface {
         // Spousal Support checkbox
         if (!empty($data['spousal_support']) && isset($positions['spousal_support'])) {
             $pos = $positions['spousal_support'];
-            $pdf->SetFont('Arial', '', $pos['fontSize'] ?? 9);
+            $fieldType = $pos['type'] ?? 'text';
+            $fontSettings = \WebPdfTimeSaver\Mvp\FontManager::getFontSettings($pos, 't_fl100_gc120', $fieldType);
+            \WebPdfTimeSaver\Mvp\FontManager::applyFont($pdf, $fontSettings);
             $pdf->SetXY($pos['x'], $pos['y']);
             $pdf->Cell($pos['width'], 5, 'X', 0, 0, 'C');
             $logger->debug('Spousal support checkbox filled', ['x' => $pos['x'], 'y' => $pos['y']]);
@@ -47,7 +54,9 @@ final class ReliefFieldFiller implements FieldFillerInterface {
         // Attorney Fees checkbox
         if (!empty($data['attorney_fees']) && isset($positions['attorney_fees'])) {
             $pos = $positions['attorney_fees'];
-            $pdf->SetFont('Arial', '', $pos['fontSize'] ?? 9);
+            $fieldType = $pos['type'] ?? 'text';
+            $fontSettings = \WebPdfTimeSaver\Mvp\FontManager::getFontSettings($pos, 't_fl100_gc120', $fieldType);
+            \WebPdfTimeSaver\Mvp\FontManager::applyFont($pdf, $fontSettings);
             $pdf->SetXY($pos['x'], $pos['y']);
             $pdf->Cell($pos['width'], 5, 'X', 0, 0, 'C');
             $logger->debug('Attorney fees checkbox filled', ['x' => $pos['x'], 'y' => $pos['y']]);
@@ -56,7 +65,9 @@ final class ReliefFieldFiller implements FieldFillerInterface {
         // Name Change checkbox
         if (!empty($data['name_change']) && isset($positions['name_change'])) {
             $pos = $positions['name_change'];
-            $pdf->SetFont('Arial', '', $pos['fontSize'] ?? 9);
+            $fieldType = $pos['type'] ?? 'text';
+            $fontSettings = \WebPdfTimeSaver\Mvp\FontManager::getFontSettings($pos, 't_fl100_gc120', $fieldType);
+            \WebPdfTimeSaver\Mvp\FontManager::applyFont($pdf, $fontSettings);
             $pdf->SetXY($pos['x'], $pos['y']);
             $pdf->Cell($pos['width'], 5, 'X', 0, 0, 'C');
             $logger->debug('Name change checkbox filled', ['x' => $pos['x'], 'y' => $pos['y']]);

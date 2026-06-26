@@ -102,20 +102,40 @@ class QpdfDecryptExtractor {
      */
     async decryptPdf(inputPath, outputPath, password) {
         return new Promise((resolve) => {
+            // Ensure temp directory exists
+            const tempDir = path.dirname(outputPath);
+            if (!fs.existsSync(tempDir)) {
+                fs.mkdirSync(tempDir, { recursive: true });
+            }
+
             const args = ['--decrypt'];
             if (password) {
                 args.push(`--password=${password}`);
             }
             args.push(inputPath, outputPath);
 
-            const qpdf = spawn(this.qpdfPath, args);
-            
-            qpdf.on('close', (code) => {
-                resolve(code === 0 && fs.existsSync(outputPath));
-            });
-            
-            qpdf.on('error', () => {
-                resolve(false);
+            let errorOutput = '';
+            // Use execFile for Windows paths with spaces - it handles paths properly
+            const { execFile } = require('child_process');
+            execFile(this.qpdfPath, args, { 
+                shell: false,
+                windowsVerbatimArguments: false
+            }, (error, stdout, stderr) => {
+                if (error) {
+                    errorOutput = stderr || error.message || '';
+                    if (errorOutput) {
+                        console.log(`   ⚠️  qpdf error: ${errorOutput.trim()}`);
+                    }
+                    resolve(false);
+                } else {
+                    // Check if output file was created
+                    if (fs.existsSync(outputPath)) {
+                        resolve(true);
+                    } else {
+                        console.log(`   ⚠️  qpdf completed but output file not found: ${outputPath}`);
+                        resolve(false);
+                    }
+                }
             });
         });
     }
@@ -127,15 +147,33 @@ class QpdfDecryptExtractor {
         const candidates = [
             path.join(__dirname, '../../bin/qpdf/bin/qpdf.exe'),
             path.join(__dirname, '../../bin/qpdf.exe'),
-            'qpdf' // System PATH
+            'qpdf', // System PATH
+            'qpdf.exe' // Windows PATH
         ];
 
+        // First check if file exists
         for (const candidate of candidates) {
             if (fs.existsSync(candidate)) {
+                console.log(`   ✅ Found qpdf at: ${candidate}`);
                 return candidate;
             }
         }
 
+        // If not found by path, try to find it in system PATH
+        const { execSync } = require('child_process');
+        try {
+            // Try to find qpdf in PATH
+            const result = execSync('where qpdf 2>nul || which qpdf 2>/dev/null', { encoding: 'utf8', timeout: 2000 });
+            const qpdfPath = result.trim().split('\n')[0];
+            if (qpdfPath && fs.existsSync(qpdfPath)) {
+                console.log(`   ✅ Found qpdf in PATH: ${qpdfPath}`);
+                return qpdfPath;
+            }
+        } catch (e) {
+            // qpdf not in PATH
+        }
+
+        console.log('   ⚠️  qpdf not found - will skip decryption method');
         return null;
     }
 }

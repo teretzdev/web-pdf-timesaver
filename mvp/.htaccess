@@ -1,0 +1,22 @@
+# Disable all caching for development
+<IfModule mod_headers.c>
+    Header set Cache-Control "no-store, no-cache, must-revalidate, max-age=0"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+</IfModule>
+
+# Disable ETags
+FileETag None
+
+# Disable mod_expires
+<IfModule mod_expires.c>
+    ExpiresActive Off
+</IfModule>
+
+# Force PHP to not cache
+<IfModule mod_php.c>
+    php_value opcache.enable 0
+    php_value opcache.enable_cli 0
+    php_value opcache.validate_timestamps 1
+    php_value opcache.revalidate_freq 0
+</IfModule>

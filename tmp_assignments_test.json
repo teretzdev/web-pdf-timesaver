@@ -1,0 +1,14 @@
+[
+  {
+    "fieldKey": "test_name",
+    "value": "NODE OVERLAY SELECTABLE",
+    "fieldType": "text",
+    "page": 1,
+    "x": 30,
+    "y": 40,
+    "width": 80,
+    "height": 6,
+    "fontSize": 10,
+    "fontStyle": ""
+  }
+]

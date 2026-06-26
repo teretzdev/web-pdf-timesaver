@@ -6,7 +6,9 @@
         "height": 8,
         "fontSize": 9,
         "type": "text",
-        "page": 1
+        "page": 1,
+        "canonicalName": "attorney_name",
+        "name": "attorney_name"
     },
     "attorney_bar_number": {
         "x": 150,
@@ -15,7 +17,9 @@
         "height": 8,
         "fontSize": 9,
         "type": "text",
-        "page": 1
+        "page": 1,
+        "canonicalName": "attorney_bar_number",
+        "name": "attorney_bar_number"
     },
     "attorney_firm": {
         "x": 30,
@@ -24,7 +28,9 @@
         "height": 8,
         "fontSize": 9,
         "type": "text",
-        "page": 1
+        "page": 1,
+        "canonicalName": "attorney_firm",
+        "name": "attorney_firm"
     },
     "attorney_address": {
         "x": 30,
@@ -33,7 +39,9 @@
         "height": 8,
         "fontSize": 9,
         "type": "text",
-        "page": 1
+        "page": 1,
+        "canonicalName": "attorney_address",
+        "name": "attorney_address"
     },
     "attorney_city_state_zip": {
         "x": 30,
@@ -42,7 +50,9 @@
         "height": 8,
         "fontSize": 9,
         "type": "text",
-        "page": 1
+        "page": 1,
+        "canonicalName": "attorney_city_state_zip",
+        "name": "attorney_city_state_zip"
     },
     "attorney_phone": {
         "x": 30,
@@ -51,7 +61,9 @@
         "height": 8,
         "fontSize": 9,
         "type": "text",
-        "page": 1
+        "page": 1,
+        "canonicalName": "attorney_phone",
+        "name": "attorney_phone"
     },
     "attorney_email": {
         "x": 30,
@@ -60,7 +72,9 @@
         "height": 8,
         "fontSize": 9,
         "type": "text",
-        "page": 1
+        "page": 1,
+        "canonicalName": "attorney_email",
+        "name": "attorney_email"
     },
     "court_county": {
         "x": 160,
@@ -69,7 +83,9 @@
         "height": 8,
         "fontSize": 9,
         "type": "text",
-        "page": 1
+        "page": 1,
+        "canonicalName": "court_county",
+        "name": "court_county"
     },
     "court_address": {
         "x": 160,
@@ -78,7 +94,9 @@
         "height": 8,
         "fontSize": 9,
         "type": "text",
-        "page": 1
+        "page": 1,
+        "canonicalName": "court_address",
+        "name": "court_address"
     },
     "case_type": {
         "x": 160,
@@ -87,7 +105,9 @@
         "height": 8,
         "fontSize": 9,
         "type": "text",
-        "page": 1
+        "page": 1,
+        "canonicalName": "case_type",
+        "name": "case_type"
     },
     "case_number": {
         "x": 160,
@@ -96,7 +116,9 @@
         "height": 8,
         "fontSize": 9,
         "type": "text",
-        "page": 1
+        "page": 1,
+        "canonicalName": "case_number",
+        "name": "case_number"
     },
     "filing_date": {
         "x": 160,
@@ -105,7 +127,9 @@
         "height": 8,
         "fontSize": 9,
         "type": "text",
-        "page": 1
+        "page": 1,
+        "canonicalName": "filing_date",
+        "name": "filing_date"
     },
     "petitioner_name": {
         "x": 25,
@@ -114,7 +138,9 @@
         "height": 8,
         "fontSize": 9,
         "type": "text",
-        "page": 2
+        "page": 2,
+        "canonicalName": "petitioner_name",
+        "name": "petitioner_name"
     },
     "respondent_name": {
         "x": 25,
@@ -123,7 +149,9 @@
         "height": 8,
         "fontSize": 9,
         "type": "text",
-        "page": 2
+        "page": 2,
+        "canonicalName": "respondent_name",
+        "name": "respondent_name"
     },
     "petitioner_address": {
         "x": 25,
@@ -132,7 +160,9 @@
         "height": 8,
         "fontSize": 9,
         "type": "text",
-        "page": 2
+        "page": 2,
+        "canonicalName": "petitioner_address",
+        "name": "petitioner_address"
     },
     "petitioner_phone": {
         "x": 25,
@@ -141,7 +171,9 @@
         "height": 8,
         "fontSize": 9,
         "type": "text",
-        "page": 2
+        "page": 2,
+        "canonicalName": "petitioner_phone",
+        "name": "petitioner_phone"
     },
     "respondent_address": {
         "x": 25,
@@ -150,7 +182,9 @@
         "height": 8,
         "fontSize": 9,
         "type": "text",
-        "page": 2
+        "page": 2,
+        "canonicalName": "respondent_address",
+        "name": "respondent_address"
     },
     "marriage_date": {
         "x": 25,
@@ -159,7 +193,9 @@
         "height": 8,
         "fontSize": 9,
         "type": "date",
-        "page": 2
+        "page": 2,
+        "canonicalName": "marriage_date",
+        "name": "marriage_date"
     },
     "separation_date": {
         "x": 100,
@@ -168,7 +204,9 @@
         "height": 8,
         "fontSize": 9,
         "type": "date",
-        "page": 2
+        "page": 2,
+        "canonicalName": "separation_date",
+        "name": "separation_date"
     },
     "marriage_location": {
         "x": 25,
@@ -177,7 +215,9 @@
         "height": 8,
         "fontSize": 9,
         "type": "text",
-        "page": 2
+        "page": 2,
+        "canonicalName": "marriage_location",
+        "name": "marriage_location"
     },
     "grounds_for_dissolution": {
         "x": 25,
@@ -186,7 +226,9 @@
         "height": 8,
         "fontSize": 9,
         "type": "text",
-        "page": 2
+        "page": 2,
+        "canonicalName": "grounds_for_dissolution",
+        "name": "grounds_for_dissolution"
     },
     "dissolution_type": {
         "x": 25,
@@ -195,7 +237,9 @@
         "height": 8,
         "fontSize": 9,
         "type": "select",
-        "page": 2
+        "page": 2,
+        "canonicalName": "dissolution_type",
+        "name": "dissolution_type"
     },
     "property_division": {
         "x": 25,
@@ -204,7 +248,9 @@
         "height": 6,
         "fontSize": 9,
         "type": "checkbox",
-        "page": 2
+        "page": 2,
+        "canonicalName": "property_division",
+        "name": "property_division"
     },
     "spousal_support": {
         "x": 25,
@@ -213,7 +259,9 @@
         "height": 6,
         "fontSize": 9,
         "type": "checkbox",
-        "page": 2
+        "page": 2,
+        "canonicalName": "spousal_support",
+        "name": "spousal_support"
     },
     "attorney_fees": {
         "x": 25,
@@ -222,7 +270,9 @@
         "height": 6,
         "fontSize": 9,
         "type": "checkbox",
-        "page": 2
+        "page": 2,
+        "canonicalName": "attorney_fees",
+        "name": "attorney_fees"
     },
     "name_change": {
         "x": 25,
@@ -231,7 +281,9 @@
         "height": 6,
         "fontSize": 9,
         "type": "checkbox",
-        "page": 2
+        "page": 2,
+        "canonicalName": "name_change",
+        "name": "name_change"
     },
     "has_children": {
         "x": 25,
@@ -240,7 +292,9 @@
         "height": 8,
         "fontSize": 9,
         "type": "text",
-        "page": 2
+        "page": 2,
+        "canonicalName": "has_children",
+        "name": "has_children"
     },
     "children_count": {
         "x": 150,
@@ -249,7 +303,9 @@
         "height": 8,
         "fontSize": 9,
         "type": "number",
-        "page": 2
+        "page": 2,
+        "canonicalName": "children_count",
+        "name": "children_count"
     },
     "additional_info": {
         "x": 25,
@@ -258,7 +314,9 @@
         "height": 40,
         "fontSize": 9,
         "type": "textarea",
-        "page": 3
+        "page": 3,
+        "canonicalName": "additional_info",
+        "name": "additional_info"
     },
     "attorney_signature": {
         "x": 25,
@@ -267,7 +325,9 @@
         "height": 8,
         "fontSize": 9,
         "type": "text",
-        "page": 3
+        "page": 3,
+        "canonicalName": "attorney_signature",
+        "name": "attorney_signature"
     },
     "signature_date": {
         "x": 150,
@@ -276,6 +336,8 @@
         "height": 8,
         "fontSize": 9,
         "type": "date",
-        "page": 3
+        "page": 3,
+        "canonicalName": "signature_date",
+        "name": "signature_date"
     }
 }

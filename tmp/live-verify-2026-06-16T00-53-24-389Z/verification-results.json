@@ -1,0 +1,90 @@
+{
+  "runId": "live-verify-2026-06-16T00-53-24-389Z",
+  "startedAt": "2026-06-16T00:53:24.390Z",
+  "baseUrl": "https://pdftimesaver.desktopmasters.com/mvp",
+  "artifacts": {
+    "artifactDir": "C:\\Users\\Shadow\\Web-PDFTimeSaver\\tmp\\live-verify-2026-06-16T00-53-24-389Z",
+    "shotDir": "C:\\Users\\Shadow\\Web-PDFTimeSaver\\tmp\\live-verify-2026-06-16T00-53-24-389Z\\screenshots",
+    "downloadDir": "C:\\Users\\Shadow\\Web-PDFTimeSaver\\tmp\\live-verify-2026-06-16T00-53-24-389Z\\downloads"
+  },
+  "groups": {
+    "A": {
+      "name": "Projects page controls and navigation",
+      "checks": [
+        {
+          "item": "Search works (control present)",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=projects",
+          "details": "Found input placeholder \"Search for project\"."
+        },
+        {
+          "item": "Search works (returns matching project)",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=projects&q=LiveSignoff_20260611_1623",
+          "details": "Searched for \"LiveSignoff_20260611_1623\"."
+        },
+        {
+          "item": "Browse lists projects",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=projects&browse=1",
+          "details": "Browse listing showed 9 project links."
+        },
+        {
+          "item": "New Project flow opens project view",
+          "pass": false,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=projects&new=1",
+          "details": "New Project button routed into project view."
+        },
+        {
+          "item": "Selecting project opens project view",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=project&id=p_9f0aa3c44f17",
+          "details": "Clicked project \"Test E2E Verification Project\"."
+        }
+      ]
+    },
+    "B": {
+      "name": "Project View behavior",
+      "checks": [
+        {
+          "item": "Sections visible (Project Name, Client, Case, Form Set)",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=project&id=p_e33ed95825e0",
+          "details": "Verified section labels in rendered page text."
+        },
+        {
+          "item": "Client select/change/edit path works (controls present)",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=project&id=p_e33ed95825e0",
+          "details": "Found Change/Edit/Add Client/Search controls."
+        },
+        {
+          "item": "Client Edit path opens client view",
+          "pass": true,
+          "evidence": "https://pdftimesaver.desktopmasters.com/mvp/?route=client&id=c_ee68dcb903cd",
+          "details": "Clicked Edit in Client section."
+        }
+      ]
+    },
+    "C": {
+      "name": "Fill Out Forms behavior",
+      "checks": []
+    },
+    "D": {
+      "name": "Export behavior",
+      "checks": []
+    },
+    "E": {
+      "name": "End-to-end transition and preservation",
+      "checks": []
+    }
+  },
+  "context": {
+    "firstProjectOnList": {
+      "href": "?route=project&id=p_9f0aa3c44f17",
+      "text": "Test E2E Verification Project"
+    },
+    "projectUrl": "https://pdftimesaver.desktopmasters.com/mvp/?route=project&id=p_e33ed95825e0"
+  },
+  "finishedAt": "2026-06-16T00:53:41.271Z"
+}

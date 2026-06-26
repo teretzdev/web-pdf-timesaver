@@ -18,6 +18,7 @@ final class Logger {
 
     public function debug(string $msg, array $context = []): void { $this->write('DEBUG', $msg, $context); }
     public function info(string $msg, array $context = []): void { $this->write('INFO', $msg, $context); }
+    public function warning(string $msg, array $context = []): void { $this->write('WARN', $msg, $context); }
     public function error(string $msg, array $context = []): void { $this->write('ERROR', $msg, $context); }
 
     private function write(string $level, string $msg, array $context = []): void {
