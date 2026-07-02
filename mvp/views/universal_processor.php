@@ -455,11 +455,29 @@ $fieldMetricsJs = \WebPdfTimeSaver\Mvp\FieldMetrics::jsConfig();
 
     .tech-preview-controls {
         display: flex;
-        align-items: center;
+        align-items: flex-start;
         justify-content: space-between;
         gap: 12px;
         margin-bottom: 16px;
         flex-wrap: wrap;
+    }
+
+    .tech-preview-visibility-options {
+        display: inline-flex;
+        flex-wrap: wrap;
+        gap: 10px 14px;
+        align-items: center;
+    }
+
+    .tech-preview-visibility-options label {
+        display: inline-flex;
+        align-items: center;
+        gap: 7px;
+        font-size: 12px;
+        font-weight: 600;
+        color: #334155;
+        cursor: pointer;
+        user-select: none;
     }
 
     .tech-preview-toggle {
@@ -487,17 +505,29 @@ $fieldMetricsJs = \WebPdfTimeSaver\Mvp\FieldMetrics::jsConfig();
         color: #3d4a57;
     }
 
+    .tech-preview-legend-title {
+        font-size: 12px;
+        font-weight: 700;
+        color: #1f2937;
+        margin-right: 2px;
+    }
+
     .tech-preview-legend-item {
         display: inline-flex;
         align-items: center;
         gap: 6px;
+        padding: 4px 8px;
+        border: 1px solid #e2e8f0;
+        border-radius: 999px;
+        background: #ffffff;
     }
 
     .tech-preview-legend-swatch {
-        width: 12px;
-        height: 12px;
-        border-radius: 3px;
-        border: 1px solid transparent;
+        width: 16px;
+        height: 16px;
+        border-radius: 50%;
+        border: 2px solid transparent;
+        box-shadow: inset 0 0 0 1px rgba(255,255,255,0.65), 0 0 0 1px rgba(15,23,42,0.08);
     }
 
     .tech-preview-canvas {
@@ -625,6 +655,15 @@ $fieldMetricsJs = \WebPdfTimeSaver\Mvp\FieldMetrics::jsConfig();
         padding: 14px;
         margin-bottom: 14px;
     }
+    .form-search-controls {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        margin-bottom: 8px;
+    }
+    .form-search-controls .template-id-input {
+        margin-bottom: 0;
+    }
     .form-search-list {
         margin-top: 10px;
         border: 1px solid #e2e8f0;
@@ -640,6 +679,15 @@ $fieldMetricsJs = \WebPdfTimeSaver\Mvp\FieldMetrics::jsConfig();
         gap: 12px;
         padding: 10px 12px;
         border-bottom: 1px solid #eef2f7;
+        cursor: pointer;
+        transition: background 0.15s ease;
+    }
+    .form-search-row:hover {
+        background: #f8fafc;
+    }
+    .form-search-row.is-loading {
+        cursor: wait;
+        opacity: 0.75;
     }
     .form-search-row:last-child {
         border-bottom: 0;
@@ -788,6 +836,27 @@ $fieldMetricsJs = \WebPdfTimeSaver\Mvp\FieldMetrics::jsConfig();
         border: 1px solid #d6dbe3;
         border-radius: 8px;
         background: #f8fafc;
+    }
+    .page-padding-title-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    .page-padding-help {
+        width: 20px;
+        height: 20px;
+        border-radius: 999px;
+        border: 1px solid #cbd5e1;
+        background: #fff;
+        color: #334155;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: help;
+        line-height: 1;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
     }
     .page-padding-row {
         display: flex;
@@ -1164,13 +1233,17 @@ $fieldMetricsJs = \WebPdfTimeSaver\Mvp\FieldMetrics::jsConfig();
     <div class="form-search-section">
         <h2 style="margin-top:0;">Search Forms</h2>
         <p style="color:#64748b; margin: 0 0 10px 0;">Find a form to modify, or add a new form.</p>
-        <input
-            type="text"
-            id="formSearchInput"
-            class="template-id-input"
-            placeholder="Search by form number, template ID, or form name"
-            autocomplete="off"
-        />
+        <div class="form-search-controls">
+            <input
+                type="text"
+                id="formSearchInput"
+                class="template-id-input"
+                placeholder="Search by form number, template ID, or form name"
+                autocomplete="off"
+            />
+            <button type="button" class="browse-btn" id="formSearchBtn">Search</button>
+            <button type="button" class="browse-btn" id="formBrowseBtn">Browse</button>
+        </div>
         <div id="formSearchList" class="form-search-list"></div>
         <div id="formSearchStatus" class="form-search-status" aria-live="polite"></div>
         <div style="margin-top: 12px;">
@@ -1222,6 +1295,18 @@ $fieldMetricsJs = \WebPdfTimeSaver\Mvp\FieldMetrics::jsConfig();
                 <?php endif; ?>
                 <div id="fileInfo" class="file-info" style="display: none;"></div>
             </div>
+            <?php if ($isFormManagement): ?>
+            <div style="margin:12px 0 0 0;">
+                <label for="existingServerPdfSelect" style="display:block;font-weight:600;margin:0 0 6px 0;color:#334155;">Or use existing server PDF</label>
+                <div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap;">
+                    <select id="existingServerPdfSelect" class="pdftimesaver-input" style="min-width:280px;flex:1;">
+                        <option value="">Select existing PDF...</option>
+                    </select>
+                    <button type="button" class="browse-btn" id="existingServerPdfRefreshBtn">Refresh</button>
+                </div>
+                <div id="existingServerPdfStatus" class="form-search-status" style="margin-top:6px;" aria-live="polite"></div>
+            </div>
+            <?php endif; ?>
 
             <button type="submit" class="submit-btn" id="submitBtn"><?php echo $isFormManagement ? 'Next: Analyze form fields' : 'Next: Analyze &amp; extract fields'; ?></button>
         </form>
@@ -1256,13 +1341,13 @@ $fieldMetricsJs = \WebPdfTimeSaver\Mvp\FieldMetrics::jsConfig();
                         <label for="globalFormFontFamilySelect">Global font (all fields)</label>
                         <select id="globalFormFontFamilySelect">
                             <?php foreach ($availableFonts as $font): ?>
-                                <option value="<?php echo htmlspecialchars((string)$font); ?>"><?php echo htmlspecialchars((string)$font); ?></option>
+                                <option value="<?php echo htmlspecialchars((string)$font); ?>"<?php echo strcasecmp((string)$font, 'Times') === 0 ? ' selected' : ''; ?>><?php echo htmlspecialchars((string)$font); ?></option>
                             <?php endforeach; ?>
                         </select>
                     </div>
                     <div>
                         <label for="globalFormFontSizeInput">Global font size (px)</label>
-                        <input type="number" id="globalFormFontSizeInput" step="1" min="6" max="72" value="15">
+                        <input type="number" id="globalFormFontSizeInput" step="1" min="<?php echo (int)($fieldMetricsJs['MIN_FONT_PX'] ?? 8); ?>" max="<?php echo (int)($fieldMetricsJs['MAX_FONT_PX'] ?? 32); ?>" value="<?php echo (int)($fieldMetricsJs['DEFAULT_FONT_PX'] ?? 13); ?>">
                     </div>
                 </div>
                 <p id="formSearchKeyHint" style="display:none;margin:8px 0 0 0;font-size:12px;color:#475569;">
@@ -1343,8 +1428,15 @@ $fieldMetricsJs = \WebPdfTimeSaver\Mvp\FieldMetrics::jsConfig();
                                 <option value="<?php echo htmlspecialchars((string)$font); ?>"><?php echo htmlspecialchars((string)$font); ?></option>
                             <?php endforeach; ?>
                         </select>
-                        <label for="fieldFontSizeInput">Font size</label>
-                        <input type="number" id="fieldFontSizeInput" step="1" min="6" max="72" value="10">
+                        <label for="fieldFontSizeInput">Font size (px)</label>
+                        <select id="fieldFontSizeInput" class="pdftimesaver-input">
+                            <?php
+                            $fieldSidebarMinFontPx = (int)round((($fieldMetricsJs['MIN_FONT_PT'] ?? 6) * 96) / 72);
+                            $fieldSidebarMaxFontPx = 24; // Match Fill Out Forms sidebar dropdown behavior.
+                            for ($fs = $fieldSidebarMinFontPx; $fs <= $fieldSidebarMaxFontPx; $fs++): ?>
+                                <option value="<?php echo $fs; ?>"<?php echo $fs === 13 ? ' selected' : ''; ?>><?php echo $fs; ?> px</option>
+                            <?php endfor; ?>
+                        </select>
                         <label for="fieldFontColorInput">Font color</label>
                         <input type="color" id="fieldFontColorInput" value="#000000">
                         <label>Text style</label>
@@ -1357,9 +1449,7 @@ $fieldMetricsJs = \WebPdfTimeSaver\Mvp\FieldMetrics::jsConfig();
                     </div>
                     <div id="formLocationFieldWrap" class="form-manager-panel">
                         <label for="formLocationInput">Form location</label>
-                        <textarea id="formLocationInput" name="form_location" rows="2" placeholder="Jurisdiction, county, court / venue — optional. Saved with this template and included in form search." autocomplete="off" style="width:100%;box-sizing:border-box;min-height:56px;resize:vertical;font:inherit;"></textarea>
-                        <p style="font-size:12px; color:#64748b; margin:6px 0 0 0;">Saves automatically with field positions.</p>
-                        <p style="font-size:12px; color:#64748b; margin:6px 0 0 0;">Status: <span id="positionAutoSaveStatusPanel"></span></p>
+                        <textarea id="formLocationInput" name="form_location" rows="2" placeholder="Jurisdiction, county, court / venue — optional. Included in form search." autocomplete="off" style="width:100%;box-sizing:border-box;min-height:56px;resize:vertical;font:inherit;"></textarea>
                     </div>
 
                     </div>
@@ -1379,7 +1469,6 @@ $fieldMetricsJs = \WebPdfTimeSaver\Mvp\FieldMetrics::jsConfig();
             <div class="wizard-nav">
                 <button type="button" class="browse-btn wizard-action-btn" id="wizardBackTo1">← Back</button>
                 <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:center; margin-left:auto;">
-                    <span id="positionAutoSaveStatus" style="font-size:12px;color:#64748b;"></span>
                     <?php if ($isFormManagement): ?>
                     <select id="wizardExportModeSelect" aria-label="Export mode" title="Export mode" style="min-width:160px;padding:8px 10px;border-radius:6px;border:1px solid #cbd5e1;margin-bottom:0;">
                         <option value="test" selected>Test Form</option>
@@ -1437,6 +1526,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const wizardState = {
         step: 1,
         templateId: '',
+        pendingRegistryCommit: false,
+        sourceFileName: '',
         positionsMap: {},
         positionsSaved: false,
         selectedFieldKey: '',
@@ -1468,7 +1559,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const uploadZone = document.getElementById('uploadZone');
     const uploadFormSection = document.getElementById('uploadFormSection');
     const fileInfo = document.getElementById('fileInfo');
+    const existingServerPdfSelect = document.getElementById('existingServerPdfSelect');
+    const existingServerPdfRefreshBtn = document.getElementById('existingServerPdfRefreshBtn');
+    const existingServerPdfStatus = document.getElementById('existingServerPdfStatus');
     const formSearchInput = document.getElementById('formSearchInput');
+    const formSearchBtn = document.getElementById('formSearchBtn');
+    const formBrowseBtn = document.getElementById('formBrowseBtn');
     const formSearchList = document.getElementById('formSearchList');
     const formSearchStatus = document.getElementById('formSearchStatus');
     const addNewFormBtn = document.getElementById('addNewFormBtn');
@@ -1481,6 +1577,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const diagnosticsPanel = document.getElementById('diagnosticsPanel');
     let diagnosticsLoaded = false;
     let formSearchLoadingTemplateId = '';
+    let formSearchBrowseMode = false;
     
     function openPdfPicker() {
         if (!pdfFileInput) return;
@@ -1525,6 +1622,46 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 0);
     }
 
+    function setExistingServerPdfStatus(message, tone = '') {
+        if (!existingServerPdfStatus) return;
+        existingServerPdfStatus.textContent = String(message || '');
+        existingServerPdfStatus.classList.remove('is-loading', 'is-error', 'is-success');
+        if (tone === 'loading') existingServerPdfStatus.classList.add('is-loading');
+        if (tone === 'error') existingServerPdfStatus.classList.add('is-error');
+        if (tone === 'success') existingServerPdfStatus.classList.add('is-success');
+    }
+
+    async function loadExistingServerPdfs() {
+        if (!existingServerPdfSelect) return;
+        setExistingServerPdfStatus('Loading PDFs...', 'loading');
+        const previousValue = String(existingServerPdfSelect.value || '');
+        try {
+            const response = await fetch('?route=actions/list-pdfs', { cache: 'no-store' });
+            const payload = await response.json();
+            const rows = Array.isArray(payload?.pdfs) ? payload.pdfs : [];
+            existingServerPdfSelect.innerHTML = '<option value="">Select existing PDF...</option>';
+            rows
+                .sort((a, b) => Number(b?.modified || 0) - Number(a?.modified || 0))
+                .forEach((row) => {
+                    const path = String(row?.path || '').trim();
+                    if (!path) return;
+                    const name = String(row?.name || path).trim();
+                    const option = document.createElement('option');
+                    option.value = path;
+                    option.textContent = name;
+                    existingServerPdfSelect.appendChild(option);
+                });
+            if (previousValue && Array.from(existingServerPdfSelect.options).some((o) => String(o.value) === previousValue)) {
+                existingServerPdfSelect.value = previousValue;
+            }
+            setExistingServerPdfStatus(rows.length
+                ? `Loaded ${rows.length} server PDF${rows.length === 1 ? '' : 's'}.`
+                : 'No server PDFs found.', rows.length ? 'success' : '');
+        } catch (err) {
+            setExistingServerPdfStatus(err?.message || 'Failed to load server PDFs.', 'error');
+        }
+    }
+
     // Browse button - open native file picker
     browseBtn?.addEventListener('click', (e) => {
         e.preventDefault();
@@ -1534,6 +1671,23 @@ document.addEventListener('DOMContentLoaded', function() {
     // Upload zone click - open native file picker
     uploadZone?.addEventListener('click', () => {
         openPdfPicker();
+    });
+    existingServerPdfRefreshBtn?.addEventListener('click', () => {
+        void loadExistingServerPdfs();
+    });
+    existingServerPdfSelect?.addEventListener('change', () => {
+        if (!existingServerPdfSelect) return;
+        if (String(existingServerPdfSelect.value || '').trim() !== '') {
+            if (pdfFileInput) pdfFileInput.value = '';
+            if (uploadZone) uploadZone.classList.remove('file-selected');
+            if (fileInfo) {
+                fileInfo.textContent = '';
+                fileInfo.style.display = 'none';
+            }
+            setExistingServerPdfStatus('Using selected server PDF.', 'success');
+        } else {
+            setExistingServerPdfStatus('', '');
+        }
     });
     
     // Drag and drop handlers
@@ -1571,7 +1725,29 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     if (formSearchInput) {
-        formSearchInput.addEventListener('input', renderManagedFormSearchList);
+        formSearchInput.addEventListener('input', () => {
+            formSearchBrowseMode = false;
+            renderManagedFormSearchList();
+        });
+        formSearchInput.addEventListener('keydown', (ev) => {
+            if (ev.key !== 'Enter') return;
+            ev.preventDefault();
+            formSearchBrowseMode = false;
+            renderManagedFormSearchList();
+        });
+    }
+    if (formSearchBtn) {
+        formSearchBtn.addEventListener('click', () => {
+            formSearchBrowseMode = false;
+            renderManagedFormSearchList();
+        });
+    }
+    if (formBrowseBtn) {
+        formBrowseBtn.addEventListener('click', () => {
+            if (formSearchInput) formSearchInput.value = '';
+            formSearchBrowseMode = true;
+            renderManagedFormSearchList();
+        });
     }
     if (addNewFormBtn) {
         addNewFormBtn.addEventListener('click', () => {
@@ -1637,9 +1813,9 @@ document.addEventListener('DOMContentLoaded', function() {
     });
     if (formSearchList) {
         formSearchList.addEventListener('click', async (ev) => {
-            const btn = ev.target && ev.target.closest ? ev.target.closest('[data-action="open-existing-form"]') : null;
-            if (!btn) return;
-            const tid = String(btn.getAttribute('data-template-id') || '').trim();
+            const rowEl = ev.target && ev.target.closest ? ev.target.closest('[data-action="open-existing-form"]') : null;
+            if (!rowEl) return;
+            const tid = String(rowEl.getAttribute('data-template-id') || '').trim();
             if (!tid) return;
             const row = (managedFormTemplates || []).find((item) => String(item.templateId || '') === tid);
             if (!row) return;
@@ -1651,6 +1827,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 formSearchLoadingTemplateId = '';
                 renderManagedFormSearchList();
             }
+        });
+        formSearchList.addEventListener('keydown', (ev) => {
+            if (ev.key !== 'Enter' && ev.key !== ' ') return;
+            const rowEl = ev.target && ev.target.closest ? ev.target.closest('[data-action="open-existing-form"]') : null;
+            if (!rowEl) return;
+            ev.preventDefault();
+            rowEl.click();
         });
     }
     renderManagedFormSearchList();
@@ -1669,6 +1852,10 @@ document.addEventListener('DOMContentLoaded', function() {
         uploadZone.classList.add('file-selected');
         fileInfo.style.display = 'block';
         fileInfo.textContent = `Selected: ${file.name} (${(file.size / 1024).toFixed(1)} KB)`;
+        if (existingServerPdfSelect) {
+            existingServerPdfSelect.value = '';
+            setExistingServerPdfStatus('Using local upload.', 'success');
+        }
     }
 
     function setUploadFormVisible(visible) {
@@ -1736,6 +1923,14 @@ document.addEventListener('DOMContentLoaded', function() {
         };
     }
 
+    function normalizeUnicodeDashes(value) {
+        let text = String(value || '');
+        text = text.replace(/\u2014|\u2013/g, ' - ');
+        text = text.replace(/\s*-\s*/g, ' - ');
+        text = text.replace(/\s+/g, ' ').trim();
+        return text.replace(/^[\s-]+|[\s-]+$/g, '');
+    }
+
     function deriveFormNumberFromTemplateId(templateId) {
         const raw = String(templateId || '').trim();
         if (!raw) return '';
@@ -1746,20 +1941,27 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function deriveInitialFormIdentity(templateId, rawFormName) {
         const tid = String(templateId || '').trim();
-        const incoming = String(rawFormName || '').trim();
+        const incoming = normalizeUnicodeDashes(String(rawFormName || '').trim());
         let number = '';
         let name = '';
         if (incoming && incoming.toLowerCase() !== tid.toLowerCase()) {
-            const parts = incoming.split(/\s+-\s+/, 2);
-            if (parts.length === 2 && /[a-z]/i.test(parts[0]) && /\d/.test(parts[0])) {
-                number = parts[0].trim().toUpperCase();
-                name = parts[1].trim();
+            const prefixMatch = incoming.match(/^([A-Z]{1,4}-\d{1,4})\s*-\s*(.+)$/i)
+                || incoming.match(/^([A-Z]{1,4}-\d{1,4})\s+(.+)$/i);
+            if (prefixMatch) {
+                number = String(prefixMatch[1] || '').trim().toUpperCase();
+                name = normalizeUnicodeDashes(String(prefixMatch[2] || '').trim());
             } else {
                 name = incoming;
             }
         }
         if (!number) {
             number = deriveFormNumberFromTemplateId(tid);
+        }
+        if (number && name) {
+            const stripPrefix = name.match(new RegExp('^' + number.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*-\\s*(.+)$', 'i'));
+            if (stripPrefix) {
+                name = normalizeUnicodeDashes(String(stripPrefix[1] || '').trim());
+            }
         }
         return { number, name };
     }
@@ -1823,16 +2025,19 @@ document.addEventListener('DOMContentLoaded', function() {
         if (!formSearchList) return;
         const term = formSearchInput ? formSearchInput.value : '';
         const q = String(term || '').trim();
-        if (!q) {
-            formSearchList.innerHTML = '';
+        if (!formSearchBrowseMode && !q) {
+            formSearchList.innerHTML = '<div class="form-search-empty">Type to search forms, or click Browse.</div>';
+            setFormSearchStatus('', '');
             return;
         }
         const rows = (Array.isArray(managedFormTemplates) ? managedFormTemplates : [])
-            .filter((row) => matchesManagedFormSearch(row, term));
+            .filter((row) => formSearchBrowseMode ? true : matchesManagedFormSearch(row, term));
         if (!rows.length) {
-            formSearchList.innerHTML = '<div class="form-search-empty">No matching forms found.</div>';
+            formSearchList.innerHTML = '<div class="form-search-empty">' + (formSearchBrowseMode ? 'No forms found in database.' : 'No matching forms found.') + '</div>';
+            setFormSearchStatus(formSearchBrowseMode ? 'Browse mode: showing all forms.' : '', '');
             return;
         }
+        setFormSearchStatus(formSearchBrowseMode ? `Browse mode: showing ${rows.length} form${rows.length === 1 ? '' : 's'}.` : '', 'success');
         formSearchList.innerHTML = rows.map((row) => {
             const templateId = String(row?.templateId || '').trim();
             const label = formSearchDisplayLabel(row);
@@ -1844,17 +2049,12 @@ document.addEventListener('DOMContentLoaded', function() {
             const meta = metaParts.length ? metaParts.join(' · ') : 'Stored template';
             const isLoading = formSearchLoadingTemplateId !== '' && formSearchLoadingTemplateId === templateId;
             return `
-                <div class="form-search-row">
+                <div class="form-search-row${isLoading ? ' is-loading' : ''}" data-action="open-existing-form" data-template-id="${escapeAttr(templateId)}" role="button" tabindex="0" aria-label="Open ${escapeAttr(label)}">
                     <div>
                         <div class="form-search-label">${escapeHtml(label)}</div>
                         <div class="form-search-meta">${escapeHtml(meta)}</div>
                     </div>
-                    <button
-                        type="button"
-                        class="browse-btn${isLoading ? ' form-search-btn-loading' : ''}"
-                        data-action="open-existing-form"
-                        data-template-id="${escapeAttr(templateId)}"
-                        ${isLoading ? 'disabled' : ''}>${isLoading ? 'Loading...' : 'Modify'}</button>
+                    <div class="form-search-meta">${isLoading ? '<span class="form-search-btn-loading">Loading...</span>' : 'Open'}</div>
                 </div>
             `;
         }).join('');
@@ -1939,6 +2139,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 clearUploadInlineError();
             }
         });
+        void loadExistingServerPdfs();
     }
     const currentFirmIdForAlign = <?php echo json_encode(isset($currentFirmId) ? (string)$currentFirmId : 'default_firm'); ?>;
     const customFieldMatchingMode = <?php echo json_encode($customFieldMatchingMode, JSON_UNESCAPED_SLASHES); ?>;
@@ -2194,6 +2395,16 @@ document.addEventListener('DOMContentLoaded', function() {
             return modeSel.value === 'test';
         }
         const el = document.getElementById('wizardShowSampleData');
+        return !!(el && el.checked);
+    }
+
+    function getPreviewHideSampleData() {
+        const el = document.getElementById('previewHideSampleData');
+        return !!(el && el.checked);
+    }
+
+    function getPreviewHideLinkedData() {
+        const el = document.getElementById('previewHideLinkedData');
         return !!(el && el.checked);
     }
 
@@ -2625,20 +2836,173 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     const FIELD_METRICS = <?php echo json_encode($fieldMetricsJs, JSON_UNESCAPED_SLASHES); ?>;
+    const UI_DEFAULT_FONT_PX = Number(FIELD_METRICS.DEFAULT_FONT_PX || 13);
+    const IMPORTER_DEFAULT_FONT_FAMILY = 'Times';
+    const IMPORTER_TYPOGRAPHY_PREF_KEY = 'formImporterGlobalTypography';
+    const UI_MIN_FONT_PX = Math.max(1, Number(FIELD_METRICS.MIN_FONT_PX || 8));
+    const UI_MAX_FONT_PX = Math.max(UI_MIN_FONT_PX, Number(FIELD_METRICS.MAX_FONT_PX || 32));
+    const LEGACY_FONT_MIGRATION_MAX_PX = 13;
+    const LEGACY_FONT_MIGRATION_MODERN_MIN_PX = 17;
 
     function clampFieldMetric(value, min, max) {
         return Math.max(min, Math.min(max, value));
     }
 
-    function normalizeImportedFontSize(meta, fallbackSize = FIELD_METRICS.DEFAULT_FONT_PT || 10) {
+    function normalizeSidebarFontSizePx(pxValue) {
+        const rounded = Math.round(getNumericInputValue(pxValue || UI_DEFAULT_FONT_PX));
+        const options = fieldFontSizeInput ? Array.from(fieldFontSizeInput.options || []) : [];
+        if (!options.length) {
+            return rounded;
+        }
+        const numeric = options
+            .map((opt) => parseInt(String(opt.value || ''), 10))
+            .filter((n) => Number.isFinite(n));
+        if (!numeric.length) {
+            return rounded;
+        }
+        const min = Math.min(...numeric);
+        const max = Math.max(...numeric);
+        return clampFieldMetric(rounded, min, max);
+    }
+
+    function normalizeGlobalFontSizePx(pxValue) {
+        const rounded = Math.round(getNumericInputValue(pxValue || UI_DEFAULT_FONT_PX));
+        return Math.round(clampFieldMetric(rounded, Math.ceil(UI_MIN_FONT_PX), Math.floor(UI_MAX_FONT_PX)));
+    }
+
+    function normalizeGlobalFontFamilyValue(rawFamily, selectEl) {
+        if (!selectEl) {
+            return String(rawFamily || IMPORTER_DEFAULT_FONT_FAMILY);
+        }
+        const options = Array.from(selectEl.options || []).map((o) => String(o.value || '')).filter(Boolean);
+        if (!options.length) {
+            return String(rawFamily || IMPORTER_DEFAULT_FONT_FAMILY);
+        }
+        const wanted = String(rawFamily || '').trim();
+        if (wanted) {
+            const exact = options.find((value) => value === wanted);
+            if (exact) return exact;
+            const ci = options.find((value) => value.toLowerCase() === wanted.toLowerCase());
+            if (ci) return ci;
+        }
+        const defaultOpt = options.find((value) => value.toLowerCase() === IMPORTER_DEFAULT_FONT_FAMILY.toLowerCase());
+        return defaultOpt || options[0];
+    }
+
+    function readPersistedGlobalTypographyPreference(globalFontSelect) {
+        const fallback = {
+            fontFamily: normalizeGlobalFontFamilyValue(IMPORTER_DEFAULT_FONT_FAMILY, globalFontSelect),
+            fontSizePx: normalizeGlobalFontSizePx(UI_DEFAULT_FONT_PX),
+        };
+        try {
+            const raw = String(window.localStorage.getItem(IMPORTER_TYPOGRAPHY_PREF_KEY) || '').trim();
+            if (!raw) {
+                return fallback;
+            }
+            const parsed = JSON.parse(raw);
+            return {
+                fontFamily: normalizeGlobalFontFamilyValue(parsed?.fontFamily, globalFontSelect),
+                fontSizePx: normalizeGlobalFontSizePx(parsed?.fontSizePx),
+            };
+        } catch (_) {
+            return fallback;
+        }
+    }
+
+    function persistGlobalTypographyPreference(globalFontSelect, globalFontSizeInput) {
+        if (!globalFontSelect || !globalFontSizeInput) return;
+        const payload = {
+            fontFamily: normalizeGlobalFontFamilyValue(globalFontSelect.value, globalFontSelect),
+            fontSizePx: normalizeGlobalFontSizePx(globalFontSizeInput.value),
+        };
+        try {
+            window.localStorage.setItem(IMPORTER_TYPOGRAPHY_PREF_KEY, JSON.stringify(payload));
+        } catch (_) {
+            // Ignore storage issues.
+        }
+    }
+
+    function applyGlobalTypographyControls(globalFontSelect, globalFontSizeInput, family, sizePx) {
+        if (!globalFontSelect || !globalFontSizeInput) return;
+        globalFontSelect.value = normalizeGlobalFontFamilyValue(family, globalFontSelect);
+        globalFontSizeInput.value = String(normalizeGlobalFontSizePx(sizePx));
+    }
+
+    function resolveTemplateIdForFinishRedirect() {
+        const direct = String(wizardState.templateId || '').trim();
+        if (direct) return direct;
+        const sourceFile = String(wizardState.sourceFileName || '').trim().toLowerCase();
+        if (sourceFile) {
+            const bySource = (Array.isArray(managedFormTemplates) ? managedFormTemplates : []).find((row) => {
+                return String(row?.sourceFileName || '').trim().toLowerCase() === sourceFile
+                    && String(row?.templateId || '').trim() !== '';
+            });
+            if (bySource) {
+                return String(bySource.templateId || '').trim();
+            }
+        }
+        const formNumber = String(wizardState.formNumber || '').trim().toLowerCase();
+        const formName = String(wizardState.formName || '').trim().toLowerCase();
+        const byIdentity = (Array.isArray(managedFormTemplates) ? managedFormTemplates : []).find((row) => {
+            const tid = String(row?.templateId || '').trim();
+            if (!tid) return false;
+            const rowName = String(row?.formName || '').trim().toLowerCase();
+            const numberMatch = formNumber !== '' && (tid.toLowerCase().includes(formNumber.replace('-', '_')) || tid.toLowerCase().includes(formNumber.replace('-', '')));
+            const nameMatch = formName !== '' && rowName.includes(formName);
+            return numberMatch || nameMatch;
+        });
+        return byIdentity ? String(byIdentity.templateId || '').trim() : '';
+    }
+
+    function normalizeFinishRedirectUrl(rawDest) {
+        let dest = String(rawDest || '').trim();
+        if (!dest) return '';
+        if (!dest.includes('?route=') && !dest.startsWith('?') && !/^https?:\/\//i.test(dest)) {
+            dest = '?' + dest.replace(/^\/+/, '');
+        }
+        if (dest.startsWith('%')) {
+            try {
+                const decoded = decodeURIComponent(dest);
+                if (decoded) {
+                    dest = decoded;
+                }
+            } catch (_) {
+                // Keep raw value if decode fails.
+            }
+        }
+        try {
+            // Resolve against the current app path (e.g. /mvp/), not origin alone — otherwise
+            // ?route=... becomes https://host/?route=... and hits the router default (dashboard).
+            const url = /^https?:\/\//i.test(dest)
+                ? new URL(dest)
+                : new URL(dest, window.location.origin + window.location.pathname);
+            const route = String(url.searchParams.get('route') || '').trim();
+            if (!route) {
+                return '';
+            }
+            return url.toString();
+        } catch (_) {
+            return '';
+        }
+    }
+
+    function normalizeImportedFontSize(meta, fallbackSize = FIELD_METRICS.DEFAULT_FONT_PX || 13) {
         const fallback = clampFieldMetric(
-            getNumericInputValue(fallbackSize || FIELD_METRICS.DEFAULT_FONT_PT || 10),
-            FIELD_METRICS.MIN_FONT_PT || 6,
-            FIELD_METRICS.MAX_FONT_PT || 24
+            getNumericInputValue(fallbackSize || FIELD_METRICS.DEFAULT_FONT_PX || 13),
+            FIELD_METRICS.MIN_FONT_PX || 8,
+            FIELD_METRICS.MAX_FONT_PX || 32
         );
         const rawSize = getNumericInputValue(meta?.fontSize);
         if (!Number.isFinite(rawSize) || rawSize <= 0) {
             return fallback;
+        }
+        // Preserve explicit user-chosen sizing exactly (within absolute metric limits).
+        if (String(meta?.fontSizeSource || '').toLowerCase() === 'user') {
+            return clampFieldMetric(
+                rawSize,
+                FIELD_METRICS.MIN_FONT_PX || 8,
+                FIELD_METRICS.MAX_FONT_PX || 32
+            );
         }
         const hasExtractionSignature = !!(
             meta
@@ -2651,12 +3015,40 @@ document.addEventListener('DOMContentLoaded', function() {
             )
         );
         if (!hasExtractionSignature) {
-            return rawSize;
+            return clampFieldMetric(
+                rawSize,
+                FIELD_METRICS.MIN_FONT_PX || 8,
+                FIELD_METRICS.MAX_FONT_PX || 32
+            );
         }
         const fieldType = String(meta?.type || meta?.fieldType || '').toLowerCase();
-        const minPt = (fieldType === 'checkbox' || fieldType === 'radio') ? 5 : (FIELD_METRICS.MIN_FONT_PT || 6);
-        const maxPt = (fieldType === 'checkbox' || fieldType === 'radio') ? 12 : 16;
-        return clampFieldMetric(rawSize, minPt, maxPt);
+        // Extractors can infer oversized fonts from large boxes. Keep imported defaults
+        // anchored to the app standard until a user explicitly changes the size.
+        if (fieldType !== 'checkbox' && fieldType !== 'radio') {
+            return fallback;
+        }
+        const minPx = 7;
+        const maxPx = 16;
+        return clampFieldMetric(rawSize, minPx, maxPx);
+    }
+
+    function migrateFieldFontSizeToPx(meta) {
+        if (!meta || typeof meta !== 'object') return;
+        const unit = String(meta.fontSizeUnit || '').toLowerCase();
+        if (unit === 'px') {
+            return;
+        }
+        const raw = getNumericInputValue(meta.fontSize);
+        if (!Number.isFinite(raw) || raw <= 0) {
+            meta.fontSize = FIELD_METRICS.DEFAULT_FONT_PX || 13;
+            meta.fontSizeUnit = 'px';
+            return;
+        }
+        // Legacy positions stored pt without fontSizeUnit (typical range 5–24).
+        if (raw <= 24) {
+            meta.fontSize = Math.round(raw * 96 / 72);
+        }
+        meta.fontSizeUnit = 'px';
     }
 
     function coerceFieldGeometry(f) {
@@ -2684,9 +3076,55 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
         if (o.fontSize !== undefined && o.fontSize !== null && o.fontSize !== '') {
+            migrateFieldFontSizeToPx(o);
             o.fontSize = normalizeImportedFontSize(o, o.fontSize);
         }
         return o;
+    }
+
+    function getFontMigrationDecisionKey(templateId) {
+        return `wpts:font-migration:${String(templateId || '').trim() || 'unknown-template'}`;
+    }
+
+    function shouldPromptLegacyFontMigration(positionsMap) {
+        const values = [];
+        Object.keys(positionsMap || {}).forEach((key) => {
+            const meta = positionsMap[key];
+            if (!meta || typeof meta !== 'object') return;
+            if (String(meta.fontSizeSource || '').toLowerCase() === 'user') {
+                return;
+            }
+            migrateFieldFontSizeToPx(meta);
+            const raw = getNumericInputValue(meta.fontSize);
+            if (Number.isFinite(raw) && raw > 0) {
+                values.push(raw);
+            }
+        });
+        if (!values.length) return false;
+        const legacyCount = values.filter((v) => v <= LEGACY_FONT_MIGRATION_MAX_PX).length;
+        const modernCount = values.filter((v) => v >= LEGACY_FONT_MIGRATION_MODERN_MIN_PX).length;
+        return legacyCount > 0 && modernCount === 0 && (legacyCount / values.length) >= 0.6;
+    }
+
+    function applyLegacyFontMigration(positionsMap, targetPx) {
+        let touched = 0;
+        const target = normalizeGlobalFontSizePx(targetPx || FIELD_METRICS.DEFAULT_FONT_PX || 13);
+        Object.keys(positionsMap || {}).forEach((key) => {
+            const meta = positionsMap[key];
+            if (!meta || typeof meta !== 'object') return;
+            if (String(meta.fontSizeSource || '').toLowerCase() === 'user') {
+                return;
+            }
+            migrateFieldFontSizeToPx(meta);
+            const raw = getNumericInputValue(meta.fontSize);
+            if (!Number.isFinite(raw) || raw <= LEGACY_FONT_MIGRATION_MAX_PX) {
+                meta.fontSize = target;
+                meta.fontSizeUnit = 'px';
+                meta.fontSizeSource = 'user';
+                touched += 1;
+            }
+        });
+        return touched;
     }
 
     function canonicalizeFieldKey(raw, fallback = '') {
@@ -2966,7 +3404,9 @@ document.addEventListener('DOMContentLoaded', function() {
         setFieldValueEditorMode(selectedType, getDisplayedFillValue(key, meta), locked);
         if (fieldValueLockedNote) fieldValueLockedNote.hidden = !locked;
         if (fieldFontFamilySelect) fieldFontFamilySelect.value = String(meta.fontFamily || 'Arial');
-        if (fieldFontSizeInput) fieldFontSizeInput.value = String(getNumericInputValue(meta.fontSize || 10));
+        if (fieldFontSizeInput) {
+            fieldFontSizeInput.value = String(normalizeSidebarFontSizePx(getNumericInputValue(meta.fontSize || (FIELD_METRICS.DEFAULT_FONT_PX || 13))));
+        }
         if (fieldFontColorInput) fieldFontColorInput.value = toHexColor(meta.fontColor);
         const style = String(meta.fontStyle || '').toUpperCase();
         if (fieldBoldInput) fieldBoldInput.checked = !!meta.isBold || style.includes('B');
@@ -3091,9 +3531,22 @@ document.addEventListener('DOMContentLoaded', function() {
         if (getCustomFieldOverrideValue(key, meta) !== null) {
             return 'custom';
         }
+        const fieldType = String(meta?.type || meta?.fieldType || '').toLowerCase();
+        const isCheckable = isCheckableFieldType(fieldType);
+        const checkboxUserSet = !!meta?.checkboxUserSet;
         if (Object.prototype.hasOwnProperty.call(wizardState.fieldDefaults, key)) {
             const fd = wizardState.fieldDefaults[key]?.value;
             if (fd !== undefined && fd !== null) {
+                if (isCheckable && !checkboxUserSet) {
+                    const hasMetaDefault = meta.defaultValue != null && String(meta.defaultValue).trim() !== '';
+                    if (hasMetaDefault && isTruthyCheckboxValue(fd) === isTruthyCheckboxValue(meta.defaultValue)) {
+                        return 'saved';
+                    }
+                }
+                const metaDefault = meta.defaultValue;
+                if (metaDefault != null && String(metaDefault) !== '' && String(fd) === String(metaDefault)) {
+                    return 'saved';
+                }
                 return 'session';
             }
         }
@@ -3124,7 +3577,7 @@ document.addEventListener('DOMContentLoaded', function() {
             fieldEl.appendChild(span);
         }
         const fontFamily = normalizePreviewFontFamily(meta.fontFamily);
-        const fontSize = normalizeImportedFontSize(meta, FIELD_METRICS.DEFAULT_FONT_PT || 10);
+        const fontSize = normalizeImportedFontSize(meta, FIELD_METRICS.DEFAULT_FONT_PX || 13);
         const fontColor = Array.isArray(meta.fontColor) && meta.fontColor.length >= 3
             ? `rgb(${Math.max(0, Math.min(255, parseInt(meta.fontColor[0], 10) || 0))}, ${Math.max(0, Math.min(255, parseInt(meta.fontColor[1], 10) || 0))}, ${Math.max(0, Math.min(255, parseInt(meta.fontColor[2], 10) || 0))})`
             : '#0f172a';
@@ -3133,11 +3586,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const isItalic = !!meta.isItalic || style.includes('I');
         const isUnderline = !!meta.isUnderline || style.includes('U');
         const isStrike = !!meta.isStrikethrough || style.includes('S');
-        // Convert PDF font size (pt) into preview px using field's rendered mm->px scale.
+        const fontSizePx = Math.max(FIELD_METRICS.MIN_PREVIEW_PX || 4, fontSize);
         const displayedHeightPx = Math.max(1, fieldEl.getBoundingClientRect().height || parseFloat(fieldEl.style.height || '0') || 0);
-        const mmFieldHeight = Math.max(0.1, getNumericInputValue(meta.height || fieldEl.dataset.h || 0));
-        const pxPerMmY = displayedHeightPx / mmFieldHeight;
-        const fontSizePx = Math.max(FIELD_METRICS.MIN_PREVIEW_PX || 4, (fontSize * (FIELD_METRICS.MM_PER_PT || 0.352778) * pxPerMmY));
         const padPx = Math.max(1, Math.min(3, Math.round(displayedHeightPx * 0.08)));
         // Keep the preview text style in sync with field properties edits.
         span.style.fontFamily = `${fontFamily}, "Helvetica Neue", Helvetica, "Segoe UI", Arial, sans-serif`;
@@ -3171,15 +3621,27 @@ document.addEventListener('DOMContentLoaded', function() {
             span.textContent = '';
             span.style.display = 'none';
             span.removeAttribute('title');
-            fieldEl.classList.toggle('is-checked', isTruthyCheckboxValue(displayVal));
-            fieldEl.title = isTruthyCheckboxValue(displayVal)
+            // Imported checkbox defaults are often effectively sample/seed values.
+            // When users hide sample data, suppress both suggested and saved checks
+            // unless the checkbox was explicitly changed in-session.
+            const checkboxUserSet = !!meta?.checkboxUserSet;
+            const hideSampleCheck = getPreviewHideSampleData()
+                && !checkboxUserSet
+                && (src === 'suggested' || src === 'saved' || src === 'session');
+            const hideLinkedCheck = getPreviewHideLinkedData() && src === 'custom';
+            const shouldRenderCheck = !(hideSampleCheck || hideLinkedCheck) && isTruthyCheckboxValue(displayVal);
+            fieldEl.classList.toggle('is-checked', shouldRenderCheck);
+            fieldEl.title = shouldRenderCheck
                 ? `${key} — checked (export)`
                 : `${key} — unchecked`;
         } else {
             span.style.display = '';
             fieldEl.classList.remove('is-checked');
-            span.textContent = displayVal;
-            const full = displayVal.trim() === '' ? `${key} — (empty)` : `${key}: ${displayVal}`;
+            const hideSampleText = getPreviewHideSampleData() && src === 'suggested';
+            const hideLinkedText = getPreviewHideLinkedData() && src === 'custom';
+            const renderedValue = (hideSampleText || hideLinkedText) ? '' : displayVal;
+            span.textContent = renderedValue;
+            const full = renderedValue.trim() === '' ? `${key} — (empty)` : `${key}: ${renderedValue}`;
             span.title = full;
             fieldEl.title = full;
         }
@@ -3315,10 +3777,10 @@ document.addEventListener('DOMContentLoaded', function() {
         const heightMm = selectedMeta ? Math.max(2, getNumericInputValue(selectedMeta.height || defaultHeightMm)) : defaultHeightMm;
         const fontFamily = selectedMeta?.fontFamily
             ? String(selectedMeta.fontFamily)
-            : (gff ? String(gff.value || 'Helvetica') : 'Helvetica');
+            : (gff ? normalizeGlobalFontFamilyValue(gff.value, gff) : IMPORTER_DEFAULT_FONT_FAMILY);
         const fontSize = selectedMeta?.fontSize
-            ? getNumericInputValue(selectedMeta.fontSize)
-            : (gfs ? getNumericInputValue(gfs.value || 15) : 15);
+            ? normalizeGlobalFontSizePx(selectedMeta.fontSize)
+            : normalizeGlobalFontSizePx(gfs ? gfs.value : UI_DEFAULT_FONT_PX);
         const type = String(selectedMeta?.type || selectedMeta?.fieldType || 'text').toLowerCase();
         return {
             widthMm,
@@ -3382,6 +3844,7 @@ document.addEventListener('DOMContentLoaded', function() {
             fieldType: draft.type,
             fontFamily: draft.fontFamily,
             fontSize: draft.fontSize,
+            fontSizeUnit: 'px',
             fontColor: draft.fontColor,
             isBold: draft.isBold,
             isItalic: draft.isItalic,
@@ -3525,13 +3988,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const gff = document.getElementById('globalFormFontFamilySelect');
         const gfs = document.getElementById('globalFormFontSizeInput');
         if (!gff || !gfs) return;
-        const fam = String(gff.value || 'Helvetica');
-        const sz = getNumericInputValue(gfs.value || 15);
+        const fam = normalizeGlobalFontFamilyValue(gff.value, gff);
+        const sz = normalizeGlobalFontSizePx(gfs.value);
         Object.keys(wizardState.positionsMap).forEach((k) => {
             const m = wizardState.positionsMap[k];
             if (!m || typeof m !== 'object') return;
             m.fontFamily = fam;
             m.fontSize = sz;
+            m.fontSizeUnit = 'px';
+            m.fontSizeSource = 'user';
         });
         if (wizardState.selectedFieldKey) {
             syncSelectedFieldInputs();
@@ -3601,7 +4066,9 @@ document.addEventListener('DOMContentLoaded', function() {
         meta.height = getNumericInputValue(fieldHeightInput ? fieldHeightInput.value : meta.height);
         meta.type = String(fieldTypeSelect ? fieldTypeSelect.value : (meta.type || 'text'));
         meta.fontFamily = String(fieldFontFamilySelect ? fieldFontFamilySelect.value : (meta.fontFamily || 'Arial'));
-        meta.fontSize = getNumericInputValue(fieldFontSizeInput ? fieldFontSizeInput.value : (meta.fontSize || 10));
+        meta.fontSize = normalizeGlobalFontSizePx(fieldFontSizeInput ? fieldFontSizeInput.value : (meta.fontSize || (FIELD_METRICS.DEFAULT_FONT_PX || 13)));
+        meta.fontSizeUnit = 'px';
+        meta.fontSizeSource = 'user';
         meta.fontColor = hexToRgbArray(fieldFontColorInput ? fieldFontColorInput.value : '#000000');
         meta.isBold = !!fieldBoldInput?.checked;
         meta.isItalic = !!fieldItalicInput?.checked;
@@ -3625,15 +4092,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const locked = isCustomFieldLocked(key, meta);
         const currentType = String(meta.type || meta.fieldType || '').toLowerCase();
+        const isCheckable = isCheckableFieldType(currentType);
+        const previousCheckboxValue = isCheckable
+            ? (isTruthyCheckboxValue(meta.defaultValue) ? '1' : '')
+            : '';
         if (!locked) {
             let panelValue = '';
-            if (isCheckableFieldType(currentType)) {
+            if (isCheckable) {
                 panelValue = fieldValueCheckbox?.checked ? '1' : '';
             } else if (fieldValueInput) {
                 panelValue = String(fieldValueInput.value);
             }
             wizardState.fieldDefaults[key] = { value: panelValue };
             meta.defaultValue = panelValue;
+            if (isCheckable && panelValue !== previousCheckboxValue) {
+                meta.checkboxUserSet = true;
+            }
         } else {
             const ov = getCustomFieldOverrideValue(key, meta);
             if (ov !== null) {
@@ -3721,6 +4195,59 @@ document.addEventListener('DOMContentLoaded', function() {
         } finally {
             autoSavePromise = null;
         }
+    }
+
+    async function finalizeCurrentTemplateRegistration() {
+        if (!wizardState.pendingRegistryCommit) {
+            return true;
+        }
+        if (!wizardState.templateId) {
+            throw new Error('Template ID is missing. Re-upload the PDF and try again.');
+        }
+        if (Object.keys(wizardState.positionsMap || {}).length > 0 && !wizardState.positionsSaved) {
+            if (autoSaveTimer) {
+                window.clearTimeout(autoSaveTimer);
+                autoSaveTimer = null;
+            }
+            const saved = await savePositionsToServer(true);
+            if (!saved) {
+                throw new Error(lastAutoSaveError || 'Could not save latest template edits.');
+            }
+        }
+        const res = await fetch('?route=api/form-management/finalize-template', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                template_id: String(wizardState.templateId || '').trim(),
+                form_number: String(wizardState.formNumber || '').trim(),
+                form_name: String(wizardState.formName || '').trim(),
+                form_location: String(wizardState.formLocation || '').trim(),
+                source_file_name: String(wizardState.sourceFileName || '').trim(),
+                detected_firm_name: String(wizardState.detectedFirmName || '').trim()
+            })
+        });
+        const payload = await res.json();
+        if (!res.ok || !payload.success) {
+            throw new Error(payload.error || payload.message || `Finalize failed (HTTP ${res.status})`);
+        }
+        wizardState.pendingRegistryCommit = false;
+        const existingIdx = managedFormTemplates.findIndex((row) => String(row?.templateId || '').trim() === String(wizardState.templateId || '').trim());
+        if (existingIdx < 0) {
+            managedFormTemplates.unshift({
+                templateId: String(wizardState.templateId || '').trim(),
+                formName: String(payload?.template?.formName || wizardState.formName || wizardState.templateId || '').trim(),
+                sourceFileName: String(payload?.template?.sourceFileName || wizardState.sourceFileName || '').trim(),
+                formLocation: String(payload?.template?.formLocation || wizardState.formLocation || '').trim(),
+            });
+        } else {
+            syncManagedTemplateRowLocal(wizardState.templateId, {
+                formNumber: String(payload?.form_number || wizardState.formNumber || '').trim(),
+                formName: String(payload?.form_name || wizardState.formName || '').trim(),
+                formLocation: String(payload?.form_location || wizardState.formLocation || '').trim(),
+            });
+        }
+        renderManagedFormSearchList();
+        return true;
     }
 
     function schedulePositionsAutoSave() {
@@ -4075,11 +4602,15 @@ document.addEventListener('DOMContentLoaded', function() {
                     <h3>🔍 Technical Preview – PDF Background & Field Positions</h3>
                     ${firmFromResponse ? `<div class="detected-firm-banner"><strong>Firm name</strong> (from PDF scan / database): ${escapeHtml(firmFromResponse)}</div>` : ''}
                     <p>Preview shows page backgrounds and detected fields. Drag highlighted boxes to adjust positions; coordinates and field edits save automatically.</p>
-                    <div class="tech-preview-guidance">Drag a highlight to move it; positions and values are kept in millimeters on your template.</div>
                     <div class="tech-preview-controls">
-                        <div class="tech-preview-legend" role="group" aria-label="Field highlight legend">
-                            <span class="tech-preview-legend-item" title="Fields found by the PDF extraction step; not yet tied to your Firm / Client / Case catalog unless you map them."><span class="tech-preview-legend-swatch" style="background: rgba(37,99,235,0.16); border-color: #2563eb;"></span>Detected field</span>
-                            <span class="tech-preview-legend-item" title="This highlight is linked to a Field Manager custom field: the PDF field key matched your catalog row’s Matching Tag (exact or wildcard). The (11)-style counts in older builds were UI noise; the color means ‘linked to catalog’."><span class="tech-preview-legend-swatch" style="background: rgba(124,58,237,0.2); border-color: #7c3aed;"></span>Linked to catalog (auto-matched)</span>
+                        <div class="tech-preview-legend" role="group" aria-label="Input box color legend">
+                            <span class="tech-preview-legend-title">Input box color legend:</span>
+                            <span class="tech-preview-legend-item" title="Fields found by PDF extraction; not yet mapped to your Field Manager catalog."><span class="tech-preview-legend-swatch" style="background: rgba(37,99,235,0.20); border-color: #2563eb;"></span>Unmapped input box</span>
+                            <span class="tech-preview-legend-item" title="Input box auto-matched to a Field Manager catalog entry using matching tags."><span class="tech-preview-legend-swatch" style="background: rgba(124,58,237,0.24); border-color: #7c3aed;"></span>Catalog-linked input box</span>
+                        </div>
+                        <div class="tech-preview-visibility-options" role="group" aria-label="Preview text visibility options">
+                            <label><input type="checkbox" id="previewHideSampleData"> Hide Sample Data</label>
+                            <label><input type="checkbox" id="previewHideLinkedData"> Hide Linked Data</label>
                         </div>
                     </div>
                     <div class="tech-preview-pages">
@@ -4109,7 +4640,10 @@ document.addEventListener('DOMContentLoaded', function() {
                         <div class="tech-preview-page">
                             <div class="tech-preview-page-title">Page ${pageNum} ${pageFields.length ? `· Fields detected: ${pageFields.length}` : '· No fields detected yet (background ready for manual mapping)'}</div>
                             <div class="page-padding-controls" data-padding-controls-page="${pageNum}">
-                                <div style="font-size:12px;font-weight:700;color:#1e293b;">Page ${pageNum} padding / offset (px)</div>
+                                <div class="page-padding-title-row">
+                                    <div style="font-size:12px;font-weight:700;color:#1e293b;">Page ${pageNum} padding / offset (px)</div>
+                                    <button type="button" class="page-padding-help" title="Use positive or negative pixel values; only this page is affected." aria-label="Page ${pageNum} padding help">?</button>
+                                </div>
                                 <div class="page-padding-row">
                                     <div class="page-padding-input-group">
                                         <label for="page-pad-top-${pageNum}">Top</label>
@@ -4130,7 +4664,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                     <button type="button" class="page-padding-btn page-padding-apply" data-pad-page="${pageNum}">Apply to page ${pageNum}</button>
                                     <button type="button" class="page-padding-btn secondary page-padding-reset" data-pad-page="${pageNum}">Reset inputs</button>
                                 </div>
-                                <div class="page-padding-note" id="page-padding-note-${pageNum}">Use positive or negative pixel values; only this page is affected.</div>
+                                <div class="page-padding-note" id="page-padding-note-${pageNum}"></div>
                             </div>
                             <div class="tech-preview-canvas">
                                 <img src="${bgUrl}" alt="Background page ${pageNum}" class="tech-preview-bg" id="preview-bg-${pageNum}" />
@@ -4186,16 +4720,24 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        html += `<p style="margin-top:20px;color:#495057;font-size:14px;">Click fields to set values in the panel, then use <strong>Generate PDF</strong> when ready.</p>`;
         results.innerHTML = html;
 
         wizardState.templateId = data.data.template_id || '';
+        wizardState.pendingRegistryCommit = Boolean(data?.data?.registry_pending_finish);
+        wizardState.sourceFileName = String(data?.data?.source_file_name || '').trim();
+        const serverFormNumber = String(data?.data?.form_number || '').trim();
+        const serverFormName = String(
+            data?.data?.form_name
+            || data?.data?.detected_form_title
+            || data?.data?.registered_form_name
+            || ''
+        ).trim();
         const identity = deriveInitialFormIdentity(
             wizardState.templateId,
-            String(data?.data?.form_name || data?.data?.registered_form_name || '')
+            serverFormName
         );
-        wizardState.formNumber = String(data?.data?.form_number || identity.number || '').trim();
-        wizardState.formName = String(identity.name || '').trim();
+        wizardState.formNumber = serverFormNumber || identity.number || '';
+        wizardState.formName = String(data?.data?.form_name || identity.name || '').trim();
         if (formNumberInput) {
             formNumberInput.value = wizardState.formNumber;
         }
@@ -4230,6 +4772,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 meta.page = 1;
             }
         });
+        let fontMigrationTouched = 0;
+        const defaultFontPx = getNumericInputValue(FIELD_METRICS.DEFAULT_FONT_PX || 13);
+        if (wizardState.templateId && shouldPromptLegacyFontMigration(wizardState.positionsMap)) {
+            const decisionKey = getFontMigrationDecisionKey(wizardState.templateId);
+            let decision = '';
+            try {
+                decision = String(window.localStorage.getItem(decisionKey) || '');
+            } catch (_) {
+                decision = '';
+            }
+            if (!decision) {
+                const doUpgrade = window.confirm('This template appears to use legacy 7-10 pt import text sizing. Upgrade this template to the 13 px standard now?');
+                decision = doUpgrade ? 'upgrade' : 'keep';
+                try {
+                    window.localStorage.setItem(decisionKey, decision);
+                } catch (_) {
+                    // Ignore storage failures (private mode/storage disabled).
+                }
+            }
+            if (decision === 'upgrade') {
+                fontMigrationTouched = applyLegacyFontMigration(wizardState.positionsMap, defaultFontPx);
+            }
+        }
         initWizardPaddingBaselines();
         hydrateFieldDefaultsFromPositionsMap();
         const firmResolvedEarly = String(data.data.detected_firm_name || wizardState.detectedFirmName || '').trim();
@@ -4239,10 +4804,16 @@ document.addEventListener('DOMContentLoaded', function() {
         } else {
             refreshAllPreviewFieldValues();
         }
-        // Loaded positions come from server state, so start as clean.
-        // This avoids forcing a redundant save before first export.
-        wizardState.positionsSaved = true;
-        setAutoSaveStatus('Saved');
+        if (fontMigrationTouched > 0) {
+            wizardState.positionsSaved = false;
+            setAutoSaveStatus(`Unsaved changes (upgraded ${fontMigrationTouched} fields to ${defaultFontPx} px)`);
+            schedulePositionsAutoSave();
+        } else {
+            // Loaded positions come from server state, so start as clean.
+            // This avoids forcing a redundant save before first export.
+            wizardState.positionsSaved = true;
+            setAutoSaveStatus('Saved');
+        }
         wizardState.selectedFieldKey = '';
 
         ensureTechPreviewResizeListener();
@@ -4266,15 +4837,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const gff = document.getElementById('globalFormFontFamilySelect');
         if (gff && gfs) {
             const firstMeta = wizardState.positionsMap[Object.keys(wizardState.positionsMap)[0]];
-            if (firstMeta && typeof firstMeta === 'object') {
+            const isFreshImport = Boolean(data?.data?.registry_pending_finish);
+            if (isFreshImport) {
+                const pref = readPersistedGlobalTypographyPreference(gff);
+                applyGlobalTypographyControls(gff, gfs, pref.fontFamily, pref.fontSizePx);
+                applyGlobalFormTypography();
+            } else if (firstMeta && typeof firstMeta === 'object') {
                 const ff = String(firstMeta.fontFamily || '').trim();
-                if (ff) {
-                    const opt = Array.from(gff.options).find((o) => String(o.value) === ff);
-                    if (opt) gff.value = opt.value;
-                    else gff.value = gff.options[0] ? gff.options[0].value : ff;
-                }
-                const sz = getNumericInputValue(firstMeta.fontSize || 15);
-                if (Number.isFinite(sz) && sz > 0) gfs.value = String(sz);
+                const sizePx = normalizeGlobalFontSizePx(getNumericInputValue(firstMeta.fontSize || UI_DEFAULT_FONT_PX));
+                applyGlobalTypographyControls(gff, gfs, ff, sizePx);
+            } else {
+                applyGlobalTypographyControls(gff, gfs, IMPORTER_DEFAULT_FONT_FAMILY, UI_DEFAULT_FONT_PX);
             }
         }
 
@@ -4321,17 +4894,24 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             });
         });
+        results.querySelector('#previewHideSampleData')?.addEventListener('change', () => {
+            refreshAllPreviewFieldValues();
+        });
+        results.querySelector('#previewHideLinkedData')?.addEventListener('change', () => {
+            refreshAllPreviewFieldValues();
+        });
     }
     
     // Form submission
     form.addEventListener('submit', async function(e) {
         e.preventDefault();
-        
-        if (!pdfFileInput.files || pdfFileInput.files.length === 0) {
+        const hasLocalFile = !!(pdfFileInput.files && pdfFileInput.files.length > 0);
+        const selectedServerPdf = String(existingServerPdfSelect?.value || '').trim();
+        if (!hasLocalFile && selectedServerPdf === '') {
             const uploadErr = document.getElementById('uploadInlineError');
             if (uploadErr) {
                 uploadErr.style.display = 'block';
-                uploadErr.textContent = 'Please select a PDF file to upload.';
+                uploadErr.textContent = 'Please select a local PDF or choose an existing server PDF.';
             }
             return;
         }
@@ -4354,7 +4934,11 @@ document.addEventListener('DOMContentLoaded', function() {
         if (templateIdInput !== '') {
             formData.append('template_id', templateIdInput);
         }
-        formData.append('pdf_file', pdfFileInput.files[0]);
+        if (hasLocalFile) {
+            formData.append('pdf_file', pdfFileInput.files[0]);
+        } else if (selectedServerPdf !== '') {
+            formData.append('selected_pdf_path', selectedServerPdf);
+        }
         const clientSel = document.getElementById('clientIdSelect');
         if (clientSel && clientSel.value) {
             formData.append('client_id', clientSel.value);
@@ -4546,6 +5130,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function resetWizardToStart() {
         wizardState.templateId = '';
+        wizardState.pendingRegistryCommit = false;
+        wizardState.sourceFileName = '';
         wizardState.formNumber = '';
         wizardState.formName = '';
         wizardState.formLocation = '';
@@ -4573,6 +5159,10 @@ document.addEventListener('DOMContentLoaded', function() {
         if (fileInfo) {
             fileInfo.textContent = '';
             fileInfo.style.display = 'none';
+        }
+        if (existingServerPdfSelect) {
+            existingServerPdfSelect.value = '';
+            setExistingServerPdfStatus('', '');
         }
         if (formSearchInput) {
             formSearchInput.value = '';
@@ -4603,6 +5193,10 @@ document.addEventListener('DOMContentLoaded', function() {
         populateCustomFieldOptions('firm', '');
         const sampleCb = document.getElementById('wizardShowSampleData');
         if (sampleCb) sampleCb.checked = true;
+        const hideSampleCb = document.getElementById('previewHideSampleData');
+        if (hideSampleCb) hideSampleCb.checked = false;
+        const hideLinkedCb = document.getElementById('previewHideLinkedData');
+        if (hideLinkedCb) hideLinkedCb.checked = false;
         clearFieldSelectionVisual();
         resetPropertiesPanelPrompt();
         setFieldSidebarVisible(true);
@@ -4613,9 +5207,36 @@ document.addEventListener('DOMContentLoaded', function() {
     document.getElementById('wizardRestartBtn')?.addEventListener('click', resetWizardToStart);
 
     document.getElementById('wizardFinishedBtn')?.addEventListener('click', () => {
-        const dest = String(formsManagerFinishRedirect || '').trim();
+        const finishBtn = document.getElementById('wizardFinishedBtn');
+        const run = async () => {
+            const prevLabel = finishBtn ? String(finishBtn.textContent || 'Finished') : 'Finished';
+            if (finishBtn) {
+                finishBtn.disabled = true;
+                finishBtn.textContent = 'Saving...';
+            }
+            try {
+                await finalizeCurrentTemplateRegistration();
+            } catch (err) {
+                alert(err?.message || 'Failed to finish form import.');
+                if (finishBtn) {
+                    finishBtn.disabled = false;
+                    finishBtn.textContent = prevLabel;
+                }
+                return;
+            }
+            if (finishBtn) {
+                finishBtn.disabled = false;
+                finishBtn.textContent = prevLabel;
+            }
+        const runtimeFinishRedirect = new URL(window.location.href).searchParams.get('finish_redirect') || '';
+        const dest = normalizeFinishRedirectUrl(formsManagerFinishRedirect || runtimeFinishRedirect || '');
         if (dest !== '') {
-            window.location.assign(dest);
+            const importedTemplateId = resolveTemplateIdForFinishRedirect();
+            const url = new URL(dest, window.location.origin);
+            if (importedTemplateId) {
+                url.searchParams.set('imported_template_id', importedTemplateId);
+            }
+            window.location.assign(url.toString());
             return;
         }
         if (isFormNew) {
@@ -4623,10 +5244,26 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
         resetWizardToStart();
+        };
+        run();
     });
 
-    document.getElementById('globalFormFontFamilySelect')?.addEventListener('change', applyGlobalFormTypography);
-    document.getElementById('globalFormFontSizeInput')?.addEventListener('change', applyGlobalFormTypography);
+    const globalFontFamilyControl = document.getElementById('globalFormFontFamilySelect');
+    const globalFontSizeControl = document.getElementById('globalFormFontSizeInput');
+    const onGlobalTypographyChange = () => {
+        if (globalFontFamilyControl && globalFontSizeControl) {
+            applyGlobalTypographyControls(
+                globalFontFamilyControl,
+                globalFontSizeControl,
+                globalFontFamilyControl.value,
+                globalFontSizeControl.value
+            );
+            persistGlobalTypographyPreference(globalFontFamilyControl, globalFontSizeControl);
+        }
+        applyGlobalFormTypography();
+    };
+    globalFontFamilyControl?.addEventListener('change', onGlobalTypographyChange);
+    globalFontSizeControl?.addEventListener('change', onGlobalTypographyChange);
     document.getElementById('wizardExportModeSelect')?.addEventListener('change', () => {
         refreshAllPreviewFieldValues();
         if (wizardState.selectedFieldKey) {

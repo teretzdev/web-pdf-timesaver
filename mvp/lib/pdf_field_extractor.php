@@ -371,7 +371,8 @@ final class PdfFieldExtractor {
                     'y' => 0,  // DUMMY VALUE - pdftk doesn't give coordinates
                     'width' => 100,  // DUMMY VALUE
                     'height' => 10,  // DUMMY VALUE
-                    'fontSize' => 9
+                    'fontSize' => FieldMetrics::defaultFontPx(),
+                    'fontSizeUnit' => 'px',
                 ];
             } elseif ($currentField && strpos($line, 'FieldType:') === 0) {
                 $type = trim(substr($line, 10));
@@ -522,7 +523,8 @@ final class PdfFieldExtractor {
                             'y' => $position['y'],
                             'width' => $position['width'],
                             'height' => $position['height'],
-                            'fontSize' => max(8, min(12, (int)$position['height'])) // Estimate font size from field height
+                            'fontSize' => FieldMetrics::defaultFontPx(),
+                    'fontSizeUnit' => 'px',
                         ];
                     }
                 }
@@ -897,7 +899,8 @@ final class PdfFieldExtractor {
                                 'y' => round($yMm, 2),
                                 'width' => round($widthMm, 2),
                                 'height' => round($heightMm, 2),
-                                'fontSize' => 10,
+                                'fontSize' => FieldMetrics::defaultFontPx(),
+                                'fontSizeUnit' => 'px',
                                 'estimated' => true,
                                 'sourceText' => $line,
                                 'confidence' => 0.6 // Lower confidence for estimated positions

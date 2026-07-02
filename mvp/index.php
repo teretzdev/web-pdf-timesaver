@@ -485,6 +485,41 @@ function resolveOutputFilePath(string $filename): ?string {
     return $candidatePath;
 }
 
+/**
+ * Guard against leaking internal preset connector tokens into user-facing form output.
+ * These values are metadata-like selectors (e.g. "Court Information Fields::fcf_xxx"),
+ * not real caption content, and should never be rendered/exported as field text.
+ */
+function isInternalPresetTokenValue(string $value): bool {
+    $trimmed = trim($value);
+    if ($trimmed === '') {
+        return false;
+    }
+    if (stripos($trimmed, '::fcf_') !== false) {
+        return true;
+    }
+    return (bool)preg_match('/^[a-z][a-z ]*fields::[a-z0-9_:-]+$/i', $trimmed);
+}
+
+/**
+ * Remove internal preset connector tokens from plain field values.
+ *
+ * @param array<string,mixed> $values
+ * @return array<string,mixed>
+ */
+function sanitizeRenderableFieldValues(array $values): array {
+    foreach ($values as $key => $rawValue) {
+        if (!is_string($key) || $key === '' || strncmp($key, '_', 1) === 0) {
+            continue;
+        }
+        $value = is_scalar($rawValue) ? trim((string)$rawValue) : '';
+        if ($value !== '' && isInternalPresetTokenValue($value)) {
+            $values[$key] = '';
+        }
+    }
+    return $values;
+}
+
 /** @return array<int, array{key:string,label:string}> */
 function loadTemplateFieldKeysFast(string $templateId): array {
 	$file = __DIR__ . '/../data/' . $templateId . '_positions.json';
@@ -599,7 +634,7 @@ function computePopulateAutofillValues($store, array $projDoc, array $template):
             foreach ((array)$store->getFirmDefaultFields() as $r) {
                 if (!is_array($r)) { continue; }
                 $v = trim((string)($r['value'] ?? ''));
-                if ($v === '') { continue; }
+                if ($v === '' || isInternalPresetTokenValue($v)) { continue; }
                 $indexFirmKey = static function (string $key) use (&$firmVals, $norm, $v): void {
                     $nk = $norm($key);
                     if ($nk !== '' && !isset($firmVals[$nk])) {
@@ -647,13 +682,16 @@ function computePopulateAutofillValues($store, array $projDoc, array $template):
         if (method_exists($store, 'getProjectViewConfig') && $projectId !== '') {
             $cfg = (array)$store->getProjectViewConfig($projectId);
             $caseNumber = trim((string)($cfg['caseNumber'] ?? ''));
+            if (isInternalPresetTokenValue($caseNumber)) {
+                $caseNumber = '';
+            }
             $courtValuesRaw = is_array($cfg['courtValues'] ?? null) ? $cfg['courtValues'] : [];
             if (method_exists($store, 'getFieldManagerCustomFields')) {
                 foreach ((array)$store->getFieldManagerCustomFields('court') as $r) {
                     if (!is_array($r)) { continue; }
                     $fid = (string)($r['id'] ?? '');
                     $v = trim((string)($courtValuesRaw[$fid] ?? ''));
-                    if ($v === '') { continue; }
+                    if ($v === '' || isInternalPresetTokenValue($v)) { continue; }
                     foreach ([(string)($r['linkId'] ?? ''), (string)($r['matchingTag'] ?? '')] as $k) {
                         $nk = $norm($k);
                         if ($nk !== '' && !isset($courtVals[$nk])) { $courtVals[$nk] = $v; }
@@ -678,7 +716,7 @@ function computePopulateAutofillValues($store, array $projDoc, array $template):
                     if (!is_array($r)) { continue; }
                     $fid = (string)($r['id'] ?? '');
                     $v = trim((string)($attorneyValuesRaw[$fid] ?? ''));
-                    if ($v === '') { continue; }
+                    if ($v === '' || isInternalPresetTokenValue($v)) { continue; }
                     foreach ([(string)($r['linkId'] ?? ''), (string)($r['matchingTag'] ?? '')] as $k) {
                         $nk = $norm($k);
                         if ($nk !== '' && !isset($attorneyVals[$nk])) { $attorneyVals[$nk] = $v; }
@@ -704,6 +742,21 @@ function computePopulateAutofillValues($store, array $projDoc, array $template):
             }
             return $firm($cands);
         };
+        $attorneyOnly = static function (array $cands) use ($attorneyVals): string {
+            foreach ($cands as $c) {
+                if (isset($attorneyVals[$c]) && $attorneyVals[$c] !== '') { return $attorneyVals[$c]; }
+            }
+            return '';
+        };
+        $firmFirst = static function (array $cands) use ($firmVals, $attorneyVals): string {
+            foreach ($cands as $c) {
+                if (isset($firmVals[$c]) && $firmVals[$c] !== '') { return $firmVals[$c]; }
+            }
+            foreach ($cands as $c) {
+                if (isset($attorneyVals[$c]) && $attorneyVals[$c] !== '') { return $attorneyVals[$c]; }
+            }
+            return '';
+        };
 
         foreach ((array)($template['fields'] ?? []) as $fld) {
             if (!is_array($fld)) { continue; }
@@ -721,17 +774,17 @@ function computePopulateAutofillValues($store, array $projDoc, array $template):
             if ($has('attyfirm')) {
                 $val = $attorney(['attyfirm', 'attyinfoattyfirm', 'firmname', 'firm', 'attorneyfirm', 'lawfirm']);
             } elseif ($has('attyname')) {
-                $val = $attorney(['attyname', 'attorneyname', 'attorney']);
+                $val = $attorneyOnly(['attyname', 'attorneyname', 'attorney']);
             } elseif ($has('barno')) {
-                $val = $attorney(['barno', 'barnumber', 'attorneybarnumber', 'statebarnumber', 'statebarno']);
+                $val = $attorneyOnly(['barno', 'barnumber', 'attorneybarnumber', 'statebarnumber', 'statebarno']);
             } elseif ($has('attystreet')) {
-                $val = $attorney(['attystreet', 'attorneystreet', 'firmstreet', 'firmaddress', 'street', 'address']);
+                $val = $firmFirst(['attystreet', 'firmstreet', 'attorneystreet', 'firmaddress', 'street', 'address']);
             } elseif ($has('attycity')) {
-                $val = $attorney(['attycity', 'attorneycity', 'firmcity', 'city']);
+                $val = $firmFirst(['attycity', 'firmcity', 'attorneycity', 'city']);
             } elseif ($has('attystate')) {
-                $val = $attorney(['attystate', 'attorneystate', 'firmstate', 'state']);
+                $val = $firmFirst(['attystate', 'firmstate', 'attorneystate', 'state']);
             } elseif ($has('attyzip')) {
-                $val = $attorney(['attyzip', 'attorneyzip', 'firmzip', 'zip', 'zipcode']);
+                $val = $firmFirst(['attyzip', 'firmzip', 'attorneyzip', 'zip', 'zipcode']);
             } elseif ($has('attyinfo') && $has('phone')) {
                 $val = $attorney(['attyinfophone', 'firmphone', 'attorneyphone', 'phone', 'telephone']);
             } elseif ($has('attyinfo') && $has('fax')) {
@@ -818,10 +871,13 @@ function isProjectCaptionAutofillField(array $template, string $fieldKey): bool 
  * project-caption fields (court, case, firm, client) always take current project data.
  */
 function mergeFieldValuesWithAutofill($store, array $projDoc, array $template, array $storedValues): array {
-    $merged = $storedValues;
+    $merged = sanitizeRenderableFieldValues($storedValues);
     $autofillValues = computePopulateAutofillValues($store, $projDoc, $template ?: []);
     foreach ($autofillValues as $afKey => $afVal) {
         $afVal = trim((string)$afVal);
+        if (isInternalPresetTokenValue($afVal)) {
+            $afVal = '';
+        }
         if ($afVal === '') { continue; }
         $existing = trim((string)($merged[$afKey] ?? ''));
         if ($existing === '' || isProjectCaptionAutofillField($template ?: [], (string)$afKey)) {
@@ -1760,28 +1816,73 @@ function handleFormTemplatePdfDownload(): void {
  * Load stored template fields/backgrounds so Modify can open editor without re-upload.
  */
 function splitFormIdentityForEditor(string $templateId, string $storedFormName): array {
-    $templateId = trim($templateId);
-    $storedFormName = trim($storedFormName);
-    $number = '';
-    $name = '';
+    require_once __DIR__ . '/lib/form_title_extractor.php';
+    $identity = \WebPdfTimeSaver\Mvp\FormTitleExtractor::parseFormIdentityFromTitle($storedFormName, $templateId, '');
+    return [
+        'formNumber' => (string)($identity['formNumber'] ?? ''),
+        'formName' => (string)($identity['formName'] ?? ''),
+    ];
+}
 
-    if ($storedFormName !== '' && strcasecmp($storedFormName, $templateId) !== 0) {
-        $parts = preg_split('/\s+-\s+/', $storedFormName, 2) ?: [];
-        if (count($parts) === 2 && preg_match('/[a-z]/i', (string)$parts[0]) === 1 && preg_match('/\d/', (string)$parts[0]) === 1) {
-            $number = strtoupper(trim((string)$parts[0]));
-            $name = trim((string)$parts[1]);
-        } else {
-            $name = $storedFormName;
+/**
+ * Resolve canonical form identity for storage using extractor + identifier catalog fallback.
+ *
+ * @return array{formNumber:string, formName:string, combinedName:string}
+ */
+function resolveFormIdentityForStorage(
+    string $templateId,
+    string $formNameInput,
+    string $sourceFileName = '',
+    string $formNumberInput = ''
+): array {
+    require_once __DIR__ . '/lib/form_title_extractor.php';
+    $rawName = trim($formNameInput);
+    $source = trim($sourceFileName);
+    $explicitNumber = strtoupper(trim($formNumberInput));
+
+    $identity = \WebPdfTimeSaver\Mvp\FormTitleExtractor::parseFormIdentityFromTitle($rawName, $templateId, $source);
+    $resolvedNumber = $explicitNumber !== ''
+        ? $explicitNumber
+        : trim((string)($identity['formNumber'] ?? ''));
+    $resolvedName = trim((string)($identity['formName'] ?? ''));
+    if ($resolvedName === '' && $rawName !== '') {
+        $resolvedName = $rawName;
+    }
+
+    // Guaranteed fallback path for imports with missing/blank metadata titles.
+    if ($resolvedName === '') {
+        $fallback = \WebPdfTimeSaver\Mvp\FormTitleExtractor::parseFormIdentityFromTitle('', $templateId, $source);
+        if ($resolvedNumber === '') {
+            $resolvedNumber = trim((string)($fallback['formNumber'] ?? ''));
         }
+        $resolvedName = trim((string)($fallback['formName'] ?? ''));
     }
 
-    if ($number === '' && preg_match('/([a-z]{1,4}[-_]\d{1,4})/i', str_replace('_', '-', $templateId), $m) === 1) {
-        $number = strtoupper((string)($m[1] ?? ''));
+    if ($resolvedNumber === '' && $resolvedName === '') {
+        return [
+            'formNumber' => '',
+            'formName' => '',
+            'combinedName' => $templateId,
+        ];
     }
+
+    if ($resolvedNumber === '') {
+        return [
+            'formNumber' => '',
+            'formName' => $resolvedName,
+            'combinedName' => $resolvedName,
+        ];
+    }
+
+    $alreadyPrefixed = preg_match('/^' . preg_quote($resolvedNumber, '/') . '(?:\s*-\s*|\s+|$)/i', $resolvedName) === 1;
+    $combinedName = ($resolvedName === '' || $alreadyPrefixed)
+        ? ($resolvedName !== '' ? $resolvedName : $resolvedNumber)
+        : ($resolvedNumber . ' - ' . $resolvedName);
 
     return [
-        'formNumber' => $number,
-        'formName' => $name,
+        'formNumber' => $resolvedNumber,
+        'formName' => $resolvedName,
+        'combinedName' => $combinedName,
     ];
 }
 
@@ -2183,14 +2284,40 @@ function handleUniversalProcess(): void {
     $response = ['success' => false, 'message' => '', 'data' => []];
     
     try {
-        if (!isset($_FILES['pdf_file']) || $_FILES['pdf_file']['error'] !== UPLOAD_ERR_OK) {
-            throw new Exception('File upload failed');
+        $uploadedFile = null;
+        $tmpPath = '';
+        $selectedPath = '';
+        $sourceOriginalName = '';
+        if (isset($_FILES['pdf_file']) && (int)($_FILES['pdf_file']['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_OK) {
+            $uploadedFile = $_FILES['pdf_file'];
+            $tmpPath = (string)($uploadedFile['tmp_name'] ?? '');
+            $sourceOriginalName = (string)($uploadedFile['name'] ?? '');
+        } else {
+            $selectedRaw = trim((string)($_POST['selected_pdf_path'] ?? ''));
+            if ($selectedRaw === '') {
+                throw new Exception('Please select a PDF file to upload');
+            }
+            $uploadsDir = realpath(__DIR__ . '/../uploads');
+            if ($uploadsDir === false) {
+                throw new Exception('Uploads directory not available');
+            }
+            $resolvedSelected = resolveUploadsPdfSelection($selectedRaw, $uploadsDir);
+            if ($resolvedSelected === null) {
+                throw new Exception('Invalid selected PDF file');
+            }
+            $selectedPath = $resolvedSelected;
+            $tmpPath = $selectedPath;
+            $sourceOriginalName = basename($selectedPath);
+            $uploadedFile = [
+                'name' => $sourceOriginalName,
+                'tmp_name' => $selectedPath,
+            ];
         }
-        
+        if ($tmpPath === '' || !is_file($tmpPath)) {
+            throw new Exception('Selected PDF source is unavailable');
+        }
+
         require_once __DIR__ . '/lib/pdf_field_extractor.php';
-        
-        $uploadedFile = $_FILES['pdf_file'];
-        $tmpPath = $uploadedFile['tmp_name'];
 
         // Determine template ID
         $rawTemplateId = trim((string)($_POST['template_id'] ?? ''));
@@ -2200,7 +2327,7 @@ function handleUniversalProcess(): void {
         } else {
             // Auto-generate a stable template ID based on PDF content
             // This ensures the same form gets the same ID when re-uploaded
-            $baseName = pathinfo($uploadedFile['name'], PATHINFO_FILENAME);
+            $baseName = pathinfo($sourceOriginalName, PATHINFO_FILENAME);
             $cleanBase = preg_replace('/[^a-z0-9_-]+/i', '_', strtolower($baseName)) ?: 'template';
 
             // Hash PDF contents for stability; use short prefix to keep IDs readable
@@ -2212,13 +2339,52 @@ function handleUniversalProcess(): void {
 
         $permanentPath = __DIR__ . '/../uploads/' . $templateId . '.pdf';
         
-        // Save uploaded PDF
-        if (!move_uploaded_file($tmpPath, $permanentPath)) {
-            throw new Exception('Failed to save PDF');
+        // Save selected/uploaded PDF into canonical template path
+        if ($selectedPath !== '') {
+            $sourceReal = realpath($selectedPath);
+            $targetReal = realpath($permanentPath);
+            if ($sourceReal === false || ($targetReal !== false && strcasecmp($sourceReal, $targetReal) === 0)) {
+                // No copy needed (already canonical path), continue.
+            } elseif (!copy($selectedPath, $permanentPath)) {
+                throw new Exception('Failed to save selected PDF');
+            }
+        } else {
+            if (!move_uploaded_file($tmpPath, $permanentPath)) {
+                throw new Exception('Failed to save PDF');
+            }
         }
         
         $response['data']['pdf_saved'] = $permanentPath;
         $response['data']['template_id'] = $templateId;
+        require_once __DIR__ . '/lib/form_title_extractor.php';
+        $detectedFormTitleInfo = \WebPdfTimeSaver\Mvp\FormTitleExtractor::extractFromPdfMetadata(
+            $permanentPath,
+            $templateId,
+            $sourceOriginalName
+        );
+        $detectedFormTitle = trim((string)($detectedFormTitleInfo['title'] ?? ''));
+        $detectedFormTitleConfidence = (float)($detectedFormTitleInfo['confidence'] ?? 0.0);
+        $detectedFormTitleSource = trim((string)($detectedFormTitleInfo['source'] ?? ''));
+        $parsedIdentity = \WebPdfTimeSaver\Mvp\FormTitleExtractor::parseFormIdentityFromTitle(
+            $detectedFormTitle,
+            $templateId,
+            $sourceOriginalName
+        );
+        $parsedFormNumber = trim((string)($parsedIdentity['formNumber'] ?? ''));
+        $parsedFormName = trim((string)($parsedIdentity['formName'] ?? ''));
+        if ($detectedFormTitle !== '') {
+            $response['data']['detected_form_title'] = $detectedFormTitle;
+            $response['data']['detected_form_title_source'] = $detectedFormTitleSource;
+            $response['data']['detected_form_title_confidence'] = $detectedFormTitleConfidence;
+        }
+        if ($parsedFormNumber !== '') {
+            $response['data']['form_number'] = $parsedFormNumber;
+        }
+        if ($parsedFormName !== '' && $detectedFormTitleConfidence >= 0.70) {
+            $response['data']['form_name'] = $parsedFormName;
+        } elseif ($parsedFormName !== '' && $detectedFormTitle !== '') {
+            $response['data']['form_name'] = $parsedFormName;
+        }
         
         // STEP 1: Try to detect if PDF has fillable fields
         $parser = new \Smalot\PdfParser\Parser();
@@ -2396,36 +2562,26 @@ function handleUniversalProcess(): void {
             }
         }
 
-        if (!empty($response['success']) && !empty($response['data']['template_id']) && $store && method_exists($store, 'upsertGlobalFormTemplate')) {
+        if (!empty($response['success']) && !empty($response['data']['template_id']) && $store && method_exists($store, 'getGlobalFormTemplate')) {
             try {
                 $templateIdForRegistry = (string)$response['data']['template_id'];
-                $uploadedName = (string)($uploadedFile['name'] ?? '');
-                $formName = pathinfo($uploadedName, PATHINFO_FILENAME) ?: $templateIdForRegistry;
-                $preserveFormLocation = '';
-                if (method_exists($store, 'getGlobalFormTemplate')) {
-                    $prevReg = $store->getGlobalFormTemplate($templateIdForRegistry);
-                    if (is_array($prevReg)) {
-                        $preserveFormLocation = trim((string)($prevReg['formLocation'] ?? ''));
-                    }
-                }
-                $store->upsertGlobalFormTemplate($templateIdForRegistry, $formName, $uploadedName, $detectedFirmName, $preserveFormLocation);
+                $reg = $store->getGlobalFormTemplate($templateIdForRegistry);
+                $response['data']['registry_exists'] = $reg !== null;
+                $response['data']['registry_pending_finish'] = $reg === null;
+                $response['data']['source_file_name'] = (string)($sourceOriginalName !== '' ? $sourceOriginalName : ($uploadedFile['name'] ?? ''));
                 if (method_exists($store, 'isMysqlPhaseOneConnected')) {
                     $response['data']['phase1_mysql_connected'] = $store->isMysqlPhaseOneConnected();
                 }
-                if (method_exists($store, 'getGlobalFormTemplate')) {
-                    $reg = $store->getGlobalFormTemplate($templateIdForRegistry);
-                    $response['data']['registry_verified'] = $reg !== null;
-                    if ($reg !== null) {
-                        $response['data']['registered_form_name'] = (string)($reg['formName'] ?? '');
-                        $response['data']['form_location'] = trim((string)($reg['formLocation'] ?? ''));
-                        if ($detectedFirmName === '' && trim((string)($reg['detectedFirmName'] ?? '')) !== '') {
-                            $response['data']['detected_firm_name'] = trim((string)$reg['detectedFirmName']);
-                        }
+                if ($reg !== null) {
+                    $response['data']['registered_form_name'] = (string)($reg['formName'] ?? '');
+                    $response['data']['form_location'] = trim((string)($reg['formLocation'] ?? ''));
+                    if ($detectedFirmName === '' && trim((string)($reg['detectedFirmName'] ?? '')) !== '') {
+                        $response['data']['detected_firm_name'] = trim((string)$reg['detectedFirmName']);
                     }
                 }
             } catch (\Throwable $e) {
-                error_log('handleUniversalProcess upsertGlobalFormTemplate warning: ' . $e->getMessage());
-                $response['data']['registry_warning'] = 'Template was uploaded, but optional form registry sync failed.';
+                error_log('handleUniversalProcess getGlobalFormTemplate warning: ' . $e->getMessage());
+                $response['data']['registry_warning'] = 'Template uploaded, but pending registry status could not be determined.';
             }
         }
         
@@ -2635,6 +2791,9 @@ if (strpos($route, 'api/') === 0) {
         case 'form-management/delete-template':
             handleFormManagementDeleteTemplate();
             break;
+        case 'form-management/finalize-template':
+            handleFormManagementFinalizeTemplate();
+            break;
         case 'form-management/cleanup-database':
             handleFormManagementCleanupDatabase();
             break;
@@ -2725,6 +2884,83 @@ function handleFormTemplateMeta(): void {
         'success' => true,
         'template' => $row,
     ], JSON_UNESCAPED_SLASHES);
+}
+
+function handleFormManagementFinalizeTemplate(): void {
+    global $store;
+    header('Content-Type: application/json; charset=utf-8');
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        http_response_code(405);
+        echo json_encode(['success' => false, 'error' => 'Method not allowed'], JSON_UNESCAPED_SLASHES);
+        return;
+    }
+    if (!$store || !method_exists($store, 'upsertGlobalFormTemplate')) {
+        http_response_code(500);
+        echo json_encode(['success' => false, 'error' => 'Store unavailable'], JSON_UNESCAPED_SLASHES);
+        return;
+    }
+
+    $raw = file_get_contents('php://input');
+    $decoded = json_decode((string)$raw, true);
+    if (!is_array($decoded)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Invalid JSON body'], JSON_UNESCAPED_SLASHES);
+        return;
+    }
+
+    $templateId = sanitizeId((string)($decoded['template_id'] ?? ''));
+    if ($templateId === '') {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'template_id required'], JSON_UNESCAPED_SLASHES);
+        return;
+    }
+
+    $formNumber = strtoupper(trim((string)($decoded['form_number'] ?? '')));
+    $formName = trim((string)($decoded['form_name'] ?? ''));
+    $formLocation = trim((string)($decoded['form_location'] ?? ''));
+    $sourceFileNameInput = trim((string)($decoded['source_file_name'] ?? ''));
+    $detectedFirmNameInput = trim((string)($decoded['detected_firm_name'] ?? ''));
+
+    $existing = method_exists($store, 'getGlobalFormTemplate')
+        ? $store->getGlobalFormTemplate($templateId)
+        : null;
+
+    $sourceFileName = $sourceFileNameInput !== ''
+        ? $sourceFileNameInput
+        : (is_array($existing) ? trim((string)($existing['sourceFileName'] ?? '')) : '');
+    $detectedFirmName = $detectedFirmNameInput !== ''
+        ? $detectedFirmNameInput
+        : (is_array($existing) ? trim((string)($existing['detectedFirmName'] ?? '')) : '');
+    $resolvedLocation = $formLocation !== ''
+        ? $formLocation
+        : (is_array($existing) ? trim((string)($existing['formLocation'] ?? '')) : '');
+
+    $seedName = $formName !== ''
+        ? $formName
+        : (is_array($existing) ? trim((string)($existing['formName'] ?? '')) : '');
+    $resolvedIdentity = resolveFormIdentityForStorage($templateId, $seedName, $sourceFileName, $formNumber);
+    $resolvedName = $resolvedIdentity['combinedName'];
+
+    try {
+        $store->upsertGlobalFormTemplate($templateId, $resolvedName, $sourceFileName, $detectedFirmName, $resolvedLocation);
+        $saved = method_exists($store, 'getGlobalFormTemplate')
+            ? $store->getGlobalFormTemplate($templateId)
+            : null;
+        echo json_encode([
+            'success' => true,
+            'template_id' => $templateId,
+            'form_number' => (string)($resolvedIdentity['formNumber'] ?? ''),
+            'form_name' => (string)($resolvedIdentity['formName'] ?? ''),
+            'form_location' => $resolvedLocation,
+            'template' => $saved,
+        ], JSON_UNESCAPED_SLASHES);
+    } catch (\Throwable $e) {
+        http_response_code(500);
+        echo json_encode([
+            'success' => false,
+            'error' => 'Failed to finalize template: ' . $e->getMessage(),
+        ], JSON_UNESCAPED_SLASHES);
+    }
 }
 
 function handleFormManagementUpsertCustomField(): void {
@@ -2820,17 +3056,125 @@ function handleFormManagementDeleteTemplate(): void {
         return;
     }
     try {
+        $templateMeta = method_exists($store, 'getGlobalFormTemplate')
+            ? (array)($store->getGlobalFormTemplate($templateId) ?? [])
+            : [];
+        $sourceFileName = basename((string)($templateMeta['sourceFileName'] ?? ''));
+
         $deleted = (bool)$store->deleteGlobalFormTemplate($templateId);
-        $dataDir = realpath(__DIR__ . '/../data');
-        if ($dataDir !== false && is_dir($dataDir)) {
-            $patterns = [
-                $templateId . '_positions.json',
-                $templateId . '_config.json',
-                $templateId . '_extraction_details.json',
-                $templateId . '_verification_report.json',
+        $normalizeTemplateToken = static function (string $raw): string {
+            return strtolower((string)preg_replace('/[^a-z0-9]+/i', '', trim($raw)));
+        };
+        $deleteTemplateArtifacts = static function (string $dir, string $tid, bool $allowNormalized) use ($normalizeTemplateToken): void {
+            $baseDir = realpath($dir);
+            if ($baseDir === false || !is_dir($baseDir)) {
+                return;
+            }
+            $safeTid = basename($tid);
+            $normTid = $normalizeTemplateToken($safeTid);
+            $names = [
+                $safeTid . '_positions.json',
+                $safeTid . '_config.json',
+                $safeTid . '_extraction_details.json',
+                $safeTid . '_verification_report.json',
             ];
-            foreach ($patterns as $name) {
-                $candidate = $dataDir . DIRECTORY_SEPARATOR . $name;
+            foreach ($names as $name) {
+                $candidate = $baseDir . DIRECTORY_SEPARATOR . $name;
+                if (is_file($candidate)) {
+                    @unlink($candidate);
+                }
+            }
+            if (!$allowNormalized || $normTid === '') {
+                return;
+            }
+            foreach ((array)(glob($baseDir . DIRECTORY_SEPARATOR . '*.json') ?: []) as $path) {
+                $name = basename((string)$path);
+                if (!preg_match('/^(.+?)_(positions|config|extraction_details|verification_report)\.json$/', $name, $m)) {
+                    continue;
+                }
+                $token = $normalizeTemplateToken((string)($m[1] ?? ''));
+                if ($token !== '' && $token === $normTid && is_file($path)) {
+                    @unlink($path);
+                }
+            }
+        };
+        $deleteBackgrounds = static function (string $uploadsDir, string $tid, bool $allowNormalized) use ($normalizeTemplateToken): void {
+            $baseDir = realpath($uploadsDir);
+            if ($baseDir === false || !is_dir($baseDir)) {
+                return;
+            }
+            $normTid = $normalizeTemplateToken($tid);
+            foreach ((array)(glob($baseDir . DIRECTORY_SEPARATOR . '*_page*_background.png') ?: []) as $path) {
+                $name = basename((string)$path);
+                if (preg_match('/^(.*)_page\d+_background\.png$/i', $name, $m) !== 1) {
+                    continue;
+                }
+                $prefix = (string)($m[1] ?? '');
+                $isExact = strcasecmp($prefix, $tid) === 0;
+                $isNorm = $allowNormalized && $normTid !== '' && $normalizeTemplateToken($prefix) === $normTid;
+                if (($isExact || $isNorm) && is_file($path)) {
+                    @unlink($path);
+                }
+            }
+        };
+        $deleteTemplatePdfFiles = static function (string $uploadsDir, string $tid, bool $allowNormalized) use ($normalizeTemplateToken): void {
+            $baseDir = realpath($uploadsDir);
+            if ($baseDir === false || !is_dir($baseDir)) {
+                return;
+            }
+            $safeTid = basename($tid);
+            $normTid = $normalizeTemplateToken($safeTid);
+            $exact = $baseDir . DIRECTORY_SEPARATOR . $safeTid . '.pdf';
+            if (is_file($exact)) {
+                @unlink($exact);
+            }
+            if (!$allowNormalized || $normTid === '') {
+                return;
+            }
+            foreach ((array)(glob($baseDir . DIRECTORY_SEPARATOR . '*.pdf') ?: []) as $path) {
+                $name = basename((string)$path);
+                if (preg_match('/^(.+)\.pdf$/i', $name, $m) !== 1) {
+                    continue;
+                }
+                $prefix = (string)($m[1] ?? '');
+                if ($normalizeTemplateToken($prefix) === $normTid && is_file($path)) {
+                    @unlink($path);
+                }
+            }
+        };
+
+        $remainingTemplates = method_exists($store, 'getGlobalFormTemplates')
+            ? (array)$store->getGlobalFormTemplates()
+            : [];
+        $normTid = $normalizeTemplateToken($templateId);
+        $hasSiblingNormalizedTemplate = false;
+        $hasSiblingSourceFile = false;
+        foreach ($remainingTemplates as $row) {
+            if (!is_array($row)) { continue; }
+            $rid = sanitizeId((string)($row['templateId'] ?? ''));
+            if ($rid === '' || $rid === $templateId) { continue; }
+            if ($normTid !== '' && $normalizeTemplateToken($rid) === $normTid) {
+                $hasSiblingNormalizedTemplate = true;
+            }
+            $rowSource = basename((string)($row['sourceFileName'] ?? ''));
+            if ($sourceFileName !== '' && $rowSource !== '' && strcasecmp($rowSource, $sourceFileName) === 0) {
+                $hasSiblingSourceFile = true;
+            }
+        }
+
+        $deleteTemplateArtifacts(__DIR__ . '/../data', $templateId, !$hasSiblingNormalizedTemplate);
+        $deleteTemplateArtifacts(__DIR__ . '/data', $templateId, !$hasSiblingNormalizedTemplate);
+        $deleteBackgrounds(__DIR__ . '/uploads', $templateId, !$hasSiblingNormalizedTemplate);
+        $deleteBackgrounds(__DIR__ . '/../uploads', $templateId, !$hasSiblingNormalizedTemplate);
+        $deleteTemplatePdfFiles(__DIR__ . '/uploads', $templateId, !$hasSiblingNormalizedTemplate);
+        $deleteTemplatePdfFiles(__DIR__ . '/../uploads', $templateId, !$hasSiblingNormalizedTemplate);
+
+        if ($sourceFileName !== '' && !$hasSiblingSourceFile) {
+            $sourceCandidates = [
+                __DIR__ . '/../uploads/' . $sourceFileName,
+                __DIR__ . '/uploads/' . $sourceFileName,
+            ];
+            foreach ($sourceCandidates as $candidate) {
                 if (is_file($candidate)) {
                     @unlink($candidate);
                 }
@@ -3531,6 +3875,68 @@ function handleFirmDefaultsUpdateValue(): void {
 }
 
 /** @return array<string, mixed> */
+function inferAttorneyDisplayName(array $fieldValues, array $fieldRows, string $storedName = ''): string {
+    $best = '';
+    $bestScore = -100000;
+    foreach ($fieldRows as $fieldRow) {
+        if (!is_array($fieldRow)) {
+            continue;
+        }
+        $fid = sanitizeId((string)($fieldRow['id'] ?? ''));
+        if ($fid === '') {
+            continue;
+        }
+        $value = trim((string)($fieldValues[$fid] ?? ''));
+        if ($value === '') {
+            continue;
+        }
+        $linkId = strtolower(trim((string)($fieldRow['linkId'] ?? '')));
+        $display = strtolower(trim((string)($fieldRow['displayName'] ?? $fieldRow['label'] ?? '')));
+        $matchingTag = strtolower(trim((string)($fieldRow['matchingTag'] ?? '')));
+        $score = 0;
+        if ($linkId === 'attorney_name') { $score += 1000; }
+        if (strpos($linkId, 'attorney_name') !== false) { $score += 900; }
+        if (strpos($matchingTag, 'attyname') !== false || strpos($matchingTag, 'attorneyname') !== false) { $score += 850; }
+        if (strpos($display, 'attorney') !== false && strpos($display, 'name') !== false) { $score += 800; }
+        if (preg_match('/(^|_)name($|_)/', $linkId)) { $score += 300; }
+        if (strpos($display, 'name') !== false) { $score += 200; }
+        if (strpos($linkId, 'bar') !== false || strpos($display, 'bar') !== false) { $score -= 700; }
+        if (
+            strpos($linkId, 'phone') !== false ||
+            strpos($linkId, 'fax') !== false ||
+            strpos($linkId, 'email') !== false ||
+            strpos($linkId, 'zip') !== false
+        ) {
+            $score -= 500;
+        }
+        if ($score > $bestScore) {
+            $bestScore = $score;
+            $best = $value;
+        }
+    }
+    if ($best !== '') {
+        return $best;
+    }
+    foreach (['attorney_name', 'attorney', 'name'] as $key) {
+        $value = trim((string)($fieldValues[$key] ?? ''));
+        if ($value !== '') {
+            return $value;
+        }
+    }
+    $storedName = trim($storedName);
+    if ($storedName !== '') {
+        return $storedName;
+    }
+    foreach ($fieldValues as $value) {
+        $text = trim((string)$value);
+        if ($text !== '') {
+            return $text;
+        }
+    }
+    return 'Untitled Attorney';
+}
+
+/** @return array<string, mixed> */
 function formatAttorneyApiRow(array $row, array $fieldRows): array {
     $fieldValues = is_array($row['fieldValues'] ?? null) ? $row['fieldValues'] : [];
     $fields = [];
@@ -3552,7 +3958,7 @@ function formatAttorneyApiRow(array $row, array $fieldRows): array {
     }
     return [
         'id' => (string)($row['id'] ?? ''),
-        'displayName' => (string)($row['displayName'] ?? ''),
+        'displayName' => inferAttorneyDisplayName($fieldValues, $fieldRows, (string)($row['displayName'] ?? '')),
         'fieldValues' => $fieldValues,
         'fields' => $fields,
         'createdAt' => (string)($row['createdAt'] ?? ''),
@@ -3833,6 +4239,20 @@ function handleFormSetsUpsert(): void {
         http_response_code(400);
         echo json_encode(['success' => false, 'error' => 'Form set name is required.']);
         return;
+    }
+    $nameNorm = mb_strtolower(trim($name));
+    foreach ((array)$store->getGlobalFormSets() as $row) {
+        if (!is_array($row)) { continue; }
+        $rowId = sanitizeId((string)($row['id'] ?? ''));
+        if ($id !== '' && $rowId === $id) {
+            continue;
+        }
+        $rowNameNorm = mb_strtolower(trim((string)($row['name'] ?? '')));
+        if ($rowNameNorm !== '' && $rowNameNorm === $nameNorm) {
+            http_response_code(409);
+            echo json_encode(['success' => false, 'error' => 'A form set with that name already exists.']);
+            return;
+        }
     }
     $uniqueTemplateIds = array_values(array_unique($templateIds));
     $row = $store->upsertGlobalFormSet($name, $uniqueTemplateIds, $id, false);
@@ -4904,18 +5324,16 @@ function handlePositionUpdate(): void {
         } elseif (is_array($existingRegistry)) {
             $locToSave = trim((string)($existingRegistry['formLocation'] ?? ''));
         }
-        if ($store && method_exists($store, 'upsertGlobalFormTemplate') && method_exists($store, 'getGlobalFormTemplate')) {
+        if (is_array($existingRegistry) && $store && method_exists($store, 'upsertGlobalFormTemplate') && method_exists($store, 'getGlobalFormTemplate')) {
             $existing = $existingRegistry;
             $sourceFileName = is_array($existing) ? (string)($existing['sourceFileName'] ?? '') : '';
             $detectedFirmName = is_array($existing) ? (string)($existing['detectedFirmName'] ?? '') : '';
-            $resolvedName = $formName !== '' ? $formName : (is_array($existing) ? (string)($existing['formName'] ?? '') : '');
-            $resolvedName = trim($resolvedName);
-            if ($formNumber !== '') {
-                $resolvedName = $resolvedName !== '' ? ($formNumber . ' - ' . $resolvedName) : $formNumber;
-            } elseif ($resolvedName === '') {
-                $resolvedName = $templateId;
-            }
+            $seedName = $formName !== '' ? $formName : (is_array($existing) ? (string)($existing['formName'] ?? '') : '');
+            $resolvedIdentity = resolveFormIdentityForStorage($templateId, trim($seedName), trim($sourceFileName), $formNumber);
+            $resolvedName = (string)($resolvedIdentity['combinedName'] ?? $templateId);
             $store->upsertGlobalFormTemplate($templateId, $resolvedName, $sourceFileName, $detectedFirmName, $locToSave);
+            $formNumber = (string)($resolvedIdentity['formNumber'] ?? $formNumber);
+            $formName = (string)($resolvedIdentity['formName'] ?? $formName);
         }
         
         echo json_encode([
@@ -5170,6 +5588,12 @@ case 'projects':
 		}
 		$clientFieldRows = method_exists($store, 'getFieldManagerCustomFields') ? $store->getFieldManagerCustomFields('client') : [];
 		$attorneyFieldRows = method_exists($store, 'getFieldManagerCustomFields') ? $store->getFieldManagerCustomFields('attorney') : [];
+		$attorneyRoster = [];
+		if (method_exists($store, 'getAttorneys')) {
+			$attorneyRoster = array_map(static function (array $row) use ($attorneyFieldRows): array {
+				return formatAttorneyApiRow($row, $attorneyFieldRows);
+			}, (array)$store->getAttorneys());
+		}
 		$courtFieldRows = method_exists($store, 'getFieldManagerCustomFields') ? $store->getFieldManagerCustomFields('court') : [];
 		$caseFieldRows = method_exists($store, 'getFieldManagerCustomFields') ? $store->getFieldManagerCustomFields('case') : [];
 		$caseLibrary = [];
@@ -5215,6 +5639,7 @@ case 'projects':
 			'globalForms' => $globalForms,
 			'clientFieldRows' => $clientFieldRows,
 			'attorneyFieldRows' => $attorneyFieldRows,
+			'attorneyRoster' => $attorneyRoster,
 			'courtFieldRows' => $courtFieldRows,
 			'caseFieldRows' => $caseFieldRows,
 			'caseLibrary' => $caseLibrary,
@@ -5871,15 +6296,9 @@ case 'projects':
 
 		$additionalTemplateIds = $sanitizeTemplateList($additionalTemplateIdsInput);
 		$templateOrder = $sanitizeTemplateList($templateOrderInput);
-		$baseTemplateIds = [];
-		if ($selectedFormSetId !== '' && method_exists($store, 'getGlobalFormSet')) {
-			$formSetRow = $store->getGlobalFormSet($selectedFormSetId);
-			if (is_array($formSetRow)) {
-				$baseTemplateIds = $sanitizeTemplateList((array)($formSetRow['templateIds'] ?? []));
-			}
-		}
-
-		$templateOrder = $sanitizeTemplateList(array_merge($templateOrder, $baseTemplateIds, $additionalTemplateIds));
+		// Treat posted template order as authoritative. This allows removing
+		// individual forms even when a form set is selected.
+		$templateOrder = $sanitizeTemplateList(array_merge($templateOrder, $additionalTemplateIds));
 		$templateOrder = dedupeTemplateIdsByFamily($templateOrder);
 
 		$configPayload = [
@@ -5941,7 +6360,7 @@ case 'projects':
 		// what is still required before they can proceed to filling out forms.
 		$missing = [];
 		if (trim($caseNumber) === '') { $missing[] = 'case number'; }
-		if ($selectedFormSetId === '') { $missing[] = 'form set'; }
+		if (empty($templateOrder)) { $missing[] = 'at least one form'; }
 		if (!empty($missing)) {
 			header('Location: ?route=project&id=' . urlencode($projectId) . '&error=' . urlencode('Saved. Still required before continuing: ' . implode(', ', $missing) . '.'));
 			exit;
@@ -5963,7 +6382,7 @@ case 'projects':
 			exit;
 		}
 
-		// Accept the full selected order from the Next button so the entire form set is
+		// Accept the full selected order from the Next button so all selected forms are
 		// materialized even when the user did not click "Save Project Setup" first.
 		$postedOrder = [];
 		$postedOrderRaw = (string)($_POST['templateOrderJson'] ?? '');
@@ -6133,6 +6552,22 @@ case 'projects':
 
 	case 'actions/save-fields':
         $logFile = __DIR__ . '/../logs/pdf_debug.log';
+        $contentType = strtolower((string)($_SERVER['CONTENT_TYPE'] ?? ''));
+        $isJsonSave = strpos($contentType, 'application/json') !== false;
+        $jsonPayload = [];
+        if ($isJsonSave) {
+            $rawBody = (string)file_get_contents('php://input');
+            $decodedBody = json_decode($rawBody, true);
+            if (is_array($decodedBody)) {
+                $jsonPayload = $decodedBody;
+            }
+        }
+        $isAjaxSave = (
+            ($isJsonSave && !empty($jsonPayload))
+            || (!empty($_POST['ajax']) && (string)$_POST['ajax'] === '1')
+            || (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower((string)$_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
+            || (isset($_SERVER['HTTP_ACCEPT']) && strpos(strtolower((string)$_SERVER['HTTP_ACCEPT']), 'application/json') !== false)
+        );
         if ($isDebug) {
             file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Request method: ' . $_SERVER['REQUEST_METHOD'] . PHP_EOL, FILE_APPEND);
             file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: POST data: ' . json_encode($_POST) . PHP_EOL, FILE_APPEND);
@@ -6146,13 +6581,13 @@ case 'projects':
 			exit; 
 		}
 		
-		$pdId = sanitizeId((string)($_POST['projectDocumentId'] ?? ''));
+		$pdId = sanitizeId((string)($jsonPayload['projectDocumentId'] ?? ($_POST['projectDocumentId'] ?? '')));
         if ($isDebug) {
             file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: PD ID: ' . $pdId . PHP_EOL, FILE_APPEND);
         }
 		$pdDoc = $pdId !== '' ? $store->getProjectDocumentById($pdId) : null;
 		if ($pdDoc === null) {
-			if (!empty($_POST['ajax']) && $_POST['ajax'] === '1') {
+			if ($isAjaxSave) {
 				http_response_code(400);
 				header('Content-Type: application/json');
 				echo json_encode(['success' => false, 'message' => 'Invalid project document id']);
@@ -6162,8 +6597,14 @@ case 'projects':
 			exit;
 		}
 		
-		$data = $_POST;
-		unset($data['projectDocumentId'], $data['ajax']);
+		if ($isJsonSave && is_array($jsonPayload['values'] ?? null)) {
+			$data = $jsonPayload['values'];
+			unset($data['projectDocumentId'], $data['ajax']);
+		} else {
+			$data = $_POST;
+			unset($data['projectDocumentId'], $data['ajax']);
+		}
+        $data = sanitizeRenderableFieldValues((array)$data);
         if ($isDebug) {
             file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Data to save: ' . json_encode($data) . PHP_EOL, FILE_APPEND);
         }
@@ -6180,7 +6621,7 @@ case 'projects':
             file_put_contents($logFile, date('Y-m-d H:i:s') . ' SAVE FIELDS: Values saved successfully' . PHP_EOL, FILE_APPEND);
         }
 
-		if (!empty($_POST['ajax']) && $_POST['ajax'] === '1') {
+		if ($isAjaxSave) {
 			header('Content-Type: application/json');
 			echo json_encode(['success' => true, 'projectDocumentId' => $pdId]);
 			exit;
@@ -7302,6 +7743,9 @@ case 'projects':
 		exit;
 
 	case 'form-management':
+		if ($store && method_exists($store, 'cleanupGlobalFormDatabase')) {
+			try { $store->cleanupGlobalFormDatabase(); } catch (\Throwable $e) { /* best-effort */ }
+		}
 		$clientsList = method_exists($store, 'getClients') ? $store->getClients() : [];
 		$formCustomFields = method_exists($store, 'getFormCustomFields') ? $store->getFormCustomFields() : [];
 		$customFieldMatchingMode = method_exists($store, 'getFormImporterMatchingMode') ? $store->getFormImporterMatchingMode() : 'exact';
@@ -7319,29 +7763,8 @@ case 'projects':
 			$row['templateId'] = $tid;
 			$templatesById[$tid] = $row;
 		}
-		$dataDir = realpath(__DIR__ . '/../data');
-		if ($dataDir !== false && is_dir($dataDir)) {
-			$positionFiles = glob($dataDir . DIRECTORY_SEPARATOR . '*_positions.json') ?: [];
-			foreach ($positionFiles as $positionsPath) {
-				$base = basename((string)$positionsPath);
-				if (preg_match('/^(.+)_positions\.json$/', $base, $m) !== 1) {
-					continue;
-				}
-				$tid = sanitizeId((string)($m[1] ?? ''));
-				if ($tid === '' || isset($templatesById[$tid])) {
-					continue;
-				}
-				$templatesById[$tid] = [
-					'templateId' => $tid,
-					'formName' => $tid,
-					'sourceFileName' => $tid . '.pdf',
-					'detectedFirmName' => '',
-					'scope' => 'global',
-					'createdAt' => '',
-					'updatedAt' => '',
-				];
-			}
-		}
+		// Intentionally do not synthesize list entries from *_positions.json.
+		// Search Forms should list only concrete template records, not stale file artifacts.
 		$managedFormTemplates = array_values($templatesById);
 		usort($managedFormTemplates, static function (array $a, array $b): int {
 			return strcmp((string)($a['templateId'] ?? ''), (string)($b['templateId'] ?? ''));
@@ -7365,6 +7788,9 @@ case 'projects':
 		break;
 
 	case 'form-new':
+		if ($store && method_exists($store, 'cleanupGlobalFormDatabase')) {
+			try { $store->cleanupGlobalFormDatabase(); } catch (\Throwable $e) { /* best-effort */ }
+		}
 		$clientsList = method_exists($store, 'getClients') ? $store->getClients() : [];
 		$formCustomFields = method_exists($store, 'getFormCustomFields') ? $store->getFormCustomFields() : [];
 		$customFieldMatchingMode = method_exists($store, 'getFormImporterMatchingMode') ? $store->getFormImporterMatchingMode() : 'exact';
@@ -7382,29 +7808,8 @@ case 'projects':
 			$row['templateId'] = $tid;
 			$templatesById[$tid] = $row;
 		}
-		$dataDir = realpath(__DIR__ . '/../data');
-		if ($dataDir !== false && is_dir($dataDir)) {
-			$positionFiles = glob($dataDir . DIRECTORY_SEPARATOR . '*_positions.json') ?: [];
-			foreach ($positionFiles as $positionsPath) {
-				$base = basename((string)$positionsPath);
-				if (preg_match('/^(.+)_positions\.json$/', $base, $m) !== 1) {
-					continue;
-				}
-				$tid = sanitizeId((string)($m[1] ?? ''));
-				if ($tid === '' || isset($templatesById[$tid])) {
-					continue;
-				}
-				$templatesById[$tid] = [
-					'templateId' => $tid,
-					'formName' => $tid,
-					'sourceFileName' => $tid . '.pdf',
-					'detectedFirmName' => '',
-					'scope' => 'global',
-					'createdAt' => '',
-					'updatedAt' => '',
-				];
-			}
-		}
+		// Intentionally do not synthesize list entries from *_positions.json.
+		// Search Forms should list only concrete template records, not stale file artifacts.
 		$managedFormTemplates = array_values($templatesById);
 		usort($managedFormTemplates, static function (array $a, array $b): int {
 			return strcmp((string)($a['templateId'] ?? ''), (string)($b['templateId'] ?? ''));
@@ -7452,10 +7857,17 @@ case 'projects':
 		$firmDefaultFields = method_exists($store, 'getFirmDefaultFields') ? $store->getFirmDefaultFields() : [];
 		$firmDefaultMatchingMode = method_exists($store, 'getFormImporterMatchingMode') ? $store->getFormImporterMatchingMode() : 'exact';
 		$attorneyFieldRows = method_exists($store, 'getFieldManagerCustomFields') ? $store->getFieldManagerCustomFields('attorney') : [];
+		$attorneyRosterInitial = [];
+		if (method_exists($store, 'getAttorneys')) {
+			$attorneyRosterInitial = array_map(static function (array $row) use ($attorneyFieldRows): array {
+				return formatAttorneyApiRow($row, $attorneyFieldRows);
+			}, (array)$store->getAttorneys());
+		}
 		render('firm_defaults', [
 			'firmDefaultFields' => $firmDefaultFields,
 			'firmDefaultMatchingMode' => $firmDefaultMatchingMode,
 			'attorneyFieldRows' => $attorneyFieldRows,
+			'attorneyRosterInitial' => $attorneyRosterInitial,
 		]);
 		break;
 		

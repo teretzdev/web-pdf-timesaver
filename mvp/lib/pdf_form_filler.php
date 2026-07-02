@@ -152,6 +152,7 @@ final class PdfFormFiller {
      * Fill PDF using Node.js/pdf-lib (AcroForm filling)
      */
     private function fillUsingNodeJs(string $pdfPath, array $values, string $outputPath, string $templateId): array {
+        $values = $this->sanitizeFillValues($values);
         $nodePath = $this->findNodeBinary();
         if (!$nodePath) {
             throw new \RuntimeException('Node.js not available');
@@ -184,7 +185,7 @@ final class PdfFormFiller {
 
         // Map canonical position keys to AcroForm names (e.g. FL_100_... -> FL-100[0].Page1[0]...)
         foreach ($values as $key => $value) {
-            if (!is_string($key) || str_starts_with($key, '_font_')) {
+            if (!is_string($key) || $this->isInternalMetaFieldKey($key)) {
                 continue;
             }
             if ($value === '' || $value === null) {
@@ -244,7 +245,6 @@ final class PdfFormFiller {
                 if (preg_match('/Filled (\d+)/', $outputText, $matches)) {
                     $fieldsFilled = (int)$matches[1];
                 }
-                
                 return [
                     'success' => true,
                     'fieldsFilled' => $fieldsFilled,
@@ -1531,6 +1531,7 @@ final class PdfFormFiller {
      * Place fields on a specific page
      */
     private function placeFieldsForPage(Fpdi $pdf, array $values, array $positions, int $pageNum, string $logFile, ?array $template = null, ?string $templateId = null): int {
+        $values = $this->sanitizeFillValues($values);
         $fieldsPlaced = 0;
         
         // Use UniversalFieldMapper to map user values to PDF field names
@@ -1579,10 +1580,7 @@ final class PdfFormFiller {
             if (!is_string($fieldKey)) {
                 continue;
             }
-            if (str_starts_with($fieldKey, '_font_')) {
-                continue;
-            }
-            if ($fieldKey === 'temporary_custom_fields_json') {
+            if ($this->isInternalMetaFieldKey($fieldKey)) {
                 continue;
             }
             if ($value === '' || $value === null) {
@@ -1647,9 +1645,8 @@ final class PdfFormFiller {
             
             $x = (float)($position['x'] ?? 0);
             $y = (float)($position['y'] ?? 0);
-            $fontSize = FieldMetrics::normalizeImportedFontPt($position['fontSize'] ?? FieldMetrics::defaultFontPt(), $position, FieldMetrics::defaultFontPt());
-            $fontStyle = (string)($position['fontStyle'] ?? '');
             $fontSize = FieldMetrics::exportFontPtForField($position, $values, $fieldKey);
+            $fontStyle = (string)($position['fontStyle'] ?? '');
             $width = (float)($position['width'] ?? 100);
             $height = (float)($position['height'] ?? 10);
             
@@ -1838,7 +1835,18 @@ final class PdfFormFiller {
             if ($boxHeight >= 6) {
                 $boxHeight = 3.18;
             }
-            $fontPt = FieldMetrics::normalizeImportedFontPt($row['fontPt'] ?? ($row['fontSize'] ?? ($row['pt'] ?? FieldMetrics::defaultFontPt())), $row, FieldMetrics::defaultFontPt());
+            $fontPt = FieldMetrics::exportFontPtForField(
+                [
+                    'fontSize' => $row['fontSize'] ?? ($row['fontPt'] ?? ($row['pt'] ?? FieldMetrics::defaultFontPx())),
+                    'fontSizeUnit' => $row['fontSizeUnit'] ?? (
+                        isset($row['fontPt']) || (isset($row['pt']) && !isset($row['fontSize']))
+                            ? ''
+                            : 'px'
+                    ),
+                ],
+                ['_font_size__temp' => $row['fontSize'] ?? ($row['fontPt'] ?? ($row['pt'] ?? ''))],
+                'temp'
+            );
 
             $userStyleFlags = strtoupper(preg_replace('/[^BIUS]/', '', (string)($row['fontStyle'] ?? '')));
             $textStyle = '';
@@ -2044,6 +2052,47 @@ final class PdfFormFiller {
             }
         }
         return null;
+    }
+
+    /**
+     * Prevent hidden UI metadata (font/style/preset pointers/temp JSON) and connector
+     * token values from being treated as real PDF field content during mapping/fill.
+     *
+     * @param array<string,mixed> $values
+     * @return array<string,mixed>
+     */
+    private function sanitizeFillValues(array $values): array {
+        $clean = [];
+        foreach ($values as $key => $value) {
+            if (!is_string($key) || $key === '' || $this->isInternalMetaFieldKey($key)) {
+                continue;
+            }
+            if (is_array($value) || is_object($value)) {
+                continue;
+            }
+            $text = trim((string)$value);
+            if ($text !== '' && $this->isInternalPresetTokenValue($text)) {
+                // Skip connector tokens entirely; they are metadata selectors, not content.
+                continue;
+            }
+            $clean[$key] = $value;
+        }
+        return $clean;
+    }
+
+    private function isInternalMetaFieldKey(string $fieldKey): bool {
+        return str_starts_with($fieldKey, '_') || $fieldKey === 'temporary_custom_fields_json';
+    }
+
+    private function isInternalPresetTokenValue(string $value): bool {
+        $trimmed = trim($value);
+        if ($trimmed === '') {
+            return false;
+        }
+        if (stripos($trimmed, '::fcf_') !== false) {
+            return true;
+        }
+        return (bool)preg_match('/^[a-z][a-z ]*fields::[a-z0-9_:-]+$/i', $trimmed);
     }
 
     /**

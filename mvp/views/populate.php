@@ -83,8 +83,8 @@ if (is_array($decodedTempFields)) {
             'top' => max(0, min(273, (float)($row['top'] ?? 20))),
             'width' => max(2, min(205, $rawTempW)),
             'height' => max(2, min(6, $rawTempH)),
-            'fontPt' => max(4, min(24, (float)($row['fontPt'] ?? ($row['pt'] ?? ($fieldMetricsJs['DEFAULT_FONT_PT'] ?? 10))))),
-            'fontSize' => max(0, min(24, (int)($row['fontSize'] ?? 0))),
+            'fontPt' => max(4, min(24, (float)($row['fontPt'] ?? ($row['pt'] ?? ($fieldMetricsJs['DEFAULT_FONT_PX'] ?? 13))))),
+            'fontSize' => max(0, min(32, (int)($row['fontSize'] ?? 0))),
             'fontColor' => (string)($row['fontColor'] ?? '#000000'),
             'fontStyle' => strtoupper(preg_replace('/[^BIUS]/', '', (string)($row['fontStyle'] ?? ''))),
         ];
@@ -502,16 +502,20 @@ body.route-populate-scroll-lock .populate-action-bar-wrap {
     overflow: auto;
     flex: 1;
     min-height: 0;
+    padding-bottom: 96px;
 }
 .fillout-sidebar-footer {
-    margin-top: auto;
+    margin-top: 0;
     padding: 12px 14px 16px;
     border-top: 1px solid #e2e8f0;
     background: #fff;
     flex-shrink: 0;
+    position: sticky;
+    bottom: 0;
+    z-index: 3;
 }
 .fillout-sidebar-footer.js-fillout-custombox-section {
-    margin-top: auto;
+    margin-top: 0;
 }
 .fillout-sidebar .pdftimesaver-btn-secondary,
 .fillout-sidebar .js-fillout-preset-apply {
@@ -752,8 +756,9 @@ body.route-populate-scroll-lock .populate-action-bar-wrap {
         return $css;
     };
     $filloutMinFontPx = 4;
-    // Keep populate default aligned with requested baseline.
-    $filloutDefaultFontPx = 15;
+    // Keep populate defaults aligned to canonical pt->px conversion used by
+    // import/edit/export flows (1pt = 96/72 CSS px).
+    $filloutDefaultFontPx = (int)max($filloutMinFontPx, (int)round($fieldMetricsJs['DEFAULT_FONT_PX'] ?? 13));
     $ptsStyleControls = static function (int $size, string $color, string $style) use ($filloutMinFontPx): void {
         $pickerColor = preg_match('/^#[0-9a-fA-F]{6}$/', $color) ? $color : '#000000';
         ?>
@@ -1120,8 +1125,8 @@ body.route-populate-scroll-lock .populate-action-bar-wrap {
                                 if (strpos($storedFontStyle, 'U') !== false) { $deco[] = 'underline'; }
                                 if (strpos($storedFontStyle, 'S') !== false) { $deco[] = 'line-through'; }
                                 if (!empty($deco)) { $styleCss .= 'text-decoration:' . implode(' ', $deco) . ';'; }
-                                $seededPt = (float)($pos['fontSize'] ?? ($fieldMetricsJs['DEFAULT_FONT_PT'] ?? 10));
-                                $fallbackFontPx = (int)max($filloutMinFontPx, min(24, round($seededPt * (96 / 72))));
+                                $seededPx = (float)($pos['fontSize'] ?? ($fieldMetricsJs['DEFAULT_FONT_PX'] ?? 13));
+                                $fallbackFontPx = (int)max($filloutMinFontPx, min(32, round($seededPx)));
                                 $displayFontPx = $storedFontSize > 0 ? $storedFontSize : $fallbackFontPx;
                                 $styleCss = 'font-size: ' . (int)$displayFontPx . 'px;' . $styleCss;
                                 ?>
@@ -1133,7 +1138,7 @@ body.route-populate-scroll-lock .populate-action-bar-wrap {
                                     data-y="<?php echo htmlspecialchars((string)($pos['y'] ?? 0)); ?>"
                                     data-w="<?php echo htmlspecialchars((string)($pos['width'] ?? 0)); ?>"
                                     data-h="<?php echo htmlspecialchars((string)($pos['height'] ?? 0)); ?>"
-                                    data-pt="<?php echo htmlspecialchars((string)($pos['fontSize'] ?? $fieldMetricsJs['DEFAULT_FONT_PT'])); ?>"
+                                    data-pt="<?php echo htmlspecialchars((string)($pos['fontSize'] ?? $fieldMetricsJs['DEFAULT_FONT_PX'])); ?>"
                                     title="<?php echo htmlspecialchars($label); ?>">
                                     <?php if ($type === 'checkbox'): ?>
                                         <input type="hidden" name="<?php echo htmlspecialchars($fieldKey); ?>" value="0">
@@ -1215,7 +1220,7 @@ body.route-populate-scroll-lock .populate-action-bar-wrap {
                         <span class="fillout-help-icon" tabindex="0" aria-label="Custom input box help" data-tip="Add a free-form text box, then click on the document to place it. Drag the top bar to move; drag the corner to resize.">?</span>
                     </label>
                     <div style="display:flex; gap:8px;">
-                        <button type="button" id="add-temp-field-btn" class="pdftimesaver-btn-secondary" style="flex:1;">Add Custom Input Box</button>
+                        <button type="button" id="add-temp-field-btn" class="pdftimesaver-btn-secondary" style="flex:1;">Add Custom Field</button>
                         <button type="button" class="pdftimesaver-btn-secondary js-fillout-custom-remove" style="width:42px; min-width:42px; padding:0;" aria-label="Remove custom box" title="Remove custom box" disabled>&#128465;</button>
                     </div>
                 </div>
@@ -1395,11 +1400,11 @@ body.route-populate-scroll-lock .populate-action-bar-wrap {
         </div>
     <?php endif; ?>
 
-    <?php if (!$hasInteractivePreview && !$hideFallbackFieldGrid): ?>
+    <?php if (!$hasInteractivePreview): ?>
     <div class="pdftimesaver-card">
         <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap;">
             <h3 style="margin:0; color:#2c3e50; font-size:18px; font-weight:600;">Custom Input Boxes</h3>
-            <button type="button" id="add-temp-field-btn" class="pdftimesaver-btn-secondary">Add Custom Input Box</button>
+            <button type="button" id="add-temp-field-btn" class="pdftimesaver-btn-secondary">Add Custom Field</button>
         </div>
         <p class="wpts-form-help" style="margin-top:8px;">Add a free-form text box. Use &times; on a box to delete it.</p>
         <div id="temp-fields-wrap" class="populate-temp-fields-wrap"></div>
@@ -1438,6 +1443,7 @@ body.route-populate-scroll-lock .populate-action-bar-wrap {
     var maxSize = 24;
     var exportBtn = document.getElementById('export-action-btn');
     var exportScope = document.getElementById('export-scope-select');
+    var thisFormOptionTemplate = exportScope ? exportScope.querySelector('option[value="this"]') : null;
     var displayModeSelect = document.getElementById('display-mode-select');
     var nextBtn = document.getElementById('populate-next-btn');
     var completeBtn = document.getElementById('populate-complete-btn');
@@ -1488,13 +1494,57 @@ body.route-populate-scroll-lock .populate-action-bar-wrap {
         el.style.display = '';
         el.style.background = '#b91c1c';
         el.textContent = msg || 'Autosave failed';
+        setTimeout(function () {
+            if (el.textContent === (msg || 'Autosave failed')) {
+                el.textContent = '';
+                el.style.display = 'none';
+            }
+        }, 4000);
     }
 
     function autoSaveNow() {
-        var fd = new FormData(form);
-        fd.append('ajax', '1');
-        return fetch(form.action, { method: 'POST', body: fd })
-            .then(function (r) { return r.json(); })
+        var values = {};
+        var elements = form && form.elements ? Array.prototype.slice.call(form.elements) : [];
+        elements.forEach(function (el) {
+            if (!el || !el.name || el.disabled) { return; }
+            if (el.type === 'radio' && !el.checked) { return; }
+            if (el.type === 'checkbox') {
+                values[el.name] = el.checked ? '1' : '0';
+                return;
+            }
+            values[el.name] = String(el.value == null ? '' : el.value);
+        });
+        var payload = {
+            ajax: 1,
+            projectDocumentId: currentPdId,
+            values: values
+        };
+        return fetch(form.action, {
+            method: 'POST',
+            body: JSON.stringify(payload),
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        })
+            .then(function (r) { return r.text(); })
+            .then(function (rawText) {
+                var text = String(rawText || '');
+                var json = null;
+                try {
+                    json = JSON.parse(text);
+                } catch (e) {
+                    var match = text.match(/(\{[\s\S]*\})\s*$/);
+                    if (match && match[1]) {
+                        try { json = JSON.parse(match[1]); } catch (_e) { json = null; }
+                    }
+                }
+                if (!json && /"success"\s*:\s*true/i.test(text)) {
+                    json = { success: true };
+                }
+                return json;
+            })
             .then(function (j) {
                 if (j && j.success) {
                     showSaved('Saved');
@@ -1513,15 +1563,9 @@ body.route-populate-scroll-lock .populate-action-bar-wrap {
         return Math.max(low, Math.min(high, n));
     }
 
-    function overlayFontPtToPx(fontPt, fieldEl, fallbackPx) {
-        var fEl = fieldEl || null;
-        var baseCssPx = (parseFloat(fontPt || '0') || FIELD_METRICS.DEFAULT_FONT_PT || 10) * (96 / 72);
-        var mmFieldHeight = Math.max(0.1, parseFloat((fEl && fEl.dataset && fEl.dataset.h) || '0') || 0);
-        var displayedHeightPx = Math.max(1, (fEl && fEl.getBoundingClientRect ? fEl.getBoundingClientRect().height : 0) || parseFloat((fEl && fEl.style && fEl.style.height) || '0') || 0);
-        var pxPerMm = displayedHeightPx / mmFieldHeight;
-        var px = (parseFloat(fontPt || '0') || FIELD_METRICS.DEFAULT_FONT_PT || 10) * (FIELD_METRICS.MM_PER_PT || 0.352778) * pxPerMm;
-        var cappedPx = Math.min(px, baseCssPx * 1.6);
-        return clamp(parseInt(Math.round(cappedPx), 10) || fallbackPx || defaultFontPx, minSize, maxSize);
+    function overlaySeedFontPx(fontPx, fieldEl, fallbackPx) {
+        var px = parseFloat(fontPx || '0') || FIELD_METRICS.DEFAULT_FONT_PX || 13;
+        return clamp(parseInt(Math.round(px), 10) || fallbackPx || defaultFontPx, minSize, maxSize);
     }
 
     function getStoredOverlayFontPx(input) {
@@ -1539,8 +1583,8 @@ body.route-populate-scroll-lock .populate-action-bar-wrap {
     function applyOverlayFieldFont(input, fEl, h) {
         if (!input || !fEl) { return; }
         var stored = getStoredOverlayFontPx(input);
-        var seededPt = parseFloat(fEl.getAttribute('data-pt') || '') || FIELD_METRICS.DEFAULT_FONT_PT || 10;
-        var fallbackPx = overlayFontPtToPx(seededPt, fEl, defaultFontPx);
+        var seededPx = parseFloat(fEl.getAttribute('data-pt') || '') || FIELD_METRICS.DEFAULT_FONT_PX || 13;
+        var fallbackPx = overlaySeedFontPx(seededPx, fEl, defaultFontPx);
         var chosenPx = (stored >= minSize) ? stored : fallbackPx;
         // Keep preview font faithful to the chosen size; do not silently shrink
         // on selection/layout changes. Overflow handling still runs on input edits.
@@ -1571,7 +1615,7 @@ body.route-populate-scroll-lock .populate-action-bar-wrap {
         // Trigger repair when the dataset is clearly legacy-skewed toward a single
         // stamped default size, while preserving genuinely curated documents.
         if (defaultRatio < 0.85) { return; }
-        var legacyFallback = clamp(Math.round(((FIELD_METRICS && FIELD_METRICS.DEFAULT_FONT_PT) ? FIELD_METRICS.DEFAULT_FONT_PT : 10) * (96 / 72)), minSize, maxSize);
+        var legacyFallback = clamp(FIELD_METRICS.DEFAULT_FONT_PX || 13, minSize, maxSize);
         withStored.forEach(function (row) {
             var key = row.input.getAttribute('data-font-size-key') || '';
             var hidden = key ? findHiddenFontSizeInput(key) : null;
@@ -1751,12 +1795,12 @@ body.route-populate-scroll-lock .populate-action-bar-wrap {
         return {
             width: parseFloat(fEl.dataset.w || '45') || 45,
             height: parseFloat(fEl.dataset.h || '3.18') || 3.18,
-            fontPt: parseFloat(fEl.dataset.pt || String(FIELD_METRICS.DEFAULT_FONT_PT || 10)) || (FIELD_METRICS.DEFAULT_FONT_PT || 10)
+            fontPt: parseFloat(fEl.dataset.pt || String(FIELD_METRICS.DEFAULT_FONT_PX || 13)) || (FIELD_METRICS.DEFAULT_FONT_PX || 13)
         };
     }
     function getDefaultTempFieldMetrics() {
         var ref = getReferenceOverlayTextField();
-        return ref ? metricsFromOverlayField(ref) : { width: 45, height: 3.18, fontPt: (FIELD_METRICS.DEFAULT_FONT_PT || 10) };
+        return ref ? metricsFromOverlayField(ref) : { width: 45, height: 3.18, fontPt: (FIELD_METRICS.DEFAULT_FONT_PX || 13) };
     }
     function getTempPlacementDefaults() {
         return getDefaultTempFieldMetrics();
@@ -2050,12 +2094,40 @@ body.route-populate-scroll-lock .populate-action-bar-wrap {
             '&format=' + encodeURIComponent(format);
     }
 
+    function triggerExportDownload(url) {
+        var href = String(url || '').trim();
+        if (!href) { return; }
+        var a = document.createElement('a');
+        a.href = href;
+        // Keep Fill Out state in current tab; downloads/opening happen off-tab.
+        a.target = '_blank';
+        a.rel = 'noopener noreferrer';
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+    }
+
     function updateActionBarState() {
         var mode = displayModeSelect ? displayModeSelect.value : 'single';
         var isAllMode = mode === 'all';
         var isLast = !hasNextForm;
 
         if (exportScope) {
+            var thisFormOption = exportScope.querySelector('option[value="this"]');
+            // In All Forms mode, remove "This Form" from the UI entirely so it
+            // cannot be perceived as selectable.
+            if (isAllMode) {
+                if (thisFormOption) {
+                    thisFormOption.remove();
+                    thisFormOption = null;
+                }
+            } else if (!thisFormOption && thisFormOptionTemplate) {
+                exportScope.insertBefore(thisFormOptionTemplate, exportScope.firstChild);
+                thisFormOption = thisFormOptionTemplate;
+            }
+            if (thisFormOption) {
+                thisFormOption.disabled = false;
+            }
             if (isAllMode || isLast) {
                 if (exportScope.value === 'this') {
                     exportScope.value = 'all-zip';
@@ -2204,7 +2276,7 @@ body.route-populate-scroll-lock .populate-action-bar-wrap {
 
     if (exportBtn && exportScope) {
         exportBtn.addEventListener('click', function () {
-            window.location.assign(buildExportUrl(exportScope.value || 'this', currentPdId));
+            triggerExportDownload(buildExportUrl(exportScope.value || 'this', currentPdId));
         });
     }
 
@@ -2212,7 +2284,7 @@ body.route-populate-scroll-lock .populate-action-bar-wrap {
         btn.addEventListener('click', function () {
             var pdId = String(btn.getAttribute('data-pd-id') || '').trim();
             if (!pdId) return;
-            window.location.assign(buildExportUrl('this', pdId));
+            triggerExportDownload(buildExportUrl('this', pdId));
         });
     });
 
@@ -2497,7 +2569,8 @@ body.route-populate-scroll-lock .populate-action-bar-wrap {
 
     function setFilloutSidebarOpen(open) {
         if (!filloutSidebar) { return; }
-        var show = !!open;
+        // Keep the properties panel (including Add Custom Field) persistently visible.
+        var show = true;
         if (filloutLayout) {
             filloutLayout.classList.toggle('is-panel-open', show);
         }
@@ -2603,6 +2676,58 @@ body.route-populate-scroll-lock .populate-action-bar-wrap {
         });
     }
 
+    // Safety-net sync: ensure the right-panel pointer dropdowns always reflect
+    // the selected field's saved pointer value, even if connector-local sync misses.
+    function syncPresetConnectorFallbackForInput(input) {
+        if (!filloutSidebar || !form || !input || input.type === 'checkbox' || !input.name) { return; }
+        var catSel = filloutSidebar.querySelector('.js-fillout-preset-category');
+        var fieldSel = filloutSidebar.querySelector('.js-fillout-preset-field');
+        if (!catSel || !fieldSel) { return; }
+        var pointerName = '_preset_pointer__' + input.name;
+        var pointerHidden = form.querySelector('input[type="hidden"][name="' + CSS.escape(pointerName) + '"]');
+        var pointer = pointerHidden ? String(pointerHidden.value || '') : '';
+        var splitAt = pointer.indexOf('::');
+        if (splitAt <= 0) { return; }
+        var rawCategory = pointer.slice(0, splitAt);
+        var fieldKey = pointer.slice(splitAt + 2);
+        if (!rawCategory || !fieldKey) { return; }
+        var groups = {};
+        try { groups = JSON.parse(filloutSidebar.getAttribute('data-preset-groups') || '{}') || {}; } catch (e) { groups = {}; }
+        var categoryKeys = Object.keys(groups || {});
+        if (!categoryKeys.length) { return; }
+        var category = categoryKeys.find(function (k) { return k === rawCategory; })
+            || categoryKeys.find(function (k) { return String(k || '').toLowerCase() === String(rawCategory || '').toLowerCase(); })
+            || '';
+        if (!category) { return; }
+
+        // Ensure category option exists.
+        if (!catSel.querySelector('option[value="' + CSS.escape(category) + '"]')) {
+            var catOpt = document.createElement('option');
+            catOpt.value = category;
+            catOpt.textContent = category;
+            catSel.appendChild(catOpt);
+        }
+        catSel.value = category;
+
+        // Rebuild field options for this category and select the pointed field key.
+        fieldSel.innerHTML = '<option value="">Select field…</option>';
+        var list = Array.isArray(groups[category]) ? groups[category] : [];
+        list.forEach(function (item) {
+            var key = String((item && item.key) || '');
+            if (!key) { return; }
+            var opt = document.createElement('option');
+            opt.value = key;
+            var label = String((item && item.label) || key);
+            var value = String((item && item.value) || '');
+            opt.textContent = label + (value ? ' — ' + (value.length > 24 ? value.slice(0, 24) + '…' : value) : ' (empty)');
+            if (key === fieldKey) {
+                opt.selected = true;
+            }
+            fieldSel.appendChild(opt);
+        });
+        fieldSel.disabled = list.length === 0;
+    }
+
     function updateFilloutSidebarForInput(input, fieldEl, label) {
         if (!filloutSidebar || !input) return;
         if (filloutSelectedFieldEl && filloutSelectedFieldEl !== fieldEl) {
@@ -2632,6 +2757,9 @@ body.route-populate-scroll-lock .populate-action-bar-wrap {
         }
         if (typeof syncFilloutPresetConnectorSelection === 'function') {
             syncFilloutPresetConnectorSelection();
+        }
+        if (!isCheckbox) {
+            syncPresetConnectorFallbackForInput(input);
         }
         setFilloutSidebarOpen(true);
     }
@@ -2795,6 +2923,21 @@ body.route-populate-scroll-lock .populate-action-bar-wrap {
         function getCategoryList(category) {
             return groups[category] || [];
         }
+        function resolveCategoryKey(rawCategory) {
+            var raw = String(rawCategory || '').trim();
+            if (!raw) { return ''; }
+            if (Object.prototype.hasOwnProperty.call(groups, raw)) {
+                return raw;
+            }
+            var rawNorm = raw.toLowerCase();
+            var keys = Object.keys(groups || {});
+            for (var i = 0; i < keys.length; i++) {
+                if (String(keys[i] || '').toLowerCase() === rawNorm) {
+                    return keys[i];
+                }
+            }
+            return '';
+        }
         function normalizeLinkId(raw) {
             return String(raw || '').toLowerCase().trim();
         }
@@ -2802,11 +2945,15 @@ body.route-populate-scroll-lock .populate-action-bar-wrap {
             return String(raw || '').toLowerCase().replace(/[^a-z0-9]+/g, '');
         }
         function findPresetByKey(category, fieldKey) {
-            var list = getCategoryList(category);
+            var resolvedCategory = resolveCategoryKey(category);
+            var list = getCategoryList(resolvedCategory);
             for (var i = 0; i < list.length; i++) {
                 var item = list[i];
                 if (String(item && item.key || '') === String(fieldKey || '')) {
-                    return item;
+                    return {
+                        category: resolvedCategory,
+                        item: item
+                    };
                 }
             }
             return null;
@@ -2876,7 +3023,6 @@ body.route-populate-scroll-lock .populate-action-bar-wrap {
             fieldSel.disabled = list.length === 0;
         }
         Object.keys(groups).forEach(function (cat) {
-            if (String(cat || '').trim().toLowerCase() === 'general') { return; }
             var opt = document.createElement('option');
             opt.value = cat; opt.textContent = cat;
             catSel.appendChild(opt);
@@ -2888,10 +3034,16 @@ body.route-populate-scroll-lock .populate-action-bar-wrap {
                 return;
             }
             var parsed = decodePointer(getPointer(filloutSelectedInput));
-            if (parsed.category && groups[parsed.category]) {
-                catSel.value = parsed.category;
-                renderFieldOptions(parsed.category, parsed.fieldKey);
-                return;
+            var resolvedPointerCategory = resolveCategoryKey(parsed.category);
+            if (resolvedPointerCategory) {
+                catSel.value = resolvedPointerCategory;
+                renderFieldOptions(resolvedPointerCategory, parsed.fieldKey);
+                // If the saved pointer's field key no longer exists in that category,
+                // clear the stale selection instead of silently showing a wrong link.
+                var hasSelected = !!fieldSel.querySelector('option[value="' + CSS.escape(String(parsed.fieldKey || '')) + '"]');
+                if (!parsed.fieldKey || hasSelected) {
+                    return;
+                }
             }
             // If no explicit pointer is saved yet, infer from the selected field's
             // Field Manager linkId (e.g. AttyName -> Attorney Name).
@@ -2927,12 +3079,13 @@ body.route-populate-scroll-lock .populate-action-bar-wrap {
                 autoSaveNow();
                 return;
             }
-            var f = findPresetByKey(catSel.value, selectedFieldKey);
-            if (!f) return;
+            var match = findPresetByKey(catSel.value, selectedFieldKey);
+            if (!match || !match.item) return;
+            var f = match.item;
             // Copy the preset value into the selected box only; the original field's
             // saved value is untouched (we never write back to f.key).
             filloutSelectedInput.value = f.value || '';
-            setPointer(filloutSelectedInput, catSel.value, selectedFieldKey);
+            setPointer(filloutSelectedInput, match.category || catSel.value, selectedFieldKey);
             filloutSelectedInput.dispatchEvent(new Event('input', { bubbles: true }));
             filloutSelectedInput.focus();
             autoSaveNow();

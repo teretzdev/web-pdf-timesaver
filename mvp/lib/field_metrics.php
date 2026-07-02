@@ -21,23 +21,41 @@ final class FieldMetrics
         return self::$fontConfig;
     }
 
+    public static function defaultFontPx(): float
+    {
+        $cfg = self::fontConfig();
+        $value = (float)($cfg['defaults']['fontSize'] ?? $cfg['sizeLimits']['default'] ?? 13);
+        return self::clamp($value, self::minFontPx(), self::maxFontPx());
+    }
+
+    public static function minFontPx(): float
+    {
+        $cfg = self::fontConfig();
+        return max(1.0, (float)($cfg['sizeLimits']['min'] ?? 8));
+    }
+
+    public static function maxFontPx(): float
+    {
+        $cfg = self::fontConfig();
+        return max(self::minFontPx(), (float)($cfg['sizeLimits']['max'] ?? 32));
+    }
+
+    /** @deprecated Use defaultFontPx(); kept for PDF engine boundary conversions. */
     public static function defaultFontPt(): float
     {
-        $cfg = self::fontConfig();
-        $value = (float)($cfg['defaults']['fontSize'] ?? $cfg['sizeLimits']['default'] ?? 10);
-        return self::clamp($value, self::minFontPt(), self::maxFontPt());
+        return self::cssPxToPt(self::defaultFontPx());
     }
 
+    /** @deprecated Use minFontPx(). */
     public static function minFontPt(): float
     {
-        $cfg = self::fontConfig();
-        return max(1.0, (float)($cfg['sizeLimits']['min'] ?? 6));
+        return self::cssPxToPt(self::minFontPx());
     }
 
+    /** @deprecated Use maxFontPx(). */
     public static function maxFontPt(): float
     {
-        $cfg = self::fontConfig();
-        return max(self::minFontPt(), (float)($cfg['sizeLimits']['max'] ?? 24));
+        return self::cssPxToPt(self::maxFontPx());
     }
 
     public static function clamp(float $value, float $min, float $max): float
@@ -65,59 +83,101 @@ final class FieldMetrics
         return $px / self::CSS_PX_PER_PT;
     }
 
-    public static function estimateFontPtFromHeightMm(float $heightMm, float $fallbackPt = 10.0): float
+    public static function pxToPt(float $px): float
     {
-        if (!is_finite($heightMm) || $heightMm <= 0) {
-            return self::clamp($fallbackPt, self::minFontPt(), self::maxFontPt());
-        }
-        $pt = $heightMm * 0.7;
-        return self::clamp($pt, 7.0, 16.0);
+        return self::cssPxToPt($px);
     }
 
-    public static function previewPtToPx(float $fontPt, float $displayedHeightPx, float $fieldHeightMm): float
+    public static function normalizeFontPx($rawValue, array $meta = [], ?float $fallback = null): float
     {
+        $fallbackPx = $fallback ?? self::defaultFontPx();
+        $raw = is_numeric($rawValue) ? (float)$rawValue : 0.0;
+        if (!is_finite($raw) || $raw <= 0) {
+            return self::clamp($fallbackPx, self::minFontPx(), self::maxFontPx());
+        }
+
+        $unit = strtolower(trim((string)($meta['fontSizeUnit'] ?? '')));
+        if ($unit === 'px') {
+            return self::clamp($raw, self::minFontPx(), self::maxFontPx());
+        }
+
+        // Legacy positions stored pt without fontSizeUnit.
+        if ($raw <= self::maxFontPt() + 0.01) {
+            return self::clamp(self::ptToCssPx($raw), self::minFontPx(), self::maxFontPx());
+        }
+
+        return self::clamp($raw, self::minFontPx(), self::maxFontPx());
+    }
+
+    public static function estimateFontPxFromHeightMm(float $heightMm, float $fallbackPx = 13.0): float
+    {
+        if (!is_finite($heightMm) || $heightMm <= 0) {
+            return self::clamp($fallbackPx, self::minFontPx(), self::maxFontPx());
+        }
+        $pt = max(self::cssPxToPt($fallbackPx), self::mmToPt($heightMm * 0.95));
+        return self::clamp(self::ptToCssPx($pt), self::minFontPx(), self::maxFontPx());
+    }
+
+    /** @deprecated Prefer normalizeFontPx(). */
+    public static function estimateFontPtFromHeightMm(float $heightMm, float $fallbackPt = 13.0): float
+    {
+        return self::cssPxToPt(self::estimateFontPxFromHeightMm($heightMm, self::ptToCssPx($fallbackPt)));
+    }
+
+    public static function previewFontPxForField(float $fontPx, float $displayedHeightPx, float $fieldHeightMm): float
+    {
+        $storedPx = self::clamp($fontPx, self::minFontPx(), self::maxFontPx());
         $fieldMm = max(0.1, $fieldHeightMm);
         $displayPx = max(1.0, $displayedHeightPx);
         $pxPerMm = $displayPx / $fieldMm;
-        return max(4.0, self::ptToMm($fontPt) * $pxPerMm);
+        $pt = self::cssPxToPt($storedPx);
+        return max(4.0, self::ptToMm($pt) * $pxPerMm);
     }
 
+    /** @deprecated Prefer previewFontPxForField(). */
+    public static function previewPtToPx(float $fontPt, float $displayedHeightPx, float $fieldHeightMm): float
+    {
+        return self::previewFontPxForField(self::ptToCssPx($fontPt), $displayedHeightPx, $fieldHeightMm);
+    }
+
+    /** @deprecated Prefer normalizeFontPx(). */
     public static function normalizeImportedFontPt($rawValue, array $meta = [], ?float $fallback = null): float
     {
-        $fallbackPt = $fallback ?? self::defaultFontPt();
-        $raw = is_numeric($rawValue) ? (float)$rawValue : 0.0;
-        if (!is_finite($raw) || $raw <= 0) {
-            return self::clamp($fallbackPt, self::minFontPt(), self::maxFontPt());
-        }
-        $type = strtolower((string)($meta['type'] ?? $meta['fieldType'] ?? ''));
-        if ($type === 'checkbox' || $type === 'radio') {
-            return self::clamp($raw, 5.0, 12.0);
-        }
-        return self::clamp($raw, 6.0, 16.0);
+        $fallbackPx = $fallback !== null ? self::ptToCssPx((float)$fallback) : null;
+        $px = self::normalizeFontPx($rawValue, $meta, $fallbackPx);
+        return self::cssPxToPt($px);
     }
 
     public static function exportFontPtForField(array $position, array $values, string $fieldKey): float
     {
-        $fallback = self::normalizeImportedFontPt($position['fontSize'] ?? self::defaultFontPt(), $position, self::defaultFontPt());
+        $fallbackPx = self::normalizeFontPx($position['fontSize'] ?? self::defaultFontPx(), $position, self::defaultFontPx());
+        $fallbackPt = self::cssPxToPt($fallbackPx);
+
         $raw = $values['_font_size__' . $fieldKey] ?? null;
         if ($raw === null || $raw === '') {
-            return $fallback;
+            return self::cssPxToPt(self::normalizeFontPx($position['fontSize'] ?? $fallbackPx, $position, $fallbackPx));
         }
         if (!is_numeric($raw)) {
-            return $fallback;
+            return $fallbackPt;
         }
 
         $rawNumber = (float)$raw;
         if (!is_finite($rawNumber) || $rawNumber <= 0) {
-            return $fallback;
+            return $fallbackPt;
         }
 
-        // Legacy populate saves are px. Infer px when value is noticeably above pt range.
-        $asPt = $rawNumber;
-        if ($rawNumber > self::maxFontPt()) {
-            $asPt = self::cssPxToPt($rawNumber);
-        }
-        return self::normalizeImportedFontPt($asPt, $position, $fallback);
+        // Populate/import UI overrides are stored in CSS px.
+        $px = self::normalizeFontPx($rawNumber, ['fontSizeUnit' => 'px'], $fallbackPx);
+        return self::cssPxToPt($px);
+    }
+
+    public static function exportFontPxForField(array $position, array $values, string $fieldKey): float
+    {
+        return self::normalizeFontPx(
+            $values['_font_size__' . $fieldKey] ?? ($position['fontSize'] ?? self::defaultFontPx()),
+            $position,
+            self::defaultFontPx()
+        );
     }
 
     public static function jsConfig(): array
@@ -126,9 +186,13 @@ final class FieldMetrics
             'MM_PER_PT' => self::MM_PER_PT,
             'PT_PER_MM' => self::PT_PER_MM,
             'CSS_PX_PER_PT' => self::CSS_PX_PER_PT,
-            'DEFAULT_FONT_PT' => self::defaultFontPt(),
-            'MIN_FONT_PT' => self::minFontPt(),
-            'MAX_FONT_PT' => self::maxFontPt(),
+            'DEFAULT_FONT_PX' => self::defaultFontPx(),
+            'MIN_FONT_PX' => self::minFontPx(),
+            'MAX_FONT_PX' => self::maxFontPx(),
+            // Legacy keys — px values for backward-compatible JS reads during migration.
+            'DEFAULT_FONT_PT' => self::defaultFontPx(),
+            'MIN_FONT_PT' => self::minFontPx(),
+            'MAX_FONT_PT' => self::maxFontPx(),
             'MIN_PREVIEW_PX' => 4.0,
         ];
     }

@@ -5,9 +5,9 @@
  */
 
 return [
-    // Canonical unit policy for preview/extraction/export.
+    // Canonical unit policy for preview/extraction/export (stored/displayed in CSS px).
     'units' => [
-        'canonical' => 'pt',
+        'canonical' => 'px',
         'mmPerPt' => 0.352778,
         'ptPerMm' => 2.834645669,
         'cssPxPerPt' => 96 / 72,
@@ -15,7 +15,7 @@ return [
     // Default font settings for all PDFs
     'defaults' => [
         'fontFamily' => 'Arial',
-        'fontSize' => 10,
+        'fontSize' => 13,
         'fontStyle' => '',
         'fontColor' => [0, 0, 0], // RGB: black
     ],
@@ -128,11 +128,11 @@ return [
         'ZapfDingbats',
     ],
     
-    // Font size limits
+    // Font size limits (CSS px)
     'sizeLimits' => [
-        'min' => 6,
-        'max' => 24,
-        'default' => 10,
+        'min' => 8,
+        'max' => 32,
+        'default' => 13,
     ],
 ];
 
