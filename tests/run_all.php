@@ -11,6 +11,11 @@ $tests = [
     __DIR__ . '/dom_assertions_test.php',
     __DIR__ . '/assign_client_test.php',
     __DIR__ . '/client_page_test.php',
+    // New comprehensive tests for panel editor functionality
+    __DIR__ . '/test_panel_management.php',
+    __DIR__ . '/test_template_editing.php',
+    __DIR__ . '/test_field_editor_comprehensive.php',
+    __DIR__ . '/test_form_population.php',
 ];
 
 $overall = 0;
